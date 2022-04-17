@@ -1,27 +1,38 @@
-const {Client} = require("pg");
+const Pool = require("pg").Pool;
 
-const client = new Client({
+const pool = new Pool({
     host: "localhost",
     user: "admin",
-    port: 5432,
     password: "admin",
-    database: "sickst"
+    database: "sickst",
+    port: 5432
 });
 
-const execute = async (query) => {
-    try {
-        console.log('Making query')
-        await client.connect();     // gets connection
-        const res = await client.query(query);  // sends queries
-        console.log('res',res);
-        return true;
-    } catch (error) {
-        console.error(error.stack);
-        return false;
-    } finally {
-        console.log('Ending DB')
-        await client.end();
-    }
-}
+const categoryTable = `
+  CREATE TABLE IF NOT EXISTS "category" (
+    "id" SERIAL,
+    "name" VARCHAR(100) NOT NULL,
+    UNIQUE (name),
+    PRIMARY KEY ("id")
+    );
+`;
 
-module.exports = execute;
+const productTable = `
+    CREATE TABLE IF NOT EXISTS "product" (
+        "id" SERIAL,
+        "brand" VARCHAR(100) NOT NULL,
+        "model" VARCHAR(100) NOT NULL,
+        "type" VARCHAR(100) NOT NULL,
+        "price" INTEGER NOT NULL,
+        "category_id" INTEGER REFERENCES category (id),
+
+        PRIMARY KEY ("id")
+    )
+`
+
+pool.query(categoryTable);  // create category table
+pool.query(productTable);  // create product table
+
+// pool.query(`DROP TABLE category CASCADE;`);
+
+module.exports = pool;
