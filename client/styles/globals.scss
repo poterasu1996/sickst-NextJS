@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+html {
+  font-size: 62.5%;
+}
+a {
+  color: #cecece;
+  text-decoration: none !important;
+}
+span {
+  color: #141414;
+}
+body {
+  box-sizing: border-box;
+  margin: 0;
+  height: 100%;
+
+  font-family: Proxima Nova,Open Sans,Gill Sans MT,Gill Sans,Corbel,Trebuchet MS,Verdana,sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+.container {
+  @media (max-width:1200px) {
+    width: 100%;
+    margin: 0;
+    padding: 0 3rem;
+    max-width: unset;
+  }
+}
+
+::selection {
+  color: #000;
+  text-shadow: none;
+  background-color: #b3d4fc;
+}
