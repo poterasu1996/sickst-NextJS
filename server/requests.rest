@@ -1,0 +1,14 @@
+GET http://localhost:8000/categories
+
+
+###
+GET http://localhost:8000/posts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiS2F5bGUiLCJpYXQiOjE2NTA2NTg0OTd9.9aI1q5eU-OsKPOA16lFxinG6Elczjn5VxcoLI8Q5fZU
+
+###
+POST http://localhost:8000/login
+Content-Type: application/json
+
+{
+    "username": "Kayle"
+}

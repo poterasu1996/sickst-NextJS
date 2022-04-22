@@ -1,10 +1,13 @@
-import styles from '../styles/Layout.module.css'
+import Footer from './Footer';
+import Header from './Header';
 
-const Layout = () => {
+const Layout = ({ children }) => {
     return (
-        <div>
-            
-        </div>
+        <>
+            <Header />
+            {children}
+            <Footer />
+        </>
     );
 }
 

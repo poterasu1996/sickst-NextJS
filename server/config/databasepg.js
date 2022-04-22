@@ -2,9 +2,9 @@ const Pool = require("pg").Pool;
 
 const pool = new Pool({
     host: "localhost",
+    database: "sickst",
     user: "admin",
     password: "admin",
-    database: "sickst",
     port: 5432
 });
 
@@ -28,10 +28,20 @@ const productTable = `
 
         PRIMARY KEY ("id")
     )
-`
+`;
+const userTable = `
+    CREATE TABLE IF NOT EXISTS "user" (
+        "id" SERIAL,
+        "email" VARCHAR(100) NOT NULL,
+        "password" VARCHAR(100) NOT NULL,
+
+        PRIMARY KEY ("id")
+    )
+`;
 
 pool.query(categoryTable);  // create category table
 pool.query(productTable);  // create product table
+pool.query(userTable);  // create user table
 
 // pool.query(`DROP TABLE category CASCADE;`);
 

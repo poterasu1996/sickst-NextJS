@@ -15,9 +15,12 @@ body {
   margin: 0;
   height: 100%;
 
-  font-family: Proxima Nova,Open Sans,Gill Sans MT,Gill Sans,Corbel,Trebuchet MS,Verdana,sans-serif;
+  font-family: Lato ,Open Sans,Gill Sans MT,Gill Sans,Corbel,Trebuchet MS,Verdana,sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+}
+body.modal-open {
+  padding-right: 0 !important;
 }
 .container {
   @media (max-width:1200px) {
@@ -32,4 +35,107 @@ body {
   color: #000;
   text-shadow: none;
   background-color: #b3d4fc;
+}
+
+.card-button {
+  width: 100%;
+  color: #141414;
+  font-size: 16px;
+  line-height: 26px;
+  font-weight: 700;
+  position: relative;
+  &::before {
+    content: "+";
+    display: block;
+    position: absolute;
+    text-align: center;
+    color: #fff;
+    font-size: 26px;
+    width: 30px;
+    height: 30px;
+    left: -38px;
+    border-radius: 45px;
+    background-color: black;
+  }
+  &:hover {
+    color: #cc3633;
+    &::before {
+      background-color: #cc3633;
+    }
+  }
+}
+
+.button-primary {
+  display: block;
+  width: 100%;
+  border: 1px solid red;
+
+  padding: 0 20px;
+  font-size: 1.8rem;
+  line-height: 5.4rem;
+  font-weight: 600;
+  text-align: center;
+  color: #cecece;
+  background-color: transparent;
+  border-radius: 0;
+  &:hover, &:active, &:active:focus, &:focus {
+    background-color: #cc3633;
+    border-color: #cc3633;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: unset;
+  }
+  &.big {
+    max-width: 200px;
+  }
+}
+
+.button-second-empty {
+  display: block;
+  width: 100%;
+  border: 1px solid #cc3633;
+  border-radius: 0;
+
+  padding: 0 20px;
+  font-size: 1.8rem;
+  line-height: 5.4rem;
+  font-weight: 600;
+  text-align: center;
+  color: #cc3633;
+  background-color: #fff;
+  &:hover, &:active, &:active:focus, &:focus {
+    background-color: #cc3633;
+    color: #fff;
+    border-color: #cc3633;
+    box-shadow: unset;
+  }
+  &.big {
+    max-width: 200px;
+  }
+}
+
+.button-second {
+  display: block;
+  width: 100%;
+  border: 1px solid red;
+
+  padding: 0 20px;
+  font-size: 1.8rem;
+  line-height: 5.4rem;
+  font-weight: 600;
+  text-align: center;
+  background-color: #cc3633;
+  color: #fff;
+  border-radius: 0;
+  &:hover {
+    background-color: #d24f4d;
+    color: #fff;
+  }
+  &.big {
+    max-width: 200px;
+  }
+}
+
+.brand-color {
+  color: #cc3633;
 }

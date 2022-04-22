@@ -1,0 +1,96 @@
+footer {
+    background-color: #1a1a1a;
+    border-top: 1px solid hsla(0,0%,100%,0.3);
+    color: #fff;
+    .footer {
+        padding: 2rem;
+        .row {
+            border-bottom: 1px solid hsla(0,0%,100%,0.3);
+            padding: 2rem 0;
+            margin: 0;
+            margin-bottom: 2rem;
+            .col-4 {
+                display: flex;
+                flex-direction: column;
+                padding: 0 4rem;
+                padding-left: 0;
+            }
+            .col {
+                padding-left: 4rem;
+            }
+            .logo {
+                font-size: 3rem;
+                line-height: 3rem;
+                color: #fff;
+                margin-bottom: 3rem;
+            }
+            .text {
+                font-size: 1.6rem;
+                line-height: 2.6rem;
+                color: #fff;
+            }
+            .title {
+                font-size: 1.2rem;
+                line-height: 2.2rem;
+                color: #666;
+                text-transform: uppercase;
+                font-weight: 400;
+            }
+            ul {
+                list-style: none;
+                padding-top: 2rem;
+                padding-left: 0;
+            }
+            .list-item {
+                margin: 0.4rem;
+                a {
+                    font-size: 1.6rem;
+                    line-height: 2.6rem;
+                    font-weight: 400;
+                    color: #fff;
+                    transition: ease 0.3s;
+                    &:hover {
+                        color: #cc3633;
+                        transition: ease 0.3s;
+                    }
+                }
+            }
+            .social-links {
+                margin-top: 2rem;
+                a {
+                    width: 3.2rem;
+                    height: 3.2rem;
+                    margin-left: 4rem;
+                    &:first-of-type {
+                        margin-left: 0;
+                    }
+                    &:hover {
+                        color: #cc3633;
+                        transition: ease 0.3s;
+                    }
+                    img {
+                        width: 2.4rem;
+                        height: 2.4rem;
+                    }
+                }
+            }
+        }
+        .all-rights {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.4rem;
+            line-height: 2.4rem;
+            .left {
+                .company {
+                    color: #cecece;
+                }
+            }
+            .right {
+                a {
+                    color: #cecece;
+                    margin: 0 2rem;
+                }
+            }
+        }
+    }
+}

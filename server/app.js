@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require("path");
 const express = require("express");
 const app = express();
@@ -8,6 +9,7 @@ const passport = require("passport");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const pool = require("./config/databasepg");
+const jwt = require("jsonwebtoken");
 
 // Middleware
 app.use(express.json());
@@ -84,6 +86,48 @@ app.delete("/category/:id", async(req, res) => {
     console.error(error.message);
   }
 })
+
+const posts = [
+  {
+    username: 'Kayle',
+    title: 'Post 1'
+  },
+  {
+    username: 'Doe',
+    title: 'Post 2'
+  }
+]
+
+// test JWT
+app.get('/posts', authenticateToken, (req, res) => {
+  res.json(posts.filter(post => post.username === req.user.name))
+})
+
+app.post('/login', (req, res) => {
+  // Authenticate user
+
+  const username = req.body.username;
+  const user = { name: username };
+
+  console.log('username', username);
+  console.log('user', user);
+
+  const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
+  res.json({ accessToken: accessToken })
+})
+
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
+  if (token === null) return res.sendStatus(401)
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user
+    next();
+  })
+}
+
 
 // Logging - only for dev
 if (process.env.NODE_ENV === "development") {
