@@ -34,7 +34,7 @@ const Product = ({image, brand, model, type, price}) => {
             </div>
             <div className="product-card-fragrance">Fragrance elements</div>
             <div className="product-card-description">
-                {description.substring(0, 200) + '...'}
+                {description.substring(0, 195) + '...'}
                 <Button onClick={() => setShow(!show)}>Read more</Button>
                 <Modal
                     className="product-card-modal"

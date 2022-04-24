@@ -32,7 +32,7 @@ const Header = () => {
                 </ul>
 
                 <div className="right-side">
-                    <Link href="/register/login">
+                    <Link href="/account/login">
                         <a>Log in</a>
                     </Link>
 

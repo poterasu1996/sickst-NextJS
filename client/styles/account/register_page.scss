@@ -1,0 +1,217 @@
+.register-page, .account-content {
+    margin: 4rem 0 ;
+    .row {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        div {
+            display: flex;
+            justify-content: center;
+        }
+    }
+    .title {
+        font-size: 3.8rem;
+        line-height: 4.8rem;
+        font-weight: 600;
+    }
+    .subtitle {
+        font-size: 2rem;
+        line-height: 3rem;
+        margin: 3rem 0;
+    }
+    .gender-icons {
+        .check {
+
+        }
+        img {
+            width: 10rem;
+            height: 10rem;
+        }
+        a {
+            display: flex;
+            flex-direction: column;
+            margin: 0 2rem;
+        }
+        span {
+            font-size: 18px;
+            line-height: 28px;
+            font-weight: 600;
+            text-align: center;
+        }
+    }
+    .login {
+        flex-direction: column;
+        align-items: center;
+        .login-link {
+            margin: 2.4rem 0;
+            font-size: 1.6rem;
+            line-height: 2.4rem;
+            a {
+                color: #cc3633;
+                font-weight: 600;
+            }
+        }
+        .split {
+            width: 100%;
+            align-items: center;
+            .line {
+                width: 100%;
+                height: 1px;
+                background-color: #dcdfe5;
+            }
+            .text {
+                font-size: 1.4rem;
+                line-height: 2.4rem;
+                font-weight: 500;
+                padding: 0 1.6rem;
+                text-transform: uppercase;
+                color: #9b9b9b;
+                text-align: center;
+            }
+        }
+        .fb-signup {
+            flex-direction: column;
+            width: 100%;
+        }
+    }
+    .copyright {
+        margin-top: 2.4rem;
+        justify-content: center !important;
+        span {
+            font-size: 2rem;
+            line-height: 2.4rem;
+            color: #9b9b9b;
+        }
+    }
+    // form control
+    .form {
+        width: 100%;
+        form {
+            width: 100%;
+            .form-field {
+                margin-top: 2.5rem;
+                height: 5rem;
+                display: flex;
+                flex-direction: column;
+                .form-control {
+                    height: 100%;
+                    font-size: 1.8rem;
+
+                    &:focus {
+                        border-color: #cc3633;
+                        box-shadow: 0 0 0 0.25rem rgba($color: #cc3633, $alpha: 0.25);
+                    }
+                    
+                    &.invalid-form-control {
+                        border-color: #cc3633;
+                        box-shadow: 0 0 0 0.25rem rgba($color: #cc3633, $alpha: 0.25);
+                    }
+                }
+                #bdate {
+                    padding-left: 2.4rem;
+                }
+                label {
+                    font-size: 1.8rem;
+                    line-height: 2.8rem;
+                    padding: 1rem 2.5rem;
+                }
+                &.newsletter {
+                    align-items: center;
+                    justify-content: flex-start;
+                    height: auto;
+                    .check-box {
+                        cursor: pointer;
+                        display: flex;
+                        position: relative;
+                        .cb {
+                            z-index: -1;
+                            position: absolute;
+                            top: 1.5rem;
+                            left: 3rem;
+                            
+                            &:checked~.custom-cb {
+                                background-color: #cc3633;
+                                transition: .1s;
+                                &::after {
+                                    opacity: 1;
+                                }
+                            }
+                        }
+                        .custom-cb {
+                            width: 2.4rem;
+                            height: 2.4rem;
+                            background-color: #f2f5f8;
+                            display: inline-block;
+                            border: 1px solid #dcdfe5;
+                            z-index: 1;
+                            &::after {
+                                content: "";
+                                display: block;
+                                width: 1.6rem;
+                                height: 1.6rem;
+                                margin-top: .3rem;
+                                margin-left: .3rem;
+                                background-image: url('../../public/img/svg/check.svg');
+                                background-position: center;
+                                background-size: contain;
+                                opacity: 0;
+                            }
+                            &:hover {
+                                border: 1px solid #cc3633;
+                            }
+                        }
+                        .text {
+                            margin-left: 1.2rem;
+                            font-size: 1.6rem;
+                            line-height: 2.4rem;
+                        }
+                    }
+                    .terms {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        margin-top: 1.2rem;
+                        .title {
+                            font-size: 1.2rem;
+                            line-height: 2.4rem;
+                            font-weight: 400;
+                            color: #666;
+                            text-transform: uppercase;
+                        }
+                        .tc {
+                            font-size: 1.4rem;
+                            line-height: 2.4rem;
+                            a {
+                                font-size: 1.6rem;
+                                line-height: 2.4rem;
+                                color: #000;
+                                border-bottom: 1px solid #000;
+                                &:hover {
+                                    border-bottom: none;
+                                    color: #cc3633;
+                                    transition: ease .2s;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .invalid-field {
+                justify-content: unset;
+                padding-top: .5rem;
+                height: .2rem;
+                font-size: 1.3rem;
+                font-weight: 700;
+                margin-left: 1rem;
+            }
+            .button-second {
+                margin-top: 2.4rem;
+            }
+        }
+        .form-floating>.form-control:focus~label, .form-floating>.form-control:not(:placeholder-shown)~label, .form-floating>.form-select~label {
+            opacity: .65;
+            transform: scale(.55) translateY(-.5rem) translateX(.15rem);
+        }
+    }
+}
