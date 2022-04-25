@@ -1,0 +1,26 @@
+@import './product_details.scss';
+
+.product-details-content {
+    padding: 5rem 0;
+}
+
+.slider {
+    background-color: #f9f9f9;
+    padding: 5rem 3rem;
+    .item > img {
+        max-height: 250px;
+    }
+    .slick-slider {
+        padding: 0 1.6rem;
+    }
+    .slick-next {
+        background-color: #fff;
+        &::before {
+            background-color: #cc3633;
+            opacity: 1;
+        }
+    }
+}
+.slick-slide img {
+    margin: auto;
+  }

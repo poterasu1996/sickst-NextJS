@@ -1,0 +1,40 @@
+.page-not-found {
+    margin: 0 5rem;
+    .wrapper {
+        max-width: 740px;
+        margin: 0 auto;
+        padding-top: 5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        &--info {
+            padding-left: 10rem;
+            margin-top: -13%;
+            font-family: 'Lato', sans-serif;
+            @media (max-width: 720px) {
+                margin-top: 2rem;
+                padding-left: 0;
+            }
+            
+            .title {
+                font-size: 2.6rem;
+                line-height: 3.6rem;
+                font-weight: 700;
+                @media (max-width: 500px) {
+                    font-size: 2rem;
+                    line-height: 3rem;
+                }
+            }
+            .text {
+                margin-top: 2rem;
+                font-size: 1.8rem;
+                line-height: 2.8rem;
+                @media (max-width: 500px) {
+                    font-size: 1.2rem;
+                    line-height: 2.2rem;
+                }
+            }
+        }
+    }
+}
