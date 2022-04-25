@@ -2,6 +2,7 @@ import maleIcon from "../../public/img/male-icon.png"
 import femaleIcon from "../../public/img/female-icon.jpg"
 import Link from "next/link";
 import Image from "next/image";
+import Signup from "../../components/SignUp";
 
 const Register = () => {
     return <>
@@ -31,7 +32,7 @@ const Register = () => {
                         </div>
                         <div className="col-5">
                             <div className="form">
-                                {/* <Signup /> */}
+                                <Signup />
                             </div>
                         </div>
                         <div className="col-5 login">
@@ -48,9 +49,11 @@ const Register = () => {
                                 <h1>Google</h1>
                             </div>
                         </div>
-                        <div className="col-5 copyright">
+
+                        {/* simple footer */}
+                        {/* <div className="col-5 copyright">
                             <span>&copy; Sickst</span>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
