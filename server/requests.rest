@@ -1,4 +1,4 @@
-GET http://localhost:8000/categories
+GET http://localhost:8000/category
 
 
 ###
@@ -11,4 +11,28 @@ Content-Type: application/json
 
 {
     "username": "Kayle"
+}
+
+###
+GET http://localhost:8000/category
+
+###
+POST http://localhost:8000/category
+Content-Type: application/json
+
+{
+    "name": "Category2"
+}
+
+###
+DELETE http://localhost:8000/category/9
+
+###
+POST http://localhost:8000/register
+
+Content-Type: application/json
+
+{
+    "email": "e@email.com",
+    "password": "password"
 }
