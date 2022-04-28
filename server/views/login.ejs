@@ -2,7 +2,7 @@
 <% if (messages.error) { %>
     <%= messages.error %>
 <% } %>
-<form action="/login" method="POST">
+<form action="/api/login" method="POST">
     <div>
         <label for="email">Email</label>
         <input type="text" id="email" name="email" required>
@@ -13,4 +13,4 @@
     </div>
     <button type="submit">Login</button>
 </form>
-<a href="/register">Register</a>
+<a href="/api/register">Register</a>

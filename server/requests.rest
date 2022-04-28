@@ -1,38 +1,69 @@
-GET http://localhost:8000/category
-
-
 ###
 GET http://localhost:8000/posts
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiS2F5bGUiLCJpYXQiOjE2NTA2NTg0OTd9.9aI1q5eU-OsKPOA16lFxinG6Elczjn5VxcoLI8Q5fZU
-
 ###
 POST http://localhost:8000/login
 Content-Type: application/json
-
 {
     "username": "Kayle"
 }
-
+### CATEGORY
+GET http://localhost:8000/api/category
 ###
-GET http://localhost:8000/category
-
+GET http://localhost:8000/api/category/1
 ###
-POST http://localhost:8000/category
+POST http://localhost:8000/api/category
 Content-Type: application/json
 
 {
-    "name": "Male"
+    "name": "Female"
 }
 
 ###
-DELETE http://localhost:8000/category/9
+PATCH  http://localhost:8000/api/category/3
+Content-Type: application/json
 
+{
+    "name": "Male modified"
+}
 ###
-POST http://localhost:8000/register
-
+DELETE http://localhost:8000/api/category/2
+### REGISTER
+POST http://localhost:8000/api/register
 Content-Type: application/json
 
 {
     "email": "e@email.com",
     "password": "password"
+}
+###
+POST http://localhost:8000/api/review
+Content-Type: application/json
+
+{
+    "product_id": "1",
+    "user_id": "1",
+    "product_rating": "4",
+    "review": "Top parfume this month"
+}
+###
+GET http://localhost:8000/api/review
+jwt-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAZGFzZC5jb20iLCJpYXQiOjE2NTExODY5ODN9.smmC5mO15BP3uqGAVF6jFZygJSudPStRkeCG9qhLEr0 
+
+###
+POST http://localhost:8000/api/user/register
+Content-Type: application/json
+
+{
+    "email": "test22@dasd.com",
+    "password": "Uwuwdwadawd"
+}
+
+###
+POST http://localhost:8000/api/user/login
+Content-Type: application/json
+
+{
+    "email": "test@dasd.com",
+    "password": "Uwuwdwadawd"
 }

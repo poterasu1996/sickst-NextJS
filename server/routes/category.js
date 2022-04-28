@@ -1,7 +1,7 @@
 // category route
 const express = require("express");
 const router = express.Router();
-const pool = require('../config/databasepg');
+const { pool } = require('../config/databasepg');
 
 // get all categories
 router.get("/", async(req, res) => {
@@ -40,11 +40,11 @@ router.post("/", async (req, res) => {
 });
 
 // update a category
-router.put("/:id", async(req, res) => {
+router.patch("/:id", async(req, res) => {
   try {
     const { id } = req.params;
     const { name } = req.body;
-    const updateCategory = await pool.query("UPDATE category SET name = $1 WHERE id = $2", [name, id]);
+    const updateCategory = await pool.query(`UPDATE "category" SET name = $1 WHERE id = $2`, [name, id]);
 
     res.json("Category updated.");
   } catch (error) {

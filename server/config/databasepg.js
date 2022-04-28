@@ -23,7 +23,7 @@ const imageTable = `
         "img" TEXT,
 
         PRIMARY KEY ("id")
-    )
+    );
 `;
 const productTable = `
     CREATE TABLE IF NOT EXISTS "product" (
@@ -32,41 +32,60 @@ const productTable = `
         "model" VARCHAR(100) NOT NULL,
         "type" VARCHAR(100) NOT NULL,
         "price" INTEGER NOT NULL,
-        "category_id" INTEGER REFERENCES category (id),
-        "image_id" INTEGER REFERENCES image (id),
+        "category_id" INTEGER REFERENCES "category" (id),
+        "image_id" INTEGER REFERENCES "image" (id),
 
         PRIMARY KEY ("id")
     )
 `;
 const userTable = `
-    CREATE TABLE IF NOT EXISTS "user" (
+    CREATE TABLE IF NOT EXISTS "customer" (
         "id" SERIAL,
         "email" VARCHAR(100) NOT NULL,
+        UNIQUE (email),
         "password" VARCHAR(255) NOT NULL,
+        "create_date" DATE NOT NULL DEFAULT CURRENT_DATE,
 
         PRIMARY KEY ("id")
-    )
+    );
+`;
+
+const reviewTable = `
+    CREATE TABLE IF NOT EXISTS "review" (
+        "id" SERIAL,
+        "product_id" INTEGER REFERENCES "product" (id),
+        "user_id" INTEGER references "user" (id),
+        "product_rating" REAL,
+        "review" TEXT,
+
+        PRIMARY KEY ("id")
+    );
 `;
 
 function createTables() {
     pool.query(categoryTable)  // create category table
         .then(res => {
-            console.log('Table created');
+            console.log('Category table created');
         })
         .catch(e => console.error(e.stack));
     pool.query(imageTable)     // create image table
         .then(res => {
-            console.log('Table created');
+            console.log('Image table created');
         })
         .catch(e => console.error(e.stack));
     pool.query(productTable)   // create product table
         .then(res => {
-            console.log('Table created');
+            console.log('Product table created');
         })
         .catch(e => console.error(e.stack));
     pool.query(userTable)      // create user table
         .then(res => {
-            console.log('Table created');
+            console.log('User table created');
+        })
+        .catch(e => console.error(e.stack));
+    pool.query(reviewTable)      // create review table
+        .then(res => {
+            console.log('Review table created');
         })
         .catch(e => console.error(e.stack));
 }

@@ -5,7 +5,7 @@ const { pool } = require("../config/databasepg");
 router.get('/', async(req, res) => {
     try {
         const users = await pool.query(
-            `SELECT * FROM "user"`
+            `SELECT * FROM "user";`
         );
         res.json(users.rows);
     } catch (error) {

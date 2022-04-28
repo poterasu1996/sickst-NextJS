@@ -18,8 +18,8 @@ const jwt = require("jsonwebtoken");
 const methodOverride = require("method-override");
 
 // Middleware
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());  // to access body from json
+// app.use(bodyParser.urlencoded({ extended: true }));
 
 // create tables
 createTables();
@@ -71,15 +71,17 @@ createTables();
 //     next();
 //   })
 // }
-function getUsers() {
-  pool.query(`SELECT * FROM "user"`)  // create category table
-      .then(res => {
-          console.log(res.rows);
-      })
-      .catch(e => console.error(e.stack));
-}
 
-console.log('users',getUsers());
+// function getUsers() {
+//   pool.query(`SELECT * FROM "user"`)  // create category table
+//       .then(res => {
+//           console.log(res.rows);
+//       })
+//       .catch(e => console.error(e.stack));
+// }
+
+// console.log('users',getUsers());
+
 // const initializePassport = require('./passport-config');
 // initializePassport(
 //   passport, 
@@ -133,18 +135,19 @@ app.use(passport.session());
 // Static folder
 app.use(express.static(path.join(__dirname, "public")));
 
-// Routes
+// Import Routes
+const authRoute = require('./routes/auth');
+app.use('/api/user', authRoute);
+
 const category =  require('./routes/category');
-app.use('/category', category);
-
-const register = require('./routes/register');
-app.use('/register', register);
-
-const login = require('./routes/login');
-app.use('/login', login);
+app.use('/api/category', category);
 
 const userList = require('./routes/user');
-app.use('/users', userList);
+app.use('/api/user', userList);
+
+const review = require('./routes/review');
+app.use('/api/review', review);
+
 // app.use("/", require("./routes/index"));
 // app.use("/login2", require("./routes/login"));
 
