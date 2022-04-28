@@ -15,16 +15,11 @@ const bodyParser = require("body-parser");
 const pool = require("./config/databasepg");
 // const { pool, createTables } = require("./config/databasepg");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 const methodOverride = require("method-override");
 
 // Middleware
 app.use(express.json());
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // create tables
 // createTables();
@@ -83,11 +78,11 @@ initializePassport(
   email => users.find(user => user.email === email),
   id => users.find(user => user.id === id)
 );
-const users = []  // need to be stored in DB in the future
+// const users = []  // need to be stored in DB in the future
 
 // optional if we work with React
 app.set("view engine", "ejs");
-app.use(express.urlencoded({ extended: false })); // this allows us to access form fiels 
+app.use(express.urlencoded({ extended: false })); // this allows us to access form fields 
 app.use(flash());
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -110,41 +105,6 @@ app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
   failureRedirect: '/login',
   failureFlash: true
 }))
-
-app.get('/register', checkNotAuthenticated, (req, res) => {
-    res.render("register.ejs");
-});
-app.post('/register', async (req, res) => {
-  try {
-      const hashedPassword = await bcrypt.hash(req.body.password, 10);
-      const { email } = req.body;
-
-      console.log('USER: ',req.body.email, hashedPassword)
-      console.log('email ', email)
-      const newUser = await pool.query(
-        "INSERT INTO user (email, password) VALUES($1, $2) RETURNING *",
-        [email, hashedPassword]
-      );
-
-      // const newUser = await pool.query(
-      //   "INSERT INTO user (email, password) VALUES($1, $2) RETURNING *",
-      //   [req.body.email, hashedPassword]
-      // );
-
-      // users.push({
-      // id: Date.now().toString(),
-      // name: req.body.name,
-      // email: req.body.email,
-      // password: hashedPassword
-      // });
-      
-      res.redirect('/login');
-  } catch (error) {
-      console.log(error);
-      res.redirect('register');
-  }
-  console.log(users);
-  });
 
 app.delete('/logout', (req, res) => {
   req.logOut();

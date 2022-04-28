@@ -21,7 +21,7 @@ POST http://localhost:8000/category
 Content-Type: application/json
 
 {
-    "name": "Category2"
+    "name": "Male"
 }
 
 ###
