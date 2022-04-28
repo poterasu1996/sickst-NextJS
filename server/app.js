@@ -12,8 +12,8 @@ const passport = require("passport");
 const session = require("express-session");
 const flash = require("express-flash");
 const bodyParser = require("body-parser");
-const pool = require("./config/databasepg");
-// const { pool, createTables } = require("./config/databasepg");
+// const pool = require("./config/databasepg");
+const { pool, createTables } = require("./config/databasepg");
 const jwt = require("jsonwebtoken");
 const methodOverride = require("method-override");
 
@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // create tables
-// createTables();
+createTables();
 
 // Load config
 // dotenv.config({ path: "./config/config.env" });
@@ -71,14 +71,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //     next();
 //   })
 // }
+function getUsers() {
+  pool.query(`SELECT * FROM "user"`)  // create category table
+      .then(res => {
+          console.log(res.rows);
+      })
+      .catch(e => console.error(e.stack));
+}
 
-const initializePassport = require('./passport-config');
-initializePassport(
-  passport, 
-  email => users.find(user => user.email === email),
-  id => users.find(user => user.id === id)
-);
-// const users = []  // need to be stored in DB in the future
+console.log('users',getUsers());
+// const initializePassport = require('./passport-config');
+// initializePassport(
+//   passport, 
+//   email => users.find(user => user.email === email),
+//   id => users.find(user => user.id === id)
+// );
+
 
 // optional if we work with React
 app.set("view engine", "ejs");
@@ -97,14 +105,6 @@ app.use(methodOverride('_method'));
 app.get('/', checkAuthenticated, (req, res) => {
   res.render('index.ejs', { name: req.user.name });
 })
-app.get('/login', checkNotAuthenticated, (req, res) => {
-  res.render("login.ejs");
-})
-app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
-  successRedirect: '/',
-  failureRedirect: '/login',
-  failureFlash: true
-}))
 
 app.delete('/logout', (req, res) => {
   req.logOut();
@@ -139,6 +139,12 @@ app.use('/category', category);
 
 const register = require('./routes/register');
 app.use('/register', register);
+
+const login = require('./routes/login');
+app.use('/login', login);
+
+const userList = require('./routes/user');
+app.use('/users', userList);
 // app.use("/", require("./routes/index"));
 // app.use("/login2", require("./routes/login"));
 

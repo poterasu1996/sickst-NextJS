@@ -74,5 +74,4 @@ function createTables() {
 
 // pool.query(`DROP TABLE user CASCADE;`);
 
-// module.exports = {createTables};
-module.exports = pool;
+module.exports = {createTables, pool};
