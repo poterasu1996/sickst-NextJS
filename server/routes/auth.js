@@ -21,8 +21,11 @@ router.post('/register', async (req, res) => {
         const newUser = await pool.query(
             `INSERT INTO "customer" (email, password) VALUES($1, $2) RETURNING *`,
             [email, hashedPassword]
-        ).then(res => res.send('User Registered'))
-        .catch(e => res.status(404).send('Already registered!'));
+        ).then(res => res.send('User registered'))
+        .catch(e => {
+            res.status(400).send('User is already registered')
+        });
+        
   
     } catch (error) {
         console.log(error);
@@ -46,7 +49,7 @@ router.post('/login', async (req, res) => {
 
         // If password is correct
         // console.log(userExist.rows[0])
-        const validPW = await bcrypt.compare(req.body.password, userExist.rows[0].password)
+        const validPW = await bcrypt.compare(req.body.password, userExist.rows[0].password);
 
         if(!validPW) return res.status(400).send('Invalid password!');
         // continue with login

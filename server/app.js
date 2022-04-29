@@ -143,7 +143,7 @@ const category =  require('./routes/category');
 app.use('/api/category', category);
 
 const userList = require('./routes/user');
-app.use('/api/user', userList);
+app.use('/api/users', userList);
 
 const review = require('./routes/review');
 app.use('/api/review', review);

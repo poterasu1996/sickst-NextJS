@@ -38,7 +38,7 @@ const productTable = `
         PRIMARY KEY ("id")
     )
 `;
-const userTable = `
+const customerTable = `
     CREATE TABLE IF NOT EXISTS "customer" (
         "id" SERIAL,
         "email" VARCHAR(100) NOT NULL,
@@ -78,9 +78,9 @@ function createTables() {
             console.log('Product table created');
         })
         .catch(e => console.error(e.stack));
-    pool.query(userTable)      // create user table
+    pool.query(customerTable)      // create user table
         .then(res => {
-            console.log('User table created');
+            console.log('Customer table created');
         })
         .catch(e => console.error(e.stack));
     pool.query(reviewTable)      // create review table
