@@ -22,7 +22,7 @@ app.use(express.json());  // to access body from json
 // app.use(bodyParser.urlencoded({ extended: true }));
 
 // create tables
-createTables();
+// createTables();
 
 // Load config
 // dotenv.config({ path: "./config/config.env" });
