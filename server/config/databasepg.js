@@ -44,6 +44,7 @@ const customerTable = `
         "email" VARCHAR(100) NOT NULL,
         UNIQUE (email),
         "password" VARCHAR(255) NOT NULL,
+        "role" VARCHAR(50) DEFAULT 'customer',
         "create_date" DATE NOT NULL DEFAULT CURRENT_DATE,
 
         PRIMARY KEY ("id")
@@ -59,7 +60,7 @@ const reviewTable = `
         "review" TEXT,
 
         PRIMARY KEY ("id")
-    );
+    ); 
 `;
 
 function createTables() {
