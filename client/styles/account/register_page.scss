@@ -197,6 +197,13 @@
                     }
                 }
             }
+            .form-errors {
+                padding: 1.6rem;
+                margin-top: 3rem;
+                background-color: rgba($color: #cc3633, $alpha: .3);
+                color: #cc3633;
+                font-size: 1.6rem;
+            }
             .invalid-field {
                 justify-content: unset;
                 padding-top: .5rem;

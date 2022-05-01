@@ -1,14 +1,20 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import Link from 'next/link';
-import SideModal from './SideModal';
+import SideModal from './global/SideModal';
+import AuthContext from '../store/auth-context';
+import { Menu, ShoppingCart } from 'react-feather';
 
 const Header = () => {
     const [showModal, setShowModal] = useState(false);
+    const { auth } = useContext(AuthContext);
 
+    if (auth) {
+        console.log('auth on header',auth)
+    }
     return (
         <header>
-            <div className="container header">
+            <div className="container header sticky-header">
 
                 <div className='logo'>
                     <Link href="/" >
@@ -32,14 +38,24 @@ const Header = () => {
                 </ul>
 
                 <div className="right-side">
-                    <Link href="/account/login">
-                        <a>Log in</a>
-                    </Link>
+                    { auth 
+                        ? <Link href="/account">
+                            <a>Account</a>
+                        </Link>
+                        : <Link href="/account/login">
+                            <a>Log in</a>
+                        </Link>
+                    }
 
                     <Button 
                         variant='menu'
                         onClick={() => setShowModal(true)}
-                    />
+                    >
+                        {auth 
+                            ? <ShoppingCart />
+                            : <Menu />
+                        } 
+                    </Button>
 
                     <SideModal show={showModal} onClick={() => setShowModal(false)}/>
                 </div>

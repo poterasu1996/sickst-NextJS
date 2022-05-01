@@ -127,9 +127,11 @@ body.modal-open {
   background-color: #cc3633;
   color: #fff;
   border-radius: 0;
-  &:hover {
+  &:hover, &:active, &:active:focus, &:focus {
     background-color: #d24f4d;
     color: #fff;
+    border-color: #d24f4d;
+    box-shadow: unset;
   }
   &.big {
     max-width: 200px;

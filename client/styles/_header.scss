@@ -1,4 +1,5 @@
-@import './side-modal';
+@import "./side-modal";
+@import "./side-modal-cart";
 
 header {
   height: 7rem;
@@ -7,177 +8,176 @@ header {
   font-size: 1.6rem;
   display: flex;
   justify-content: center;
-  border-bottom: 1px solid hsla(0,0%,100%,0.3);
+  border-bottom: 1px solid hsla(0, 0%, 100%, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 999;
   .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .logo {
+      height: 100%;
+      .logo-link {
+        color: #cecece;
+        text-decoration: none;
+        display: flex;
+        height: 100%;
+        padding: 0 3rem;
+        &:hover {
+          background-color: #000;
+        }
+        .big-s {
+          font-size: 5rem;
+          line-height: 7rem;
+          margin: 0;
+        }
+        .sickst {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          line-height: 5.5rem;
+          padding-left: 0.2rem;
+          .pt-1 {
+            font-size: 2.5rem;
+            line-height: 2.5rem;
+            font-weight: 700;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.8rem;
+          }
+          .pt-2 {
+            margin: 0;
+            font-size: 1.1rem;
+            letter-spacing: 0.3rem;
+            line-height: 1.2rem;
+            text-transform: uppercase;
+          }
+        }
+      }
+    }
+    .nav-menu {
+      flex: 1%;
+      height: 100%;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      .logo {
+      margin: 0;
+      padding: 0;
+      text-transform: uppercase;
+      .nav-link {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding: 0;
+        &:hover {
+          background-color: #000;
+        }
+        a {
+          color: #cecece;
+          text-decoration: none;
+          padding: 0 3rem;
+          display: block;
           height: 100%;
-          .logo-link {
-              color: #cecece;
-              text-decoration: none;
-              display: flex;
-              height: 100%;
-              padding: 0 3rem;
-              &:hover {
-                  background-color: #000;
-              }
-              .big-s {
-                  font-size: 5rem;
-                  line-height: 7rem;
-                  margin: 0;
-              }
-              .sickst {
-                  display: flex;
-                  flex-direction: column;
-                  justify-content: center;
-                  line-height: 5.5rem;
-                  padding-left: 0.2rem;
-                  .pt-1 {
-                      font-size: 2.5rem;
-                      line-height: 2.5rem;
-                      font-weight: 700;
-                      margin: 0;
-                      text-transform: uppercase;
-                      letter-spacing: .8rem;
-                  }
-                  .pt-2 {
-                      margin: 0;
-                      font-size: 1.1rem;
-                      letter-spacing: .3rem;
-                      line-height: 1.2rem;
-                      text-transform: uppercase;
-                  }
-              }
+          line-height: 7rem;
+
+          @media (max-width: 768px) {
+            padding: 0 1.5rem;
           }
+        }
       }
-      .nav-menu {
-          flex: 1%;
+    }
+    .right-side {
+      display: flex;
+      height: 100%;
+      align-items: center;
+      text-transform: uppercase;
+      a {
+        color: #cecece;
+        text-decoration: none;
+        display: block;
+        height: 100%;
+        line-height: 7rem;
+        padding: 0 2rem;
+        &:hover {
+          background-color: #000;
+        }
+      }
+      .btn-menu {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        background-color: #1a1a1a;
+        border: none;
+
+        svg {
+          stroke: #cecece;
+        }
+        &:hover {
+          svg {
+            stroke: #cc3633;
+          }
+        }
+        &:focus {
+          box-shadow: none;
+        }
+      }
+      .modal {
+        .modal-dialog {
+          position: fixed;
+          top: 0;
+          right: 0px;
           height: 100%;
-          display: flex;
-          align-items: center;
+          width: 40rem;
           margin: 0;
-          padding: 0;
-          text-transform: uppercase;
-          .nav-link {
-              display: flex;
-              align-items: center;
-              height: 100%;
-              padding: 0;
-              &:hover {
-                  background-color: #000;
+          transition: left ease-in;
+
+          .modal-content {
+            height: 100%;
+            padding: 3rem;
+            text-transform: none;
+            .modal-header {
+              border-bottom: none;
+              .text {
+                font-size: 1.8rem;
+                line-height: 2.8rem;
+                font-weight: 600;
               }
-              a {
-                  color: #cecece;
-                  text-decoration: none;
-                  padding: 0 3rem;
-                  display: block;
-                  height: 100%;
-                  line-height: 7rem;
-                
-                  @media (max-width:768px) {
-                    padding: 0 1.5rem;
+            }
+            .modal-body {
+              .mid-menu {
+                display: flex;
+                flex-direction: column;
+                margin-top: 17rem;
+                a {
+                  font-size: 2.8rem;
+                  line-height: 3.8rem;
+                  font-weight: 600;
+                  padding: 0;
+                  color: #000;
+                  transform-origin: 0 center;
+                  transition: ease 0.2s;
+                  &:hover {
+                    background-color: unset;
+                    transform: scale3d(1.25, 1.25, 1.25);
+                    transition: ease 0.2s;
                   }
+                }
               }
+              .button-second {
+                height: unset;
+                margin: 6rem 0;
+                color: #fff;
+                &:hover {
+                  background-color: #d24f4d;
+                }
+              }
+            }
           }
+        }
       }
-      .right-side {
-          display: flex;
-          height: 100%;
-          align-items: center;
-          text-transform: uppercase;
-          a {
-              color: #cecece;
-              text-decoration: none;
-              display: block;
-              height: 100%;
-              line-height: 7rem;
-              padding: 0 2rem;
-              &:hover {
-                  background-color: #000;
-              }
-          }
-          .btn-menu {
-              display: flex;
-              align-items: center;
-              height: 100%;
-              background-color: #1a1a1a;
-              border: none;
-              &::before {
-                  content: "";
-                  display: block;
-                  background-image: url('../public/img/svg/hamburger-icon.svg');
-                  background-position: center;
-                  background-size: contain;
-                  width: 4.5rem;
-                  height: 4.5rem;
-              }
-              &:hover {
-                background-color: #000;
-              }
-              &:focus {
-                  box-shadow: none;
-              }
-          }
-          .modal {
-              .modal-dialog {
-                  position: fixed;
-                  top: 0;
-                  right: 0px;
-                  height: 100%;
-                  width: 40rem;
-                  margin: 0;
-                  transition: left ease-in;
-                 
-                  
-                  .modal-content {
-                      height: 100%;
-                      padding: 3rem;
-                      text-transform: none;
-                      .modal-header {
-                          border-bottom: none;
-                          .text {
-                              font-size: 1.8rem;
-                              line-height: 2.8rem;
-                              font-weight: 600;
-                          }
-                      }
-                      .modal-body {
-                          .mid-menu {
-                              display: flex;
-                              flex-direction: column;
-                              margin-top: 17rem;
-                              a {
-                                  font-size: 2.8rem;
-                                  line-height: 3.8rem;
-                                  font-weight: 600;
-                                  padding: 0;
-                                  color: #000;
-                                  transform-origin: 0 center;
-                                  transition: ease .2s;
-                                  &:hover {
-                                      background-color: unset;
-                                      transform: scale3d(1.25,1.25,1.25);
-                                      transition: ease .2s;
-                                  }
-                              }
-                          }
-                          .button-second {
-                              height: unset;
-                              margin: 6rem 0;
-                              color: #fff;
-                              &:hover {
-                                  background-color: #d24f4d;
-                              }
-                          }
-                      }
-                  }
-              }
-          }
-      }
+    }
   }
   .register {
-      justify-content: center;
+    justify-content: center;
   }
 }

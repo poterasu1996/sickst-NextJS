@@ -1,11 +1,15 @@
 import { Form, Alert, Button } from "react-bootstrap";
 import { useRef, useState } from "react";
 import { Formik } from "formik";
-import CustomFormField from "./CustomFormField";
+import CustomFormField from "../CustomFormField";
 import * as Yup from 'yup';
-// import { useAuth } from '../../contexts/AuthContext';
+import { useRouter } from "next/router";
 
-export default function Signup() {
+import axios from "../../api/axios";
+const REGISTER_URL = '/auth/local/register';
+
+export default function SignUpForm() {
+  const router = useRouter();
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
@@ -25,18 +29,26 @@ export default function Signup() {
       .required('Confirm password*'),
   });
 
-  async function handleSubmit(e) {
-    console.log(passwordRef)
+  const submitHandler = async (e) => {
     e.preventDefault();
 
-    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-      return setError("Passwords must match!");
-    }
+    const username = emailRef.current.value;
+    const email = emailRef.current.value;
+    const pw = passwordRef.current.value;
 
     try {
       setError("");
       setLoading(true);
-    //   await signup(emailRef.current.value, passwordRef.current.value);
+
+      const response = await axios.post(REGISTER_URL, {
+        username: username,
+        email: email,
+        password: pw,
+      })
+
+      if (response.status === 200) {
+        router.push('/account/login');
+      }
     } catch {
       setError("Failed to create an account.");
     }
@@ -53,7 +65,7 @@ export default function Signup() {
       validationSchema={validate}
     >
       {formik => (
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={submitHandler}>
           <CustomFormField controlid='floatingEmail' name='email' label='Email address' type='email' ref={emailRef}  />
           <CustomFormField controlid='floatingPassword' name='password' label='Password' type='password' ref={passwordRef}  />
           <CustomFormField controlid='floatingPasswordConfirm' name='confirmPassword' label='Password confirmation' type='password' ref={passwordConfirmRef}  />
@@ -74,7 +86,7 @@ export default function Signup() {
               </span>
             </div>
           </div>
-          <Button disabled={loading} className="button-second mt-5" type="submit">Sign up</Button>
+          <Button className="button-second mt-5" type="submit">Sign up</Button>
         </Form>
       )}
     </Formik>

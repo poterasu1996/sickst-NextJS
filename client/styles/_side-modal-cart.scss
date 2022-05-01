@@ -1,0 +1,193 @@
+#side-modal.cart {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 40rem;
+    background-color: #f9f9f9;
+    z-index: 100;
+    padding: 2rem;
+    text-transform: none;
+
+    .side-modal-header{
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+
+        .text{
+            font-size: 1.8rem;
+            line-height: 2.8rem;
+            font-weight: 600;
+        }
+    }
+
+    .side-modal-body {
+        position: relative;
+        flex: 1 1 auto;
+        padding: 1rem;
+        
+        .mid-menu {
+            display: flex;
+            flex-direction: column;
+            margin-top: 0rem;
+            background-color: #fff;
+            border: 1px solid #dcdfe5;
+            
+            .cart-list {
+                padding: 1rem;
+            }
+            .cart-item {
+                display: flex;
+                padding: 2rem 0;
+                border-bottom: 1px solid #dcdfe5;
+                position: relative;
+
+                .btn {
+                    width: 2.4rem;
+                    height: 2.4rem;
+                    position: absolute;
+                    top: 1.5rem;
+                    right: 0;
+                    background-color: #fff;
+                    border: none;
+                    svg {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                    }
+                }
+                &-image {
+                    display: flex;
+                    justify-content: center;
+                    border: 1px solid #dcdfe5;
+                    width: 8rem;
+                    height: 8rem;
+                    margin-right: 2rem;
+                    img {
+                        height: 100%;
+                    }
+                }
+                &-details {
+                    flex: 1;
+                    color: #141414;
+                    .item-brand {
+                        font-size: 1.6rem;
+                        font-weight: 600;
+                        text-transform: uppercase;
+                    }
+                    .item-model, .item-type {
+                        font-size: 1.3rem;
+                        margin-top: .3rem;
+                    }
+                    .item-quantity {
+                        display: flex;
+                        margin-top: 1.4rem;
+                        .quantity-buttons {
+                            display: flex;
+                            .item-remove {
+                                width: 2.6rem;
+                                height: 2.6rem;
+                                background-color: #f1f5f8;
+                                border-radius: 50%;
+                                cursor: pointer;
+                                position: relative;
+
+                                &:hover::before {
+                                    background-color: #000;
+                                }
+                                &::before {
+                                    content: '';
+                                    width: .8rem;
+                                    height: .2rem;
+                                    position: absolute;
+                                    top: 0;
+                                    right: 0;
+                                    bottom: 0;
+                                    left: 0;
+                                    margin: auto;
+                                    background-color: #a8abad;
+                                }
+                            }
+                            .item-count {
+                                text-align: center;
+                                width: 4rem;
+                            }
+                            .item-add {
+                                width: 2.6rem;
+                                height: 2.6rem;
+                                background-color: #f1f5f8;
+                                border-radius: 50%;
+                                cursor: pointer;
+                                position: relative;
+
+                                &:hover::before {
+                                    background-color: #000;
+                                }
+                                &:hover::after {
+                                    background-color: #000;
+                                }
+                                &::before {
+                                    content: '';
+                                    width: .8rem;
+                                    height: .2rem;
+                                    position: absolute;
+                                    top: 0;
+                                    right: 0;
+                                    bottom: 0;
+                                    left: 0;
+                                    margin: auto;
+                                    background-color: #a8abad;
+                                }
+                                &::after {
+                                    content: '';
+                                    width: .2rem;
+                                    height: .8rem;
+                                    position: absolute;
+                                    top: 0;
+                                    right: 0;
+                                    bottom: 0;
+                                    left: 0;
+                                    margin: auto;
+                                    background-color: #a8abad;
+                                }
+                            }
+                        }
+                        .quantity-price {
+                            margin-left: auto;
+                        }
+                    }
+                }
+            }
+            .cart-subtotal {
+                display: flex;
+                font-size: 1.6rem;
+                line-height: 2.6rem;
+                font-weight: 400;
+                padding-top: 2.4rem;
+            }
+            .cart-total {
+                display: flex;
+                font-size: 1.6rem;
+                line-height: 2.6rem;
+                font-weight: 700;
+                > span:not(.cart-price){
+                    text-transform: uppercase;
+                }
+            }
+            .cart-price {
+                margin-left: auto;
+            }
+        }
+
+        .button-second {
+            line-height: 5.4rem;
+            margin: 2rem 0;
+            color: #fff;
+            &:hover {
+                background-color: #d24f4d;
+            }
+        }
+    }
+}
