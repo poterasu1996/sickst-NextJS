@@ -13,10 +13,12 @@
   "pluginOptions": {},
   "attributes": {
     "brand": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "model": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "categories": {
       "type": "relation",
@@ -40,13 +42,18 @@
     },
     "price": {
       "type": "integer",
-      "min": 0
+      "min": 0,
+      "required": true,
+      "default": 0
     },
     "description": {
       "type": "text"
     },
     "rating": {
-      "type": "decimal"
+      "type": "decimal",
+      "default": 0,
+      "min": 0,
+      "max": 5
     },
     "tags": {
       "type": "relation",

@@ -105,8 +105,9 @@
             margin: 2rem 0;
             display: flex;
             justify-content: space-between;
-            .card-button {
-                margin-left: 3.8rem;
+            align-items: center;
+            .spinner-border {
+                margin-left: 2rem;
             }
             .price {
                 font-size: 1.6rem;
@@ -132,8 +133,8 @@
             align-items: center;
             text-align: center;
             img {
-                width: 100%;
                 max-height: 500px;
+                max-width: 500px;
             }
         }
         .product-details {

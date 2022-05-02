@@ -43,26 +43,61 @@ body.modal-open {
   font-size: 16px;
   line-height: 26px;
   font-weight: 700;
+  display: flex;
+  align-items: center;
   position: relative;
-  &::before {
-    content: "+";
-    display: block;
-    position: absolute;
+  cursor: pointer;
+  
+  .check {
+    background-color: #cc3633;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
     text-align: center;
-    color: #fff;
-    font-size: 26px;
-    width: 30px;
-    height: 30px;
-    left: -38px;
-    border-radius: 45px;
+    margin-right: 1rem;
+  }
+  .plus  {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
     background-color: black;
+    position: relative;
+    margin-right: 1rem;
+    
+    &::before {
+      content: "";
+      width: 1.2rem;
+      height: 0.2rem;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      margin: auto;
+      background-color: #fff;
+    }
+    &::after {
+      content: "";
+      height: 1.2rem;
+      width: 0.2rem;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      margin: auto;
+      background-color: #fff;
+    }
   }
   &:hover {
     color: #cc3633;
-    &::before {
-      background-color: #cc3633;
-    }
   }
+  &:hover .plus {
+    background-color: #cc3633;
+  }
+}
+.disabled {
+  cursor: default;
 }
 
 .button-primary {

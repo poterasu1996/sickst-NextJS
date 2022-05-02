@@ -7,7 +7,7 @@ export const CartProvider = ({ children }) => {
         const storageCart = localStorage.getItem('cart');
         setCart(storageCart);
     })
-    const [cart, setCart] = useState();
+    const [cart, setCart] = useState([]);
 
     return (
         <CartContext.Provider value={{cart, setCart}}>
