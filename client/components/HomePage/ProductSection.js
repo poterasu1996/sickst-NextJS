@@ -3,6 +3,10 @@ import image2 from "../../public/img/versace-eros.jpg";
 import image3 from "../../public/img/dolce-gabbana-the-one-for-men.jpg";
 import Product from './Product';
 import { Button } from 'react-bootstrap';
+import { useEffect } from 'react';
+
+import axios from '../../api/axios';
+const PRODUCTS_URL = '/products?populate=*'
 
 const ProductSection = () => {
     const list = [
@@ -49,6 +53,11 @@ const ProductSection = () => {
           price: "550",
         },
       ];
+
+      useEffect(async() => {
+        const response = await axios.get(PRODUCTS_URL);
+        console.log('response',response.data.data);
+      }, [])
     
       const size = 3;
       const items = list.slice(0, size);

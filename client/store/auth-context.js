@@ -4,11 +4,10 @@ const AuthContext =  React.createContext({});
 
 export const AuthProvider = ({ children }) => {
     useEffect(() => {
-        const storageToken = localStorage.getItem('token');
+        const storageToken = localStorage.getItem('jwt');
         setAuth(storageToken);
     })
     const [auth, setAuth] = useState();
-
 
     return (
         <AuthContext.Provider value={{auth, setAuth}}>

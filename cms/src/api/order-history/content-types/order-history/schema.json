@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "order_histories",
+  "info": {
+    "singularName": "order-history",
+    "pluralName": "order-histories",
+    "displayName": "order_history"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "order_type": {
+      "type": "enumeration",
+      "enum": [
+        "Subscription",
+        "One time buy",
+        "Collection"
+      ],
+      "required": true
+    }
+  }
+}

@@ -45,7 +45,7 @@ export default function LogInForm() {
 
       if (jwt) {
         setAuth(jwt);
-        localStorage.setItem('token', jwt);
+        localStorage.setItem('jwt', jwt);
         router.push('/');
       }
     } catch (err) {

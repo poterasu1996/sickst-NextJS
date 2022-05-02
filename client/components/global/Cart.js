@@ -82,7 +82,7 @@ const Cart = (props) => {
                     </div>
                 </div>
             </div>
-            <Link href="/account/register">
+            <Link href="/subscription/payment">
                 <a className="button-second">Checkout</a>
             </Link>
             
