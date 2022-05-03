@@ -11,7 +11,7 @@ const Cart = (props) => {
     const [cartItems, setCartItems] = useState();
     const [loading, setLoading] = useState(true);
     const { cart } = useContext(CartContext);
-    const [orderPrice, setOrderPrice] = useState(listPrice);
+    const [orderPrice, setOrderPrice] = useState();
 
     // const itemList = [
     //     {
@@ -30,21 +30,32 @@ const Cart = (props) => {
     //     },
     // ]
 
-    const listPrice = () => {
-        let total = 0;
-        cart.forEach(element => {
-            console.log('element',element);
-            total = total + parseInt(element.attributes.price);
-        });
-        return total;
-    }
+    useEffect(() => {
+        // move listPrice here?
+        const listPrice = () => {
+            let total = 0;
+            cart.forEach(element => {
+                console.log('element',element);
+                total = total + parseInt(element.attributes.price);
+            });
+            return total;
+        }
+        setOrderPrice(listPrice);
+    }, [cart])
+
+    // const listPrice = () => {
+    //     let total = 0;
+    //     cart.forEach(element => {
+    //         console.log('element',element);
+    //         total = total + parseInt(element.attributes.price);
+    //     });
+    //     return total;
+    // }
 
     function listTotal(item) {
         setOrderPrice(item);
         setLoading(true);
     }
-    
-    console.log('cart', cart)
 
     setTimeout(() => {
         setLoading(false);
@@ -56,39 +67,41 @@ const Cart = (props) => {
             <Button variant="close" onClick={props.onClick} />
         </div>
         <div className="side-modal-body">
-            <div className="mid-menu">
-                <div className="cart-list">
-                    {/* ITEM */}
-                    {(cart.length > 0) 
-                        ? cart.map((item, i) => (
-                            <CartItem key={i} item={item} listTotal={orderPrice} onOrderPrice={(itemPrice) => listTotal(itemPrice)}/>
-                        ))
-                        : <div>Your cart is empty</div>
-                    }
-                    <div className="cart-subtotal">
-                        <span>Subtotal</span>
-                        <span className="cart-price">
-                        {loading 
-                            ? <Spinner animation="border" style={{color: "#cc3663"}}/>
-                            : <>Ron {orderPrice}</>
-                        }
-                        </span>
+            {/* ITEM */}
+            {(cart.length > 0) 
+                ? <>
+                    <div className="mid-menu">
+                        <div className="cart-list">
+                                {cart.map((item, i) => (
+                                    <CartItem key={i} item={item} listTotal={orderPrice} onOrderPrice={(itemPrice) => listTotal(itemPrice)}/>
+                                ))}
+                                
+                            <div className="cart-subtotal">
+                                <span>Subtotal</span>
+                                <span className="cart-price">
+                                {loading 
+                                    ? <Spinner animation="border" style={{color: "#cc3663"}}/>
+                                    : <>Ron {orderPrice}</>
+                                }
+                                </span>
+                            </div>
+                            <div className="cart-total">
+                                <span>Total</span>
+                                <span className="cart-price">
+                                {loading 
+                                    ? <Spinner animation="border" style={{color: "#cc3663"}}/>
+                                    : <>Ron {orderPrice}</>
+                                }
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <div className="cart-total">
-                        <span>Total</span>
-                        <span className="cart-price">
-                        {loading 
-                            ? <Spinner animation="border" style={{color: "#cc3663"}}/>
-                            : <>Ron {orderPrice}</>
-                        }
-                        </span>
-                    </div>
-                </div>
-            </div>{console.log(cart.length > 0)}
-            <Link href="/subscription/payment">
-                <a className="button-second">Checkout</a>
-            </Link>
-            
+                    <Link href="/subscription/payment">
+                        <a className="button-second">Checkout</a>
+                    </Link>
+                </> 
+                : <div className="cart-empty">Your cart is empty</div>
+            }
         </div>
     </>);
 }

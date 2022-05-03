@@ -17,17 +17,15 @@ const Product = ({ product }) => {
   const [loading, setLoading] = useState(false);            // used for loading animation
 
   const addToCart = () => {
-    // add item to cart
+    // set that item is added to cart
     setAddedToCart(true);
 
     if(localStorage.getItem('cart') !== null) {
         const storageProducts = JSON.parse(localStorage.getItem('cart'));
         const newProduct = JSON.stringify([...storageProducts, product]);
         localStorage.setItem('cart', newProduct);
-        // setCart(product);
     } else {
         localStorage.setItem('cart', JSON.stringify([product]));
-        // setCart(product);   // set Cart Context
     }
     setResetCart(true);
     setLoading(true);
@@ -95,7 +93,7 @@ const Product = ({ product }) => {
                       <div className="type">{product.attributes.type}</div>
                       <div className="retail">
                         <b className="brand-color">
-                          RON {product.attributes.price}
+                          RON {product.attributes.retail_value}
                         </b>{" "}
                         Retail value
                       </div>
@@ -122,7 +120,7 @@ const Product = ({ product }) => {
                             <div className="order-info">
                               <div className="volume">8 ml</div>
                               <div className="type">
-                                Subscription <b>RON 60</b>
+                                Subscription <b>RON {product.attributes.subscription_price}</b>
                               </div>
                             </div>
                           </div>
@@ -135,7 +133,7 @@ const Product = ({ product }) => {
                             <div className="order-info">
                               <div className="volume">8 ml</div>
                               <div className="type">
-                                One time <b>RON 80</b>
+                                One time <b>RON {product.attributes.otb_price}</b>
                               </div>
                             </div>
                           </div>
@@ -176,7 +174,7 @@ const Product = ({ product }) => {
             }  
           </div>
           <div>
-            <span className="price">RON: {product.attributes.price}</span>
+            <span className="price">RON: {product.attributes.retail_value}</span>
           </div>
         </div>
       </div>

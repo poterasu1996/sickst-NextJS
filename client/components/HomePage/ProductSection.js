@@ -65,6 +65,7 @@ const ProductSection = () => {
 
   console.log('product list',productList)
 
+  // FILTER PROBLEM
   const showMore = () => {
     if (nrOfItems <= productList.length) {
       setNrOfItems(nrOfItems + 3);
