@@ -30,6 +30,8 @@
                 line-height: 2.6rem;
                 color: #141414;
                 padding: 0 2rem;
+                cursor: pointer;
+                
                 &.active {
                     font-weight: 600;
                     border-bottom: .2rem solid;

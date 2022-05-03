@@ -11,21 +11,26 @@ import CartContext from "../../store/cart-context";
 const SV_URL = "http://localhost:1337";
 
 const Product = ({ product }) => {
-  const [show, setShow] = useState(false);
-  const { cart, setCart } = useContext(CartContext);
-  const [addedToCart, setAddedToCart] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);                  // for Read more modal
+  const { cart, setResetCart } = useContext(CartContext);
+  const [addedToCart, setAddedToCart] = useState(false);    // show the checkmark after added to cart
+  const [loading, setLoading] = useState(false);            // used for loading animation
 
-  const cartItem = [];
   const addToCart = () => {
     // add item to cart
     setAddedToCart(true);
-    cartItem.push(product);
-    setCart(cartItem);
-    setLoading(true);
 
-    console.log('cartItem',cartItem);
-    console.log('cart', cart)
+    if(localStorage.getItem('cart') !== null) {
+        const storageProducts = JSON.parse(localStorage.getItem('cart'));
+        const newProduct = JSON.stringify([...storageProducts, product]);
+        localStorage.setItem('cart', newProduct);
+        // setCart(product);
+    } else {
+        localStorage.setItem('cart', JSON.stringify([product]));
+        // setCart(product);   // set Cart Context
+    }
+    setResetCart(true);
+    setLoading(true);
   }
 
   setTimeout(() => {
@@ -44,7 +49,6 @@ const Product = ({ product }) => {
             ></img>
           </div>
           <span className="tag black">Exclussive</span>
-          {console.log(cart)}
         </div>
         <div className="product-card-rating">
           <Rating
@@ -171,7 +175,7 @@ const Product = ({ product }) => {
                 </div>
             }  
           </div>
-          <div>{console.log(product)}
+          <div>
             <span className="price">RON: {product.attributes.price}</span>
           </div>
         </div>

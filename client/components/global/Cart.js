@@ -1,47 +1,50 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
-import { X } from "react-feather";
 
 import img1 from "../../public/img/creed-aventus.jpg";
 import img2 from "../../public/img/dolce-gabbana-the-one-for-men.jpg";
 import CartItem from "./CartItem";
+import CartContext from "../../store/cart-context";
 
 const Cart = (props) => {
-    const [cartItems, setCartItems] = useState([]);
+    const [cartItems, setCartItems] = useState();
     const [loading, setLoading] = useState(true);
+    const { cart } = useContext(CartContext);
+    const [orderPrice, setOrderPrice] = useState(listPrice);
 
-    const itemList = [
-        {
-            "brand": "Pink Sugar",
-            "model": "Pink Sugar by Aquolina",
-            "image": img1,
-            "type": "Eau de Toilette",
-            "price": "60",
-        },
-        {
-            "brand": "Dior",
-            "model": "Sauvage",
-            "image": img2,
-            "type": "Eau de Parfumme",
-            "price": "80",
-        },
-    ]
+    // const itemList = [
+    //     {
+    //         "brand": "Pink Sugar",
+    //         "model": "Pink Sugar by Aquolina",
+    //         "image": img1,
+    //         "type": "Eau de Toilette",
+    //         "price": "60",
+    //     },
+    //     {
+    //         "brand": "Dior",
+    //         "model": "Sauvage",
+    //         "image": img2,
+    //         "type": "Eau de Parfumme",
+    //         "price": "80",
+    //     },
+    // ]
 
     const listPrice = () => {
         let total = 0;
-        itemList.forEach(element => {
-            total = total + parseInt(element.price);
+        cart.forEach(element => {
+            console.log('element',element);
+            total = total + parseInt(element.attributes.price);
         });
         return total;
     }
-
-    const [orderPrice, setOrderPrice] = useState(listPrice);
 
     function listTotal(item) {
         setOrderPrice(item);
         setLoading(true);
     }
+    
+    console.log('cart', cart)
 
     setTimeout(() => {
         setLoading(false);
@@ -56,8 +59,8 @@ const Cart = (props) => {
             <div className="mid-menu">
                 <div className="cart-list">
                     {/* ITEM */}
-                    {(itemList.length > 0) 
-                        ? itemList.map((item, i) => (
+                    {(cart.length > 0) 
+                        ? cart.map((item, i) => (
                             <CartItem key={i} item={item} listTotal={orderPrice} onOrderPrice={(itemPrice) => listTotal(itemPrice)}/>
                         ))
                         : <div>Your cart is empty</div>
@@ -81,7 +84,7 @@ const Cart = (props) => {
                         </span>
                     </div>
                 </div>
-            </div>
+            </div>{console.log(cart.length > 0)}
             <Link href="/subscription/payment">
                 <a className="button-second">Checkout</a>
             </Link>

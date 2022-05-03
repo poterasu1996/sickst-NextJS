@@ -55,15 +55,15 @@ const PRODUCTS_URL = "/products?populate=*";
 
 const ProductSection = () => {
   const [maleTab, setMaleTab] = useState(true);
-  const [femaleTab, setFemaleTab] = useState(false);
   const [nrOfItems, setNrOfItems] = useState(3);
   const [productList, setProductList] = useState();
-  const [filteredList, setFilteredList] = useState();
 
   useEffect(async () => {
     const response = await axios.get(PRODUCTS_URL);
     setProductList(response.data.data);
   }, []);
+
+  console.log('product list',productList)
 
   const showMore = () => {
     if (nrOfItems <= productList.length) {
@@ -73,31 +73,28 @@ const ProductSection = () => {
     }
   }
 
-  const filterTabMale = () => {
-    setMaleTab(true);
-    setFemaleTab(false);
-
-    const filteredProducts = productList.filter(product => product.attributes.categories.data[0].attributes.name === "Male");
-    setFilteredList(filteredProducts);
-  }
-  const filterTabFemale = () => {
-    setMaleTab(false);
-    setFemaleTab(true);
-  }
-
   const itemsToShow = useMemo(() => {
-    filterTabMale();
-
-    if(filteredList){
-      return filteredList
+    if(productList && maleTab){
+      return productList
         .slice(0, nrOfItems)
+        .filter(product => product.attributes.categories.data[0].attributes.name === "Male")
         .map((product, i) => (
           <Product
             key={i}
             product={product}
           />
         ));
-    }
+      } else if (productList && !maleTab){
+      return productList
+        .slice(0, nrOfItems)
+        .filter(product => product.attributes.categories.data[0].attributes.name === "Female")
+        .map((product, i) => (
+          <Product
+            key={i}
+            product={product}
+          />
+        ));
+      }
   })
 
   return (
@@ -105,8 +102,8 @@ const ProductSection = () => {
       <div className="container">
         <div className="title">Cele mai dorite parfumuri</div>
         <div className="filter-tabs">
-          <div className={maleTab && "active man"} onClick={filterTabMale}>Pentru el</div>
-          <div className={femaleTab && "active man"} onClick={filterTabFemale}>Pentru ea</div>
+          <div className={maleTab ? "active man" : ""} onClick={() => setMaleTab(true)}>Pentru el</div>
+          <div className={!maleTab ? "active man" : ""} onClick={() => setMaleTab(false)}>Pentru ea</div>
         </div>
 
         <div className="products">
@@ -115,7 +112,7 @@ const ProductSection = () => {
           </div>
         </div>
         <div className="more-prod">
-          {(productList && (nrOfItems < productList.length))
+          {(productList && (nrOfItems < productList.length - 1))
             && <Button className="button-second-empty" onClick={showMore}>
               Vezi mai multe produse
             </Button>

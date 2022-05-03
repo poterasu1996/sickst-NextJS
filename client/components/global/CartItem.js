@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
 import { X } from "react-feather";
 
+const SV_URL = "http://localhost:1337";
+
 const CartItem = ({ item, listTotal, onOrderPrice }) => {
     const [count, setCount] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -10,14 +12,14 @@ const CartItem = ({ item, listTotal, onOrderPrice }) => {
         if(count > 1) {
             setCount(count - 1);
             setLoading(true);
-            onOrderPrice(listTotal - parseInt(item.price));
+            onOrderPrice(listTotal - parseInt(item.attributes.price));
         }
     }
     
     const orderPlus = () => {
         setCount(count + 1);
         setLoading(true);
-        onOrderPrice(listTotal + parseInt(item.price));
+        onOrderPrice(listTotal + parseInt(item.attributes.price));
     }
 
     setTimeout(() => {
@@ -27,12 +29,12 @@ const CartItem = ({ item, listTotal, onOrderPrice }) => {
     return (
         <div className="cart-item">
             <div className="cart-item-image">
-                <img src={item.image.src}></img>
+                <img src={`${SV_URL}` + item.attributes.image.data[0].attributes.url}></img>
             </div>
             <div className="cart-item-details">
-                <div className="item-brand">{item.brand}</div>{listTotal}
-                <div className="item-model">{item.model}</div>
-                <div className="item-type">{item.type}</div>
+                <div className="item-brand">{item.attributes.brand}</div>
+                <div className="item-model">{item.attributes.model}</div>
+                <div className="item-type">{item.attributes.type}</div>
                 <div className="item-quantity">
                     <div className="quantity-buttons">
                         <div className="item-remove" onClick={orderMinus}></div>
@@ -42,7 +44,7 @@ const CartItem = ({ item, listTotal, onOrderPrice }) => {
                     <div className="quantity-price">
                         {loading 
                             ? <Spinner animation="border" style={{color: "#cc3663"}}/>
-                            : <>Ron {item.price * count}</>
+                            : <>Ron {item.attributes.price * count}</>
                         }
                     </div>
                 </div>

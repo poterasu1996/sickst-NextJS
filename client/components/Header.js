@@ -9,9 +9,10 @@ const Header = () => {
     const [showModal, setShowModal] = useState(false);
     const { auth } = useContext(AuthContext);
 
-    if (auth) {
-        console.log('auth on header',auth)
-    }
+    // if (auth) {
+    //     console.log('auth on header',auth)
+    // }
+
     return (
         <header>
             <div className="container header sticky-header">
