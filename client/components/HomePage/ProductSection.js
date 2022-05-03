@@ -52,9 +52,13 @@ const PRODUCTS_URL = "/products?populate=*";
 //       price: "550",
 //     },
 //   ];
+
 const ProductSection = () => {
-  const [productList, setProductList] = useState();
+  const [maleTab, setMaleTab] = useState(true);
+  const [femaleTab, setFemaleTab] = useState(false);
   const [nrOfItems, setNrOfItems] = useState(3);
+  const [productList, setProductList] = useState();
+  const [filteredList, setFilteredList] = useState();
 
   useEffect(async () => {
     const response = await axios.get(PRODUCTS_URL);
@@ -69,9 +73,23 @@ const ProductSection = () => {
     }
   }
 
+  const filterTabMale = () => {
+    setMaleTab(true);
+    setFemaleTab(false);
+
+    const filteredProducts = productList.filter(product => product.attributes.categories.data[0].attributes.name === "Male");
+    setFilteredList(filteredProducts);
+  }
+  const filterTabFemale = () => {
+    setMaleTab(false);
+    setFemaleTab(true);
+  }
+
   const itemsToShow = useMemo(() => {
-    if(productList){
-      return productList
+    filterTabMale();
+
+    if(filteredList){
+      return filteredList
         .slice(0, nrOfItems)
         .map((product, i) => (
           <Product
@@ -80,7 +98,6 @@ const ProductSection = () => {
           />
         ));
     }
-
   })
 
   return (
@@ -88,15 +105,13 @@ const ProductSection = () => {
       <div className="container">
         <div className="title">Cele mai dorite parfumuri</div>
         <div className="filter-tabs">
-          <a className="active man" href="#">
-            Pentru el
-          </a>
-          <a href="#">Pentru ea</a>
+          <div className={maleTab && "active man"} onClick={filterTabMale}>Pentru el</div>
+          <div className={femaleTab && "active man"} onClick={filterTabFemale}>Pentru ea</div>
         </div>
 
         <div className="products">
           <div className="row">
-            {itemsToShow ? itemsToShow : <Spinner animation="grow"/>}
+            {itemsToShow ? itemsToShow : <div className="d-flex justify-content-center main-spinner"><Spinner animation="grow" style={{color: "#cc3633"}}/></div>}
           </div>
         </div>
         <div className="more-prod">

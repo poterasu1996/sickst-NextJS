@@ -61,7 +61,7 @@ const Product = ({ product }) => {
         </div>
         <div className="product-card-fragrance">Fragrance elements</div>
         <div className="product-card-description">
-          {product.attributes.description.substring(0, 195) + "..."}
+          {product.attributes.description && (product.attributes.description.substring(0, 195) + "...")}
           <Button onClick={() => setShow(!show)}>Read more</Button>
           <Modal
             className="product-card-modal"
@@ -171,7 +171,7 @@ const Product = ({ product }) => {
                 </div>
             }  
           </div>
-          <div>
+          <div>{console.log(product)}
             <span className="price">RON: {product.attributes.price}</span>
           </div>
         </div>
