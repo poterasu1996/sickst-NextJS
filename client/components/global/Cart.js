@@ -8,21 +8,21 @@ import CartContext from "../../store/cart-context";
 const Cart = (props) => {
     const [loading, setLoading] = useState(true);
     const [orderPrice, setOrderPrice] = useState();
-    const { manager } = useContext(CartContext);
+    const { cartManager } = useContext(CartContext);
 
     useEffect(() => {
         const listPrice = () => {
             let total = 0;
-            manager.cart && manager.cart.forEach(element => {
+            cartManager.cart && cartManager.cart.forEach(element => {
                 total = total + parseInt(element.attributes.subscription_price);
             });
             return total;
         }
         setOrderPrice(listPrice);
-    }, [manager.cart])
+    }, [cartManager.cart])
 
     const listTotal = (item) => {
-        setOrderPrice(item);
+        setOrderPrice();
         setLoading(true);
     }
 
@@ -37,11 +37,11 @@ const Cart = (props) => {
         </div>
         <div className="side-modal-body">
             {/* ITEM */}
-            {(manager.cart && manager.cart.length > 0) 
+            {(cartManager.cart && cartManager.cart.length > 0) 
                 ? <>
                     <div className="mid-menu">
                         <div className="cart-list">
-                                {manager.cart.map((item, i) => (
+                                {cartManager.cart.map((item, i) => (
                                     <CartItem key={i} item={item} listTotal={orderPrice} onOrderPrice={(item) => listTotal(item)}/>
                                 ))}
                                 

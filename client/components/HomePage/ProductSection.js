@@ -63,8 +63,6 @@ const ProductSection = () => {
     setProductList(response.data.data);
   }, []);
 
-  console.log('product list',productList)
-
   // FILTER PROBLEM
   const showMore = () => {
     if (nrOfItems <= productList.length) {

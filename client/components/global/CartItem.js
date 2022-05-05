@@ -8,7 +8,7 @@ const SV_URL = "http://localhost:1337";
 const CartItem = ({ item, listTotal, onOrderPrice }) => {
     const [count, setCount] = useState(1);
     const [loading, setLoading] = useState(false);
-    const { manager } = useContext(CartContext);
+    const { cartManager } = useContext(CartContext);
 
     const orderMinus = () => {
         if(count > 1) {
@@ -52,8 +52,11 @@ const CartItem = ({ item, listTotal, onOrderPrice }) => {
                 </div>
             </div>
             <Button onClick={() => {
-                manager.removeProduct(item);
-                onOrderPrice(listTotal - parseInt(item.attributes.subscription_price) * count);
+                const removePrice = parseInt(item.attributes.subscription_price) * count;
+                console.log('remove price: ', removePrice);
+                console.log('list price: ', listTotal - removePrice);
+                onOrderPrice(listTotal - removePrice);
+                cartManager.removeProduct(item);
             }}>
                 <X stroke="#cc3663" width={20} height={20} />
             </Button>
