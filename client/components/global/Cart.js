@@ -21,7 +21,7 @@ const Cart = (props) => {
         setOrderPrice(listPrice);
     }, [manager.cart])
 
-    function listTotal(item) {
+    const listTotal = (item) => {
         setOrderPrice(item);
         setLoading(true);
     }
@@ -42,7 +42,7 @@ const Cart = (props) => {
                     <div className="mid-menu">
                         <div className="cart-list">
                                 {manager.cart.map((item, i) => (
-                                    <CartItem key={i} item={item} listTotal={orderPrice} onOrderPrice={(itemPrice) => listTotal(itemPrice)}/>
+                                    <CartItem key={i} item={item} listTotal={orderPrice} onOrderPrice={(item) => listTotal(item)}/>
                                 ))}
                                 
                             <div className="cart-subtotal">
