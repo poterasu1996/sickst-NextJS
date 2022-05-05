@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 const CartContext = React.createContext([]);
 
 export const CartProvider = ({ children }) => {
-    const [resetCart, setResetCart] = useState(false)
-    const [cart, setCart] = useState([]);
+    const [resetCart, setResetCart] = useState(false)   // reset cart each time add/delete action is made
+    const [cart, setCart] = useState([]);               // set the cart list
 
     useEffect(() => {
         const storageCart = JSON.parse(localStorage.getItem('cart'));
@@ -35,17 +35,17 @@ export const CartProvider = ({ children }) => {
         })
         if(newList.length > 0) {
             setCart(newList);
-            localStorage.setItem('cart', JSON.stringify(newList));
+            localStorage.setItem('cart', JSON.stringify(newList));  // set new cart list with removed item
         } else {
             setCart(newList);
-            localStorage.removeItem('cart');
+            localStorage.removeItem('cart');    // if list is empty, remove cart from storage
         }
     };
 
-    const hasProduct = (product) => {
+    const hasProduct = (product) => {   // place a checkmark if item is in cart list
         if(localStorage.getItem('cart') !== null) {
             const cartList = JSON.parse(localStorage.getItem('cart'));
-            const exist = cartList.filter(item => product.id === item.id);
+            const exist = cartList.filter(item => product.id === item.id); 
             if(exist.length > 0) {
                 return true;
             } 
@@ -55,12 +55,12 @@ export const CartProvider = ({ children }) => {
         }
     };
 
-    const manager = {
+    const cartManager = {
         cart, setCart, setResetCart, addProduct, removeProduct, hasProduct
     }
 
     return (
-        <CartContext.Provider value={{manager}}>
+        <CartContext.Provider value={{cartManager}}>
             {children}
         </CartContext.Provider>
     );

@@ -12,7 +12,7 @@ const SV_URL = "http://localhost:1337";
 
 const Product = ({ product }) => {
   const [show, setShow] = useState(false);                  // for Read more modal
-  const { manager } = useContext(CartContext);
+  const { cartManager } = useContext(CartContext);
   const [addedToCart, setAddedToCart] = useState(false);    // show the checkmark after added to cart
   const [loading, setLoading] = useState(false);            // used for loading animation
 
@@ -144,7 +144,7 @@ const Product = ({ product }) => {
         </div>
         <div className="product-card-button">
           <div>
-            {manager.hasProduct(product)
+            {cartManager.hasProduct(product)
                 ? loading 
                     ? <Spinner animation="border" style={{color: "#cc3663"}}/>
                     : <div className="card-button disabled">
@@ -155,7 +155,7 @@ const Product = ({ product }) => {
                     </div>
                 : <div className="card-button" onClick={() => {
                     setAddedToCart(true);
-                    manager.addProduct(product);
+                    cartManager.addProduct(product);
                     setLoading(true);
                 }}>
                     <div className="plus"></div>Add to cart
