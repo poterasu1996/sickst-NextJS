@@ -15,8 +15,32 @@ export const CartProvider = ({ children }) => {
         setResetCart(false);
     }, 500);
 
+    const addProduct = (product) => {
+        if(localStorage.getItem('cart') !== null) {
+            const storageProducts = JSON.parse(localStorage.getItem('cart'));
+            const newProduct = JSON.stringify([...storageProducts, product]);
+            localStorage.setItem('cart', newProduct);
+        } else {
+            localStorage.setItem('cart', JSON.stringify([product]));
+        }
+        setResetCart(true);
+        // setLoading(true);
+    };
+
+    const removeProduct = (product) => {
+
+    };
+
+    const hasProduct = () => {
+
+    };
+
+    const manager = {
+        cart, setCart, setResetCart, addProduct, removeProduct, hasProduct
+    }
+
     return (
-        <CartContext.Provider value={{cart, setCart, setResetCart}}>
+        <CartContext.Provider value={manager}>
             {children}
         </CartContext.Provider>
     );

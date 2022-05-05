@@ -12,14 +12,14 @@ const CartItem = ({ item, listTotal, onOrderPrice }) => {
         if(count > 1) {
             setCount(count - 1);
             setLoading(true);
-            onOrderPrice(listTotal - parseInt(item.attributes.price));
+            onOrderPrice(listTotal - parseInt(item.attributes.subscription_price));
         }
     }
     
     const orderPlus = () => {
         setCount(count + 1);
         setLoading(true);
-        onOrderPrice(listTotal + parseInt(item.attributes.price));
+        onOrderPrice(listTotal + parseInt(item.attributes.subscription_price));
     }
 
     setTimeout(() => {
@@ -44,7 +44,7 @@ const CartItem = ({ item, listTotal, onOrderPrice }) => {
                     <div className="quantity-price">
                         {loading 
                             ? <Spinner animation="border" style={{color: "#cc3663"}}/>
-                            : <>Ron {item.attributes.price * count}</>
+                            : <>Ron {item.attributes.subscription_price * count}</>
                         }
                     </div>
                 </div>

@@ -36,22 +36,14 @@ const Cart = (props) => {
             let total = 0;
             cart.forEach(element => {
                 console.log('element',element);
-                total = total + parseInt(element.attributes.price);
+                total = total + parseInt(element.attributes.subscription_price);
             });
             return total;
         }
         setOrderPrice(listPrice);
     }, [cart])
 
-    // const listPrice = () => {
-    //     let total = 0;
-    //     cart.forEach(element => {
-    //         console.log('element',element);
-    //         total = total + parseInt(element.attributes.price);
-    //     });
-    //     return total;
-    // }
-
+    console.log('order price', orderPrice)
     function listTotal(item) {
         setOrderPrice(item);
         setLoading(true);
