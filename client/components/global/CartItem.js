@@ -51,7 +51,10 @@ const CartItem = ({ item, listTotal, onOrderPrice }) => {
                     </div>
                 </div>
             </div>
-            <Button onClick={() => manager.removeProduct(item)}>
+            <Button onClick={() => {
+                manager.removeProduct(item);
+                onOrderPrice(listTotal - parseInt(item.attributes.subscription_price) * count);
+            }}>
                 <X stroke="#cc3663" width={20} height={20} />
             </Button>
         </div>

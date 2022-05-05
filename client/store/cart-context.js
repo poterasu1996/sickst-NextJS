@@ -23,6 +23,7 @@ export const CartProvider = ({ children }) => {
             localStorage.setItem('cart', JSON.stringify(newProduct));
         } else {
             localStorage.setItem('cart', JSON.stringify([product]));
+            setCart([product]);
         }
     };
 
@@ -47,9 +48,8 @@ export const CartProvider = ({ children }) => {
             const exist = cartList.filter(item => product.id === item.id);
             if(exist.length > 0) {
                 return true;
-            } else {
-                return false;
-            }
+            } 
+            return false;
         } else {
             return false;
         }
