@@ -15,24 +15,44 @@ export const CartProvider = ({ children }) => {
         setResetCart(false);
     }, 500);
 
-    const addProduct = (product) => {
+    function addProduct(product) {
         if(localStorage.getItem('cart') !== null) {
             const storageProducts = JSON.parse(localStorage.getItem('cart'));
-            const newProduct = JSON.stringify([...storageProducts, product]);
-            localStorage.setItem('cart', newProduct);
+            const newProduct = [...storageProducts, product];
+            setCart(newProduct);
+            localStorage.setItem('cart', JSON.stringify(newProduct));
         } else {
             localStorage.setItem('cart', JSON.stringify([product]));
         }
-        setResetCart(true);
-        // setLoading(true);
     };
 
     const removeProduct = (product) => {
-
+        const cartList = JSON.parse(localStorage.getItem('cart'));
+        // return a new list without the selected item
+        const newList = cartList.filter(el => {
+            return el.id !== product.id;
+        })
+        if(newList.length > 0) {
+            setCart(newList);
+            localStorage.setItem('cart', JSON.stringify(newList));
+        } else {
+            setCart(newList);
+            localStorage.removeItem('cart');
+        }
     };
 
-    const hasProduct = () => {
-
+    const hasProduct = (product) => {
+        if(localStorage.getItem('cart') !== null) {
+            const cartList = JSON.parse(localStorage.getItem('cart'));
+            const exist = cartList.filter(item => product.id === item.id);
+            if(exist.length > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     };
 
     const manager = {
@@ -40,7 +60,7 @@ export const CartProvider = ({ children }) => {
     }
 
     return (
-        <CartContext.Provider value={manager}>
+        <CartContext.Provider value={{manager}}>
             {children}
         </CartContext.Provider>
     );

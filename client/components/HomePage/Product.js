@@ -16,23 +16,8 @@ const Product = ({ product }) => {
   const [addedToCart, setAddedToCart] = useState(false);    // show the checkmark after added to cart
   const [loading, setLoading] = useState(false);            // used for loading animation
 
-  // const addToCart = () => {
-  //   // set that item is added to cart
-  //   setAddedToCart(true);
-
-  //   if(localStorage.getItem('cart') !== null) {
-  //       const storageProducts = JSON.parse(localStorage.getItem('cart'));
-  //       const newProduct = JSON.stringify([...storageProducts, product]);
-  //       localStorage.setItem('cart', newProduct);
-  //   } else {
-  //       localStorage.setItem('cart', JSON.stringify([product]));
-  //   }
-  //   setResetCart(true);
-  //   setLoading(true);
-  // }
-
   setTimeout(() => {
-    setLoading(false);
+    setLoading(false);  // to clear loading state
   }, 500);
 
   return (
@@ -159,7 +144,7 @@ const Product = ({ product }) => {
         </div>
         <div className="product-card-button">
           <div>
-            {addedToCart
+            {manager.hasProduct(product)
                 ? loading 
                     ? <Spinner animation="border" style={{color: "#cc3663"}}/>
                     : <div className="card-button disabled">
@@ -169,9 +154,10 @@ const Product = ({ product }) => {
                         <span>Added</span>
                     </div>
                 : <div className="card-button" onClick={() => {
+                    setAddedToCart(true);
                     manager.addProduct(product);
                     setLoading(true);
-                  }}>
+                }}>
                     <div className="plus"></div>Add to cart
                 </div>
             }  

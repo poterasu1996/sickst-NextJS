@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Button, Spinner } from "react-bootstrap";
 import { X } from "react-feather";
+import CartContext from "../../store/cart-context";
 
 const SV_URL = "http://localhost:1337";
 
 const CartItem = ({ item, listTotal, onOrderPrice }) => {
     const [count, setCount] = useState(1);
     const [loading, setLoading] = useState(false);
+    const { manager } = useContext(CartContext);
 
     const orderMinus = () => {
         if(count > 1) {
@@ -49,7 +51,7 @@ const CartItem = ({ item, listTotal, onOrderPrice }) => {
                     </div>
                 </div>
             </div>
-            <Button>
+            <Button onClick={() => manager.removeProduct(item)}>
                 <X stroke="#cc3663" width={20} height={20} />
             </Button>
         </div>
