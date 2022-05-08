@@ -21,7 +21,7 @@ const Product = ({ product }) => {
   }, 500);
 
   return (
-    <div className="col-6 col-lg-4">
+    <div className="col col-sm-6 col-lg-4">
       <div className="product-card">
         <div className="product-card-image">
           <div className="product-card-image-wrapper">
@@ -60,7 +60,7 @@ const Product = ({ product }) => {
             <ModalHeader toggle={() => setShow(!show)}></ModalHeader>
             <ModalBody>
               <div className="row modal-container">
-                <div className="col-6">
+                <div className="col-12 col-md-4 col-lg-6">
                   <div className="img-wrapper">
                     <img
                       src={
@@ -70,7 +70,7 @@ const Product = ({ product }) => {
                     ></img>
                   </div>
                 </div>
-                <div className="col-6">
+                <div className="col col-md-8 col-lg-6">
                   <div className="product-details">
                     <div className="title">{product.attributes.brand}</div>
                     <div className="model">{product.attributes.model}</div>
@@ -155,7 +155,7 @@ const Product = ({ product }) => {
                     </div>
                 : <div className="card-button" onClick={() => {
                     setAddedToCart(true);
-                    cartManager.addProduct(product);
+                    cartManager.addProduct(product, 1);
                     setLoading(true);
                 }}>
                     <div className="plus"></div>Add to cart
@@ -163,7 +163,7 @@ const Product = ({ product }) => {
             }  
           </div>
           <div>
-            <span className="price">RON: {product.attributes.retail_value}</span>
+            <div className="price">RON: {product.attributes.retail_value}</div>
           </div>
         </div>
       </div>

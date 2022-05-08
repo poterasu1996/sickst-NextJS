@@ -7,12 +7,12 @@ const Footer = () => {
     return <footer>
         <div className="container footer">
             <div className="row">
-                <div className="col-4">
-                    <span className="logo">Sickst</span>
-                    <span className="text">Descopera un nou parfum in fiecare luna pentru 60 RON.</span>
+                <div className="col-6 col-sm-3 col-md-3">
+                    <div className="logo">Sickst</div>
+                    <div className="text">Descopera un nou parfum in fiecare luna pentru 60 RON.</div>
                 </div>
-                <div className="col-2">
-                    <span className="title">Despre Sickst</span>
+                <div className="col-6 col-sm-3 col-md-3 col-about" >
+                    <div className="title">Despre Sickst</div>
                     <ul>
                         <li className="list-item">
                             <Link href="/about-us">
@@ -36,8 +36,8 @@ const Footer = () => {
                         </li>
                     </ul>
                 </div>
-                <div className="col-2">
-                    <span className="title">Shop</span>
+                <div className="col-6 col-sm-3 col-md-3 col-shop">
+                    <div className="title">Shop</div>
                     <ul>
                         <li className="list-item">
                             <Link href="#">
@@ -61,8 +61,8 @@ const Footer = () => {
                         </li>
                     </ul>
                 </div>
-                <div className="col">
-                    <span className="title">Follow us</span>
+                <div className="col-6 col-sm-3 col-md-3 col-last">
+                    <div className="title">Follow us</div>
                     <div className="social-links">
                         <Link href="#">
                             <a className="insta">

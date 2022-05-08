@@ -1,9 +1,11 @@
 import { FloatingLabel, Form } from 'react-bootstrap';
-import React from 'react';
+import React, { useState } from 'react';
 import { ErrorMessage, useField } from 'formik';
+import PhoneInput from 'react-phone-number-input/input';
 
 const FormField = (props, ref) => {
     const [field, meta] = useField(props);
+
     return (
         <>
             <FloatingLabel
@@ -11,14 +13,13 @@ const FormField = (props, ref) => {
                 label={props.label}
                 className="form-field"
             >
-                <Form.Control 
-                    type={props.type}
-                    placeholder="Email address"
+                <PhoneInput 
                     name={props.name}
+                    placeholder="Phone number"
+                    country="RO" 
                     ref={ref}
-                    required
                     {...field}{...props}
-                    className={`${meta.touched && meta.error && 'invalid-form-control'}`}
+                    className={`form-control ${meta.touched && meta.error && 'invalid-form-control'}`}
                 />
                 <div className='invalid-field'>
                     <ErrorMessage name={field.name} />
@@ -28,6 +29,6 @@ const FormField = (props, ref) => {
     );
 }
 
-const CustomFormField = React.forwardRef(FormField);
+const CustomPhoneFormField = React.forwardRef(FormField);
 
-export default CustomFormField;
+export default CustomPhoneFormField;

@@ -9,6 +9,31 @@ footer {
             padding: 2rem 0;
             margin: 0;
             margin-bottom: 2rem;
+            .col-about {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                .title {
+                    margin-left: -2.6rem;
+                }
+                ul {
+                    margin-left: -3rem;
+                }
+            }
+            .col-last {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                .title {
+                    margin-left: -4rem;
+                }
+                .social-links {
+                    margin-left: -2rem;
+                }
+                ul {
+                    margin-left: -1rem;
+                }
+            }
             .col-4 {
                 display: flex;
                 flex-direction: column;

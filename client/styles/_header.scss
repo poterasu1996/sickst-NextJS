@@ -16,6 +16,9 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    @media (max-width:500px) {
+      padding: 0;
+    }
     .logo {
       height: 100%;
       .logo-link {
@@ -24,6 +27,11 @@ header {
         display: flex;
         height: 100%;
         padding: 0 3rem;
+        @media (max-width:500px) {
+          align-items: center;
+          padding: 0;
+          padding-left: 1.5rem;
+        }
         &:hover {
           background-color: #000;
         }
@@ -31,6 +39,10 @@ header {
           font-size: 5rem;
           line-height: 7rem;
           margin: 0;
+          @media (max-width:500px) {
+            font-size: 3rem;
+            line-height: 4rem;
+          }
         }
         .sickst {
           display: flex;
@@ -38,6 +50,10 @@ header {
           justify-content: center;
           line-height: 5.5rem;
           padding-left: 0.2rem;
+          @media (max-width:500px) {
+            line-height: 3.5rem;
+            justify-content: flex-end;
+          }
           .pt-1 {
             font-size: 2.5rem;
             line-height: 2.5rem;
@@ -45,6 +61,10 @@ header {
             margin: 0;
             text-transform: uppercase;
             letter-spacing: 0.8rem;
+            @media (max-width:500px) {
+              font-size: 1.5rem;
+              line-height: 1.5rem;
+            }
           }
           .pt-2 {
             margin: 0;
@@ -52,6 +72,11 @@ header {
             letter-spacing: 0.3rem;
             line-height: 1.2rem;
             text-transform: uppercase;
+            @media (max-width:500px) {
+              font-size: .7rem;
+              line-height: 1.5rem;
+              padding-top: 0 !important;
+            }
           }
         }
       }
@@ -64,6 +89,9 @@ header {
       margin: 0;
       padding: 0;
       text-transform: uppercase;
+      @media (max-width:500px) {
+        justify-content: center;
+      }
       .nav-link {
         display: flex;
         align-items: center;
@@ -91,6 +119,9 @@ header {
       height: 100%;
       align-items: center;
       text-transform: uppercase;
+      @media (max-width:500px) {
+        padding-right: 1rem;
+      }
       a {
         color: #cecece;
         text-decoration: none;

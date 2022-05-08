@@ -55,6 +55,9 @@ const SideModal = (props) => {
                                         </Link>
                                     </div>
                                     
+                                    <Link href="/account/login">
+                                        <a className="button-second d-block d-sm-none">Log in</a>
+                                    </Link>
                                     <Link href="/account/register">
                                         <a className="button-second">Autentificare</a>
                                     </Link>

@@ -58,10 +58,16 @@ const ProductSection = () => {
   const [nrOfItems, setNrOfItems] = useState(3);
   const [productList, setProductList] = useState();
 
-  useEffect(async () => {
-    const response = await axios.get(PRODUCTS_URL);
-    setProductList(response.data.data);
+  useEffect(() => {
+    axios.get(PRODUCTS_URL)
+      .then(response => setProductList(response.data.data));
+    
   }, []);
+
+  // useEffect(async () => {
+  //   const response = await axios.get(PRODUCTS_URL);
+  //   setProductList(response.data.data);
+  // }, []);
 
   // FILTER PROBLEM
   const showMore = () => {
