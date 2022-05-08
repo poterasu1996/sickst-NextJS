@@ -4,7 +4,8 @@
   "info": {
     "singularName": "order-history",
     "pluralName": "order-histories",
-    "displayName": "order_history"
+    "displayName": "order_history",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -19,6 +20,15 @@
         "Collection"
       ],
       "required": true
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "order_history"
+    },
+    "product_list": {
+      "type": "json"
     }
   }
 }

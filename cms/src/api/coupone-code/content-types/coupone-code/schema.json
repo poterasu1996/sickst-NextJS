@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "coupone_codes",
+  "info": {
+    "singularName": "coupone-code",
+    "pluralName": "coupone-codes",
+    "displayName": "coupone_code"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "discount_procent": {
+      "type": "integer",
+      "min": 0,
+      "default": 0
+    },
+    "active": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

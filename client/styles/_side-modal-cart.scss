@@ -8,6 +8,9 @@
     z-index: 100;
     padding: 2rem;
     text-transform: none;
+    @media (max-width:500px) {
+        width: 100%;
+      }
 
     .side-modal-header{
         display: flex;

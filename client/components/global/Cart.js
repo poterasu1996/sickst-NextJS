@@ -7,24 +7,7 @@ import CartContext from "../../store/cart-context";
 
 const Cart = (props) => {
     const [loading, setLoading] = useState(true);
-    const [orderPrice, setOrderPrice] = useState();
     const { cartManager } = useContext(CartContext);
-
-    useEffect(() => {
-        const listPrice = () => {
-            let total = 0;
-            cartManager.cart && cartManager.cart.forEach(element => {
-                total = total + parseInt(element.attributes.subscription_price);
-            });
-            return total;
-        }
-        setOrderPrice(listPrice);
-    }, [cartManager.cart])
-
-    const listTotal = (item) => {
-        setOrderPrice();
-        setLoading(true);
-    }
 
     setTimeout(() => {
         setLoading(false);
@@ -42,7 +25,7 @@ const Cart = (props) => {
                     <div className="mid-menu">
                         <div className="cart-list">
                                 {cartManager.cart.map((item, i) => (
-                                    <CartItem key={i} item={item} listTotal={orderPrice} onOrderPrice={(item) => listTotal(item)}/>
+                                    <CartItem key={i} item={item} handleLoading={setLoading}/>
                                 ))}
                                 
                             <div className="cart-subtotal">
@@ -50,7 +33,7 @@ const Cart = (props) => {
                                 <span className="cart-price">
                                 {loading 
                                     ? <Spinner animation="border" style={{color: "#cc3663"}}/>
-                                    : <>Ron {orderPrice}</>
+                                    : <>Ron {cartManager.total()}</>
                                 }
                                 </span>
                             </div>
@@ -59,7 +42,7 @@ const Cart = (props) => {
                                 <span className="cart-price">
                                 {loading 
                                     ? <Spinner animation="border" style={{color: "#cc3663"}}/>
-                                    : <>Ron {orderPrice}</>
+                                    : <>Ron {cartManager.total()}</>
                                 }
                                 </span>
                             </div>
