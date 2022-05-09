@@ -72,12 +72,12 @@ const PaymentPage = () => {
                                     : <b>0</b>}
                             </div>
                         </div>
-                        <div className="total">
+                        <div className="total">{couponValue && console.log('CM - ', cartManager.total(couponValue.discount))}
                             Total: { loading
                                 ? <Spinner animation="border" style={{color: "#cc3663"}}/>
                                 : (couponValue && couponValue.discount)
-                                    ? <b className="brand-color ms-4">RON {parseInt('50') - (parseInt('50') * (parseInt(couponValue.discount) / 100))}</b>
-                                    : <b className="brand-color ms-4">RON 50</b>
+                                    ? <b className="brand-color ms-4">RON {cartManager.total(couponValue.discount)}</b>
+                                    : <b className="brand-color ms-4">RON {cartManager.total()}</b>
                             } 
                         </div>
 
@@ -88,8 +88,8 @@ const PaymentPage = () => {
                 </div>
                 <div className="right-side">
                     <div className="shipment-title">Shipment details</div>
-                    <div className="shipment-details">
-                        <ShipmentForm />
+                    <div className="shipment-details">{console.log(cartManager.cartTotal)}
+                        <ShipmentForm cartTotal={cartManager.cartTotal}/>
                         {/* <CreditCardForm /> */}
                     </div>
                 </div>
