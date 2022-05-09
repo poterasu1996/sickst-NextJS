@@ -5,6 +5,7 @@ const CartContext = React.createContext([]);
 export const CartProvider = ({ children }) => {
     const [resetCart, setResetCart] = useState(false)   // reset cart each time add/delete action is made
     const [cart, setCart] = useState([]);               // set the cart list
+    const [cartTotal, setCartTotal] = useState();
     // const [cartTotal, setCartTotal] = useState(0);
 
     useEffect(() => {
@@ -89,16 +90,22 @@ export const CartProvider = ({ children }) => {
         return total;
     }
 
-    const total = () => {
+    const total = (coupone) => {
         let total = 0;
         cart.map((item) => {
             total = total + item.quantity * item.product.attributes.subscription_price;
         })
+        if(coupone) {
+            total = total - (total * (coupone / 100));
+            setCartTotal(total);
+            return total;
+        }
+        setCartTotal(total);
         return total;
     }
 
     const cartManager = {
-        cart, setCart, setResetCart, addProduct, removeProduct, hasProduct, quantityProduct, productTotal, total
+        cart, setCart, setResetCart, addProduct, removeProduct, hasProduct, quantityProduct, productTotal, total, cartTotal
     }
 
     return (

@@ -12,7 +12,7 @@ import { Lock } from "react-feather";
 import CreditCardForm from "../SubscriptionPage/CreditCardForm";
 const REGISTER_URL = "/auth/local/register";
 
-export default function ShipmentForm() {
+export default function ShipmentForm({ cartTotal }) {
   const router = useRouter();
   const addressRef = useRef();
   const phoneRef = useRef();
@@ -128,7 +128,7 @@ export default function ShipmentForm() {
               </Col>
             </Row>
 
-            <Button className="button-second mt-5" type="submit">Total X lei</Button>
+            <Button className="button-second mt-5" type="submit">Total {cartTotal} lei</Button>
           </Form>
         )}
       </Formik>

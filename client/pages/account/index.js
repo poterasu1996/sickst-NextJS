@@ -13,6 +13,12 @@ const Account = () => {
                     <ul className="nav-menu">
                         <li className="nav-link active"><a href="#">Order history</a></li>
                         <li className="nav-link"><a href="#">Manage subscription</a></li>
+                        <li className="nav-link"><a href="#">Billing information</a></li>
+                        <li className="nav-link"><a href="#">Shipping information</a></li>
+                        <li className="nav-link"><a href="#">My reviews</a></li>
+                        <li className="nav-link"><a href="#">Rated products</a></li>
+                        <li className="nav-link"><a href="#">Personal info</a></li>
+                        <li className="nav-link"><a href="#">Reset password</a></li>
                     </ul>
                 </div>
                 <div className="content">content</div>

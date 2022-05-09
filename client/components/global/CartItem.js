@@ -5,39 +5,28 @@ import CartContext from "../../store/cart-context";
 
 const SV_URL = "http://localhost:1337";
 
-const CartItem = ({ item, handleLoading }) => {
+const CartItem = ({ item, listTotal, onOrderPrice }) => {
+    const [count, setCount] = useState(1);
     const [loading, setLoading] = useState(false);
     const { cartManager } = useContext(CartContext);
 
-    const thisItemQT = () => {
-        const cItem = cartManager.cart.find(elem => elem.product.id === item.product.id);
-        return cItem.quantity;
-    }
-
     const orderMinus = () => {
-        const remove = 'remove';
-
-        if(thisItemQT() > 1) {
-            cartManager.quantityProduct(item, remove);
+        if(count > 1) {
+            setCount(count - 1);
             setLoading(true);
-            handleLoading(true);
+            onOrderPrice(listTotal - parseInt(item.product.attributes.subscription_price));
         }
     }
     
     const orderPlus = () => {
-        const add = 'add';
-
+        setCount(count + 1);
         setLoading(true);
-        handleLoading(true);
-        cartManager.quantityProduct(item, add);
+        onOrderPrice(listTotal + parseInt(item.product.attributes.subscription_price));
     }
-
-    
 
     setTimeout(() => {
         setLoading(false);
     }, 500);
-
 
     return (
         <div className="cart-item">
@@ -51,19 +40,22 @@ const CartItem = ({ item, handleLoading }) => {
                 <div className="item-quantity">
                     <div className="quantity-buttons">
                         <div className="item-remove" onClick={orderMinus}></div>
-                        <div className="item-count">{thisItemQT()}</div>
+                        <div className="item-count">{count}</div>
                         <div className="item-add" onClick={orderPlus}></div>
                     </div>
                     <div className="quantity-price">
                         {loading 
                             ? <Spinner animation="border" style={{color: "#cc3663"}}/>
-                            : <>Ron {cartManager.productTotal(item)}</>
+                            : <>Ron {item.product.attributes.subscription_price * count}</>
                         }
                     </div>
                 </div>
             </div>
             <Button onClick={() => {
-                handleLoading(true);
+                const removePrice = parseInt(item.product.attributes.subscription_price) * count;
+                console.log('remove price: ', removePrice);
+                console.log('list price: ', listTotal - removePrice);
+                onOrderPrice(listTotal - removePrice);
                 cartManager.removeProduct(item);
             }}>
                 <X stroke="#cc3663" width={20} height={20} />
