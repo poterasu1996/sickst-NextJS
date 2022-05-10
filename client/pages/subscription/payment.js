@@ -5,6 +5,7 @@ import { X } from "react-feather";
 import ShipmentForm from "../../components/auth/ShipmentForm";
 import CouponeForm from "../../components/global/CouponeForm";
 import CreditCardForm from "../../components/SubscriptionPage/CreditCardForm";
+import StripeContainer from "../../components/SubscriptionPage/StripeContainer";
 import CartContext from "../../store/cart-context";
 
 const SV_URL = "http://localhost:1337";
@@ -91,6 +92,7 @@ const PaymentPage = () => {
                     <div className="shipment-details">{console.log(cartManager.cartTotal)}
                         <ShipmentForm cartTotal={cartManager.cartTotal}/>
                         {/* <CreditCardForm /> */}
+                        <StripeContainer />
                     </div>
                 </div>
             </div>

@@ -2,6 +2,9 @@
     width: 100%;
     background-color: #f9f9f9;
     padding: 6rem 0;
+    @media (max-width:700px) {
+        padding: 2rem 0 6rem 0;
+    }
     .container {
         padding: 0;
         .title {
@@ -48,6 +51,13 @@
         display: flex;
         justify-content: center;
         margin-top: 6rem;
+        @media (max-width:990px) {
+            margin-top: 4rem;
+        }
+        @media (max-width:540px) {
+            margin-top: 2rem;
+        }
+
         & > button {
             max-width: 250px;
         }
