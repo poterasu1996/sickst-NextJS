@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import cardImg1 from '../../public/img/parfume-img.jpg'
+import cardImg1 from '../../public/img/mystery.jpg'
 
 const CollectionSection = () => {
     return <>
@@ -11,7 +11,8 @@ const CollectionSection = () => {
                 {/* card */}
                 <div className="col-4 card">
                     <div className="card-image">
-                        <Image src={cardImg1}/>
+                        {/* <Image src={cardImg1}/> */}
+                        <img src={cardImg1.src}></img>
                     </div>
                     <div className="card-content">
                         <div className="title">Make It Happen</div>
@@ -25,7 +26,8 @@ const CollectionSection = () => {
 
                 <div className="col-4 card">
                     <div className="card-image">
-                        <Image src={cardImg1}/>
+                        {/* <Image src={cardImg1}/> */}
+                        <img src={cardImg1.src}></img>
                     </div>
                     <div className="card-content">
                         <div className="title">Make It Happen</div>
@@ -35,7 +37,8 @@ const CollectionSection = () => {
                 </div>
                 <div className="col-4 card">
                     <div className="card-image">
-                        <Image src={cardImg1}/>
+                        {/* <Image src={cardImg1}/> */}
+                        <img src={cardImg1.src}></img>
                     </div>
                     <div className="card-content">
                         <div className="title">Make It Happen</div>
