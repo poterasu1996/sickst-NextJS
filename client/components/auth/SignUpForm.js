@@ -21,6 +21,7 @@ export default function SignUpForm() {
   const [loading, setLoading] = useState(false);
   const [cbFemale, setCbFemale] = useState(true);
   const [cbMale, setCbMale] = useState(false);
+  const [newsletter, setNewsletter] = useState(true);
   
 //   const { signup } = useAuth();
   const validate = Yup.object({
@@ -45,6 +46,10 @@ export default function SignUpForm() {
     }
   }
 
+  function handleNewsletter() {
+    setNewsletter((prev) => !prev);
+  }
+
   const submitHandler = async (e) => {
     e.preventDefault();
 
@@ -60,6 +65,8 @@ export default function SignUpForm() {
         username: username,
         email: email,
         password: pw,
+        sex: cbFemale ? 'female' : 'male',
+        newsletter: newsletter
       })
 
       if (response.status === 200) {
@@ -76,8 +83,7 @@ export default function SignUpForm() {
       initialValues={{
         email: '',
         password: '',
-        confirmPassword: '',
-        sex: cbFemale ? 'female' : 'male'
+        confirmPassword: ''
       }}
       validationSchema={validate}
     >
@@ -85,14 +91,14 @@ export default function SignUpForm() {
         <Form onSubmit={submitHandler}>
           <div className="gender-icons">
             <Form.Check>
-              <Form.Check.Label onClick={() => {handleGender('female')}}>
+              <Form.Check.Label onChange={() => {handleGender('female')}}>
                 <Image src={femaleIcon} width={100} height={100} />
                 {cbFemale && <div className="checked"><Check strokeWidth={'3px'} height={22} width={22} stroke={'#cc3633'}/></div>}
                 <Form.Check.Input type="radio" checked={cbFemale}/>
               </Form.Check.Label>
             </Form.Check>
             <Form.Check>
-              <Form.Check.Label onClick={() => {handleGender('male')}}>
+              <Form.Check.Label onChange={() => {handleGender('male')}}>
                 <Image src={maleIcon} width={100} height={100} />
                 {cbMale && <div className="checked"><Check strokeWidth={'3px'} height={22} width={22} stroke={'#cc3633'}/></div>}
                 <Form.Check.Input type="radio" checked={cbMale}/>
@@ -104,8 +110,8 @@ export default function SignUpForm() {
           <CustomFormField controlid='floatingPasswordConfirm' name='confirmPassword' label='Password confirmation' type='password' ref={passwordConfirmRef}  />
           
           <div className="form-field newsletter">
-            <label className="check-box">
-              <input className="cb" type="checkbox"></input>
+            <label className="check-box" onChange={() => handleNewsletter()}>
+              <input className="cb" type="checkbox" checked={newsletter}></input>
               <span className="custom-cb"></span>
               <span className="text">Sign me up for details from Sickst</span>
             </label>

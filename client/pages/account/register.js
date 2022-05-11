@@ -16,20 +16,6 @@ const Register = () => {
                         <div className="col-lg-5 subtitle">
                             <span>Selecteaza sexul</span>
                         </div>
-                        {/* <div className="col-lg-5 gender-icons">
-                            <div className="female">
-                                <a href="#">
-                                    <Image src={femaleIcon} width={100} height={100} />
-                                    <span>Female</span>
-                                </a>
-                            </div>
-                            <div className="male">
-                                <a href="#">
-                                    <Image src={maleIcon} width={100} height={100} />
-                                    <span>Male</span>
-                                </a>
-                            </div>
-                        </div> */}
                         <div className="col-lg-5">
                             <div className="form">
                                 <SignUpForm />
