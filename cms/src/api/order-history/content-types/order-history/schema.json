@@ -25,7 +25,7 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user",
-      "inversedBy": "order_history"
+      "mappedBy": "order_history"
     },
     "product_list": {
       "type": "json"
