@@ -3,6 +3,7 @@ module.exports = ({ env }) => ({
   port: env.int('PORT', 1337),
   url: env('PUBLIC_URL', 'http://sickst.ro'),
   app: {
+    proxy: env.bool("IS_PROXY"),
     keys: env.array('APP_KEYS'),
   },
 });

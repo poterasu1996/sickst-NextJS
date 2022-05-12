@@ -1,6 +1,25 @@
 version: "3"
 
 services:
+  proxy:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/sikst.ro.conf
+    networks:
+      - default
+      - traefik_web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sickst_http.rule=Host(`sickst.ro`)"
+      - "traefik.http.routers.sickst_http.entrypoints=web"
+      - "traefik.http.routers.sickst_http.middlewares=https_redirect"
+      - "traefik.http.routers.sickst_https.rule=Host(`sickst.ro`)"
+      - "traefik.http.routers.sickst_https.entrypoints=websecure"
+      - "traefik.http.routers.sickst_https.tls.certresolver=lencrypt"
+      - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+    ports:
+      - 80:80
+
   db:
     image: postgres:12
     volumes:
@@ -25,6 +44,8 @@ services:
       - API_TOKEN_SALT=w7ERujMT4m#S)n^hS-,/LJ4BYwk@;?Dz
       - ADMIN_JWT_SECRET=+g`\8A`d\yV~Gs-D3-xpZ-3>6:@dY3)Q
       - PUBLIC_URL=http://sickst.ro
+      - NODE_ENV=development
+      - IS_PROXY=true
     ports:
       - 1337:1337
 
@@ -32,9 +53,16 @@ services:
     build:
       context: ../client
     environment:
-      - name=value
+      - REACT_APP_STRAPI_APIURL=https://sickst.ro/api
+      - REACT_APP_BASEURL=https://sickst.ro
     ports:
       - 3000:3000
 
 volumes:
   data: {}
+  caddy_data: {}
+  caddy_config: {}
+
+networks:
+  traefik_web:
+    external: true
