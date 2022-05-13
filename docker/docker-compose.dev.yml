@@ -55,8 +55,9 @@ services:
       context: ../client
     restart: unless-stopped
     environment:
-      - REACT_APP_STRAPI_APIURL=https://sickst.ro/api
-      - REACT_APP_BASEURL=https://sickst.ro
+      - NEXT_PUBLIC_STRAPI_APIURL=https://sickst.ro/api
+      - NEXT_PUBLIC_STRAPI_ROOTURL=https://sickst.ro
+      - NEXT_PUBLIC_BASEURL=https://sickst.ro
     # ports:
     #   - 3000:3000
 
