@@ -47,7 +47,7 @@ services:
       - API_TOKEN_SALT=w7ERujMT4m#S)n^hS-,/LJ4BYwk@;?Dz
       - ADMIN_JWT_SECRET=+g`\8A`d\yV~Gs-D3-xpZ-3>6:@dY3)Q
       - PUBLIC_URL=https://sickst.ro
-      - NODE_ENV=development
+      - NODE_ENV=production
       - IS_PROXY=true
     # ports:
     #   - 1337:1337
