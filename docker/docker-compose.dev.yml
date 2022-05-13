@@ -54,10 +54,10 @@ services:
     build:
       context: ../client
     restart: unless-stopped
-    environment:
-      - NEXT_PUBLIC_STRAPI_APIURL=https://sickst.ro/api
-      - NEXT_PUBLIC_STRAPI_ROOTURL=https://sickst.ro
-      - NEXT_PUBLIC_BASEURL=https://sickst.ro
+    # environment:
+    #   - NEXT_PUBLIC_STRAPI_APIURL=https://sickst.ro/api
+    #   - NEXT_PUBLIC_STRAPI_ROOTURL=https://sickst.ro
+    #   - NEXT_PUBLIC_BASEURL=https://sickst.ro
     # ports:
     #   - 3000:3000
 
