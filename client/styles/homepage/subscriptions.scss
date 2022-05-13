@@ -6,6 +6,7 @@
         margin: 0;
         padding: 3rem 2rem;
     }
+    
     .col {
         padding: 0;
         .container {
@@ -27,9 +28,22 @@
         flex-direction: column;
         justify-content: space-evenly;
         padding: 0 3rem;
+        @media (max-width:700px) {
+            padding: 0;
+        }
         .text {
             display: flex;
             flex-direction: column;
+            @media (max-width:700px) {
+                padding-right: 1rem;
+            }
+        }
+        .button-second {
+            @media (max-width:700px) {
+                // margin: auto;
+                margin-top: 3rem;
+                margin-bottom: 3rem;
+            }
         }
         .title {
             font-size: 3.8rem;

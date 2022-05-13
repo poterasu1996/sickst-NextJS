@@ -63,9 +63,6 @@ const ProductSection = () => {
     setProductList(response.data.data);
   }, []);
 
-  console.log('product list',productList)
-
-  // FILTER PROBLEM
   const showMore = () => {
     if (nrOfItems <= productList.length) {
       setNrOfItems(nrOfItems + 3);
@@ -77,8 +74,8 @@ const ProductSection = () => {
   const itemsToShow = useMemo(() => {
     if(productList && maleTab){
       return productList
-        .slice(0, nrOfItems)
         .filter(product => product.attributes.categories.data[0].attributes.name === "Male")
+        .slice(0, nrOfItems)
         .map((product, i) => (
           <Product
             key={i}
@@ -87,8 +84,8 @@ const ProductSection = () => {
         ));
       } else if (productList && !maleTab){
       return productList
-        .slice(0, nrOfItems)
         .filter(product => product.attributes.categories.data[0].attributes.name === "Female")
+        .slice(0, nrOfItems)
         .map((product, i) => (
           <Product
             key={i}

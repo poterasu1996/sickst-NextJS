@@ -41,10 +41,10 @@ const Header = () => {
                 <div className="right-side">
                     { auth 
                         ? <Link href="/account">
-                            <a>Account</a>
+                            <a className='d-none d-sm-block'>Account</a>
                         </Link>
                         : <Link href="/account/login">
-                            <a>Log in</a>
+                            <a className='d-none d-sm-block'>Log in</a>
                         </Link>
                     }
 

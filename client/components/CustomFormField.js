@@ -20,10 +20,10 @@ const FormField = (props, ref) => {
                     {...field}{...props}
                     className={`${meta.touched && meta.error && 'invalid-form-control'}`}
                 />
+                <div className='invalid-field'>
+                    <ErrorMessage name={field.name} />
+                </div>
             </FloatingLabel>
-            <div className='invalid-field'>
-                <ErrorMessage name={field.name} />
-            </div>
         </>
     );
 }

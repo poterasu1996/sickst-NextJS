@@ -2,52 +2,12 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
 
-import img1 from "../../public/img/creed-aventus.jpg";
-import img2 from "../../public/img/dolce-gabbana-the-one-for-men.jpg";
 import CartItem from "./CartItem";
 import CartContext from "../../store/cart-context";
 
 const Cart = (props) => {
-    const [cartItems, setCartItems] = useState();
     const [loading, setLoading] = useState(true);
-    const { cart } = useContext(CartContext);
-    const [orderPrice, setOrderPrice] = useState();
-
-    // const itemList = [
-    //     {
-    //         "brand": "Pink Sugar",
-    //         "model": "Pink Sugar by Aquolina",
-    //         "image": img1,
-    //         "type": "Eau de Toilette",
-    //         "price": "60",
-    //     },
-    //     {
-    //         "brand": "Dior",
-    //         "model": "Sauvage",
-    //         "image": img2,
-    //         "type": "Eau de Parfumme",
-    //         "price": "80",
-    //     },
-    // ]
-
-    useEffect(() => {
-        // move listPrice here?
-        const listPrice = () => {
-            let total = 0;
-            cart.forEach(element => {
-                console.log('element',element);
-                total = total + parseInt(element.attributes.subscription_price);
-            });
-            return total;
-        }
-        setOrderPrice(listPrice);
-    }, [cart])
-
-    console.log('order price', orderPrice)
-    function listTotal(item) {
-        setOrderPrice(item);
-        setLoading(true);
-    }
+    const { cartManager } = useContext(CartContext);
 
     setTimeout(() => {
         setLoading(false);
@@ -60,12 +20,12 @@ const Cart = (props) => {
         </div>
         <div className="side-modal-body">
             {/* ITEM */}
-            {(cart.length > 0) 
+            {(cartManager.cart && cartManager.cart.length > 0) 
                 ? <>
                     <div className="mid-menu">
                         <div className="cart-list">
-                                {cart.map((item, i) => (
-                                    <CartItem key={i} item={item} listTotal={orderPrice} onOrderPrice={(itemPrice) => listTotal(itemPrice)}/>
+                                {cartManager.cart.map((item, i) => (
+                                    <CartItem key={i} item={item} handleLoading={setLoading}/>
                                 ))}
                                 
                             <div className="cart-subtotal">
@@ -73,7 +33,7 @@ const Cart = (props) => {
                                 <span className="cart-price">
                                 {loading 
                                     ? <Spinner animation="border" style={{color: "#cc3663"}}/>
-                                    : <>Ron {orderPrice}</>
+                                    : <>Ron {cartManager.total()}</>
                                 }
                                 </span>
                             </div>
@@ -82,7 +42,7 @@ const Cart = (props) => {
                                 <span className="cart-price">
                                 {loading 
                                     ? <Spinner animation="border" style={{color: "#cc3663"}}/>
-                                    : <>Ron {orderPrice}</>
+                                    : <>Ron {cartManager.total()}</>
                                 }
                                 </span>
                             </div>

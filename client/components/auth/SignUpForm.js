@@ -4,8 +4,12 @@ import { Formik } from "formik";
 import CustomFormField from "../CustomFormField";
 import * as Yup from 'yup';
 import { useRouter } from "next/router";
+import { Check } from 'react-feather';
+import maleIcon from "../../public/img/male-icon.png"
+import femaleIcon from "../../public/img/female-icon.jpg"
 
 import axios from "../../api/axios";
+import Image from "next/image";
 const REGISTER_URL = '/auth/local/register';
 
 export default function SignUpForm() {
@@ -15,6 +19,9 @@ export default function SignUpForm() {
   const passwordConfirmRef = useRef();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [cbFemale, setCbFemale] = useState(true);
+  const [cbMale, setCbMale] = useState(false);
+  const [newsletter, setNewsletter] = useState(true);
   
 //   const { signup } = useAuth();
   const validate = Yup.object({
@@ -28,6 +35,20 @@ export default function SignUpForm() {
       .oneOf([Yup.ref('password'), null], 'Password must match*')
       .required('Confirm password*'),
   });
+
+  function handleGender(value) {
+    if(value === 'female') {
+      cbMale && setCbMale(!cbMale);
+      !cbFemale && setCbFemale(!cbFemale);
+    } else {
+      !cbMale && setCbMale(!cbMale);
+      cbFemale && setCbFemale(!cbFemale);
+    }
+  }
+
+  function handleNewsletter() {
+    setNewsletter((prev) => !prev);
+  }
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -44,6 +65,8 @@ export default function SignUpForm() {
         username: username,
         email: email,
         password: pw,
+        sex: cbFemale ? 'female' : 'male',
+        newsletter: newsletter
       })
 
       if (response.status === 200) {
@@ -66,13 +89,29 @@ export default function SignUpForm() {
     >
       {formik => (
         <Form onSubmit={submitHandler}>
+          <div className="gender-icons">
+            <Form.Check>
+              <Form.Check.Label onChange={() => {handleGender('female')}}>
+                <Image src={femaleIcon} width={100} height={100} />
+                {cbFemale && <div className="checked"><Check strokeWidth={'3px'} height={22} width={22} stroke={'#cc3633'}/></div>}
+                <Form.Check.Input type="radio" checked={cbFemale}/>
+              </Form.Check.Label>
+            </Form.Check>
+            <Form.Check>
+              <Form.Check.Label onChange={() => {handleGender('male')}}>
+                <Image src={maleIcon} width={100} height={100} />
+                {cbMale && <div className="checked"><Check strokeWidth={'3px'} height={22} width={22} stroke={'#cc3633'}/></div>}
+                <Form.Check.Input type="radio" checked={cbMale}/>
+              </Form.Check.Label>
+            </Form.Check>
+          </div>
           <CustomFormField controlid='floatingEmail' name='email' label='Email address' type='email' ref={emailRef}  />
           <CustomFormField controlid='floatingPassword' name='password' label='Password' type='password' ref={passwordRef}  />
           <CustomFormField controlid='floatingPasswordConfirm' name='confirmPassword' label='Password confirmation' type='password' ref={passwordConfirmRef}  />
           
           <div className="form-field newsletter">
-            <label className="check-box">
-              <input className="cb" type="checkbox"></input>
+            <label className="check-box" onChange={() => handleNewsletter()}>
+              <input className="cb" type="checkbox" checked={newsletter}></input>
               <span className="custom-cb"></span>
               <span className="text">Sign me up for details from Sickst</span>
             </label>

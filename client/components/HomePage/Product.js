@@ -8,41 +8,26 @@ import orderImg from "../../public/img/order-img.png";
 import Link from "next/link";
 import CartContext from "../../store/cart-context";
 
-// const SV_URL = "http://localhost:1337";
+const SV_URL = "http://localhost:1337";
 
 const Product = ({ product }) => {
   const [show, setShow] = useState(false);                  // for Read more modal
-  const { manager } = useContext(CartContext);
+  const { cartManager } = useContext(CartContext);
   const [addedToCart, setAddedToCart] = useState(false);    // show the checkmark after added to cart
   const [loading, setLoading] = useState(false);            // used for loading animation
 
-  // const addToCart = () => {
-  //   // set that item is added to cart
-  //   setAddedToCart(true);
-
-  //   if(localStorage.getItem('cart') !== null) {
-  //       const storageProducts = JSON.parse(localStorage.getItem('cart'));
-  //       const newProduct = JSON.stringify([...storageProducts, product]);
-  //       localStorage.setItem('cart', newProduct);
-  //   } else {
-  //       localStorage.setItem('cart', JSON.stringify([product]));
-  //   }
-  //   setResetCart(true);
-  //   setLoading(true);
-  // }
-
   setTimeout(() => {
-    setLoading(false);
+    setLoading(false);  // to clear loading state
   }, 500);
 
   return (
-    <div className="col-6 col-lg-4">
+    <div className="col col-sm-6 col-lg-4">
       <div className="product-card">
         <div className="product-card-image">
           <div className="product-card-image-wrapper">
             <img
               src={
-                `${process.env.NEXT_PUBLIC_STRAPI_APIURL}` + product.attributes.image.data[0].attributes.url
+                `${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` + product.attributes.image.data[0].attributes.url
               }
             ></img>
           </div>
@@ -75,17 +60,17 @@ const Product = ({ product }) => {
             <ModalHeader toggle={() => setShow(!show)}></ModalHeader>
             <ModalBody>
               <div className="row modal-container">
-                <div className="col-6">
+                <div className="col-12 col-md-4 col-lg-6">
                   <div className="img-wrapper">
                     <img
                       src={
-                        `${process.env.NEXT_PUBLIC_STRAPI_APIURL}` +
+                        `${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` +
                         product.attributes.image.data[0].attributes.url
                       }
                     ></img>
                   </div>
                 </div>
-                <div className="col-6">
+                <div className="col col-md-8 col-lg-6">
                   <div className="product-details">
                     <div className="title">{product.attributes.brand}</div>
                     <div className="model">{product.attributes.model}</div>
@@ -159,7 +144,7 @@ const Product = ({ product }) => {
         </div>
         <div className="product-card-button">
           <div>
-            {addedToCart
+            {cartManager.hasProduct(product)
                 ? loading 
                     ? <Spinner animation="border" style={{color: "#cc3663"}}/>
                     : <div className="card-button disabled">
@@ -169,15 +154,16 @@ const Product = ({ product }) => {
                         <span>Added</span>
                     </div>
                 : <div className="card-button" onClick={() => {
-                    manager.addProduct(product);
+                    setAddedToCart(true);
+                    cartManager.addProduct(product, 1);
                     setLoading(true);
-                  }}>
+                }}>
                     <div className="plus"></div>Add to cart
                 </div>
             }  
           </div>
           <div>
-            <span className="price">RON: {product.attributes.retail_value}</span>
+            <div className="price">RON: {product.attributes.retail_value}</div>
           </div>
         </div>
       </div>
