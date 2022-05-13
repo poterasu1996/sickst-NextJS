@@ -8,7 +8,7 @@ import CreditCardForm from "../../components/SubscriptionPage/CreditCardForm";
 import StripeContainer from "../../components/SubscriptionPage/StripeContainer";
 import CartContext from "../../store/cart-context";
 
-const SV_URL = "http://localhost:1337";
+// const SV_URL = "http://localhost:1337";
 
 const PaymentPage = () => {
     const router = useRouter();
@@ -36,7 +36,7 @@ const PaymentPage = () => {
                         cartManager.cart.map((item, i) => (
                             <div className="cart-item" key={i}>
                                 <div className="cart-item-image">
-                                    <img src={`${SV_URL}` + item.product.attributes.image.data[0].attributes.url}></img>
+                                    <img src={`${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` + item.product.attributes.image.data[0].attributes.url}></img>
                                 </div>
                                 <div className="cart-item-details">
                                     <div className="item-brand">{item.product.attributes.brand}</div>
