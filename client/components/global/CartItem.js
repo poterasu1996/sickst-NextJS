@@ -3,7 +3,7 @@ import { Button, Spinner } from "react-bootstrap";
 import { X } from "react-feather";
 import CartContext from "../../store/cart-context";
 
-const SV_URL = "http://localhost:1337";
+// const SV_URL = "http://localhost:1337";
 
 const CartItem = ({ item, listTotal, onOrderPrice }) => {
     const [count, setCount] = useState(1);
@@ -31,7 +31,7 @@ const CartItem = ({ item, listTotal, onOrderPrice }) => {
     return (
         <div className="cart-item">
             <div className="cart-item-image">
-                <img src={`${SV_URL}` + item.product.attributes.image.data[0].attributes.url}></img>
+                <img src={`${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` + item.product.attributes.image.data[0].attributes.url}></img>
             </div>
             <div className="cart-item-details">
                 <div className="item-brand">{item.product.attributes.brand}</div>
