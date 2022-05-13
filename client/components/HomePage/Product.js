@@ -8,7 +8,7 @@ import orderImg from "../../public/img/order-img.png";
 import Link from "next/link";
 import CartContext from "../../store/cart-context";
 
-const SV_URL = "http://localhost:1337";
+// const SV_URL = "http://localhost:1337";
 
 const Product = ({ product }) => {
   const [show, setShow] = useState(false);                  // for Read more modal
@@ -42,7 +42,7 @@ const Product = ({ product }) => {
           <div className="product-card-image-wrapper">
             <img
               src={
-                `${SV_URL}` + product.attributes.image.data[0].attributes.url
+                `${process.env.NEXT_PUBLIC_STRAPI_APIURL}` + product.attributes.image.data[0].attributes.url
               }
             ></img>
           </div>
@@ -79,7 +79,7 @@ const Product = ({ product }) => {
                   <div className="img-wrapper">
                     <img
                       src={
-                        `${SV_URL}` +
+                        `${process.env.NEXT_PUBLIC_STRAPI_APIURL}` +
                         product.attributes.image.data[0].attributes.url
                       }
                     ></img>
