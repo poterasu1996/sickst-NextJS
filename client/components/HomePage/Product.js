@@ -8,7 +8,7 @@ import orderImg from "../../public/img/order-img.png";
 import Link from "next/link";
 import CartContext from "../../store/cart-context";
 
-const SV_URL = "http://localhost:1337";
+// const SV_URL = "http://localhost:1337";
 
 const Product = ({ product }) => {
   const [show, setShow] = useState(false);                  // for Read more modal
