@@ -14,6 +14,7 @@ WORKDIR /cms
 COPY . /cms
 
 RUN npm install
+RUN npm run build
 
 EXPOSE 1337
 
