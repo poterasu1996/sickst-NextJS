@@ -4,7 +4,7 @@ services:
   proxy:
     image: nginx:latest
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/sikst.ro.conf
+      - ./nginx.conf:/etc/nginx/conf.d/sickst.ro.conf
     restart: unless-stopped
     networks:
       - default
@@ -26,8 +26,6 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
     restart: unless-stopped
-    ports:
-      - 5432:5432
     environment:
       - POSTGRES_DB=sickst
       - POSTGRES_USER=admin

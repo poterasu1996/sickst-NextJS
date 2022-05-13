@@ -1,4 +1,4 @@
-FROM node:14-alpine
+FROM node:16-alpine
 
 RUN apk add --no-cache openssl
 
@@ -14,7 +14,7 @@ WORKDIR /cms
 COPY . /cms
 
 RUN npm install
-RUN npm run build
+RUN NODE_ENV=production npm run build
 
 EXPOSE 1337
 
