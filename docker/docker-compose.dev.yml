@@ -60,8 +60,8 @@ services:
 
 volumes:
   data: {}
-  caddy_data: {}
-  caddy_config: {}
+  # caddy_data: {}
+  # caddy_config: {}
 
 networks:
   traefik_web:
