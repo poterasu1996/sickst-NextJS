@@ -46,8 +46,8 @@ services:
       - PUBLIC_URL=https://sickst.ro
       - NODE_ENV=development
       - IS_PROXY=true
-    ports:
-      - 1337:1337
+    # ports:
+    #   - 1337:1337
 
   client:
     build:
@@ -55,8 +55,8 @@ services:
     environment:
       - REACT_APP_STRAPI_APIURL=https://sickst.ro/api
       - REACT_APP_BASEURL=https://sickst.ro
-    ports:
-      - 3000:3000
+    # ports:
+    #   - 3000:3000
 
 volumes:
   data: {}
