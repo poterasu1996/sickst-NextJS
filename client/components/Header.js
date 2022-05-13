@@ -15,10 +15,10 @@ const Header = () => {
 
     return (
         <header>
-            <div className="container header sticky-header">
+            <div className="container header sticky-header">{console.log('auth',auth)}
 
                 <div className='logo'>
-                    <Link href="/" >
+                    <Link href={"/"} >
                         <a className='logo-link'>
                             <h1 className='big-s'>S</h1>
                             <div className='sickst'>

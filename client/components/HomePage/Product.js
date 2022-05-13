@@ -7,12 +7,14 @@ import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import orderImg from "../../public/img/order-img.png";
 import Link from "next/link";
 import CartContext from "../../store/cart-context";
+import AuthContext from "../../store/auth-context";
 
 // const SV_URL = "http://localhost:1337";
 
 const Product = ({ product }) => {
   const [show, setShow] = useState(false);                  // for Read more modal
   const { cartManager } = useContext(CartContext);
+  const { auth } = useContext(AuthContext);
   const [addedToCart, setAddedToCart] = useState(false);    // show the checkmark after added to cart
   const [loading, setLoading] = useState(false);            // used for loading animation
 
@@ -143,28 +145,24 @@ const Product = ({ product }) => {
           </Modal>
         </div>
         <div className="product-card-button">
-          <div>
-            {cartManager.hasProduct(product)
-                ? loading 
-                    ? <Spinner animation="border" style={{color: "#cc3663"}}/>
-                    : <div className="card-button disabled">
-                        <div className="check">
-                            <Check stroke={'#fff'} height={22} width={22} /> 
-                        </div>
-                        <span>Added</span>
-                    </div>
-                : <div className="card-button" onClick={() => {
-                    setAddedToCart(true);
-                    cartManager.addProduct(product, 1);
-                    setLoading(true);
-                }}>
-                    <div className="plus"></div>Add to cart
-                </div>
-            }  
-          </div>
-          <div>
-            <div className="price">RON: {product.attributes.retail_value}</div>
-          </div>
+          {cartManager.hasProduct(product) && auth
+              ? loading 
+                  ? <Spinner animation="border" style={{color: "#cc3663"}}/>
+                  : <div className="card-button disabled">
+                      <div className="check">
+                          <Check stroke={'#fff'} height={22} width={22} /> 
+                      </div>
+                      <span>Added</span>
+                  </div>
+              : <div className="card-button" onClick={() => {
+                  setAddedToCart(true);
+                  cartManager.addProduct(product, 1);
+                  setLoading(true);
+              }}>
+                  <div className="plus"></div>Add to cart
+              </div>
+          }  
+          <div className="price">RON:&nbsp;{product.attributes.retail_value}</div>
         </div>
       </div>
     </div>
