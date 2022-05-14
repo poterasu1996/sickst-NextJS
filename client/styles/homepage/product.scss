@@ -305,6 +305,7 @@
                 width: calc(50% - 0.8rem);
                 margin-left: .4rem;
                 margin-top: 2.4rem;
+                cursor: pointer;
                 @media (max-width:500px) {
                     width: calc(100% - 0.8rem);
                 }

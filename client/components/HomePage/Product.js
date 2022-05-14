@@ -9,14 +9,13 @@ import Link from "next/link";
 import CartContext from "../../store/cart-context";
 import AuthContext from "../../store/auth-context";
 
-// const SV_URL = "http://localhost:1337";
-
 const Product = ({ product }) => {
   const [show, setShow] = useState(false);                  // for Read more modal
   const { cartManager } = useContext(CartContext);
   const { auth } = useContext(AuthContext);
   const [addedToCart, setAddedToCart] = useState(false);    // show the checkmark after added to cart
   const [loading, setLoading] = useState(false);            // used for loading animation
+  const [subscription, setSubscription] = useState(true);
 
   setTimeout(() => {
     setLoading(false);  // to clear loading state
@@ -101,7 +100,7 @@ const Product = ({ product }) => {
                     </div>
                     <div className="order-type">
                       <div className="order">
-                        <Button className="order-btn active">
+                        <Button className={`order-btn ${subscription && 'active'}`} onClick={() => setSubscription(true)}>
                           <div className="order-btn-content">
                             <Image src={orderImg} />
                             <div className="order-info">
@@ -114,7 +113,7 @@ const Product = ({ product }) => {
                         </Button>
                       </div>
                       <div className="order">
-                        <Button className="order-btn">
+                        <Button className={`order-btn ${!subscription && 'active'}`} onClick={() => setSubscription(false)}>
                           <div className="order-btn-content">
                             <Image src={orderImg} />
                             <div className="order-info">
@@ -127,10 +126,18 @@ const Product = ({ product }) => {
                         </Button>
                       </div>
                     </div>
-                    <div className="submit-btn">
-                      <Link href="/register">
-                        <a className="button-second">Add to queue</a>
-                      </Link>
+                    <div className="submit-btn" 
+                      onClick={() => {
+                        let paymentType;
+                        if (subscription) {
+                          paymentType = 'subscription'
+                        } else {
+                          paymentType = 'otb'
+                        }
+                        cartManager.addProduct(product, 1, paymentType);
+                        // setLoading(true);
+                      }}>
+                      <div className="button-second">Add to queue</div>
                     </div>
                     <div className="fragrance-info">
                       <div className="title">About the fragrance</div>
@@ -156,13 +163,20 @@ const Product = ({ product }) => {
                   </div>
               : <div className="card-button" onClick={() => {
                   setAddedToCart(true);
-                  cartManager.addProduct(product, 1);
+                  let paymentType;
+                  if (subscription) {
+                    paymentType = 'subscription'
+                  } else {
+                    paymentType = 'otb'
+                  }
+                  console.log('payment',paymentType)
+                  cartManager.addProduct(product, 1, paymentType);
                   setLoading(true);
               }}>
                   <div className="plus"></div>Add to cart
               </div>
           }  
-          <div className="price">RON:&nbsp;{product.attributes.retail_value}</div>
+          <div className="price">RON:&nbsp;{product.attributes.subscription_price}</div>
         </div>
       </div>
     </div>

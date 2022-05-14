@@ -99,6 +99,12 @@
       "relation": "oneToOne",
       "target": "api::order-history.order-history",
       "inversedBy": "users_permissions_user"
+    },
+    "user_queue_list": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::user-queue-list.user-queue-list",
+      "mappedBy": "users_permissions_user"
     }
   }
 }

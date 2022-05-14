@@ -6,7 +6,6 @@ export const CartProvider = ({ children }) => {
     const [resetCart, setResetCart] = useState(false)   // reset cart each time add/delete action is made
     const [cart, setCart] = useState([]);               // set the cart list
     const [cartTotal, setCartTotal] = useState();
-    // const [cartTotal, setCartTotal] = useState(0);
 
     useEffect(() => {
         const storageCart = JSON.parse(localStorage.getItem('cart'));
@@ -17,15 +16,16 @@ export const CartProvider = ({ children }) => {
         setResetCart(false);
     }, 500);
 
-    function addProduct(product, quantity) {
+    function addProduct(product, quantity, payment) {
         if(localStorage.getItem('cart') !== null) {
+            const cartId = cart.length;
             const storageProducts = JSON.parse(localStorage.getItem('cart'));
-            const newProduct = [...storageProducts, {product, quantity}];
+            const newProduct = [...storageProducts, {cartId, product, quantity, payment}];
             setCart(newProduct);
             localStorage.setItem('cart', JSON.stringify(newProduct));
         } else {
-            localStorage.setItem('cart', JSON.stringify([{product, quantity}]));
-            setCart([{product, quantity}]);
+            localStorage.setItem('cart', JSON.stringify([{cartId: 0, product, quantity, payment}]));
+            setCart([{product, quantity, payment}]);
         }
     };
 
@@ -33,7 +33,7 @@ export const CartProvider = ({ children }) => {
         const cartList = JSON.parse(localStorage.getItem('cart'));
         // return a new list without the selected item
         const newList = cartList.filter(el => {
-            return el.product.id !== product.product.id;
+            return el.cartId !== product.cartId;
         })
         if(newList.length > 0) {
             setCart(newList);
@@ -62,7 +62,7 @@ export const CartProvider = ({ children }) => {
 
         if(operation === 'remove') {
             const newStoreList = storage.map(item => {
-                if (item.product.id === product.product.id) {
+                if (item.cartId === product.cartId) {
                     const qt = item.quantity;
                     return {...item, quantity: qt - 1};
                 }
@@ -72,7 +72,7 @@ export const CartProvider = ({ children }) => {
             localStorage.setItem('cart', JSON.stringify(newStoreList)); // update store
         } else {
             const newStoreList = storage.map(item => {
-                if (item.product.id === product.product.id) {
+                if (item.cartId === product.cartId) {
                     const qt = item.quantity;
                     return {...item, quantity: qt + 1};
                 }

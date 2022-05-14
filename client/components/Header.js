@@ -15,7 +15,7 @@ const Header = () => {
 
     return (
         <header>
-            <div className="container header sticky-header">{console.log('auth',auth)}
+            <div className="container header sticky-header">
 
                 <div className='logo'>
                     <Link href={"/"} >
@@ -23,7 +23,7 @@ const Header = () => {
                             <h1 className='big-s'>S</h1>
                             <div className='sickst'>
                                 <h3 className='pt-1'>ickst</h3>
-                                <h4 className='pt-2'>&bull;Bucharest</h4>
+                                <h4 className='pt-2'>&bull;Bucharest&bull;</h4>
                             </div>
                         </a>
                     </Link>
