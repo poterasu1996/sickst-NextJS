@@ -9,7 +9,6 @@ module.exports = ({ env }) => ({
       database: env('DATABASE_NAME', 'sickst'),
       user: env('DATABASE_USERNAME', 'admin'),
       password: env('DATABASE_PASSWORD', 'admin'),
-      schema: env('DATABASE_SCHEMA', 'public'), // Not required
       ssl: env('DATABASE_SSL', false)
     },
     debug: false,

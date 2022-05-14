@@ -1,0 +1,71 @@
+version: "3"
+
+services:
+  proxy:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/sickst.ro.conf
+    restart: unless-stopped
+    networks:
+      - default
+      - traefik_web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sickst_http.rule=Host(`sickst.ro`)"
+      - "traefik.http.routers.sickst_http.entrypoints=web"
+      - "traefik.http.routers.sickst_http.middlewares=https_redirect"
+      - "traefik.http.routers.sickst_https.rule=Host(`sickst.ro`)"
+      - "traefik.http.routers.sickst_https.entrypoints=websecure"
+      - "traefik.http.routers.sickst_https.tls.certresolver=lencrypt"
+      - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+    # ports:
+    #   - 80:80
+
+  db:
+    image: postgres:12
+    volumes:
+      - data:/var/lib/postgresql/data
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=sickst
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+
+  cms:
+    build:
+      context: ../cms
+    restart: unless-stopped
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_NAME=sickst
+      - DATABASE_USERNAME=admin
+      - DATABASE_PASSWORD=admin
+      - APP_KEYS=Um0yLSt1Wk1cOE4jPkpL,MjU1N3R6JnJUTVE9Ozcs
+      - JWT_SECRET=-Tz!;cD(}/D57>zC9U9aAd5sP{Cya96S
+      - API_TOKEN_SALT=w7ERujMT4m#S)n^hS-,/LJ4BYwk@;?Dz
+      - ADMIN_JWT_SECRET=+g`\8A`d\yV~Gs-D3-xpZ-3>6:@dY3)Q
+      - PUBLIC_URL=https://sickst.ro
+      - NODE_ENV=production
+      - IS_PROXY=true
+    # ports:
+    #   - 1337:1337
+
+  client:
+    build:
+      context: ../client
+    restart: unless-stopped
+    # environment:
+    #   - NEXT_PUBLIC_STRAPI_APIURL=https://sickst.ro/api
+    #   - NEXT_PUBLIC_STRAPI_ROOTURL=https://sickst.ro
+    #   - NEXT_PUBLIC_BASEURL=https://sickst.ro
+    # ports:
+    #   - 3000:3000
+
+volumes:
+  data: {}
+  # caddy_data: {}
+  # caddy_config: {}
+
+networks:
+  traefik_web:
+    external: true
