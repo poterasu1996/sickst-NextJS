@@ -1,10 +1,17 @@
-import maleIcon from "../../public/img/male-icon.png"
-import femaleIcon from "../../public/img/female-icon.jpg"
 import Link from "next/link";
-import Image from "next/image";
 import SignUpForm from "../../components/auth/SignUpForm";
+import GoogleLogin from 'react-google-login';
 
 const Register = () => {
+
+    const onSuccess = (res) => {
+        console.log("SUCCESS", res.profileObj);
+    }
+
+    const onFailure = (res) => {
+        console.log('FAILED', res);
+    }
+
     return <>
         <div className="main-content">
             <div className="main-body">
@@ -30,10 +37,15 @@ const Register = () => {
                                 <span className="text">or</span>
                                 <span className="line"></span>
                             </div>
-                            <div className="g-auth">
-                                <span className='g-icon'></span>
-                                <span className='g-btn-text'>Sign in with Google</span>
-                            </div>
+                            <GoogleLogin 
+                                clientId={process.env.NEXT_PUBLIC_GA_ID}
+                                buttonText='Sign up with Google'
+                                onSuccess={onSuccess}
+                                onFailure={onFailure}
+                                cookiePolicy={'single_host_origin'}
+                                isSignedIn={true}
+                                className="g-auth"
+                            />
                         </div>
 
                         {/* simple footer */}

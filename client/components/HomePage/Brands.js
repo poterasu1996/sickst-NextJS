@@ -7,7 +7,7 @@ const Brands = () => {
     return <div className="row brands">
         <div className="col-12 col-md-6 left-side">
             <div className="img-wrapper">
-                <Image src={brandImg}/>
+                <img src={brandImg.src}></img>
             </div>
         </div>
         <div className="col-12 col-md-6 right-side">

@@ -75,6 +75,12 @@
       "type": "integer",
       "min": 0,
       "default": 0
+    },
+    "user_queue_list": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::user-queue-list.user-queue-list",
+      "inversedBy": "products"
     }
   }
 }

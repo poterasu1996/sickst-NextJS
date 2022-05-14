@@ -1,7 +1,17 @@
 import Link from 'next/link';
 import LogInForm from '../../components/auth/LoginForm';
+import GoogleLogin from 'react-google-login';
 
 const Login = () => {
+
+    const onSuccess = (res) => {
+        console.log("SUCCESS", res.profileObj);
+    }
+
+    const onFailure = (res) => {
+        console.log('FAILED', res);
+    }
+
     return (
         <div className="main-content">
             <div className="main-body">
@@ -24,14 +34,16 @@ const Login = () => {
                                 <span className="line"></span>
                                 <span className="text">or</span>
                                 <span className="line"></span>
-                            </div>
-                            <div className="g-auth">
-                                <span className='g-icon'></span>
-                                <span className='g-btn-text'>Sign in with Google</span>
-                            </div>
-                        </div>
-                        <div className="col-5 copyright">
-                            <span>&copy; Sickst</span>
+                            </div>{console.log(process.env.NEXT_PUBLIC_GA_ID)}
+                            <GoogleLogin 
+                                clientId={process.env.NEXT_PUBLIC_GA_ID}
+                                buttonText='Log in with Google'
+                                onSuccess={onSuccess}
+                                onFailure={onFailure}
+                                cookiePolicy={'single_host_origin'}
+                                isSignedIn={true}
+                                className="g-auth"
+                            />
                         </div>
                     </div>
                 </div>

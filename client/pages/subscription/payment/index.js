@@ -2,11 +2,11 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
 import { X } from "react-feather";
-import ShipmentForm from "../../components/auth/ShipmentForm";
-import CouponeForm from "../../components/global/CouponeForm";
-import CreditCardForm from "../../components/SubscriptionPage/CreditCardForm";
-import StripeContainer from "../../components/SubscriptionPage/StripeContainer";
-import CartContext from "../../store/cart-context";
+import ShipmentForm from "../../../components/auth/ShipmentForm";
+import CouponeForm from "../../../components/global/CouponeForm";
+import CreditCardForm from "../../../components/SubscriptionPage/CreditCardForm";
+import StripeContainer from "../../../components/SubscriptionPage/StripeContainer";
+import CartContext from "../../../store/cart-context";
 
 // const SV_URL = "http://localhost:1337";
 
@@ -31,7 +31,7 @@ const PaymentPage = () => {
             <div className="container">
                 <div className="left-side">
                     <div className="title">Your monthly subscription</div>
-                    <div className="subtitle">Will ship by end of month from our facility</div>{console.log('LEFT CART coupone', couponValue)}
+                    <div className="subtitle">Will ship by end of month from our facility</div>
                     {(cartManager.cart && cartManager.cart.length > 0) && 
                         cartManager.cart.map((item, i) => (
                             <div className="cart-item" key={i}>
@@ -73,7 +73,7 @@ const PaymentPage = () => {
                                     : <b>0</b>}
                             </div>
                         </div>
-                        <div className="total">{couponValue && console.log('CM - ', cartManager.total(couponValue.discount))}
+                        <div className="total">
                             Total: { loading
                                 ? <Spinner animation="border" style={{color: "#cc3663"}}/>
                                 : (couponValue && couponValue.discount)
@@ -89,7 +89,7 @@ const PaymentPage = () => {
                 </div>
                 <div className="right-side">
                     <div className="shipment-title">Shipment details</div>
-                    <div className="shipment-details">{console.log(cartManager.cartTotal)}
+                    <div className="shipment-details">
                         <ShipmentForm cartTotal={cartManager.cartTotal}/>
                         {/* <CreditCardForm /> */}
                         <StripeContainer />
