@@ -18,12 +18,12 @@ const Header = () => {
             <div className="container header sticky-header">
 
                 <div className='logo'>
-                    <Link href="/" >
+                    <Link href={"/"} >
                         <a className='logo-link'>
                             <h1 className='big-s'>S</h1>
                             <div className='sickst'>
                                 <h3 className='pt-1'>ickst</h3>
-                                <h4 className='pt-2'>&bull;Bucharest</h4>
+                                <h4 className='pt-2'>&bull;Bucharest&bull;</h4>
                             </div>
                         </a>
                     </Link>

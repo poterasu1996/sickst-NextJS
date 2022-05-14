@@ -7,14 +7,15 @@ import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import orderImg from "../../public/img/order-img.png";
 import Link from "next/link";
 import CartContext from "../../store/cart-context";
-
-// const SV_URL = "http://localhost:1337";
+import AuthContext from "../../store/auth-context";
 
 const Product = ({ product }) => {
   const [show, setShow] = useState(false);                  // for Read more modal
   const { cartManager } = useContext(CartContext);
+  const { auth } = useContext(AuthContext);
   const [addedToCart, setAddedToCart] = useState(false);    // show the checkmark after added to cart
   const [loading, setLoading] = useState(false);            // used for loading animation
+  const [subscription, setSubscription] = useState(true);
 
   setTimeout(() => {
     setLoading(false);  // to clear loading state
@@ -99,7 +100,7 @@ const Product = ({ product }) => {
                     </div>
                     <div className="order-type">
                       <div className="order">
-                        <Button className="order-btn active">
+                        <Button className={`order-btn ${subscription && 'active'}`} onClick={() => setSubscription(true)}>
                           <div className="order-btn-content">
                             <Image src={orderImg} />
                             <div className="order-info">
@@ -112,7 +113,7 @@ const Product = ({ product }) => {
                         </Button>
                       </div>
                       <div className="order">
-                        <Button className="order-btn">
+                        <Button className={`order-btn ${!subscription && 'active'}`} onClick={() => setSubscription(false)}>
                           <div className="order-btn-content">
                             <Image src={orderImg} />
                             <div className="order-info">
@@ -125,10 +126,18 @@ const Product = ({ product }) => {
                         </Button>
                       </div>
                     </div>
-                    <div className="submit-btn">
-                      <Link href="/register">
-                        <a className="button-second">Add to queue</a>
-                      </Link>
+                    <div className="submit-btn" 
+                      onClick={() => {
+                        let paymentType;
+                        if (subscription) {
+                          paymentType = 'subscription'
+                        } else {
+                          paymentType = 'otb'
+                        }
+                        cartManager.addProduct(product, 1, paymentType);
+                        // setLoading(true);
+                      }}>
+                      <div className="button-second">Add to queue</div>
                     </div>
                     <div className="fragrance-info">
                       <div className="title">About the fragrance</div>
@@ -143,28 +152,31 @@ const Product = ({ product }) => {
           </Modal>
         </div>
         <div className="product-card-button">
-          <div>
-            {cartManager.hasProduct(product)
-                ? loading 
-                    ? <Spinner animation="border" style={{color: "#cc3663"}}/>
-                    : <div className="card-button disabled">
-                        <div className="check">
-                            <Check stroke={'#fff'} height={22} width={22} /> 
-                        </div>
-                        <span>Added</span>
-                    </div>
-                : <div className="card-button" onClick={() => {
-                    setAddedToCart(true);
-                    cartManager.addProduct(product, 1);
-                    setLoading(true);
-                }}>
-                    <div className="plus"></div>Add to cart
-                </div>
-            }  
-          </div>
-          <div>
-            <div className="price">RON: {product.attributes.retail_value}</div>
-          </div>
+          {cartManager.hasProduct(product) && auth
+              ? loading 
+                  ? <Spinner animation="border" style={{color: "#cc3663"}}/>
+                  : <div className="card-button disabled">
+                      <div className="check">
+                          <Check stroke={'#fff'} height={22} width={22} /> 
+                      </div>
+                      <span>Added</span>
+                  </div>
+              : <div className="card-button" onClick={() => {
+                  setAddedToCart(true);
+                  let paymentType;
+                  if (subscription) {
+                    paymentType = 'subscription'
+                  } else {
+                    paymentType = 'otb'
+                  }
+                  console.log('payment',paymentType)
+                  cartManager.addProduct(product, 1, paymentType);
+                  setLoading(true);
+              }}>
+                  <div className="plus"></div>Add to cart
+              </div>
+          }  
+          <div className="price">RON:&nbsp;{product.attributes.subscription_price}</div>
         </div>
       </div>
     </div>

@@ -75,30 +75,17 @@
       "type": "boolean",
       "default": false
     },
-    "avatar": {
-      "type": "media",
-      "multiple": false,
-      "required": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
-    },
-    "sex": {
-      "type": "enumeration",
-      "enum": [
-        "male",
-        "female"
-      ],
-      "default": "female"
-    },
     "order_history": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::order-history.order-history",
       "inversedBy": "users_permissions_user"
+    },
+    "user_detail": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::user-detail.user-detail",
+      "mappedBy": "users_permissions_user"
     }
   }
 }

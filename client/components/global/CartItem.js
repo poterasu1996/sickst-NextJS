@@ -3,10 +3,8 @@ import { Button, Spinner } from "react-bootstrap";
 import { X } from "react-feather";
 import CartContext from "../../store/cart-context";
 
-// const SV_URL = "http://localhost:1337";
-
-const CartItem = ({ item, listTotal, onOrderPrice }) => {
-    const [count, setCount] = useState(1);
+const CartItem = ({ item, handleLoading }) => {
+    const [count, setCount] = useState(item.quantity);
     const [loading, setLoading] = useState(false);
     const { cartManager } = useContext(CartContext);
 
@@ -14,14 +12,21 @@ const CartItem = ({ item, listTotal, onOrderPrice }) => {
         if(count > 1) {
             setCount(count - 1);
             setLoading(true);
-            onOrderPrice(listTotal - parseInt(item.product.attributes.subscription_price));
+            handleLoading(true);
+            cartManager.quantityProduct(item, 'remove');
         }
     }
-    
+
     const orderPlus = () => {
         setCount(count + 1);
         setLoading(true);
-        onOrderPrice(listTotal + parseInt(item.product.attributes.subscription_price));
+        handleLoading(true);
+        cartManager.quantityProduct(item, 'add');
+    }
+
+    // get the product details from cart context
+    const getProdFromCart = () => {
+        return cartManager.cart.find(elem => elem.cartId === item.cartId);
     }
 
     setTimeout(() => {
@@ -40,22 +45,19 @@ const CartItem = ({ item, listTotal, onOrderPrice }) => {
                 <div className="item-quantity">
                     <div className="quantity-buttons">
                         <div className="item-remove" onClick={orderMinus}></div>
-                        <div className="item-count">{count}</div>
+                        <div className="item-count">{getProdFromCart().quantity}</div>
                         <div className="item-add" onClick={orderPlus}></div>
                     </div>
                     <div className="quantity-price">
                         {loading 
                             ? <Spinner animation="border" style={{color: "#cc3663"}}/>
-                            : <>Ron {item.product.attributes.subscription_price * count}</>
+                            : <>Ron {item.product.attributes.subscription_price * getProdFromCart().quantity}</>
                         }
                     </div>
                 </div>
             </div>
             <Button onClick={() => {
-                const removePrice = parseInt(item.product.attributes.subscription_price) * count;
-                console.log('remove price: ', removePrice);
-                console.log('list price: ', listTotal - removePrice);
-                onOrderPrice(listTotal - removePrice);
+                handleLoading(true);
                 cartManager.removeProduct(item);
             }}>
                 <X stroke="#cc3663" width={20} height={20} />
