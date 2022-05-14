@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import "@stripe/stripe-js";
 import Layout from '../components/Layout';
 import { AuthProvider } from '../store/auth-context';
 import { CartProvider } from '../store/cart-context';

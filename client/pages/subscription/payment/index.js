@@ -7,14 +7,49 @@ import CouponeForm from "../../../components/global/CouponeForm";
 import CreditCardForm from "../../../components/SubscriptionPage/CreditCardForm";
 import StripeContainer from "../../../components/SubscriptionPage/StripeContainer";
 import CartContext from "../../../store/cart-context";
+import { loadStripe } from '@stripe/stripe-js';
 
-// const SV_URL = "http://localhost:1337";
+let stripePromise;
+
+const getStripe = () => {
+    // check if there is any stripe instance
+    if (!stripePromise) {
+        stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY);
+    }
+
+    return stripePromise;
+};
 
 const PaymentPage = () => {
     const router = useRouter();
     const { cartManager } = useContext(CartContext);
     const [couponValue, setCouponeValue] = useState();
     const [loading, setLoading] = useState(true);
+
+    const item = {
+        price: "price_1KxyVvIdXAYNRuBxDma0iuCv",
+        quantity: 1,
+    }
+
+    let checkoutOptions;
+
+    useEffect(() => {
+        checkoutOptions = {
+            lineItems: [item],
+            mode: "payment",
+            successUrl: `${window.location.origin}/subscription/payment/success`,
+            cancelUrl: `${window.location.origin}/subscription/payment/cancel`
+        }
+        console.log(window.location.origin)
+    })
+
+    const redirectToCheckout = async () => {
+        console.log("redirectToCheckout");
+
+        const stripe = await getStripe();
+        const {error} = await stripe.redirectToCheckout(checkoutOptions);
+        console.log("Stripe error", error);
+    }
 
     // useEffect(() => {
     //     if (cartManager.cart && cartManager.cart.length === 0) {
@@ -92,7 +127,8 @@ const PaymentPage = () => {
                     <div className="shipment-details">
                         <ShipmentForm cartTotal={cartManager.cartTotal}/>
                         {/* <CreditCardForm /> */}
-                        <StripeContainer />
+                        {/* <StripeContainer /> */}
+                        <Button onClick={redirectToCheckout}> Pay</Button>
                     </div>
                 </div>
             </div>

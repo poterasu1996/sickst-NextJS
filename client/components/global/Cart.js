@@ -83,7 +83,7 @@ const Cart = (props) => {
                 </span>
                 </div>
                 <Link href="/subscription/payment">
-                <a className="button-second">Checkout</a>
+                  <a className="button-second" onClick={props.onClick}>Checkout</a>
                 </Link>
             </div>
             

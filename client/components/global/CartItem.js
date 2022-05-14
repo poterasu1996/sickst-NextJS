@@ -3,7 +3,7 @@ import { Button, Spinner } from "react-bootstrap";
 import { X } from "react-feather";
 import CartContext from "../../store/cart-context";
 
-const CartItem = ({ item, key, handleLoading }) => {
+const CartItem = ({ item, handleLoading }) => {
     const [count, setCount] = useState(item.quantity);
     const [loading, setLoading] = useState(false);
     const { cartManager } = useContext(CartContext);
@@ -34,7 +34,7 @@ const CartItem = ({ item, key, handleLoading }) => {
     }, 500);
 
     return (
-        <div id={key} className="cart-item">
+        <div className="cart-item">
             <div className="cart-item-image">
                 <img src={`${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` + item.product.attributes.image.data[0].attributes.url}></img>
             </div>
