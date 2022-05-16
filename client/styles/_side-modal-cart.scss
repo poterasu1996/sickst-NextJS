@@ -42,11 +42,8 @@
         padding: 0;
 
         .mid-menu {
-            display: flex;
-            flex: 1;
-            flex-direction: column;
             margin-top: 0rem;
-            overflow-y: scroll;
+            overflow-y: auto;
             
             .cart-list {
                 max-height: 70rem;
@@ -120,13 +117,16 @@
                     flex: 1;
                     color: #141414;
                     .item-brand {
-                        font-size: 1.6rem;
+                        font-size: 1.4rem;
                         font-weight: 600;
                         text-transform: uppercase;
                     }
                     .item-model, .item-type {
                         font-size: 1.3rem;
                         margin-top: .3rem;
+                    }
+                    .item-type {
+                        color: #666;
                     }
                     .item-quantity {
                         display: flex;
