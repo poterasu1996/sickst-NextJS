@@ -4,7 +4,7 @@
   "info": {
     "singularName": "user-detail",
     "pluralName": "user-details",
-    "displayName": "user_details",
+    "displayName": "user_detail",
     "description": ""
   },
   "options": {
@@ -12,15 +12,11 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "users_permissions_user": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "user_detail"
-    },
     "first_name": {
-      "type": "string",
-      "default": "Sickst"
+      "type": "string"
+    },
+    "last_name": {
+      "type": "string"
     },
     "birthday": {
       "type": "date"
@@ -30,15 +26,10 @@
       "enum": [
         "Male",
         "Female"
-      ],
-      "default": "Female"
-    },
-    "last_name": {
-      "type": "string",
-      "default": "User"
+      ]
     },
     "address": {
-      "type": "text"
+      "type": "string"
     },
     "city": {
       "type": "string"
@@ -64,10 +55,16 @@
         "audios"
       ]
     },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "user_detail"
+    },
     "uid": {
       "type": "integer",
-      "required": true,
-      "unique": true
+      "unique": true,
+      "required": true
     }
   }
 }

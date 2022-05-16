@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "../../api/axios";
 
 const USER_URL = '/users/me?populate=*';
+const USER_DETAILS = '/user-details?populate=*'
 
 const Account = () => {
     const [personalInfo, setPersonalInfo] = useState(true);
@@ -16,9 +17,20 @@ const Account = () => {
         const token = {
             headers: { Authorization: `Bearer ${localStorage.getItem('jwt')}` }
         }
-        const response = await axios.get(USER_URL, token);
-        console.log('resp',response)
-        setUserDetails(response.data);
+        const user = await axios.get(USER_URL, token);  // get current user
+        const details = await axios.get(USER_DETAILS)
+        
+        const userDetails = details.data.data.find((elem) => {
+            return elem.attributes.uid === user.data.id;
+        })
+        // find((elem) => {
+        //     elem.data.data[0].attributes.uid === user.data.id;
+        // });  // get user details
+        
+        console.log('resp',user)
+        console.log('userDetails',details)
+        console.log('userDetails', userDetails)
+        setUserDetails(user);
     }, [])
 
     if (userDetails) {
