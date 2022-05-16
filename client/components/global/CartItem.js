@@ -33,21 +33,32 @@ const CartItem = ({ item, handleLoading }) => {
         setLoading(false);
     }, 500);
 
+    console.log('item',item)
     return (
         <div className="cart-item">
             <div className="cart-item-image">
                 <img src={`${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` + item.product.attributes.image.data[0].attributes.url}></img>
             </div>
             <div className="cart-item-details">
-                <div className="item-brand">{item.product.attributes.brand}</div>
-                <div className="item-model">{item.product.attributes.model}</div>
-                <div className="item-type">{item.product.attributes.type}</div>
+                {item.payment === 'otb' && <div className="item-brand">{item.product.attributes.brand}</div>}
+                <div className="item-model">
+                    {item.payment === 'otb'
+                        ? item.product.attributes.model
+                        : 'Monthly subscription'
+                    }
+                </div>
+                <div className="item-type">
+                    {item.payment === 'otb'
+                        ? item.product.attributes.type
+                        : '8 ml (1 product/month)'
+                    }
+                </div>
                 <div className="item-quantity">
-                    <div className="quantity-buttons">
+                    {item.payment === 'otb' && <div className="quantity-buttons">
                         <div className="item-remove" onClick={orderMinus}></div>
                         <div className="item-count">{getProdFromCart().quantity}</div>
                         <div className="item-add" onClick={orderPlus}></div>
-                    </div>
+                    </div>}
                     <div className="quantity-price">
                         {loading 
                             ? <Spinner animation="border" style={{color: "#cc3663"}}/>

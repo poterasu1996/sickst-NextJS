@@ -17,6 +17,7 @@ const Layout = ({ children }) => {
 
             {(router.pathname === '/account/login' || router.pathname === '/account/register') ? <SimpleHeader /> : <Header />}
             {children}
+
             {(router.pathname !== '/account/login' && router.pathname !== '/account/register') ? <Footer /> : <SimpleFooter />}
         </>
     );
