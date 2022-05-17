@@ -33,7 +33,6 @@ const CartItem = ({ item, handleLoading }) => {
         setLoading(false);
     }, 500);
 
-    console.log('item',item)
     return (
         <div className="cart-item">
             <div className="cart-item-image">

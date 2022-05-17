@@ -7,7 +7,8 @@ import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import orderImg from "../../public/img/order-img.png";
 import CartContext from "../../store/cart-context";
 import AuthContext from "../../store/auth-context";
-import CustomToast from "../global/CustomToast";
+// import CustomToast from "../global/CustomToast";
+import { toast } from 'react-toastify';
 
 const Product = ({ product }) => {
   const [show, setShow] = useState(false);                  // for Read more modal
@@ -17,6 +18,13 @@ const Product = ({ product }) => {
   const [addedToCart, setAddedToCart] = useState(false);    // show the checkmark after added to cart
   const [loading, setLoading] = useState(false);            // used for loading animation
   const [subscription, setSubscription] = useState(true);
+  
+  const notify = () => {
+    console.log('toast', product)
+    toast(product.id, {
+      autoClose: 2000,
+    });
+  }
 
   setTimeout(() => {
     setLoading(false);    // to clear loading state
@@ -169,7 +177,8 @@ const Product = ({ product }) => {
                     </div>
                 : <div className="card-button" onClick={() => {
                     setAddedToCart(true);
-                    setShowToast(true);
+                    // setShowToast(true);
+                    notify();
                     let paymentType;
                     if (subscription) {
                       paymentType = 'subscription'
@@ -186,8 +195,8 @@ const Product = ({ product }) => {
             <div className="price">RON:&nbsp;{product.attributes.subscription_price}</div>
           </div>
         </div>
-      </div>{console.log(showToast)}
-      <CustomToast product={product} showToast={showToast} />
+      </div>
+      {/* <CustomToast product={product} showToast={showToast} /> */}
     </>
   );
 };
