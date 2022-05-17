@@ -1,18 +1,15 @@
 import { useEffect, useState } from "react";
-import { Toast } from 'react-bootstrap';
+import { useNotificationCenter } from "react-toastify/addons/use-notification-center";
+import { ToastContainer, toast, TypeOptions } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+// interface Data {
+//     exclude: boolean
+// };
 
 const CustomToast = ({ product, showToast }) => {
-    const [show, setShow] = useState(false);
-
-    useEffect(() => {
-        if (showToast) {
-            setShow(showToast)
-        }
-        setTimeout(() => {
-            setShow(false);
-        }, 3000);
-    }, [showToast])
-    console.log('product', product)
+    const { notifications } = useNotificationCenter()
+    
     
   return (
     <Toast show={showToast}>
