@@ -66,6 +66,16 @@
                     .cart-item:last-child {
                         border: none;
                     }
+                    .button-second {
+                        font-size: 1.8rem;
+                        line-height: 5.4rem;
+                        margin: 2rem 0;
+                        color: #fff;
+                        &:hover {
+                            transform: none;
+                            background-color: #d24f4d;
+                        }
+                    }
                 }
 
                 &-otb {

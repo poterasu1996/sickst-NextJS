@@ -40,6 +40,9 @@ const Cart = (props) => {
                             handleLoading={setLoading}
                           />
                         ))}
+                      <Link href="/account">
+                        <a className="button-second" onClick={props.onClick}>My subscriptions</a>
+                      </Link>
                     </div>
                   </>
                 )}

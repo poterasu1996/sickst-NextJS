@@ -11,8 +11,8 @@ const Account = () => {
                         <div className="joined-date">Joined: <b className="brand-color">21 sept 2021</b></div>
                     </div>
                     <ul className="nav-menu">
-                        <li className="nav-link active"><a href="#">Order history</a></li>
-                        <li className="nav-link"><a href="#">Manage subscription</a></li>
+                        <li className="nav-link active"><a href="#">Manage subscription</a></li>
+                        <li className="nav-link"><a href="#">Order history</a></li>
                         <li className="nav-link"><a href="#">Billing information</a></li>
                         <li className="nav-link"><a href="#">Shipping information</a></li>
                         <li className="nav-link"><a href="#">My reviews</a></li>

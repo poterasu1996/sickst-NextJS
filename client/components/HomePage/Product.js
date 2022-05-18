@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, Fragment } from "react";
 import Rating from "react-rating";
 import { Star, Check } from "react-feather";
 import Image from "next/image";
@@ -12,16 +12,29 @@ import { toast } from 'react-toastify';
 
 const Product = ({ product }) => {
   const [show, setShow] = useState(false);                  // for Read more modal
-  const [showToast, setShowToast] = useState(false);        // to show toast messages
   const { cartManager } = useContext(CartContext);
   const { auth } = useContext(AuthContext);
   const [addedToCart, setAddedToCart] = useState(false);    // show the checkmark after added to cart
   const [loading, setLoading] = useState(false);            // used for loading animation
   const [subscription, setSubscription] = useState(true);
   
+  const toastMsg = (
+    <>
+      <div className="toast-item">
+        <div className="item-image">
+            <img src={`${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` + product.attributes.image.data[0].attributes.url}></img>
+        </div>
+        <div className="item-details">
+            <div className="title">{product.attributes.brand}</div>
+            <div className="subtitle">{product.attributes.model}</div>
+            <div className="added">was added to cart</div>
+        </div>
+      </div>
+    </>
+  )
+
   const notify = () => {
-    console.log('toast', product)
-    toast(product.id, {
+    toast(toastMsg, {
       autoClose: 2000,
     });
   }
@@ -30,9 +43,9 @@ const Product = ({ product }) => {
     setLoading(false);    // to clear loading state
   }, 500);
   
-  setTimeout(() => {
-    setShowToast(false);  // to clear toast state
-  }, 3000);
+  // setTimeout(() => {
+  //   setShowToast(false);  // to clear toast state
+  // }, 3000);
 
   return (
     <>
@@ -149,6 +162,7 @@ const Product = ({ product }) => {
                             paymentType = 'otb'
                           }
                           cartManager.addProduct(product, 1, paymentType);
+                          notify();
                           // setLoading(true);
                         }}>
                         <div className="button-second">Add to queue</div>
@@ -177,7 +191,6 @@ const Product = ({ product }) => {
                     </div>
                 : <div className="card-button" onClick={() => {
                     setAddedToCart(true);
-                    // setShowToast(true);
                     notify();
                     let paymentType;
                     if (subscription) {
@@ -185,7 +198,6 @@ const Product = ({ product }) => {
                     } else {
                       paymentType = 'otb'
                     }
-                    console.log('payment',paymentType)
                     cartManager.addProduct(product, 1, paymentType);
                     setLoading(true);
                 }}>
@@ -196,7 +208,6 @@ const Product = ({ product }) => {
           </div>
         </div>
       </div>
-      {/* <CustomToast product={product} showToast={showToast} /> */}
     </>
   );
 };
