@@ -185,6 +185,53 @@ body.modal-open {
 .Toastify__progress-bar {
   background: #cc3633 !important;
 }
+.Toastify__toast-container {
+  @media (max-width: 400px) {
+    width: 100%;
+  }
+}
+
+.Toastify__toast-body {
+  .toast-item {
+    display: flex;
+    align-items: center;
+
+    .item-image {
+      display: flex;
+      justify-content: center;
+      border: 1px solid #dcdfe5;
+      margin-right: 2rem;
+      height: 7rem;
+      width: 7rem;
+
+      img {
+        height: 100%;
+      }
+    }
+
+    .item-details {
+      .title {
+        font-size: 1.4rem;
+        line-height: 2.4rem;
+        text-transform: uppercase;
+        padding: 0;
+      }
+
+      .subtitle {
+        font-size: 1.1rem;
+        line-height: 2.1rem;
+      }
+
+      .added {
+        color: #cc3633;
+        font-size: 1.2rem;
+        font-weight: 600;
+        line-height: 2.2rem;
+
+      }
+    }
+  }
+}
 
 // CUstom toast bootstrap
 // .toast {

@@ -9,7 +9,15 @@ export const CartProvider = ({ children }) => {
 
     useEffect(() => {
         const storageCart = JSON.parse(localStorage.getItem('cart'));
-        storageCart && setCart(storageCart);
+        if (storageCart) {
+            const subscriptionItem = storageCart.find(item => {
+                return item.payment === 'subscription';
+            })
+            const otbList = storageCart.filter(item => {
+                return item.payment === 'otb';
+            })
+            setCart([subscriptionItem, ...otbList]);
+        }
     }, [resetCart])
 
     setTimeout(() => {
@@ -23,9 +31,11 @@ export const CartProvider = ({ children }) => {
             const newProduct = [...storageProducts, {cartId, product, quantity, payment}];
             setCart(newProduct);
             localStorage.setItem('cart', JSON.stringify(newProduct));
+            setResetCart(true);
         } else {
             localStorage.setItem('cart', JSON.stringify([{cartId: 0, product, quantity, payment}]));
             setCart([{product, quantity, payment}]);
+            setResetCart(true);
         }
     };
 
