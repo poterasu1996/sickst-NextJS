@@ -47,6 +47,7 @@ const Product = ({ product }) => {
   //   setShowToast(false);  // to clear toast state
   // }, 3000);
 
+
   return (
     <>
       <div className="col col-sm-6 col-lg-4">
@@ -158,6 +159,12 @@ const Product = ({ product }) => {
                           let paymentType;
                           if (subscription) {
                             paymentType = 'subscription'
+                            if(cartManager.subscriptionList().length >= 6) {
+                              toast('Your subscription list hast more than 6 products!', {
+                                autoClose: 2000,
+                              })
+                              return ;
+                            }
                           } else {
                             paymentType = 'otb'
                           }
@@ -190,16 +197,20 @@ const Product = ({ product }) => {
                         <span>Added</span>
                     </div>
                 : <div className="card-button" onClick={() => {
-                    setAddedToCart(true);
-                    notify();
-                    let paymentType;
-                    if (subscription) {
-                      paymentType = 'subscription'
-                    } else {
-                      paymentType = 'otb'
-                    }
-                    cartManager.addProduct(product, 1, paymentType);
-                    setLoading(true);
+                  const paymentType = 'subscription';
+                  if(cartManager.subscriptionList().length >= 6) {
+                    const msg = <>
+                      <div>Your subscription list hast more than <b className="brand-color">6 products</b>!</div>
+                    </>
+                    toast(msg, {
+                      autoClose: 2000,
+                    })
+                    return ;
+                  }
+                  notify();
+                  cartManager.addProduct(product, 1, paymentType);
+                  setAddedToCart(true);
+                  setLoading(true);
                 }}>
                     <div className="plus"></div>Add to cart
                 </div>

@@ -17,6 +17,8 @@
     "gapi-script": "^1.2.0",
     "next": "12.1.4",
     "node-sass": "^7.0.1",
+    "primeicons": "^5.0.0",
+    "primereact": "^8.1.1",
     "react": "17.0.2",
     "react-bootstrap": "^2.3.0",
     "react-credit-cards": "^0.8.3",

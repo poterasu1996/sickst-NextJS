@@ -189,6 +189,11 @@ body.modal-open {
   @media (max-width: 400px) {
     width: 100%;
   }
+
+  .Toastify__toast-body {
+    font-size: 1.2rem;
+    line-height: 2.2rem;
+  }
 }
 
 .Toastify__toast-body {

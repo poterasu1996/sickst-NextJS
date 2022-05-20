@@ -21,7 +21,7 @@ const Cart = (props) => {
       </div>
       <div className="side-modal-body">
         {/* ITEM */}
-        {cartManager.cart && cartManager.cart.length > 0 ? (
+        {cartManager.cart.length > 0 ? (
           <>
             <div className="mid-menu">
               <div className="cart-list">

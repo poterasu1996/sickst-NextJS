@@ -58,17 +58,26 @@ const CartItem = ({ item, handleLoading }) => {
                         <div className="item-count">{getProdFromCart().quantity}</div>
                         <div className="item-add" onClick={orderPlus}></div>
                     </div>}
-                    <div className="quantity-price">
-                        {loading 
-                            ? <Spinner animation="border" style={{color: "#cc3663"}}/>
-                            : <>Ron {item.product.attributes.subscription_price * getProdFromCart().quantity}</>
-                        }
-                    </div>
+                    {item.payment === 'otb'
+                        ? <div className="quantity-price">
+                            {loading 
+                                ? <Spinner animation="border" style={{color: "#cc3663"}}/>
+                                : <>Ron {item.product.attributes.otb_price * getProdFromCart().quantity}</>
+                            }
+                          </div>
+                        : <div className="quantity-price">
+                            {loading 
+                                ? <Spinner animation="border" style={{color: "#cc3663"}}/>
+                                : <>Ron {item.product.attributes.subscription_price * getProdFromCart().quantity}</>
+                            }
+                        </div>
+                    }
                 </div>
             </div>
             <Button onClick={() => {
                 handleLoading(true);
                 cartManager.removeProduct(item);
+                cartManager.setResetCart(true);
             }}>
                 <X stroke="#cc3663" width={20} height={20} />
             </Button>
