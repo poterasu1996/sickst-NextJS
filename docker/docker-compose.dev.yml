@@ -47,6 +47,8 @@ services:
       - PUBLIC_URL=https://sickst.ro
       - NODE_ENV=production
       - IS_PROXY=true
+    volumes:
+      - uploads:/cms/public/uploads
     # ports:
     #   - 1337:1337
 
@@ -63,6 +65,7 @@ services:
 
 volumes:
   data: {}
+  uploads: {}
   # caddy_data: {}
   # caddy_config: {}
 
