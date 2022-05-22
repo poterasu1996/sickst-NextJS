@@ -50,15 +50,16 @@
                 color: #141414;
                 display: flex;
                 
-                a {
+                &-btn {
                     color: #141414;
                     width: 100%;
                     height: 100%;
+                    cursor: pointer;
                 }
             }
 
             .nav-link.active {
-                a {
+                .nav-link-btn {
                     color: #cc3633;
                 }
             }
@@ -66,6 +67,58 @@
     }
 
     .content {
+        display: flex;
         flex: 1;
+        margin-left: 4rem;
+
+        .quick-tips {
+            padding: 2rem 3rem;
+            background-color: #fff;
+            max-width: 40rem;
+            align-self: flex-start;
+            border-radius: .5rem;
+            box-shadow: rgba($color: #000000, $alpha: .15) 0 2px 5px;
+
+            .title {
+                font-size: 1.2rem;
+                line-height: 2.2rem;
+                margin-bottom: 1.6rem;
+            }
+
+            .item {
+                .title {
+                    font-size: 2rem;
+                    line-height: 3rem;
+                }
+                .details {
+                    font-size: 1.5rem;
+                    line-height: 2rem;
+                }
+            }
+
+            .slick-prev.slick-disabled:before, .slick-next.slick-disabled:before {
+                opacity: 0;
+            }
+
+            button {
+                &::before {
+                    border-radius: 50%;
+                    color: #cc3633;
+                }
+            }
+        }
+
+        .dnd-list {
+            flex: 1;
+            margin-left: 2rem;
+            background-color: #fff;
+
+            .subscriptions-list {
+                li {
+                    border: solid 1px red;
+                    margin: 2rem 0;
+                }
+            }
+        }
     }
 }
