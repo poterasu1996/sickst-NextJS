@@ -111,12 +111,14 @@
         .dnd-list {
             flex: 1;
             margin-left: 2rem;
-            background-color: #fff;
+            // background-color: #fff;
+            align-self: flex-start;
 
             .subscriptions-list {
                 li {
                     border: solid 1px red;
-                    margin: 2rem 0;
+                    margin-bottom: 2rem;
+                    background-color: #fff;
                 }
             }
         }

@@ -68,14 +68,15 @@ export const CartProvider = ({ children }) => {
 
   function subscriptionList() {
     // return a list with subscription items from storage
-    const storage = JSON.parse(localStorage.getItem("cart"));
-    if(storage === null) {
-        return 0;
-    } 
-    const list = storage.filter((item) => {
-        return item.payment === "subscription";
-    })
-    return list;
+    useEffect(() => {
+      const storage = JSON.parse(localStorage.getItem("cart"));
+      if(storage) {
+        const list = storage.filter((item) => {
+          return item.payment === "subscription";
+        })
+        return list;
+      }
+    }, [])
   }
 
   const removeProduct = (product) => {

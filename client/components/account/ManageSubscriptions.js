@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import Slider from "react-slick";
+import CartContext from "../../store/cart-context";
 
 
 const ManageSubscription = () => {
@@ -26,6 +27,11 @@ const ManageSubscription = () => {
             item: 'Item 3'
         },
     ]
+    const { cartManager } = useContext(CartContext);
+    // const [subscriptionList, setSubscriptionList] = useState();
+    
+    // const subscriptionList = cartList.filter(item => item.payment === 'subscription')
+    // console.log(subscriptionList)
 
     const [winReady, setWinReady] = useState(false);
     const [subsOrder, updateSubsOrder] = useState(subsList);
@@ -33,10 +39,14 @@ const ManageSubscription = () => {
     useEffect(() => {
         setWinReady(true)
     }, []);
+    
+    const subscriptionList = cartManager.subscriptionList();
+    console.log(subscriptionList)
 
     function handleOnDragEnd(result) {
         if (!result.destination) return;
-        const items = Array.from(subsOrder);
+        if (!subscriptionList) return;
+        const items = Array.from(subscriptionList);
         const [reorderedItem] = items.splice(result.source.index, 1);
         items.splice(result.destination.index, 0, reorderedItem);
 
@@ -66,12 +76,12 @@ const ManageSubscription = () => {
                 <Droppable droppableId="subscriptions">
                     {(provided) => (
                         <ul className="subscriptions-list" {...provided.droppableProps} ref={provided.innerRef}>
-                            {subsOrder.map(({id, item}, index) => {
+                            {subscriptionList.map((item, index) => {
                                 return (
-                                    winReady && <Draggable key={id} draggableId={id} index={index}>
+                                    winReady && <Draggable key={item.cartId} draggableId={item.cartId.toString()} index={index} style={(_isDragging, draggableStyle) => ({ ...draggableStyle, position: 'static' })}>
                                         {(provided) => (
                                             <li {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-                                                <div>{item}</div>
+                                                <div>{item.payment}</div>
                                                 <>DSADASD</>
                                             </li>
                                         )}
