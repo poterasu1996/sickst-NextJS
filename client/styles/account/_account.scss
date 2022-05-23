@@ -96,6 +96,10 @@
                 }
             }
 
+            .slick-next {
+                right: -2rem;
+            }
+
             .slick-prev.slick-disabled:before, .slick-next.slick-disabled:before {
                 opacity: 0;
             }
@@ -115,10 +119,63 @@
             align-self: flex-start;
 
             .subscriptions-list {
+                list-style-type: none;
+
                 li {
-                    border: solid 1px red;
+                    display: flex;
+                    padding: 2rem 1rem;
+                    border-radius: .5rem;
                     margin-bottom: 2rem;
+                    max-width: 45rem;
+                    box-shadow: rgba($color: #000000, $alpha: .15) 0 2px 5px;
                     background-color: #fff;
+
+                    .image-wrapper {
+                        height: 10rem;
+                        width: 10rem;
+                        text-align: center;
+                        overflow: hidden;
+
+                        img {
+                            height: 100%;
+                        }
+                    }
+
+                    .details {
+                        margin-left: .8rem;
+                        display: flex;
+                        flex: 1;
+                        flex-direction: column;
+                        position: relative;
+
+                        .title {
+                            font-size: 1.8rem;
+                            font-weight: 600;
+                            color: #cc3633;
+                            text-transform: uppercase;
+                        }
+
+                        .model {
+                            font-size: 1.6rem;
+                            margin-top: .8rem;
+                        }
+
+                        .link {
+                            display: block;
+                            margin-top: auto;
+                            font-size: 1.4rem;
+                            font-weight: 600;
+                            color: #cc3633;
+                            text-transform: uppercase;
+                        } 
+
+                        .move {
+                            position: absolute;
+                            right: 0;
+                            top: 40%;
+                            transform: rotate(90deg);
+                        }
+                    }
                 }
             }
         }

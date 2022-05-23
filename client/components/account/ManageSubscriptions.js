@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { ArrowRight, Code, Move } from "react-feather";
 import Slider from "react-slick";
 import CartContext from "../../store/cart-context";
 
@@ -36,17 +37,18 @@ const ManageSubscription = () => {
     const [winReady, setWinReady] = useState(false);
     const [subsOrder, updateSubsOrder] = useState(subsList);
 
+    // console.log(cartManager.subsList)
     useEffect(() => {
         setWinReady(true)
     }, []);
     
-    const subscriptionList = cartManager.subscriptionList();
-    console.log(subscriptionList)
+    // const subscriptionList = cartManager.subscriptionList();
+    // console.log(subscriptionList)
 
     function handleOnDragEnd(result) {
         if (!result.destination) return;
-        if (!subscriptionList) return;
-        const items = Array.from(subscriptionList);
+        if (!cartManager.subsList) return;
+        const items = Array.from(cartManager.subsList);
         const [reorderedItem] = items.splice(result.source.index, 1);
         items.splice(result.destination.index, 0, reorderedItem);
 
@@ -76,13 +78,20 @@ const ManageSubscription = () => {
                 <Droppable droppableId="subscriptions">
                     {(provided) => (
                         <ul className="subscriptions-list" {...provided.droppableProps} ref={provided.innerRef}>
-                            {subscriptionList.map((item, index) => {
+                            {cartManager.subsList.map((item, index) => {
                                 return (
                                     winReady && <Draggable key={item.cartId} draggableId={item.cartId.toString()} index={index} style={(_isDragging, draggableStyle) => ({ ...draggableStyle, position: 'static' })}>
                                         {(provided) => (
                                             <li {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-                                                <div>{item.payment}</div>
-                                                <>DSADASD</>
+                                                <div className="image-wrapper">{console.log(item)}
+                                                    <img src={`${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` + item.product.attributes.image.data[0].attributes.url}></img>
+                                                </div>
+                                                <div className="details">
+                                                    <div className="title">{item.product.attributes.brand}</div>
+                                                    <div className="model">{item.product.attributes.model}</div>
+                                                    <a className="link">Details <ArrowRight width={40} height={20} /></a>
+                                                    <div className="move"><Code /></div>
+                                                </div>
                                             </li>
                                         )}
                                     </Draggable>

@@ -6,6 +6,7 @@ export const CartProvider = ({ children }) => {
   const [resetCart, setResetCart] = useState(false); // reset cart each time add/delete action is made
   const [cart, setCart] = useState([]); // set the cart list
   const [cartTotal, setCartTotal] = useState();
+  const [subsList, setSubsList] = useState([]);
 
   useEffect(() => {
     const storageCart = JSON.parse(localStorage.getItem("cart"));
@@ -18,6 +19,9 @@ export const CartProvider = ({ children }) => {
       });
       if (subscriptionItem) {
         setCart([subscriptionItem, ...otbList]);
+        setSubsList(storageCart.filter((item) => {
+          return item.payment === "subscription";
+        }))
       } else {
         setCart([...otbList]);
       }
@@ -183,6 +187,8 @@ export const CartProvider = ({ children }) => {
     productTotal,
     total,
     subscriptionList,
+    subsList,
+    setSubsList,
     cartTotal,
   };
 
