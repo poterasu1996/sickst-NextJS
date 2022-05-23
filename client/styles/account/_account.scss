@@ -149,10 +149,20 @@
                         position: relative;
 
                         .title {
-                            font-size: 1.8rem;
-                            font-weight: 600;
-                            color: #cc3633;
-                            text-transform: uppercase;
+                            display: flex;
+
+                            .brand {
+                                font-size: 1.8rem;
+                                font-weight: 600;
+                                color: #cc3633;
+                                text-transform: uppercase;
+                                margin-right: auto;
+                            }
+
+                            .date {
+                                font-size: 1.2rem;
+                                line-height: 2.6rem;
+                            }
                         }
 
                         .model {

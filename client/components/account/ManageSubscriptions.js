@@ -3,7 +3,7 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { ArrowRight, Code, Move } from "react-feather";
 import Slider from "react-slick";
 import CartContext from "../../store/cart-context";
-
+import { DateTime } from 'luxon';
 
 const ManageSubscription = () => {
     const slickSettings = {
@@ -29,30 +29,31 @@ const ManageSubscription = () => {
         },
     ]
     const { cartManager } = useContext(CartContext);
-    // const [subscriptionList, setSubscriptionList] = useState();
-    
-    // const subscriptionList = cartList.filter(item => item.payment === 'subscription')
-    // console.log(subscriptionList)
-
     const [winReady, setWinReady] = useState(false);
-    const [subsOrder, updateSubsOrder] = useState(subsList);
+    const [subsOrder, updateSubsOrder] = useState([]);
 
-    // console.log(cartManager.subsList)
     useEffect(() => {
         setWinReady(true)
-    }, []);
+        if (cartManager.subsList) {
+            updateSubsOrder(cartManager.subsList)
+        }
+    }, [cartManager.subsList]);
     
-    // const subscriptionList = cartManager.subscriptionList();
-    // console.log(subscriptionList)
-
     function handleOnDragEnd(result) {
         if (!result.destination) return;
         if (!cartManager.subsList) return;
         const items = Array.from(cartManager.subsList);
+        console.log('items', items)
         const [reorderedItem] = items.splice(result.source.index, 1);
         items.splice(result.destination.index, 0, reorderedItem);
 
+        console.log('itemsSplice',)
         updateSubsOrder(items);
+    }
+
+    function setMonth(date, index) {
+        console.log('date',date.getMonth())
+        // return date.setMonth(date.getMonth() + index++).toFormat('MMMM');
     }
 
     return (<>
@@ -78,7 +79,9 @@ const ManageSubscription = () => {
                 <Droppable droppableId="subscriptions">
                     {(provided) => (
                         <ul className="subscriptions-list" {...provided.droppableProps} ref={provided.innerRef}>
-                            {cartManager.subsList.map((item, index) => {
+                            {subsOrder.map((item, index) => {
+                                const currentTime = new DateTime.now();
+                                setMonth(currentTime, index);
                                 return (
                                     winReady && <Draggable key={item.cartId} draggableId={item.cartId.toString()} index={index} style={(_isDragging, draggableStyle) => ({ ...draggableStyle, position: 'static' })}>
                                         {(provided) => (
@@ -87,7 +90,7 @@ const ManageSubscription = () => {
                                                     <img src={`${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` + item.product.attributes.image.data[0].attributes.url}></img>
                                                 </div>
                                                 <div className="details">
-                                                    <div className="title">{item.product.attributes.brand}</div>
+                                                    <div className="title"><span className="brand">{item.product.attributes.brand}</span> <div className="date">September - {index}</div></div>
                                                     <div className="model">{item.product.attributes.model}</div>
                                                     <a className="link">Details <ArrowRight width={40} height={20} /></a>
                                                     <div className="move"><Code /></div>
