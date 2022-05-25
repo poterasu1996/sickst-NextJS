@@ -42,17 +42,16 @@ const ManageSubscription = () => {
     function handleOnDragEnd(result) {
         if (!result.destination) return;
         if (!cartManager.subsList) return;
-        const items = Array.from(cartManager.subsList);
-        console.log('items', items)
+        const items = Array.from(subsOrder);
         const [reorderedItem] = items.splice(result.source.index, 1);
         items.splice(result.destination.index, 0, reorderedItem);
 
-        console.log('itemsSplice',)
         updateSubsOrder(items);
     }
 
     function setMonth(date, index) {
-        console.log('date',date.getMonth())
+        const current = new Date().getMonth();
+        console.log('date',current)
         // return date.setMonth(date.getMonth() + index++).toFormat('MMMM');
     }
 
@@ -100,7 +99,7 @@ const ManageSubscription = () => {
                                     </Draggable>
                                 )
                             })}
-                            {provided.placeholder}
+                            {/* {provided.placeholder} */}
                         </ul>
                     )}
                 </Droppable>
