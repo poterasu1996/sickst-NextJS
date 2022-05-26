@@ -3,14 +3,16 @@ import React, { useEffect, useState } from "react";
 const CartContext = React.createContext([]);
 
 export const CartProvider = ({ children }) => {
-  const [resetCart, setResetCart] = useState(false); // reset cart each time add/delete action is made
-  const [cart, setCart] = useState([]); // set the cart list
-  const [cartTotal, setCartTotal] = useState();
-  const [subsList, setSubsList] = useState([]);
+  const [resetCart, setResetCart] = useState(false);  // reset cart each time add/delete action is made
+  const [cart, setCart] = useState([]);               // set the cart list
+  const [cartTotal, setCartTotal] = useState();       // set cart total
+  const [storageList, setStorageList] = useState([]); // set localStorage list
+  const [subsList, setSubsList] = useState([]);       // set subscriptions list from local storage
 
   useEffect(() => {
     const storageCart = JSON.parse(localStorage.getItem("cart"));
     if (storageCart) {
+      setStorageList([...storageCart]);
       const subscriptionItem = storageCart.find((item) => {
         return item.payment === "subscription";
       });
@@ -72,15 +74,13 @@ export const CartProvider = ({ children }) => {
 
   function subscriptionList() {
     // return a list with subscription items from storage
-    useEffect(() => {
-      const storage = JSON.parse(localStorage.getItem("cart"));
-      if(storage) {
-        const list = storage.filter((item) => {
-          return item.payment === "subscription";
-        })
-        return list;
-      }
-    }, [])
+    if(storageList.length > 0) {
+      const list = storageList.filter((item) => {
+        return item.payment === "subscription";
+      })
+      console.log('subsList', list)
+      return list;
+    }
   }
 
   const removeProduct = (product) => {

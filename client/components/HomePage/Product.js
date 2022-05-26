@@ -198,7 +198,7 @@ const Product = ({ product }) => {
                     </div>
                 : <div className="card-button" onClick={() => {
                   const paymentType = 'subscription';
-                  if(cartManager.subscriptionList().length >= 6) {
+                  if(cartManager.subscriptionList.length >= 6) {
                     const msg = <>
                       <div>Your subscription list hast more than <b className="brand-color">6 products</b>!</div>
                     </>

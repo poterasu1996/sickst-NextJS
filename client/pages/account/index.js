@@ -1,11 +1,30 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import axios from "../../api/axios";
 import ManageSubscription from "../../components/account/ManageSubscriptions";
+import AuthContext from "../../store/auth-context";
 
 
 const Account = () => {
     const [subscription, setSubscription] = useState(true);
     const [orderHistory, setOrderHistory] = useState(false);
+    const { auth } = useContext(AuthContext);
+    const [userInfo, setUserInfo] = useState();
+    const USER_ME = '/users/me';
+
+    useEffect(() => {
+        if(auth) {
+            axios.get(USER_ME, {
+                headers: {
+                    'Bearer': auth
+                }
+            }).then((resp) => {
+                console.log('response',resp)
+                // setUserInfo(resp.data)
+            })
+            .catch(error => console.log('axios error', error))
+        }
+    }, [auth])
 
     function activeMenuLink(button) {
         setSubscription(false);
@@ -14,7 +33,8 @@ const Account = () => {
         button(true);
     }
 
-    console.log('subscription',subscription)
+    console.log('auth', auth)
+
     return(<>
         <Head>
             <link rel="stylesheet" type="text/css" charSet="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />

@@ -85,7 +85,7 @@ const ManageSubscription = () => {
                                     winReady && <Draggable key={item.cartId} draggableId={item.cartId.toString()} index={index} style={(_isDragging, draggableStyle) => ({ ...draggableStyle, position: 'static' })}>
                                         {(provided) => (
                                             <li {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-                                                <div className="image-wrapper">{console.log(item)}
+                                                <div className="image-wrapper">
                                                     <img src={`${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` + item.product.attributes.image.data[0].attributes.url}></img>
                                                 </div>
                                                 <div className="details">
