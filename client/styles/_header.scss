@@ -12,6 +12,9 @@ header {
   position: sticky;
   top: 0;
   z-index: 999;
+  @media (max-width:500px) {
+    height: 5rem;
+  }
   .header {
     display: flex;
     align-items: center;
@@ -29,7 +32,10 @@ header {
         text-align: center;
         justify-content: center;
         height: 100%;
-        padding: 0 1rem;
+        padding: 0 2rem;
+        @media (max-width:400px) {
+          padding: 0 1rem;
+        }
         &:hover {
           background-color: #000;
         }
@@ -151,6 +157,9 @@ header {
           @media (max-width: 768px) {
             padding: 0 1.5rem;
           }
+          @media (max-width:500px) {
+            line-height: 5rem;
+          }
         }
       }
     }
@@ -169,6 +178,10 @@ header {
         height: 100%;
         line-height: 7rem;
         padding: 0 2rem;
+        @media (max-width:500px) {
+          line-height: 5rem;
+          padding: 0 1rem;
+        }
         &:hover {
           // background-color: #000;
           svg {
@@ -287,6 +300,8 @@ header {
 
     .shopping-cart {
       position: relative;
+      margin-right: .3rem;
+
       .badge {
         font-size: 1rem;
         font-weight: 600;

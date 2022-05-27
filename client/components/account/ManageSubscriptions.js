@@ -49,10 +49,13 @@ const ManageSubscription = () => {
         updateSubsOrder(items);
     }
 
-    function setMonth(date, index) {
-        const current = new Date().getMonth();
-        console.log('date',current)
-        // return date.setMonth(date.getMonth() + index++).toFormat('MMMM');
+    function setMonth(index) {
+        let subscriptionMonth;
+        if(index >= 0) {
+            subscriptionMonth = DateTime.fromISO(DateTime.now()).plus({months: index + 1}).toFormat('LLLL');
+            return subscriptionMonth;
+        } 
+        return null;
     }
 
     return (<>
@@ -79,8 +82,7 @@ const ManageSubscription = () => {
                     {(provided) => (
                         <ul className="subscriptions-list" {...provided.droppableProps} ref={provided.innerRef}>
                             {subsOrder.map((item, index) => {
-                                const currentTime = new DateTime.now();
-                                setMonth(currentTime, index);
+                                // setMonth(index);
                                 return (
                                     winReady && <Draggable key={item.cartId} draggableId={item.cartId.toString()} index={index} style={(_isDragging, draggableStyle) => ({ ...draggableStyle, position: 'static' })}>
                                         {(provided) => (
@@ -89,7 +91,7 @@ const ManageSubscription = () => {
                                                     <img src={`${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` + item.product.attributes.image.data[0].attributes.url}></img>
                                                 </div>
                                                 <div className="details">
-                                                    <div className="title"><span className="brand">{item.product.attributes.brand}</span> <div className="date">September - {index}</div></div>
+                                                    <div className="title"><span className="brand">{item.product.attributes.brand}</span> <div className="date">{setMonth(index)}</div></div>
                                                     <div className="model">{item.product.attributes.model}</div>
                                                     <a className="link">Details <ArrowRight width={40} height={20} /></a>
                                                     <div className="move"><Code /></div>

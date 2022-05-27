@@ -4,7 +4,7 @@
     width: 100%;
     @media (max-width:768px) {
         margin: 0;
-        padding: 3rem 2rem;
+        padding: 4rem 2rem;
     }
     
     .col {
@@ -28,7 +28,10 @@
         flex-direction: column;
         justify-content: space-evenly;
         padding: 0 3rem;
-        @media (max-width:700px) {
+        @media (max-width:768px) {
+            padding-left: 0;
+        }
+        @media (max-width:576px) {
             padding: 0;
         }
         .text {
@@ -37,12 +40,18 @@
             @media (max-width:700px) {
                 padding-right: 1rem;
             }
+            @media (max-width:576px) {
+                padding: 0;
+            }
         }
         .button-second {
             @media (max-width:700px) {
                 // margin: auto;
                 margin-top: 3rem;
                 margin-bottom: 3rem;
+            }
+            @media (max-width:400px) {
+                margin: 3rem auto;
             }
         }
         .title {

@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import Head from "next/head";
 import { useContext, useEffect, useState } from "react";
 import axios from "../../api/axios";
@@ -16,11 +17,11 @@ const Account = () => {
         if(auth) {
             axios.get(USER_ME, {
                 headers: {
-                    'Bearer': auth
+                    'Authorization': 'Bearer ' + auth
                 }
             }).then((resp) => {
                 console.log('response',resp)
-                // setUserInfo(resp.data)
+                setUserInfo(resp.data)
             })
             .catch(error => console.log('axios error', error))
         }
@@ -33,7 +34,12 @@ const Account = () => {
         button(true);
     }
 
-    console.log('auth', auth)
+    function getDate() {
+        const date = DateTime.fromISO(userInfo.createdAt);
+        return date.toFormat('dd LLL yyyy');
+    }
+    // console.log('auth', auth)
+    console.log('userInfo', userInfo)
 
     return(<>
         <Head>
@@ -46,7 +52,7 @@ const Account = () => {
                     <div className="user-info">
                         <div className="user-avatar"></div>
                         <div className="user-name">Sickst User</div>
-                        <div className="joined-date">Joined: <b className="brand-color">21 sept 2021</b></div>
+                        <div className="joined-date">Joined: <b className="brand-color">{userInfo && getDate()}</b></div>
                     </div>
                     <ul className="nav-menu">
                         <li className={"nav-link" + (subscription ? ' active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setSubscription)}>Manage subscription</div></li>
