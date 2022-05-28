@@ -26,6 +26,14 @@
             box-shadow: 0 .2rem 1rem rgba($color: #3E1223, $alpha: 0.08);
             border: unset;
             transition: ease 0.3s;
+            @media (max-width: 768px) {
+                width: 48%;
+                margin-bottom: 2rem;
+            }
+            @media (max-width: 576px) {
+                width: 100%;
+            }
+
             &:hover {
                 box-shadow: 0 .4rem 3.2rem rgba($color: #3E1223, $alpha: 0.25);
                 transition: ease 0.3s;
