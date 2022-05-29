@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { ArrowRight, Code, Move } from "react-feather";
+import { ArrowRight, Code, Move, Plus } from "react-feather";
 import Slider from "react-slick";
 import CartContext from "../../store/cart-context";
 import { DateTime } from 'luxon';
+import emptyBottle from '../../public/img/empty-bottle.png';
 
 const ManageSubscription = () => {
     const slickSettings = {
@@ -13,21 +14,7 @@ const ManageSubscription = () => {
         slidesToShow: 1,
         slidesToScroll: 1
     } 
-
-    const subsList = [
-        {
-            id: 'unu',
-            item: 'Item 1'
-        },
-        {   
-            id: 'doi',
-            item: 'Item 2'
-        },
-        {
-            id: 'trei',
-            item: 'Item 3'
-        },
-    ]
+    
     const { cartManager } = useContext(CartContext);
     const [winReady, setWinReady] = useState(false);
     const [subsOrder, updateSubsOrder] = useState([]);
@@ -77,6 +64,22 @@ const ManageSubscription = () => {
             </Slider>
         </div>
         <div className="dnd-list">
+            
+            {subsOrder.length === 0 && <ul className="subscriptions-list">
+                <li>
+                    <div className="image-wrapper">
+                        <img style={{height: '80%'}} src={emptyBottle.src}></img>
+                        <div className="plus">
+                            <Plus width={20} height={20} stroke={'#fff'} strokeWidth={2.7} />
+                        </div>
+                    </div>
+                    <div className="details">
+                        <div className="title"><span className="brand">Pick your next scent</span></div>
+                        <div className="model">If this slot is empty, we'll ship you our product of the month.</div>
+                    </div>
+
+                </li>
+            </ul>}
             <DragDropContext onDragEnd={handleOnDragEnd}>
                 <Droppable droppableId="subscriptions">
                     {(provided) => (

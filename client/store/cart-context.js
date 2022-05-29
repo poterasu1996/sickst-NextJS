@@ -159,10 +159,12 @@ export const CartProvider = ({ children }) => {
   };
 
   const total = (coupone) => {
+    // calculate cart total for OTB products
     let total = 0;
     cart.map((item) => {
         if(item.payment === 'subscription') {
-            total = total + item.quantity * item.product.attributes.subscription_price;
+            // total = total + item.quantity * item.product.attributes.subscription_price;
+            return;
         } else {
             total = total + item.quantity * item.product.attributes.otb_price;
         }

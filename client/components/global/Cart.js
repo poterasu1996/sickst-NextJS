@@ -64,7 +64,7 @@ const Cart = (props) => {
                 )}
               </div>
             </div>
-            <div className="cart-total-wrapper">
+            {cartManager.cart.find((el) => el.payment === 'otb') && <div className="cart-total-wrapper">
                 <div className="cart-subtotal">
                 <span>Subtotal</span>
                 <span className="cart-price">
@@ -88,7 +88,7 @@ const Cart = (props) => {
                 <Link href="/subscription/payment">
                   <a className="button-second" onClick={props.onClick}>Checkout</a>
                 </Link>
-            </div>
+            </div>}
             
           </>
         ) : (

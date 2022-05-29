@@ -8,51 +8,6 @@ import { useEffect, useMemo, useState } from "react";
 import axios from "../../api/axios";
 const PRODUCTS_URL = "/products?populate=*";
 
-// const list = [
-//     {
-//       image: image1,
-//       brand: "Paco Rabanne",
-//       model: "Invictus",
-//       type: "Eau de toilette",
-//       price: "120",
-//     },
-//     {
-//       image: image2,
-//       brand: "Dior",
-//       model: "Sauvage",
-//       type: "Eau de parfum",
-//       price: "290",
-//     },
-//     {
-//       image: image3,
-//       brand: "Paco Rabanne",
-//       model: "Phantom",
-//       type: "Parfum",
-//       price: "550",
-//     },
-//     {
-//       image: image1,
-//       brand: "Paco Rabanne",
-//       model: "One Million",
-//       type: "Eau de toilette",
-//       price: "120",
-//     },
-//     {
-//       image: image2,
-//       brand: "Sauvage",
-//       model: "One Million",
-//       type: "Eau de parfum",
-//       price: "290",
-//     },
-//     {
-//       image: image3,
-//       brand: "Paco Rabanne",
-//       model: "Exclussive",
-//       type: "Parfum",
-//       price: "550",
-//     },
-//   ];
-
 const ProductSection = () => {
   const [maleTab, setMaleTab] = useState(true);
   const [nrOfItems, setNrOfItems] = useState(3);

@@ -15,11 +15,11 @@ const CollectionSection = () => {
                         <img src={cardImg1.src}></img>
                     </div>
                     <div className="card-content">
-                        <div className="title">Make It Happen</div>
+                        <div className="title">Mystery</div>
                         <div className="description">Staying in your comfort zone is so 2021. Boldly go into the new year with these badass scents.</div>
                         {/* <a href="/" className="button-second my-5">Go to sickst.ro</a> */}
                         <Link href="/">
-                            <a className="button-second my-5">Go to sickst.ro</a>
+                            <a className="button-second my-5">Browse collection</a>
                         </Link>
                     </div>
                 </div>
@@ -30,9 +30,9 @@ const CollectionSection = () => {
                         <img src={cardImg1.src}></img>
                     </div>
                     <div className="card-content">
-                        <div className="title">Make It Happen</div>
+                        <div className="title">Season</div>
                         <div className="description">Staying in your comfort zone is so 2021. Boldly go into the new year with these badass scents these badass scents.</div>
-                        <Link href="/"><a className="button-second my-5">Go to sickst.ro</a></Link>
+                        <Link href="/"><a className="button-second my-5">Browse collection</a></Link>
                     </div>
                 </div>
                 <div className="col-4 card">
@@ -41,9 +41,9 @@ const CollectionSection = () => {
                         <img src={cardImg1.src}></img>
                     </div>
                     <div className="card-content">
-                        <div className="title">Make It Happen</div>
+                        <div className="title">Sickst</div>
                         <div className="description">Staying in your comfort zone is so 2021. Boldly go into the new year with these badass scents.</div>
-                        <Link href="/"><a className="button-second my-5">Go to sickst.ro</a></Link>
+                        <Link href="/"><a className="button-second my-5">Browse collection</a></Link>
                     </div>
                 </div>
             </div>

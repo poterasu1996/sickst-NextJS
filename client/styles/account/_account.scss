@@ -134,15 +134,32 @@
                     max-width: 45rem;
                     box-shadow: rgba($color: #000000, $alpha: .15) 0 2px 5px;
                     background-color: #fff;
+                    cursor: pointer;
 
                     .image-wrapper {
                         height: 10rem;
                         width: 10rem;
-                        text-align: center;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
                         overflow: hidden;
+                        position: relative;
 
                         img {
                             height: 100%;
+                        }
+
+                        .plus {
+                            position: absolute;
+                            right: 1rem;
+                            top: 3.5rem;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            width: 3rem;
+                            height: 3rem;
+                            background-color: #cc3633;
+                            border-radius: 50%;
                         }
                     }
 

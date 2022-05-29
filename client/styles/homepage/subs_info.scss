@@ -9,8 +9,11 @@
         padding: 3rem 2rem;
     }
     .title {
-        font-size: 3.8rem;
-        line-height: 4.8rem;
+        font-size: 3.5rem;
+        line-height: 4.5rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        // text-align: center;
         @media (max-width: 500px) {
             font-size: 2.5rem;
             line-height: 3.5rem;
@@ -37,10 +40,17 @@
                 height: 100%;
                 display: flex;
                 flex-direction: column;
+                // background-color: #141414;
+                &:hover {
+                    .card-img img {
+                        transform: scale(1);
+                    }
+                }
                 .title {
-                    font-size: 2.3rem;
-                    line-height: 3.3rem;
-                    font-weight: 600;
+                    font-size: 2rem;
+                    line-height: 3rem;
+                    font-weight: 700;
+                    text-transform: uppercase;
                     padding: 2rem 2rem 1rem 2rem;
                 }
                 .subtitle {
@@ -52,13 +62,17 @@
                 }
             }
             &-img {
-                max-height: 30rem;
+                height: 25rem;
+                overflow: hidden;
                 @media (max-width:768px) {
                     max-height: 60rem;
                 }
                 img {
                     height: 100%;
-                    width: inherit;
+                    width: 100%;
+                    object-fit: cover;
+                    transform: scale(1.1);
+                    transition: .4s ease;
                 }
             }
         }
