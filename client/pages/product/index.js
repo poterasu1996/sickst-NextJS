@@ -2,15 +2,15 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 const Product = () => {
-    const router = useRouter();
+    const { router, asPath, pathname, query} = useRouter();
 
     // redirect to home page
-    useEffect(() => {
-        router.push('/');
-    }, []);
+    // useEffect(() => {
+    //     router.push('/');
+    // }, []);
 
     return <>
-        Product page
+        asPath {asPath} - pathname {pathname} - query {query.id_token}
     </>
 }
 

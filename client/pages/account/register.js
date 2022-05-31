@@ -4,13 +4,13 @@ import GoogleLogin from 'react-google-login';
 
 const Register = () => {
 
-    const onSuccess = (res) => {
-        console.log("SUCCESS", res.profileObj);
-    }
+    // const onSuccess = (res) => {
+    //     console.log("SUCCESS", res.profileObj);
+    // }
 
-    const onFailure = (res) => {
-        console.log('FAILED', res);
-    }
+    // const onFailure = (res) => {
+    //     console.log('FAILED', res);
+    // }
 
     return <>
         <div className="main-content">
@@ -37,7 +37,7 @@ const Register = () => {
                                 <span className="text">or</span>
                                 <span className="line"></span>
                             </div>
-                            <GoogleLogin 
+                            {/* <GoogleLogin 
                                 clientId={process.env.NEXT_PUBLIC_GA_ID}
                                 buttonText='Sign up with Google'
                                 onSuccess={onSuccess}
@@ -45,7 +45,11 @@ const Register = () => {
                                 cookiePolicy={'single_host_origin'}
                                 isSignedIn={true}
                                 className="g-auth"
-                            />
+                            /> */}
+                            <div className='google-login'>
+                                <button onClick={() => 
+                                (window.location = `${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}/api/connect/google`)}>Login via google</button>
+                            </div>
                         </div>
 
                         {/* simple footer */}
