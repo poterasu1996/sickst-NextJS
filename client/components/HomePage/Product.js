@@ -9,6 +9,7 @@ import CartContext from "../../store/cart-context";
 import AuthContext from "../../store/auth-context";
 // import CustomToast from "../global/CustomToast";
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 const Product = ({ product }) => {
   const [show, setShow] = useState(false);                  // for Read more modal
@@ -17,6 +18,7 @@ const Product = ({ product }) => {
   const [addedToCart, setAddedToCart] = useState(false);    // show the checkmark after added to cart
   const [loading, setLoading] = useState(false);            // used for loading animation
   const [subscription, setSubscription] = useState(true);
+  const router = useRouter();
   
   const toastMsg = (
     <>
@@ -186,8 +188,9 @@ const Product = ({ product }) => {
               </ModalBody>
             </Modal>
           </div>
-          <div className="product-card-button">
-            {cartManager.hasProduct(product) && auth
+          <div className="product-card-button">{console.log('auth',auth)}{console.log(cartManager.hasProduct(product))}
+            { 
+            cartManager.hasProduct(product)
                 ? loading 
                     ? <Spinner animation="border" style={{color: "#cc3663"}}/>
                     : <div className="card-button disabled">
@@ -196,24 +199,30 @@ const Product = ({ product }) => {
                         </div>
                         <span>Added</span>
                     </div>
-                : <div className="card-button" onClick={() => {
-                  const paymentType = 'subscription';
-                  if(cartManager.subscriptionList.length >= 6) {
-                    const msg = <>
-                      <div>Your subscription list hast more than <b className="brand-color">6 products</b>!</div>
-                    </>
-                    toast(msg, {
-                      autoClose: 2000,
-                    })
-                    return ;
-                  }
-                  notify();
-                  cartManager.addProduct(product, 1, paymentType);
-                  setAddedToCart(true);
-                  setLoading(true);
-                }}>
+                : auth  
+                  ? <div className="card-button" onClick={() => {
+                      const paymentType = 'subscription';
+                      if(cartManager.subscriptionList.length >= 6) {
+                        const msg = <>
+                          <div>Your subscription list hast more than <b className="brand-color">6 products</b>!</div>
+                        </>
+                        toast(msg, {
+                          autoClose: 2000,
+                        })
+                        return ;
+                      }
+                      notify();
+                      cartManager.addProduct(product, 1, paymentType);
+                      setAddedToCart(true);
+                      setLoading(true);
+                    }}>
+                        <div className="plus"></div>Add to cart
+                    </div>
+                  : <div className="card-button" onClick={() => {
+                      router.push('/account/login')
+                  }}>
                     <div className="plus"></div>Add to cart
-                </div>
+                  </div>
             }  
             <div className="price">RON:&nbsp;{product.attributes.subscription_price}</div>
           </div>

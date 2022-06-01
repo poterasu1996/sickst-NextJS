@@ -20,7 +20,7 @@ const Account = () => {
                     'Authorization': 'Bearer ' + auth
                 }
             }).then((resp) => {
-                console.log('response',resp)
+                // console.log('response',resp)
                 setUserInfo(resp.data)
             })
             .catch(error => console.log('axios error', error))
@@ -39,7 +39,7 @@ const Account = () => {
         return date.toFormat('dd LLL yyyy');
     }
     // console.log('auth', auth)
-    console.log('userInfo', userInfo)
+    // console.log('userInfo', userInfo)
 
     return(<>
         <Head>

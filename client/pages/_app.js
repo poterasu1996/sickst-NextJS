@@ -9,9 +9,6 @@ function MyApp({ Component, pageProps }) {
   return (
     <AuthProvider>
       <CartProvider>
-        {/* <Route path="/auth/callback/google">
-          <GoogleAuthCallback />
-        </Route> */}
           <Layout>
             <Component {...pageProps} />
           </Layout>
