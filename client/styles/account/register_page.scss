@@ -121,11 +121,13 @@
             }
         }
         .g-auth {
-            // flex-direction: column;
+            background-color: #fff;
+            display: inline-flex;
+            align-items: center;
             width: 100%;
             justify-content: flex-start;
-            align-items: center;
             box-shadow: 0 0 2px 0 rgba($color: #000000, $alpha: 0.12), 0 2px 2px 0 rgba($color: #000000, $alpha: 0.24);
+            border: 1px solid transparent;
             transition: .2s ease;
             margin: 2.4rem;
             padding-right: 5rem !important;
@@ -137,8 +139,14 @@
                 transition: .2s ease;
             }
 
+            .g-icon {
+                width: 4rem;
+                height: 4rem;
+            }
             span {
                 margin: auto;
+                font-size: 1.4rem;
+                font-weight: 500;
             }
         }
     }
