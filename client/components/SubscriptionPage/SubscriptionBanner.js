@@ -7,7 +7,9 @@ const SubscriptionBanner = () => {
   const slickSettings = {
     dots: true,
     infinite: true,
-    speed: 500,
+    autoplay: true,
+    autoplaySpeed: 6000,
+    speed: 1000,
     slidesToShow: 1,
     slidesToScroll: 1
   }
