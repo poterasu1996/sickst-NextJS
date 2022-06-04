@@ -3,6 +3,7 @@ import React, { useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import AuthContext from '../../store/auth-context';
 import axios from '../../api/axios';
+import { Spinner } from 'react-bootstrap';
 
 const GoogleAuthCallback = () => {
   const { setAuth } = useContext(AuthContext); 
@@ -27,14 +28,9 @@ const GoogleAuthCallback = () => {
   }, [query.id_token])
 
   return (
-    <div>
-      {/* {auth && (
-        <>
-          <div>Jwt: {auth.jwt}</div>
-          <div>User Id: {auth.user.id}</div>
-          <div>Provider: {auth.user.provider}</div>
-        </>
-      )} */}
+    <div className='google-callback-page'>
+      <div className='title'>Asteptati un moment</div>
+      <Spinner animation="border" style={{color: "#cc3663"}}/>
     </div>
   )
 }

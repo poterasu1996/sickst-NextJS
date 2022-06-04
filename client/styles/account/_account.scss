@@ -8,10 +8,19 @@
 .account-main-body {
     display: flex;
     padding: 5rem 4rem;
+    @media (max-width: 600px) {
+        padding: 3rem 4rem;
+    }
+    @media (max-width: 400px) {
+        padding: 3rem 2rem;
+    }
 
     .nav-section {
-        // width: 15%;
         min-width: 15%;
+        min-width: 15rem;
+        @media (max-width: 600px) {
+            display: none;
+        }
 
         .user-info {
             padding-bottom: 2rem;
@@ -70,6 +79,59 @@
         display: flex;
         flex: 1;
         margin-left: 4rem;
+        @media (max-width:1100px) {
+            flex: 1;
+            flex-direction: column;
+        }
+        @media (max-width:600px) {
+            margin-left: 0;
+        }
+
+        .user-info-mobile {
+            margin: 0 auto;
+            margin-bottom: 2rem;
+            display: flex;
+
+            .user-avatar {
+                width: 10rem;
+                height: 10rem;
+                @media (max-width: 400px) {
+                    width: 8rem;
+                    height: 8rem;
+                }
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+
+            .user-details {
+                margin: auto 2rem;
+
+                .name {
+                    font-size: 1.8rem;
+                    line-height: 2.8rem;
+                    font-weight: 600;
+                    margin-bottom: .8rem;
+                    @media (max-width: 400px) {
+                        font-size: 1.6rem;
+                        line-height: 2.6rem;
+                        margin-bottom: .3rem;
+                    }
+                }
+
+                .joined-date, .subscription-status {
+                    font-size: 1.4rem;
+                    line-height: 2.4rem;
+                    font-weight: 400;
+                    @media (max-width: 400px) {
+                        font-size: 1.2rem;
+                        line-height: 2.2rem;
+                    }
+                }
+            }
+        }
 
         .quick-tips {
             padding: 2rem 3rem;
@@ -118,13 +180,20 @@
         }
 
         .dnd-list {
-            flex: 1;
-            margin-left: 2rem;
-            // background-color: #fff;
-            align-self: flex-start;
+            min-width: 33rem;
+            @media (max-width:1100px) {
+                margin-top: 2rem;
+                padding: 0;
+            }
+            @media (max-width: 400px) {
+                min-width: unset;
+            }
 
             .subscriptions-list {
                 list-style-type: none;
+                @media (max-width:1100px) {
+                    padding: 0;
+                }
 
                 li {
                     display: flex;
@@ -135,6 +204,9 @@
                     box-shadow: rgba($color: #000000, $alpha: .15) 0 2px 5px;
                     background-color: #fff;
                     cursor: pointer;
+                    @media (max-width:600px) {
+                        max-width: unset;
+                    }
 
                     .image-wrapper {
                         height: 10rem;
@@ -144,6 +216,10 @@
                         align-items: center;
                         overflow: hidden;
                         position: relative;
+                        @media (max-width: 400px) {
+                            height: 8rem;
+                            width: 8rem;
+                        }
 
                         img {
                             height: 100%;
@@ -179,6 +255,9 @@
                                 color: #cc3633;
                                 text-transform: uppercase;
                                 margin-right: auto;
+                                @media (max-width: 400px) {
+                                    font-size: 1.5rem;
+                                }
                             }
 
                             .date {
@@ -186,12 +265,19 @@
                                 line-height: 2.6rem;
                                 font-weight: 600;
                                 text-transform: uppercase;
+                                @media (max-width: 400px) {
+                                    line-height: 2.4rem;
+                                    margin-left: .5rem;
+                                }
                             }
                         }
 
                         .model {
                             font-size: 1.6rem;
                             margin-top: .8rem;
+                            @media (max-width: 400px) {
+                                font-size: 1.4rem;
+                            }
                         }
 
                         .link {
@@ -201,6 +287,16 @@
                             font-weight: 600;
                             color: #cc3633;
                             text-transform: uppercase;
+                            @media (max-width: 400px) {
+                                font-size: 1.2rem;
+                            }
+
+                            svg {
+                                @media (max-width: 400px) {
+                                    width: 1.6rem;
+                                    height: 1.6rem;
+                                }
+                            }
                         } 
 
                         .move {

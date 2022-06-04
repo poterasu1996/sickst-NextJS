@@ -10,9 +10,9 @@
     text-transform: none;
     display: flex;
     flex-direction: column;
-    @media (max-width:500px) {
+    @media (max-width:576px) {
         width: 100%;
-      }
+    }
 
     .side-modal-header{
         display: flex;
@@ -119,6 +119,7 @@
                     width: 8rem;
                     height: 8rem;
                     margin-right: 2rem;
+                    overflow: hidden;
                     img {
                         height: 100%;
                     }

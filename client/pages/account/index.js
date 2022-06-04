@@ -2,16 +2,34 @@ import { DateTime } from "luxon";
 import Head from "next/head";
 import { useContext, useEffect, useState } from "react";
 import axios from "../../api/axios";
+import BillingInformation from "../../components/account/BillingInformation";
 import ManageSubscription from "../../components/account/ManageSubscriptions";
+import OrderHistory from "../../components/account/OrderHistory";
+import ShippingInformation from "../../components/account/ShippingInformation";
+import UserReviews from "../../components/account/UserReviews";
+import RatedProducts from "../../components/account/RatedProducts";
+import PersonalInfo from "../../components/account/PersonalInfo";
+import ResetPassword from "../../components/account/ResetPassword";
 import AuthContext from "../../store/auth-context";
-
+import AccountContext from "../../store/account-context";
+import userAvatar from '../../public/img/svg/male_avatar.svg';
 
 const Account = () => {
     const [subscription, setSubscription] = useState(true);
     const [orderHistory, setOrderHistory] = useState(false);
+    const [billingInformation, setBillingInformation] = useState(false);
+    const [shippingInformation, setShippingInformation] = useState(false);
+    const [reviews, setReviews] = useState(false);
+    const [ratedProducts, setRatedProducts] = useState(false);
+    const [personalInfo, setPersonalInfo] = useState(false);
+    const [resetPassword, setResetPassword] = useState(false);
+    
+    const [userInfo, setUserInfo] = useState();     // fetch user info
     const { auth } = useContext(AuthContext);
-    const [userInfo, setUserInfo] = useState();
+    const { accountManager } = useContext(AccountContext);
     const USER_ME = '/users/me';
+
+    // const headerDDOptions = ['membership', 'order_history', 'shipping', 'personal_details']
 
     useEffect(() => {
         if(auth) {
@@ -27,19 +45,49 @@ const Account = () => {
         }
     }, [auth])
 
-    function activeMenuLink(button) {
+    useEffect(() => {
+        if(accountManager.headerDDLink !== null) {
+            // check if user came via header dropdown navbar
+            resetStates();
+            if(accountManager.headerDDLink === 'membership') {
+                setSubscription(true);
+            } else if(accountManager.headerDDLink === 'order_history') {
+                setOrderHistory(true);
+            } else if(accountManager.headerDDLink === 'shipping') {
+                setShippingInformation(true);
+            } else if(accountManager.headerDDLink === 'personal_details') {
+                setPersonalInfo(true);
+            } else {
+                console.log('Header link is invalid')
+            }
+        }
+        console.log('orderState', orderHistory)
+    }, [accountManager.headerDDLink])
+
+    function resetStates() {
+        // reset navbar active class
         setSubscription(false);
         setOrderHistory(false);
+        setBillingInformation(false);
+        setShippingInformation(false);
+        setReviews(false);
+        setRatedProducts(false);
+        setPersonalInfo(false);
+        setResetPassword(false);
+    }
 
-        button(true);
+    function activeMenuLink(navLink) {
+        // set every state to false;
+        resetStates();
+
+        // set active the nav-link we need
+        navLink(true);
     }
 
     function getDate() {
         const date = DateTime.fromISO(userInfo.createdAt);
         return date.toFormat('dd LLL yyyy');
     }
-    // console.log('auth', auth)
-    // console.log('userInfo', userInfo)
 
     return(<>
         <Head>
@@ -55,18 +103,35 @@ const Account = () => {
                         <div className="joined-date">Joined: <b className="brand-color">{userInfo && getDate()}</b></div>
                     </div>
                     <ul className="nav-menu">
-                        <li className={"nav-link" + (subscription ? ' active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setSubscription)}>Manage subscription</div></li>
-                        <li className={"nav-link" + (orderHistory ? ' active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setOrderHistory)}>Order history</div></li>
-                        <li className="nav-link"><div className="nav-link-btn">Billing information</div></li>
-                        <li className="nav-link"><div className="nav-link-btn">Shipping information</div></li>
-                        <li className="nav-link"><div className="nav-link-btn">My reviews</div></li>
-                        <li className="nav-link"><div className="nav-link-btn">Rated products</div></li>
-                        <li className="nav-link"><div className="nav-link-btn">Personal info</div></li>
-                        <li className="nav-link"><div className="nav-link-btn">Reset password</div></li>
+                        <li className={"nav-link " + (subscription ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setSubscription)}>Manage subscription</div></li>
+                        <li className={"nav-link " + (orderHistory ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setOrderHistory)}>Order history</div></li>
+                        <li className={"nav-link " + (billingInformation ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setBillingInformation)}>Billing information</div></li>
+                        <li className={"nav-link " + (shippingInformation ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setShippingInformation)}>Shipping information</div></li>
+                        <li className={"nav-link " + (reviews ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setReviews)}>My reviews</div></li>
+                        <li className={"nav-link " + (ratedProducts ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setRatedProducts)}>Rated products</div></li>
+                        <li className={"nav-link " + (personalInfo ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setPersonalInfo)}>Personal info</div></li>
+                        <li className={"nav-link " + (resetPassword ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setResetPassword)}>Reset password</div></li>
                     </ul>
                 </div>
                 <div className="content">
-                    {subscription && <ManageSubscription />}
+                    <div className="user-info-mobile">
+                        <div className="user-avatar">
+                            <img src={userAvatar.src}></img>
+                        </div>
+                        <div className="user-details">
+                            <div className="name">Sickst User</div>
+                            <div className="joined-date">Joined: <b className="brand-color">{userInfo && getDate()}</b></div>
+                            <div className="subscription-status">Subscription: <b className="brand-color">Active</b></div>
+                        </div>
+                    </div>
+                    {subscription && <ManageSubscription subscription={subscription} />}
+                    {orderHistory && <OrderHistory />}
+                    {billingInformation && <BillingInformation />}
+                    {shippingInformation && <ShippingInformation />}
+                    {reviews && <UserReviews />}
+                    {ratedProducts && <RatedProducts />}
+                    {personalInfo && <PersonalInfo />}
+                    {resetPassword && <ResetPassword />}
                 </div>
             </div>
         </div>

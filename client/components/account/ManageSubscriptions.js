@@ -6,7 +6,7 @@ import CartContext from "../../store/cart-context";
 import { DateTime } from 'luxon';
 import emptyBottle from '../../public/img/empty-bottle.png';
 
-const ManageSubscription = () => {
+const ManageSubscription = ({ subscription }) => {
     const slickSettings = {
         dots: false,
         infinite: false,
@@ -25,7 +25,38 @@ const ManageSubscription = () => {
             updateSubsOrder(cartManager.subsList)
         }
     }, [cartManager.subsList]);
-    
+
+    useEffect(() => {
+        const quickTipsElem = document.getElementById("quick-tips")
+        if (window.innerWidth > 600 & window.innerWidth < 1101) {
+            const elemWidth = window.innerWidth - 150 - (2 * 40) - 40;
+            quickTipsElem.style.maxWidth = `${elemWidth}px`
+        } else if(window.innerWidth <= 600) {
+            let padding = 80;
+            if (window.innerWidth <= 400) {
+                padding = 40;
+            }
+            const elemWidth = window.innerWidth - padding;
+            quickTipsElem.style.maxWidth = `${elemWidth}px`
+        }
+
+        window.onresize = () => {
+            if (window.innerWidth > 600 & window.innerWidth < 1101) {
+                const elemWidth = window.innerWidth - 150 - (2 * 40) - 40;
+                quickTipsElem.style.maxWidth = `${elemWidth}px`
+            } else if(window.innerWidth <= 600) {
+                let padding = 80;
+                if (window.innerWidth <= 400) {
+                    padding = 40;
+                }
+                const elemWidth = window.innerWidth - padding;
+                quickTipsElem.style.maxWidth = `${elemWidth}px`
+            } else {
+                quickTipsElem.style.maxWidth = '440px';
+            }
+        }
+    }, [])
+
     function handleOnDragEnd(result) {
         if (!result.destination) return;
         if (!cartManager.subsList) return;
@@ -46,7 +77,7 @@ const ManageSubscription = () => {
     }
 
     return (<>
-        <div className="quick-tips">
+        <div className="quick-tips" id="quick-tips">
             <div className="title">Quick tips to customize your queue</div>
             <Slider {...slickSettings}>
                 <div className="item">
