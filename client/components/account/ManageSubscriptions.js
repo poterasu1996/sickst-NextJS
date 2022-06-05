@@ -5,6 +5,7 @@ import Slider from "react-slick";
 import CartContext from "../../store/cart-context";
 import { DateTime } from 'luxon';
 import emptyBottle from '../../public/img/empty-bottle.png';
+import ShipmentForm from "../auth/ShipmentForm";
 
 const ManageSubscription = ({ subscription }) => {
     const slickSettings = {
@@ -28,7 +29,7 @@ const ManageSubscription = ({ subscription }) => {
 
     useEffect(() => {
         const quickTipsElem = document.getElementById("quick-tips")
-        if (window.innerWidth > 600 & window.innerWidth < 1101) {
+        if ((window.innerWidth > 600) & (window.innerWidth < 1101)) {
             const elemWidth = window.innerWidth - 150 - (2 * 40) - 40;
             quickTipsElem.style.maxWidth = `${elemWidth}px`
         } else if(window.innerWidth <= 600) {
@@ -38,6 +39,8 @@ const ManageSubscription = ({ subscription }) => {
             }
             const elemWidth = window.innerWidth - padding;
             quickTipsElem.style.maxWidth = `${elemWidth}px`
+        } else {
+            quickTipsElem.style.maxWidth = '440px';
         }
 
         window.onresize = () => {
@@ -77,22 +80,27 @@ const ManageSubscription = ({ subscription }) => {
     }
 
     return (<>
-        <div className="quick-tips" id="quick-tips">
-            <div className="title">Quick tips to customize your queue</div>
-            <Slider {...slickSettings}>
-                <div className="item">
-                    <div className="title"><b className="brand-color">1 of 3</b> - Edit your queue</div> 
-                    <div className="details">Switch the order of your items by holding down the two lines on the right side, then dragging the product to move it accordingly.</div>
-                </div>
-                <div className="item">
-                    <div className="title"><b className="brand-color">2 of 3</b> - Edit your queue</div> 
-                    <div className="details">Switch the order of your items by holding down the two lines on the right side, then dragging the product to move it accordingly.</div>
-                </div>
-                <div className="item">
-                    <div className="title"><b className="brand-color">3 of 3</b> - Edit your queue</div> 
-                    <div className="details">Switch the order of your items by holding down the two lines on the right side, then dragging the product to move it accordingly.</div>
-                </div>
-            </Slider>
+        <div className="left-side">
+            <div className="quick-tips" id="quick-tips">
+                <div className="title">Quick tips to customize your queue</div>
+                <Slider {...slickSettings}>
+                    <div className="item">
+                        <div className="title"><b className="brand-color">1 of 3</b> - Edit your queue</div> 
+                        <div className="details">Switch the order of your items by holding down the two lines on the right side, then dragging the product to move it accordingly.</div>
+                    </div>
+                    <div className="item">
+                        <div className="title"><b className="brand-color">2 of 3</b> - Edit your queue</div> 
+                        <div className="details">Switch the order of your items by holding down the two lines on the right side, then dragging the product to move it accordingly.</div>
+                    </div>
+                    <div className="item">
+                        <div className="title"><b className="brand-color">3 of 3</b> - Edit your queue</div> 
+                        <div className="details">Switch the order of your items by holding down the two lines on the right side, then dragging the product to move it accordingly.</div>
+                    </div>
+                </Slider>
+            </div>
+            <div className="shipment-details">
+                <ShipmentForm />
+            </div>
         </div>
         <div className="dnd-list">
             
@@ -135,7 +143,7 @@ const ManageSubscription = ({ subscription }) => {
                                     </Draggable>
                                 )
                             })}
-                            {/* {provided.placeholder} */}
+                            {provided.placeholder}
                         </ul>
                     )}
                 </Droppable>

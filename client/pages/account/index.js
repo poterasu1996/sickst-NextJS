@@ -29,8 +29,6 @@ const Account = () => {
     const { accountManager } = useContext(AccountContext);
     const USER_ME = '/users/me';
 
-    // const headerDDOptions = ['membership', 'order_history', 'shipping', 'personal_details']
-
     useEffect(() => {
         if(auth) {
             axios.get(USER_ME, {

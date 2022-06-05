@@ -28,7 +28,7 @@ const PaymentPage = () => {
 
   // stripe item   
   const item = {
-    price: "price_1KxyVvIdXAYNRuBxDma0iuCv",
+    price: "price_1L7IrEIdXAYNRuBx0Yi8bleX",
     quantity: 1,
   };
 
@@ -37,7 +37,7 @@ const PaymentPage = () => {
   useEffect(() => {
     checkoutOptions = {
       lineItems: [item],
-      mode: "payment",
+      mode: "subscription",
       successUrl: `${window.location.origin}/subscription/payment/success`,
       cancelUrl: `${window.location.origin}/subscription/payment/cancel`,
     };

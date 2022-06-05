@@ -91,6 +91,9 @@
             margin: 0 auto;
             margin-bottom: 2rem;
             display: flex;
+            @media (min-width: 601px) {
+                display: none;
+            }
 
             .user-avatar {
                 width: 10rem;

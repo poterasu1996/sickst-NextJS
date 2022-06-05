@@ -203,96 +203,96 @@
                 font-weight: 600;
                 margin-bottom: 1.5rem;
             }
-            .shipment-details {
-                width: 100%;
-                form {
-                    width: 100%;
-                    .form-field {
-                        margin-top: 2.5rem;
-                        height: 5rem;
-                        display: flex;
-                        flex-direction: column;
-                        .form-control {
-                            height: 100%;
-                            font-size: 1.8rem;
+            // .shipment-details {
+            //     width: 100%;
+            //     form {
+            //         width: 100%;
+            //         .form-field {
+            //             margin-top: 2.5rem;
+            //             height: 5rem;
+            //             display: flex;
+            //             flex-direction: column;
+            //             .form-control {
+            //                 height: 100%;
+            //                 font-size: 1.8rem;
         
-                            &:focus {
-                                border-color: #cc3633;
-                                box-shadow: 0 0 0 0.25rem rgba($color: #cc3633, $alpha: 0.25);
-                            }
+            //                 &:focus {
+            //                     border-color: #cc3633;
+            //                     box-shadow: 0 0 0 0.25rem rgba($color: #cc3633, $alpha: 0.25);
+            //                 }
                             
-                            &.invalid-form-control {
-                                border-color: #cc3633;
-                                box-shadow: 0 0 0 0.25rem rgba($color: #cc3633, $alpha: 0.25);
-                            }
-                        }
-                        #bdate {
-                            padding-left: 2.4rem;
-                        }
-                        label {
-                            font-size: 1.8rem;
-                            line-height: 2.8rem;
-                            padding: .6rem 2.5rem;
-                            font-weight: 600;
-                            color: #959ba6;
-                        }
-                    }
-                    .form-errors {
-                        padding: 1.6rem;
-                        margin-top: 3rem;
-                        background-color: rgba($color: #cc3633, $alpha: .3);
-                        color: #cc3633;
-                        font-size: 1.6rem;
-                    }
-                    .invalid-field {
-                        justify-content: unset;
-                        padding-top: .5rem;
-                        height: 1rem;
-                        font-size: 1.3rem;
-                        font-weight: 700;
-                        margin-left: 1rem;
-                    }
-                    .button-second {
-                        margin-top: 2.4rem;
-                        max-width: 25rem;
-                        margin: auto;
-                    }
-                }
-                .credit-card {
-                    margin-top: 1.8rem;
-                    .title {
-                        font-size: 2.2rem;
-                        line-height: 3.2rem;
-                        font-weight: 600;
-                    }
-                    .description {
-                        margin-top: .8rem;
-                        font-size: 1.6rem;
-                        line-height: 2.6rem;
-                        font-weight: 400;
-                        display: flex;
-                        align-items: center;
-                        svg {
-                            margin-right: .6rem;
-                        }
-                    }
-                }
-                .credit-card-form {
-                    display: flex;
-                    flex-direction: row-reverse;
+            //                 &.invalid-form-control {
+            //                     border-color: #cc3633;
+            //                     box-shadow: 0 0 0 0.25rem rgba($color: #cc3633, $alpha: 0.25);
+            //                 }
+            //             }
+            //             #bdate {
+            //                 padding-left: 2.4rem;
+            //             }
+            //             label {
+            //                 font-size: 1.8rem;
+            //                 line-height: 2.8rem;
+            //                 padding: .6rem 2.5rem;
+            //                 font-weight: 600;
+            //                 color: #959ba6;
+            //             }
+            //         }
+            //         .form-errors {
+            //             padding: 1.6rem;
+            //             margin-top: 3rem;
+            //             background-color: rgba($color: #cc3633, $alpha: .3);
+            //             color: #cc3633;
+            //             font-size: 1.6rem;
+            //         }
+            //         .invalid-field {
+            //             justify-content: unset;
+            //             padding-top: .5rem;
+            //             height: 1rem;
+            //             font-size: 1.3rem;
+            //             font-weight: 700;
+            //             margin-left: 1rem;
+            //         }
+            //         .button-second {
+            //             margin-top: 2.4rem;
+            //             max-width: 25rem;
+            //             margin: auto;
+            //         }
+            //     }
+            //     .credit-card {
+            //         margin-top: 1.8rem;
+            //         .title {
+            //             font-size: 2.2rem;
+            //             line-height: 3.2rem;
+            //             font-weight: 600;
+            //         }
+            //         .description {
+            //             margin-top: .8rem;
+            //             font-size: 1.6rem;
+            //             line-height: 2.6rem;
+            //             font-weight: 400;
+            //             display: flex;
+            //             align-items: center;
+            //             svg {
+            //                 margin-right: .6rem;
+            //             }
+            //         }
+            //     }
+            //     .credit-card-form {
+            //         display: flex;
+            //         flex-direction: row-reverse;
 
-                    form {
-                        margin-right: 2rem;
-                    }
-                    .rccs {
-                        margin-top: 3rem;
-                    }
-                }
-                .form-floating>.form-control:focus~label, .form-floating>.form-control:not(:placeholder-shown)~label, .form-floating>.form-select~label {
-                    opacity: .65;
-                    transform: scale(.55) translateY(-.5rem) translateX(.15rem);
-                }
-            }
+            //         form {
+            //             margin-right: 2rem;
+            //         }
+            //         .rccs {
+            //             margin-top: 3rem;
+            //         }
+            //     }
+            //     .form-floating>.form-control:focus~label, .form-floating>.form-control:not(:placeholder-shown)~label, .form-floating>.form-select~label {
+            //         opacity: .65;
+            //         transform: scale(.55) translateY(-.5rem) translateX(.15rem);
+            //     }
+            // }
         }
     }
 }
