@@ -176,22 +176,27 @@ const Product = ({ product }) => {
                         className="submit-btn"
                         onClick={() => {
                           let paymentType;
-                          if (subscription) {
-                            paymentType = "subscription";
-                            if (cartManager.subscriptionList().length >= 6) {
-                              toast(
-                                "Your subscription list hast more than 6 products!",
-                                {
-                                  autoClose: 2000,
-                                }
-                              );
-                              return;
-                            }
+                          // check if logged in
+                          if (!auth) {
+                            router.push("/account/login");
                           } else {
-                            paymentType = "otb";
+                            if (subscription) {
+                              paymentType = "subscription";
+                              if (cartManager.subscriptionList().length >= 6) {
+                                toast(
+                                  "Your subscription list hast more than 6 products!",
+                                  {
+                                    autoClose: 2000,
+                                  }
+                                );
+                                return;
+                              }
+                            } else {
+                              paymentType = "otb";
+                            }
+                            cartManager.addProduct(product, 1, paymentType);
+                            notify();
                           }
-                          cartManager.addProduct(product, 1, paymentType);
-                          notify();
                           // setLoading(true);
                         }}
                       >
