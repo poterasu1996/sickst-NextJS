@@ -32,7 +32,7 @@ const Login = () => {
               <button
                 className="g-auth"
                 onClick={() =>
-                  (window.location = `${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}/api/connect/google`)
+                  (window.location = `${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}api/connect/google`)
                 }
               >
                 <div className="g-icon">

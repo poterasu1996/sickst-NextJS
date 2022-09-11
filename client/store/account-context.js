@@ -17,7 +17,7 @@ export const AccountProvider = ({ children }) => {
         resetStates
     };
 
-    console.log('accountcontext - headerDDLInk', headerDDLink)
+    // console.log('accountcontext - headerDDLInk', headerDDLink)
     
     return (
         <AccountContext.Provider value={{ accountManager }}>

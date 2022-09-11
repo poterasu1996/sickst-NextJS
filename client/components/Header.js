@@ -153,10 +153,11 @@ const Header = () => {
             )}
           </Button>
 
-          <AccountMobileSideModal
+          {/* mobile side modal */}
+          {/* <AccountMobileSideModal
             show={accountMobileModal}
             onClick={() => setAccountMobileModal(false)}
-          />
+          /> */}
           <SideModal show={showModal} onClick={() => setShowModal(false)} />
         </div>
       </div>

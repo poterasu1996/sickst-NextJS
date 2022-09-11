@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { Button } from "react-bootstrap";
 
-const SuccessPayment = () => {
+const SuccessPayment = () => { 
     const router = useRouter();
 
     useEffect(() => {

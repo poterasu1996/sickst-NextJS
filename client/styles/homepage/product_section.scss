@@ -12,12 +12,15 @@
             line-height: 3.8rem;
             font-weight: 600;
             padding: 0 3rem;
+            margin-bottom: 1rem;
         }
+        // to be deleted
         .filter-tabs {
             display: flex;
             position: relative;
             margin: 0 3rem;
             margin-top: 3rem;
+
             &::after {
                 content: '';
                 position: absolute;
@@ -45,7 +48,47 @@
                 }
             }
         }
+
+        .filtertabs {
+            margin: 0 3rem;
+            
+            .p-tabview-nav {
+                background-color: transparent;
+                font-size: 1.6rem;
+                li {
+                    border-color: transparent;
+                    &:hover {
+                        .p-tabview-nav-link {
+                            background: transparent !important;
+                        }
+                    }
+                    a {
+                        background-color: transparent;
+                    }
+                }
+            }
+
+            .p-tabview-nav-link {
+                border: unset;
+                &:focus {
+                    box-shadow: unset !important;
+                }
+            }
+
+            
+            .p-tabview-ink-bar {
+                background-color: #cc3633;
+            }
+        }
     }
+
+    .p-tabview {
+        .p-tabview-panels {
+            background-color: transparent;
+            padding: 1.25rem 0;
+        }
+    }
+
     .more-prod {
         width: 100%;
         display: flex;
