@@ -7,7 +7,6 @@ import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import orderImg from "../../public/img/order-img.png";
 import CartContext from "../../store/cart-context";
 import AuthContext from "../../store/auth-context";
-// import CustomToast from "../global/CustomToast";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 
