@@ -26,6 +26,11 @@ export default function LogInForm() {
       .required('Password is required*'),
   });
 
+  function createCookieInHour(cookieName, cookieValue, hourToExpire) {
+    let date =  new Date();
+    date.setTime(date.getTime()+(hourToExpire*60*60*1000)); // number of hours
+    document.cookie = cookieName + "=" + cookieValue + "; expires = " + date.toString();
+  }
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -45,8 +50,11 @@ export default function LogInForm() {
 
       if (jwt) {
         setAuth(jwt);
-        localStorage.setItem('jwt', jwt);
+        localStorage.setItem('jwt', jwt); // set jwt token in local storage
+        createCookieInHour('userJWT', jwt, 2); // create cookie with jwt
+
         router.push('/');
+        console.log('jwt', jwt);
       }
     } catch (err) {
       // console.log(Object.keys(err))
@@ -62,6 +70,8 @@ export default function LogInForm() {
       } 
     }
 
+    let cookie = document.cookie.split(';');
+    console.log('cookie: ', cookie);
   }
 
   return (

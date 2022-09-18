@@ -19,6 +19,9 @@ const Product = ({ product }) => {
   const [loading, setLoading] = useState(false); // used for loading animation
   const [subscription, setSubscription] = useState(true);
   const router = useRouter();
+  
+  // in future, we must have 2 parameters: product and container (container will be the container price from DB, atm is static price)
+  const containerPrice = 50;  // price of container
 
   const toastMsg = (
     <>
@@ -39,6 +42,23 @@ const Product = ({ product }) => {
       </div>
     </>
   );
+
+  function simplePrice(price) {
+    const mlPrice = price / 100;    // price per ml of product
+
+    const productPrice = containerPrice + (8 * mlPrice);   // price of full product for OTB
+    return productPrice;
+  }
+
+  function subscriptionPrice(price) {
+    // here we want the subscription to be cheaper than OTB, with -20 for example
+    
+    // subscription discount should be imported from DB;
+    const discount = 20;
+
+    const fullPrice = simplePrice(price);
+    return fullPrice - discount;
+  }
 
   const notify = () => {
     toast(toastMsg, {
@@ -147,7 +167,7 @@ const Product = ({ product }) => {
                                 <div className="type">
                                   Subscription{" "}
                                   <b>
-                                    RON {product.attributes.subscription_price}
+                                    RON {subscriptionPrice(product.attributes.retail_value)}
                                   </b>
                                 </div>
                               </div>
@@ -165,7 +185,7 @@ const Product = ({ product }) => {
                                 <div className="volume">8 ml</div>
                                 <div className="type">
                                   One time{" "}
-                                  <b>RON {product.attributes.otb_price}</b>
+                                  <b>RON {simplePrice(product.attributes.retail_value)}</b>
                                 </div>
                               </div>
                             </div>
@@ -266,7 +286,7 @@ const Product = ({ product }) => {
               </div>
             )}
             <div className="price">
-              RON:&nbsp;{product.attributes.subscription_price}
+              RON:&nbsp;{subscriptionPrice(product.attributes.retail_value)}
             </div>
           </div>
         </div>
