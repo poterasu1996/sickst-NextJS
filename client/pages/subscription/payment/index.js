@@ -24,6 +24,18 @@ const PaymentPage = () => {
   const [couponValue, setCouponeValue] = useState();
   const [loading, setLoading] = useState(true);
 
+
+  const orderMinus = (item, quantity) => {
+    if(quantity > 1) {
+      // modify product quantity in card + template
+      cartManager.quantityProduct(item, 'remove');
+    }
+  }
+
+  const orderPlus = (item, quantity) => {
+    cartManager.quantityProduct(item, 'add');
+  }
+
   // stripe item   
   // const item = {
   //   price: "price_1L7IrEIdXAYNRuBx0Yi8bleX",
@@ -116,6 +128,11 @@ const PaymentPage = () => {
                     </div>
                     <div className="item-model">
                       {item.product.attributes.model}
+                      <div className="item-quantity">
+                        <div className="item-remove" onClick={orderMinus}></div>
+                        <div className="item-count">{item.quantity}</div>
+                        <div className="item-add" onClick={orderPlus}></div>
+                      </div>
                     </div>
                     <div className="item-price">
                       Pret
