@@ -7,7 +7,6 @@ import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import orderImg from "../../public/img/order-img.png";
 import CartContext from "../../store/cart-context";
 import AuthContext from "../../store/auth-context";
-// import CustomToast from "../global/CustomToast";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 
@@ -78,161 +77,37 @@ const Product = ({ product }) => {
     <>
       <div className="col col-sm-6 col-lg-4">
         <div className="product-card">
-          <div className="product-card-image">
-            <div className="product-card-image-wrapper">{product && console.log("Product: " + product)}
-              <img
-                src={
-                  `${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` +
-                  product.attributes.image.data[0].attributes.url
-                }
-              ></img>
+          <div className="product-wrapper" onClick={() => setShow(!show)}>
+            <div className="product-card-image">
+              <div className="product-card-image-wrapper">
+                <img
+                  src={
+                    `${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` +
+                    product.attributes.image.data[0].attributes.url
+                  }
+                ></img>
+              </div>
+              <span className="tag black">Exclussive</span>
             </div>
-            <span className="tag black">Exclussive</span>
-          </div>
-          <div className="product-card-rating">
-            <Rating
-              fractions={2}
-              initialRating={product.attributes.rating}
-              readonly={true}
-              emptySymbol={<Star size={15} fill="#babfc7" stroke="#babfc7" />}
-              fullSymbol={<Star size={15} fill="#cc3633" stroke="#cc3633" />}
-            />
-          </div>
-          <div className="product-card-title">
-            <span className="brand">{product.attributes.brand}</span>
-            <span className="model">{product.attributes.model}</span>
-          </div>
-          <div className="product-card-fragrance">Fragrance elements</div>
-          <div className="product-card-description">
-            {product.attributes.description &&
-              product.attributes.description.substring(0, 195) + "..."}
-            <Button onClick={() => setShow(!show)}>Read more</Button>
-            <Modal
-              className="product-card-modal"
-              centered={true}
-              size="xl"
-              isOpen={show}
-              toggle={() => setShow(!show)}
-            >
-              <ModalHeader toggle={() => setShow(!show)}></ModalHeader>
-              <ModalBody>
-                <div className="row modal-container">
-                  <div className="col-12 col-md-4 col-lg-6">
-                    <div className="img-wrapper">
-                      <img
-                        src={
-                          `${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` +
-                          product.attributes.image.data[0].attributes.url
-                        }
-                      ></img>
-                    </div>
-                  </div>
-                  <div className="col col-md-8 col-lg-6">
-                    <div className="product-details">
-                      <div className="title">{product.attributes.brand}</div>
-                      <div className="model">{product.attributes.model}</div>
-                      <div className="price-wrapper d-flex justify-content-between">
-                        <div className="type">{product.attributes.type}</div>
-                        <div className="retail">
-                          <b className="brand-color">
-                            RON {product.attributes.retail_value}
-                          </b>{" "}
-                          Retail value
-                        </div>
-                      </div>
-                      <div className="rating">
-                        <Rating
-                          fractions={2}
-                          initialRating={product.attributes.rating}
-                          readonly={true}
-                          emptySymbol={
-                            <Star size={15} fill="#babfc7" stroke="#babfc7" />
-                          }
-                          fullSymbol={
-                            <Star size={15} fill="#cc3633" stroke="#cc3633" />
-                          }
-                        />
-                        <div className="rating-nr">35 ratings</div>
-                      </div>
-                      <div className="order-type">
-                        <div className="order">
-                          <Button
-                            className={`order-btn ${subscription && "active"}`}
-                            onClick={() => setSubscription(true)}
-                          >
-                            <div className="order-btn-content">
-                              <Image src={orderImg} />
-                              <div className="order-info">
-                                <div className="volume">8 ml</div>
-                                <div className="type">
-                                  Subscription{" "}
-                                  <b>
-                                    RON {subscriptionPrice(product.attributes.retail_value)}
-                                  </b>
-                                </div>
-                              </div>
-                            </div>
-                          </Button>
-                        </div>
-                        <div className="order">
-                          <Button
-                            className={`order-btn ${!subscription && "active"}`}
-                            onClick={() => setSubscription(false)}
-                          >
-                            <div className="order-btn-content">
-                              <Image src={orderImg} />
-                              <div className="order-info">
-                                <div className="volume">8 ml</div>
-                                <div className="type">
-                                  One time{" "}
-                                  <b>RON {simplePrice(product.attributes.retail_value)}</b>
-                                </div>
-                              </div>
-                            </div>
-                          </Button>
-                        </div>
-                      </div>
-                      <div
-                        className="submit-btn"
-                        onClick={() => {
-                          let paymentType;
-                          // check if logged in
-                          if (!auth) {
-                            router.push("/account/login");
-                          } else {
-                            if (subscription) {
-                              paymentType = "subscription";
-                              if (cartManager.subscriptionList().length >= 6) {
-                                toast(
-                                  "Your subscription list hast more than 6 products!",
-                                  {
-                                    autoClose: 2000,
-                                  }
-                                );
-                                return;
-                              }
-                            } else {
-                              paymentType = "otb";
-                            }
-                            cartManager.addProduct(product, 1, paymentType);
-                            notify();
-                          }
-                          // setLoading(true);
-                        }}
-                      >
-                        <div className="button-second">Add to queue</div>
-                      </div>
-                      <div className="fragrance-info">
-                        <div className="title">About the fragrance</div>
-                        <div className="info">
-                          {product.attributes.description}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </ModalBody>
-            </Modal>
+            <div className="product-card-rating">
+              <Rating
+                fractions={2}
+                initialRating={product.attributes.rating}
+                readonly={true}
+                emptySymbol={<Star size={15} fill="#babfc7" stroke="#babfc7" />}
+                fullSymbol={<Star size={15} fill="#cc3633" stroke="#cc3633" />}
+              />
+            </div>
+            <div className="product-card-title">
+              <span className="brand">{product.attributes.brand}</span>
+              <span className="model">{product.attributes.model}</span>
+            </div>
+            <div className="product-card-fragrance">Fragrance elements</div>
+            <div className="product-card-description">
+              {product.attributes.description &&
+                product.attributes.description.substring(0, 195) + "..."}
+              <span>Read more</span>
+            </div>
           </div>
           <div className="product-card-button">
             {/* {console.log("auth", auth)} */}
@@ -291,6 +166,134 @@ const Product = ({ product }) => {
           </div>
         </div>
       </div>
+      
+      {/* product modal */}
+      <Modal
+        className="product-card-modal"
+        centered={true}
+        size="xl"
+        isOpen={show}
+        toggle={() => setShow(!show)}
+      >
+        <ModalHeader toggle={() => setShow(!show)}></ModalHeader>
+        <ModalBody>
+          <div className="row modal-container">
+            <div className="col-12 col-md-4 col-lg-6">
+              <div className="img-wrapper">
+                <img
+                  src={
+                    `${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` +
+                    product.attributes.image.data[0].attributes.url
+                  }
+                ></img>
+              </div>
+            </div>
+            <div className="col col-md-8 col-lg-6">
+              <div className="product-details">
+                <div className="title">{product.attributes.brand}</div>
+                <div className="model">{product.attributes.model}</div>
+                <div className="price-wrapper d-flex justify-content-between">
+                  <div className="type">{product.attributes.type}</div>
+                  <div className="retail">
+                    <b className="brand-color">
+                      RON {product.attributes.retail_value}
+                    </b>{" "}
+                    Retail value
+                  </div>
+                </div>
+                <div className="rating">
+                  <Rating
+                    fractions={2}
+                    initialRating={product.attributes.rating}
+                    readonly={true}
+                    emptySymbol={
+                      <Star size={15} fill="#babfc7" stroke="#babfc7" />
+                    }
+                    fullSymbol={
+                      <Star size={15} fill="#cc3633" stroke="#cc3633" />
+                    }
+                  />
+                  <div className="rating-nr">35 ratings</div>
+                </div>
+                <div className="order-type">
+                  <div className="order">
+                    <Button
+                      className={`order-btn ${subscription && "active"}`}
+                      onClick={() => setSubscription(true)}
+                    >
+                      <div className="order-btn-content">
+                        <Image src={orderImg} />
+                        <div className="order-info">
+                          <div className="volume">8 ml</div>
+                          <div className="type">
+                            Subscription{" "}
+                            <b>
+                              RON {subscriptionPrice(product.attributes.retail_value)}
+                            </b>
+                          </div>
+                        </div>
+                      </div>
+                    </Button>
+                  </div>
+                  <div className="order">
+                    <Button
+                      className={`order-btn ${!subscription && "active"}`}
+                      onClick={() => setSubscription(false)}
+                    >
+                      <div className="order-btn-content">
+                        <Image src={orderImg} />
+                        <div className="order-info">
+                          <div className="volume">8 ml</div>
+                          <div className="type">
+                            One time{" "}
+                            <b>RON {simplePrice(product.attributes.retail_value)}</b>
+                          </div>
+                        </div>
+                      </div>
+                    </Button>
+                  </div>
+                </div>
+                <div
+                  className="submit-btn"
+                  onClick={() => {
+                    let paymentType;
+                    // check if logged in
+                    if (!auth) {
+                      router.push("/account/login");
+                    } else {
+                      if (subscription) {
+                        paymentType = "subscription";
+                        if (cartManager.subscriptionList().length >= 6) {
+                          toast(
+                            "Your subscription list hast more than 6 products!",
+                            {
+                              autoClose: 2000,
+                            }
+                          );
+                          return;
+                        }
+                      } else {
+                        paymentType = "otb";
+                      }
+                      cartManager.addProduct(product, 1, paymentType);
+                      notify();
+                    }
+                    // setLoading(true);
+                  }}
+                >
+                  <div className="button-second">Add to queue</div>
+                </div>
+                <div className="fragrance-info">
+                  <div className="title">About the fragrance</div>
+                  <div className="info">
+                    {product.attributes.description}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ModalBody>
+      </Modal>
     </>
   );
 };
