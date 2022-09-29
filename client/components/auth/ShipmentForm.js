@@ -8,7 +8,6 @@ import PhoneInput from "react-phone-number-input/input";
 
 import axios from "../../api/axios";
 import CustomPhoneFormField from "../global/CustomPhoneFormField";
-// import CreditCardForm from "../SubscriptionPage/CreditCardForm";
 const REGISTER_URL = "/auth/local/register";
 import { loadStripe } from "@stripe/stripe-js";
 

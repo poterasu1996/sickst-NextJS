@@ -22,7 +22,8 @@ const Login = () => {
                 <a href="#">Forgot your password?</a>
                 <Link href="register">Don't have an account?</Link>
               </div>
-              <div className="split">
+
+              {/* <div className="split">
                 <span className="line"></span>
                 <span className="text">or</span>
                 <span className="line"></span>
@@ -39,7 +40,7 @@ const Login = () => {
                     <img src={gIcon.src}></img>
                 </div>
                 <span>Login with Google</span>
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
