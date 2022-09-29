@@ -21,6 +21,7 @@
         margin: 2rem 1rem;
         padding: 0 2rem;
         display: flex;
+        cursor: pointer;
         flex-direction: column;
         box-shadow: 0 .2rem 1rem rgba($color: #3E1223, $alpha: 0.08);
         transition: ease 0.3s;
@@ -96,7 +97,7 @@
                 height: .1rem;
                 background-color: #e6e6e6;
             }
-            .btn {
+            span {
                 background-color: #fff;
                 color: #cc3636;
                 border: none;
