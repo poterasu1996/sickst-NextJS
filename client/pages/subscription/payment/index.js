@@ -4,8 +4,6 @@ import { Button, Spinner } from "react-bootstrap";
 import { X } from "react-feather";
 import ShipmentForm from "../../../components/auth/ShipmentForm";
 import CouponeForm from "../../../components/global/CouponeForm";
-import CreditCardForm from "../../../components/SubscriptionPage/CreditCardForm";
-import StripeContainer from "../../../components/SubscriptionPage/StripeContainer";
 import CartContext from "../../../store/cart-context";
 import { loadStripe } from "@stripe/stripe-js";
 
@@ -26,28 +24,59 @@ const PaymentPage = () => {
   const [couponValue, setCouponeValue] = useState();
   const [loading, setLoading] = useState(true);
 
+
+  const orderMinus = (item, quantity) => {
+    if(quantity > 1) {
+      // modify product quantity in card + template
+      cartManager.quantityProduct(item, 'remove');
+    }
+  }
+
+  const orderPlus = (item, quantity) => {
+    cartManager.quantityProduct(item, 'add');
+  }
+
   // stripe item   
-  const item = {
-    price: "price_1L7IrEIdXAYNRuBx0Yi8bleX",
-    quantity: 1,
-  };
+  // const item = {
+  //   price: "price_1L7IrEIdXAYNRuBx0Yi8bleX",
+  //   quantity: 1,
+  // };
+  const items = [
+    {
+      price: "price_1LhwWFIdXAYNRuBx47EmpePf",
+      quantity: 1,
+    },
+    {
+      price: "price_1LhwanIdXAYNRuBxF7l5gaAR",
+      quantity: 1,
+    }
+  ];
 
   let checkoutOptions;
 
   useEffect(() => {
     checkoutOptions = {
-      lineItems: [item],
-      mode: "subscription",
+      lineItems: [...items],
+      mode: "payment",
       successUrl: `${window.location.origin}/subscription/payment/success`,
       cancelUrl: `${window.location.origin}/subscription/payment/cancel`,
     };
 
-    if (cartManager.cart.length === 0) {
-        setTimeout(() => {
-            router.push('/');
-        }, 200);
-    }
-  });
+    
+    // subscription
+    // checkoutOptions = {
+    //   lineItems: [item],
+    //   mode: "subscription",
+    //   successUrl: `${window.location.origin}/subscription/payment/success`,
+    //   cancelUrl: `${window.location.origin}/subscription/payment/cancel`,
+    // };
+
+    // if (cartManager.cart.length === 0) {
+    //     setTimeout(() => {
+    //         router.push('/');
+    //     }, 200);
+    // }
+  },[]);
 
   const redirectToCheckout = async () => {
     console.log("redirectToCheckout");
@@ -67,6 +96,7 @@ const PaymentPage = () => {
     setLoading(false);
   }, 500);
 
+
   return (
     <>
       <div className="main-content-payment">
@@ -77,7 +107,12 @@ const PaymentPage = () => {
               Will ship by end of month from our facility
             </div>
             {cartManager.cart && cartManager.cart.length > 0 ? (
-              cartManager.cart.map((item, i) => (
+              cartManager.cart.filter(item => {
+                  if(item.payment === 'otb') {
+                    return item;
+                  }
+                })
+                .map((item, i) => (
                 <div className="cart-item" key={i}>
                   <div className="cart-item-image">
                     <img
@@ -93,11 +128,16 @@ const PaymentPage = () => {
                     </div>
                     <div className="item-model">
                       {item.product.attributes.model}
+                      <div className="item-quantity">
+                        <div className="item-remove" onClick={orderMinus}></div>
+                        <div className="item-count">{item.quantity}</div>
+                        <div className="item-add" onClick={orderPlus}></div>
+                      </div>
                     </div>
                     <div className="item-price">
-                      Monthly subscription
+                      Pret
                       <div className="price">
-                        RON: {item.product.attributes.subscription_price}
+                        RON: {item.product.attributes.otb_price}
                       </div>
                     </div>
                   </div>
@@ -164,8 +204,6 @@ const PaymentPage = () => {
             <div className="shipment-title">Shipment details</div>
             <div className="shipment-details">
               <ShipmentForm cartTotal={cartManager.cartTotal} />
-              {/* <CreditCardForm /> */}
-              {/* <StripeContainer /> */}
               <Button onClick={redirectToCheckout}> Pay</Button>
             </div>
           </div>

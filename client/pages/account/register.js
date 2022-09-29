@@ -14,7 +14,7 @@ const Register = () => {
                 <span>Creeaza contul</span>
               </div>
               <div className="col-lg-5 subtitle">
-                <span>Selecteaza sexul</span>
+                <span>Ce tip de parfum preferati?</span>
               </div>
               <div className="col-lg-5">
                 <div className="form">
@@ -28,7 +28,8 @@ const Register = () => {
                     <a>Log In</a>
                   </Link>
                 </span>
-                <div className="split">
+
+                {/* <div className="split">
                   <span className="line"></span>
                   <span className="text">or</span>
                   <span className="line"></span>
@@ -44,7 +45,7 @@ const Register = () => {
                     <img src={gIcon.src}></img>
                   </div>
                   <span>Signup with Google</span>
-                </button>
+                </button> */}
               </div>
 
             </div>

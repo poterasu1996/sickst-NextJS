@@ -96,6 +96,7 @@ export default function SignUpForm() {
                 {cbFemale && <div className="checked"><Check strokeWidth={'3px'} height={22} width={22} stroke={'#cc3633'}/></div>}
                 <Form.Check.Input type="radio" checked={cbFemale}/>
               </Form.Check.Label>
+              <p>Feminin</p>
             </Form.Check>
             <Form.Check>
               <Form.Check.Label onChange={() => {handleGender('male')}}>
@@ -103,6 +104,7 @@ export default function SignUpForm() {
                 {cbMale && <div className="checked"><Check strokeWidth={'3px'} height={22} width={22} stroke={'#cc3633'}/></div>}
                 <Form.Check.Input type="radio" checked={cbMale}/>
               </Form.Check.Label>
+              <p>Masculin</p>
             </Form.Check>
           </div>
           <CustomFormField controlid='floatingEmail' name='email' label='Email address' type='email' ref={emailRef}  />

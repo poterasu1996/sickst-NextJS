@@ -14,11 +14,16 @@ const PRODUCTS_URL = "/products?populate=*";
 const ProductSection = () => {
   const [maleTab, setMaleTab] = useState(true);
   const [nrOfItems, setNrOfItems] = useState(3);
-  const [productList, setProductList] = useState();
+  const [productList, setProductList] = useState([]);
 
   useEffect(async () => {
     const response = await axios.get(PRODUCTS_URL);
-    setProductList(response.data.data);
+    const fetchProducts = [...response.data.data];
+    const productsList = fetchProducts.map(prod => {
+      
+    })
+    console.log('fetchProducts: ', fetchProducts)
+    setProductList([...response.data.data]);
   }, []);
 
   const showMore = () => {
@@ -30,7 +35,8 @@ const ProductSection = () => {
   }
 
   const itemsToShow = useMemo(() => {
-    if(productList && maleTab){
+    if(productList && maleTab) {
+      console.log('prod list: ', productList);
       return productList
         .filter(product => product.attributes.categories.data[0].attributes.name === "Male")
         .slice(0, nrOfItems)

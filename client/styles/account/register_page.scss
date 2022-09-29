@@ -155,6 +155,20 @@
         width: 100%;
         form {
             width: 100%;
+            .gender-icons {
+                .form-check {
+                    flex-direction: column;
+
+                    p {
+                        text-align: center;
+                        font-size: 1.5rem;
+                        margin-top: .6rem;
+                        font-weight: 600;
+                        color: #141414;
+                    }
+                }
+            }
+
             .form-field {
                 margin-top: 2.5rem;
                 height: 5rem;
