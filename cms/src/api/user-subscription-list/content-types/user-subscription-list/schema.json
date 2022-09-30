@@ -15,7 +15,7 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user",
-      "inversedBy": "user_subscription_list"
+      "mappedBy": "user_subscription_list"
     },
     "subscription_list": {
       "type": "json"

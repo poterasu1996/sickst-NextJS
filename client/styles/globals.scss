@@ -253,6 +253,14 @@ body.modal-open {
           max-width: 25rem;
           margin: auto;
       }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
   }
   .credit-card {
       margin-top: 1.8rem;

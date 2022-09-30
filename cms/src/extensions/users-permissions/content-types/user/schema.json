@@ -85,7 +85,7 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::user-detail.user-detail",
-      "mappedBy": "users_permissions_user"
+      "inversedBy": "user"
     },
     "user_subscription_list": {
       "type": "relation",

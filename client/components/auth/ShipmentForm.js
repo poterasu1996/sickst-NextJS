@@ -4,7 +4,6 @@ import { Formik } from "formik";
 import CustomFormField from "../CustomFormField";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
-import PhoneInput from "react-phone-number-input/input";
 
 import axios from "../../api/axios";
 import CustomPhoneFormField from "../global/CustomPhoneFormField";
@@ -22,6 +21,9 @@ const getStripe = () => {
   return stripePromise;
 };
 
+const USER_URL = "/users/me";
+const USER_DETAILS = "/user-details?populate=*"
+
 export default function ShipmentForm({ cartTotal }) {
   const router = useRouter();
   const addressRef = useRef();
@@ -38,11 +40,12 @@ export default function ShipmentForm({ cartTotal }) {
   
   //   const { signup } = useAuth();
   const validate = Yup.object({
-    address: Yup.string().required("Required field*"),
-    phone: Yup.number()
-      // .min(10, "Invalid phone number")
-      .max(10, "Invalid phone number")
-      .required("Phone is required*"),
+    address: Yup.string().required("Campul este obligatoriu*"),
+    firstName: Yup.string().required("Campul este obligatoriu*"),
+    lastName: Yup.string().required("Campul este obligatoriu*"),
+    city: Yup.string().required("Campul este obligatoriu*"),
+    county: Yup.string().required("Campul este obligatoriu*"),
+    phone: Yup.string().required("Nr. de telefon este obligatoriu*"),
   });
 
   let checkoutOptions;
@@ -53,7 +56,21 @@ export default function ShipmentForm({ cartTotal }) {
       successUrl: `${window.location.origin}/subscription/payment/success`,
       cancelUrl: `${window.location.origin}/subscription/payment/cancel`,
     };
-  });
+  }, []);
+
+  useEffect(async () => {
+    const jwt = localStorage.getItem('jwt');
+    const header = {
+      headers: {
+        authorization: `Bearer ${jwt}`,
+      }
+    }
+
+    const response = await axios.get(USER_URL, header);
+    const orderList = await axios.get(USER_DETAILS);
+    console.log('USER: ', response.data);
+    console.log('details: ', orderList.data.data)
+  }, [])
 
   const redirectToCheckout = async () => {
     console.log("redirectToCheckout");
@@ -103,7 +120,7 @@ export default function ShipmentForm({ cartTotal }) {
             <CustomFormField
               controlid="floatingAddress"
               name="address"
-              label="Street address"
+              label="Adresa"
               type="text"
               ref={addressRef}
             />
@@ -112,7 +129,7 @@ export default function ShipmentForm({ cartTotal }) {
                 <CustomFormField
                   controlid="floatingFirstName"
                   name="firstName"
-                  label="First Name"
+                  label="Nume"
                   type="text"
                 />
               </Col>
@@ -120,7 +137,7 @@ export default function ShipmentForm({ cartTotal }) {
                 <CustomFormField
                   controlid="floatingLastName"
                   name="lastName"
-                  label="Last Name"
+                  label="Prenume"
                   type="text"
                 />
               </Col>
@@ -130,7 +147,7 @@ export default function ShipmentForm({ cartTotal }) {
                 <CustomFormField
                   controlid="floatingCity"
                   name="city"
-                  label="City"
+                  label="Oras"
                   type="text"
                 />
               </Col>
@@ -138,7 +155,7 @@ export default function ShipmentForm({ cartTotal }) {
                 <CustomFormField
                   controlid="floatingCounty"
                   name="county"
-                  label="County"
+                  label="Judet"
                   type="text"
                 />
               </Col>
@@ -148,7 +165,7 @@ export default function ShipmentForm({ cartTotal }) {
                 <CustomFormField
                   controlid="floatingZipCode"
                   name="zipCode"
-                  label="Zip code (opt)"
+                  label="Cod postal (opt)"
                   type="text"
                 />
               </Col>
@@ -156,7 +173,8 @@ export default function ShipmentForm({ cartTotal }) {
                 <CustomPhoneFormField
                   controlid="floatingPhone"
                   name="phone"
-                  label="Phone number"
+                  label="Telefon"
+                  type="text"
                   ref={phoneRef}
                 />
               </Col>

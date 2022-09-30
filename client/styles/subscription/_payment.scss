@@ -162,6 +162,83 @@
                         font-size: 1.4rem;
                         line-height: 2.4rem;
                         font-weight: 400;
+                        margin-top: .5rem;
+                        display: flex;
+                        justify-content: space-between;
+
+                        .item-quantity {
+                            display: flex;
+
+                            .item-remove {
+                                width: 2.6rem;
+                                height: 2.6rem;
+                                background-color: #f1f5f8;
+                                border-radius: 50%;
+                                cursor: pointer;
+                                position: relative;
+
+                                &:hover::before {
+                                    background-color: #000;
+                                }
+                                &::before {
+                                    content: '';
+                                    width: .8rem;
+                                    height: .2rem;
+                                    position: absolute;
+                                    top: 0;
+                                    right: 0;
+                                    bottom: 0;
+                                    left: 0;
+                                    margin: auto;
+                                    background-color: #a8abad;
+                                }
+                            }
+
+                            .item-count {
+                                text-align: center;
+                                width: 4rem;
+                            }
+
+                            .item-add {
+                                width: 2.6rem;
+                                height: 2.6rem;
+                                background-color: #f1f5f8;
+                                border-radius: 50%;
+                                cursor: pointer;
+                                position: relative;
+
+                                &:hover::before {
+                                    background-color: #000;
+                                }
+                                &:hover::after {
+                                    background-color: #000;
+                                }
+                                &::before {
+                                    content: '';
+                                    width: .8rem;
+                                    height: .2rem;
+                                    position: absolute;
+                                    top: 0;
+                                    right: 0;
+                                    bottom: 0;
+                                    left: 0;
+                                    margin: auto;
+                                    background-color: #a8abad;
+                                }
+                                &::after {
+                                    content: '';
+                                    width: .2rem;
+                                    height: .8rem;
+                                    position: absolute;
+                                    top: 0;
+                                    right: 0;
+                                    bottom: 0;
+                                    left: 0;
+                                    margin: auto;
+                                    background-color: #a8abad;
+                                }
+                            }
+                        }
                     }
                     .item-price {
                         margin-top: auto;

@@ -12,12 +12,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "users_permissions_user": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "user_detail"
-    },
     "first_name": {
       "type": "string",
       "default": "Sickst"
@@ -64,10 +58,11 @@
         "audios"
       ]
     },
-    "uid": {
-      "type": "integer",
-      "required": true,
-      "unique": true
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "user_detail"
     }
   }
 }
