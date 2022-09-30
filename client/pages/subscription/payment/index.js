@@ -25,14 +25,14 @@ const PaymentPage = () => {
   const [loading, setLoading] = useState(true);
 
 
-  const orderMinus = (item, quantity) => {
-    if(quantity > 1) {
+  const orderMinus = (item) => {
+    if(item.quantity > 1) {
       // modify product quantity in card + template
       cartManager.quantityProduct(item, 'remove');
     }
   }
 
-  const orderPlus = (item, quantity) => {
+  const orderPlus = (item) => {
     cartManager.quantityProduct(item, 'add');
   }
 
@@ -61,7 +61,7 @@ const PaymentPage = () => {
       successUrl: `${window.location.origin}/subscription/payment/success`,
       cancelUrl: `${window.location.origin}/subscription/payment/cancel`,
     };
-
+    // console.log('cart: ', cartManager.cart)
     
     // subscription
     // checkoutOptions = {
@@ -129,9 +129,9 @@ const PaymentPage = () => {
                     <div className="item-model">
                       {item.product.attributes.model}
                       <div className="item-quantity">
-                        <div className="item-remove" onClick={orderMinus}></div>
+                        <div className="item-remove" onClick={() => orderMinus(item)}></div>
                         <div className="item-count">{item.quantity}</div>
-                        <div className="item-add" onClick={orderPlus}></div>
+                        <div className="item-add" onClick={() => orderPlus(item)}></div>
                       </div>
                     </div>
                     <div className="item-price">
