@@ -1,0 +1,91 @@
+.aboutus-page {
+  height: 100%;
+  width: 120rem;
+  margin: 0 auto;
+  padding-top: 5rem;
+  &--banner {
+    width: 100%;
+    max-height: 40rem;
+    overflow: hidden;
+    img {
+      width: 100%;
+    }
+  }
+  &--summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60%;
+    margin: 2rem auto;
+    .heading {
+      font-size: 3.2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      padding-bottom: 1rem;
+    }
+    .description {
+      font-size: 1.6rem;
+      text-align: center;
+      font-weight: 500;
+      line-height: 1.6;
+    }
+  }
+  &--team {
+    margin: 5rem 0;
+    .heading {
+      text-align: center;
+      font-size: 3.2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      padding-bottom: 2rem;
+      
+    }
+    .cards {
+      .card-team {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 5rem;
+        &--image {
+          width: 100%;
+          max-height: 50rem;
+          object-fit: contain;
+        }
+        &--name {
+          font-size: 2.8rem;
+          font-weight: bold;
+          padding-top: 1rem;
+        }
+        &--position {
+          font-size: 1.6rem;
+          font-weight: 500;
+        }
+        &--description {
+          font-size: 1.6rem;
+          text-align: center;
+        }
+      }
+    }
+  }
+  &--contact{
+    .heading{
+        text-align: center;
+      font-size: 3.2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      
+        
+    }
+    .contact-us{
+        text-align: center;
+        .subheading{
+            font-size: 2.4rem;
+        }
+        .description{
+            font-size: 1.6rem;
+            
+        }
+    }
+
+  }
+}
