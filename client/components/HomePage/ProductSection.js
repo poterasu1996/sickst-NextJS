@@ -55,12 +55,14 @@ const ProductSection = () => {
         // .slice(0, nrOfItems)
         .map((product, i) => (
           <Product
-            key={i}
-            product={product}
+          key={i}
+          product={product}
           />
         ));
       } else if (productList && !maleTab){
-      return productList
+        
+
+        return productList
         .filter(product => product.attributes.categories.data[0].attributes.name === "Female")
         .slice(0, nrOfItems)
         .map((product, i) => (
