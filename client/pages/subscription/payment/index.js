@@ -23,7 +23,7 @@ const PaymentPage = () => {
   const { cartManager } = useContext(CartContext);
   const [couponValue, setCouponeValue] = useState();
   const [loading, setLoading] = useState(true);
-
+  const [disablePayment, setDisablePayment] = useState(true);
 
   const orderMinus = (item) => {
     if(item.quantity > 1) {
@@ -36,61 +36,32 @@ const PaymentPage = () => {
     cartManager.quantityProduct(item, 'add');
   }
 
-  // stripe item   
-  // const item = {
-  //   price: "price_1L7IrEIdXAYNRuBx0Yi8bleX",
-  //   quantity: 1,
-  // };
-  const items = [
-    {
-      price: "price_1LhwWFIdXAYNRuBx47EmpePf",
-      quantity: 1,
-    },
-    {
-      price: "price_1LhwanIdXAYNRuBxF7l5gaAR",
-      quantity: 1,
-    }
-  ];
-
   let checkoutOptions;
 
   useEffect(() => {
-    checkoutOptions = {
-      lineItems: [...items],
-      mode: "payment",
-      successUrl: `${window.location.origin}/subscription/payment/success`,
-      cancelUrl: `${window.location.origin}/subscription/payment/cancel`,
-    };
-    // console.log('cart: ', cartManager.cart)
+    if(cartManager.cart.length > 0) {
+      // enable payment button
+      setDisablePayment(false);
+      const items = cartManager.singlePaymentList().map(item =>{
+        return {
+          price: item.product.attributes.stripe_fullpriceLink,
+          quantity: item.quantity
+        }
+      });
+      checkoutOptions = {
+        lineItems: [...items],
+        mode: "payment",
+        successUrl: `${window.location.origin}/subscription/payment/success`,
+        cancelUrl: `${window.location.origin}/subscription/payment/cancel`,
+      };
+    }
     
-    // subscription
-    // checkoutOptions = {
-    //   lineItems: [item],
-    //   mode: "subscription",
-    //   successUrl: `${window.location.origin}/subscription/payment/success`,
-    //   cancelUrl: `${window.location.origin}/subscription/payment/cancel`,
-    // };
-
-    // if (cartManager.cart.length === 0) {
-    //     setTimeout(() => {
-    //         router.push('/');
-    //     }, 200);
-    // }
-  },[]);
+  }, [loading, cartManager.cart]);
 
   const redirectToCheckout = async () => {
-    console.log("redirectToCheckout");
-
     const stripe = await getStripe();
     const { error } = await stripe.redirectToCheckout(checkoutOptions);
-    console.log("Stripe error", error);
   };
-
-  // useEffect(() => {
-  //     if (cartManager.cart && cartManager.cart.length === 0) {
-  //         router.push('/');
-  //     }
-  // })
 
   setTimeout(() => {
     setLoading(false);
@@ -144,6 +115,7 @@ const PaymentPage = () => {
                   <Button
                     onClick={() => {
                       // handleLoading(true);
+                      setLoading(true);
                       cartManager.removeProduct(item);
                     }}
                   >
@@ -156,19 +128,13 @@ const PaymentPage = () => {
             )}
             <div className="additional-details">
               <div className="details">
-                Subscription shipping
+                Pret Transport
                 <div className="price">
                   <b>Free</b>
                 </div>
               </div>
               <div className="details">
-                Subscription shipping
-                <div className="price">
-                  <b>Free</b>
-                </div>
-              </div>
-              <div className="details">
-                Subscription discount
+                Discount
                 <div className="price">
                   {loading ? (
                     <Spinner animation="border" style={{ color: "#cc3663" }} />
@@ -204,7 +170,7 @@ const PaymentPage = () => {
             <div className="shipment-title">Shipment details</div>
             <div className="shipment-details">
               <ShipmentForm cartTotal={cartManager.cartTotal} />
-              <Button onClick={redirectToCheckout}> Pay</Button>
+              <Button onClick={redirectToCheckout} disabled={disablePayment}> Pay</Button>
             </div>
           </div>
         </div>

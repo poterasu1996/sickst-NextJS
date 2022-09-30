@@ -5,7 +5,7 @@ import gIcon from "../../public/img/svg/g-icon.svg";
 const Login = () => {
 
   return (
-    <div className="main-content">
+    <div className="main-content account-page">
       <div className="main-body">
         <div className="container register-page">
           <div className="row">
