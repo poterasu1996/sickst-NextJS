@@ -14,7 +14,8 @@
   "attributes": {
     "first_name": {
       "type": "string",
-      "default": "Sickst"
+      "default": "Sickst",
+      "required": true
     },
     "birthday": {
       "type": "date"
@@ -29,7 +30,8 @@
     },
     "last_name": {
       "type": "string",
-      "default": "User"
+      "default": "User",
+      "required": true
     },
     "address": {
       "type": "text"
@@ -45,7 +47,9 @@
     },
     "phone_number": {
       "type": "string",
-      "maxLength": 10
+      "maxLength": 10,
+      "required": true,
+      "unique": false
     },
     "avatar": {
       "type": "media",
@@ -58,11 +62,10 @@
         "audios"
       ]
     },
-    "user": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "user_detail"
+    "user_id": {
+      "type": "integer",
+      "required": true,
+      "unique": true
     }
   }
 }

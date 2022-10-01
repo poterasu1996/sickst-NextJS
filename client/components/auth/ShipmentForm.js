@@ -69,7 +69,6 @@ export default function ShipmentForm({ cartTotal }) {
     const response = await axios.get(USER_URL, header);
     const orderList = await axios.get(USER_DETAILS);
     console.log('USER: ', response.data);
-    console.log('details: ', orderList.data.data)
   }, [])
 
   const redirectToCheckout = async () => {

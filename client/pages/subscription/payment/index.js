@@ -5,6 +5,7 @@ import { X } from "react-feather";
 import ShipmentForm from "../../../components/auth/ShipmentForm";
 import CouponeForm from "../../../components/global/CouponeForm";
 import CartContext from "../../../store/cart-context";
+import PaymentContext from "../../../store/payment-context";
 import { loadStripe } from "@stripe/stripe-js";
 
 let stripePromise;
@@ -21,9 +22,12 @@ const getStripe = () => {
 const PaymentPage = () => {
   const router = useRouter();
   const { cartManager } = useContext(CartContext);
+  const { paymentManager } = useContext(PaymentContext);
   const [couponValue, setCouponeValue] = useState();
   const [loading, setLoading] = useState(true);
   const [disablePayment, setDisablePayment] = useState(true);
+  const [orderList, setOrderList] = useState();
+  const [checkoutOptions, setCheckoutOptions] = useState();
 
   const orderMinus = (item) => {
     if(item.quantity > 1) {
@@ -36,29 +40,62 @@ const PaymentPage = () => {
     cartManager.quantityProduct(item, 'add');
   }
 
-  let checkoutOptions;
+  //test payment context
+  paymentManager.test();
 
   useEffect(() => {
     if(cartManager.cart.length > 0) {
       // enable payment button
       setDisablePayment(false);
-      const items = cartManager.singlePaymentList().map(item =>{
+      const cartList = cartManager.singlePaymentList();   // list from cart
+      const items = cartList.map(item =>{                 // item list for stripe
         return {
           price: item.product.attributes.stripe_fullpriceLink,
           quantity: item.quantity
         }
       });
-      checkoutOptions = {
+
+      if(cartList) {
+        const cleanProductList = createOrderProductList(cartList);
+        const ol = {
+          order_type: 'payment',
+          product_list: cleanProductList,
+          txn_status: false,
+        }
+        setOrderList(ol);
+      }
+
+      const stripeCheckoutOptions = {
         lineItems: [...items],
         mode: "payment",
         successUrl: `${window.location.origin}/subscription/payment/success`,
         cancelUrl: `${window.location.origin}/subscription/payment/cancel`,
       };
+
+      setCheckoutOptions(stripeCheckoutOptions);
     }
     
   }, [loading, cartManager.cart]);
 
+
+  function createOrderProductList(data) {
+    const orderList = data.map(item => {
+      const newData = {
+        data: {
+          productId: item.product.id,
+          brand: item.product.attributes.brand,
+          model: item.product.attributes.model,
+          quantity: item.quantity,
+          price: item.product.attributes.otb_price,          
+        }
+      }
+      return newData;
+    });
+    return orderList;
+  }
+
   const redirectToCheckout = async () => {
+    paymentManager.populateOrderHistory(orderList);
     const stripe = await getStripe();
     const { error } = await stripe.redirectToCheckout(checkoutOptions);
   };

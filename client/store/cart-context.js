@@ -89,7 +89,6 @@ export const CartProvider = ({ children }) => {
       const list = storageList.filter((item) => {
         return item.payment === "otb";
       })
-      console.log('otb', list)
       return list;
     }
   }
@@ -132,6 +131,7 @@ export const CartProvider = ({ children }) => {
       const newStoreList = storage.map((item) => {  // update product quantity
         if (item.cartId === product.cartId) {
           const qt = item.quantity;
+          setResetCart(true);
           return { ...item, quantity: qt - 1 };
         }
         return item;
@@ -149,6 +149,7 @@ export const CartProvider = ({ children }) => {
       const newStoreList = storage.map((item) => {
         if (item.cartId === product.cartId) {
           const qt = item.quantity;
+          setResetCart(true);
           return { ...item, quantity: qt + 1 };
         }
         return item;
