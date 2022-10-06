@@ -30,7 +30,7 @@ const ManageSubscription = ({ subscription }) => {
     useEffect(() => {
         const quickTipsElem = document.getElementById("quick-tips")
         if ((window.innerWidth > 600) & (window.innerWidth < 1101)) {
-            const elemWidth = window.innerWidth - 150 - (2 * 40) - 40;
+            const elemWidth = window.innerWidth - 150 - (2 * 20) - (2 * 40) - 40;
             quickTipsElem.style.maxWidth = `${elemWidth}px`
         } else if(window.innerWidth <= 600) {
             let padding = 80;
@@ -44,21 +44,23 @@ const ManageSubscription = ({ subscription }) => {
         }
 
         window.onresize = () => {
+            let elemWidth;
             if (window.innerWidth > 600 & window.innerWidth < 1101) {
-                const elemWidth = window.innerWidth - 150 - (2 * 40) - 40;
+                elemWidth = window.innerWidth - 150 - (2 * 20) - (2 * 40) - 40;
                 quickTipsElem.style.maxWidth = `${elemWidth}px`
             } else if(window.innerWidth <= 600) {
                 let padding = 80;
                 if (window.innerWidth <= 400) {
                     padding = 40;
                 }
-                const elemWidth = window.innerWidth - padding;
+                elemWidth = window.innerWidth - padding;
                 quickTipsElem.style.maxWidth = `${elemWidth}px`
             } else {
                 quickTipsElem.style.maxWidth = '440px';
             }
+            console.log('elem width: ', elemWidth)
         }
-    }, [])
+    }, [window.onresize])
 
     function handleOnDragEnd(result) {
         if (!result.destination) return;
