@@ -40,7 +40,7 @@ const ManageSubscription = ({ subscription }) => {
             const elemWidth = window.innerWidth - padding;
             quickTipsElem.style.maxWidth = `${elemWidth}px`
         } else {
-            quickTipsElem.style.maxWidth = '440px';
+            quickTipsElem.style.maxWidth = '458px';
         }
 
         window.onresize = () => {
@@ -56,7 +56,7 @@ const ManageSubscription = ({ subscription }) => {
                 elemWidth = window.innerWidth - padding;
                 quickTipsElem.style.maxWidth = `${elemWidth}px`
             } else {
-                quickTipsElem.style.maxWidth = '440px';
+                quickTipsElem.style.maxWidth = '458px';
             }
             console.log('elem width: ', elemWidth)
         }
