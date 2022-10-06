@@ -30,13 +30,6 @@ const Header = () => {
       <div className="container header sticky-header">
         <div className="logo">
           <Link href={"/"}>
-            {/* <a className='logo-link'>
-                            <h1 className='big-s'>S</h1>
-                            <div className='sickst'>
-                                <h3 className='pt-1'>ickst</h3>
-                                <h4 className='pt-2'>&bull;Bucharest&bull;</h4>
-                            </div>
-                        </a> */}
             <a className="logo-link2">
               <div className="t1">Sickst</div>
               <div className="t2">Bucharest</div>
@@ -54,22 +47,7 @@ const Header = () => {
         </ul>
 
         <div className="right-side">
-          {/* { auth && 
-                        <Dropdown className='header-dropdown'>
-                            <Dropdown.Toggle id="user-account-dd">
-                                <User />
-                            </Dropdown.Toggle>
-
-                            <Dropdown.Menu className='header-dropdown-menu'>
-                                <Dropdown.Item as="button">Item1</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-                    } */}
-
           {auth ? (
-            // <Link href="/account">
-            //     <a className='account'><User /></a>
-            // </Link>
             <>
               <Dropdown className="header-dropdown">
                 <Dropdown.Toggle id="user-account-dd">
@@ -81,8 +59,7 @@ const Header = () => {
                   <Dropdown.Item
                     as="button"
                     onClick={() => {
-                      accountManager.resetStates();
-                      accountManager.setHeaderDDLink("membership");
+                      accountManager.setAccountPageState("subscription");
                       router.push("/account");
                     }}
                   >
@@ -91,8 +68,7 @@ const Header = () => {
                   <Dropdown.Item
                     as="button"
                     onClick={() => {
-                      accountManager.resetStates();
-                      accountManager.setHeaderDDLink("order_history");
+                      accountManager.setAccountPageState("orderHistory");
                       router.push("/account");
                     }}
                   >
@@ -101,9 +77,8 @@ const Header = () => {
                   <Dropdown.Item 
                     as="button"
                     onClick={() => {
-                        accountManager.resetStates();
-                        accountManager.setHeaderDDLink("shipping");
-                        router.push("/account");
+                      accountManager.setAccountPageState("shippingInfo");
+                      router.push("/account");
                     }}
                   >
                     Shipping information
@@ -112,9 +87,8 @@ const Header = () => {
                   <Dropdown.Item 
                     as="button"
                     onClick={() => {
-                        accountManager.resetStates();
-                        accountManager.setHeaderDDLink("personal_details");
-                        router.push("/account");
+                      accountManager.setAccountPageState("personalInfo");
+                      router.push("/account");
                     }}
                   >
                     Personal details
@@ -130,9 +104,6 @@ const Header = () => {
               >
                 <User />
               </Button>
-              {/* <Link href="/account">
-                                <a className='account'><User /></a>
-                            </Link> */}
             </>
           ) : (
             <Link href="/account/login">

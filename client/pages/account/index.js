@@ -14,20 +14,22 @@ import AuthContext from "../../store/auth-context";
 import AccountContext from "../../store/account-context";
 import userAvatar from '../../public/img/svg/male_avatar.svg';
 
+// const accState = [
+//     'subscription', 
+//     'orderHistory', 
+//     'billingInfo', 
+//     'shippingInfo', 
+//     'reviews', 
+//     'ratedProducts', 
+//     'personalInfo', 
+//     'resetPassword'
+// ];
 const Account = () => {
-    const [subscription, setSubscription] = useState(true);
-    const [orderHistory, setOrderHistory] = useState(false);
-    const [billingInformation, setBillingInformation] = useState(false);
-    const [shippingInformation, setShippingInformation] = useState(false);
-    const [reviews, setReviews] = useState(false);
-    const [ratedProducts, setRatedProducts] = useState(false);
-    const [personalInfo, setPersonalInfo] = useState(false);
-    const [resetPassword, setResetPassword] = useState(false);
-    
+    const USER_ME = '/users/me';
     const [userInfo, setUserInfo] = useState();     // fetch user info
+    const [accState, setAccState] = useState();
     const { auth } = useContext(AuthContext);
     const { accountManager } = useContext(AccountContext);
-    const USER_ME = '/users/me';
 
     useEffect(() => {
         if(auth) {
@@ -44,42 +46,11 @@ const Account = () => {
     }, [auth])
 
     useEffect(() => {
-        if(accountManager.headerDDLink !== null) {
-            // check if user came via header dropdown navbar
-            resetStates();
-            if(accountManager.headerDDLink === 'membership') {
-                setSubscription(true);
-            } else if(accountManager.headerDDLink === 'order_history') {
-                setOrderHistory(true);
-            } else if(accountManager.headerDDLink === 'shipping') {
-                setShippingInformation(true);
-            } else if(accountManager.headerDDLink === 'personal_details') {
-                setPersonalInfo(true);
-            } else {
-                console.log('Header link is invalid')
-            }
-        }
-        console.log('orderState', orderHistory)
-    }, [accountManager.headerDDLink])
-
-    function resetStates() {
-        // reset navbar active class
-        setSubscription(false);
-        setOrderHistory(false);
-        setBillingInformation(false);
-        setShippingInformation(false);
-        setReviews(false);
-        setRatedProducts(false);
-        setPersonalInfo(false);
-        setResetPassword(false);
-    }
+        setAccState(accountManager.accountState);
+    }, [accountManager.accountState]);
 
     function activeMenuLink(navLink) {
-        // set every state to false;
-        resetStates();
-
-        // set active the nav-link we need
-        navLink(true);
+        accountManager.setAccountPageState(navLink);
     }
 
     function getDate() {
@@ -101,14 +72,14 @@ const Account = () => {
                         <div className="joined-date">Joined: <b className="brand-color">{userInfo && getDate()}</b></div>
                     </div>
                     <ul className="nav-menu">
-                        <li className={"nav-link " + (subscription ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setSubscription)}>Manage subscription</div></li>
-                        <li className={"nav-link " + (orderHistory ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setOrderHistory)}>Order history</div></li>
-                        <li className={"nav-link " + (billingInformation ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setBillingInformation)}>Billing information</div></li>
-                        <li className={"nav-link " + (shippingInformation ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setShippingInformation)}>Shipping information</div></li>
-                        <li className={"nav-link " + (reviews ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setReviews)}>My reviews</div></li>
-                        <li className={"nav-link " + (ratedProducts ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setRatedProducts)}>Rated products</div></li>
-                        <li className={"nav-link " + (personalInfo ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setPersonalInfo)}>Personal info</div></li>
-                        <li className={"nav-link " + (resetPassword ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink(setResetPassword)}>Reset password</div></li>
+                        <li className={"nav-link " + (accState === 'subscription' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('subscription')}>Manage subscription</div></li>
+                        <li className={"nav-link " + (accState === 'orderHistory' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('orderHistory')}>Order history</div></li>
+                        <li className={"nav-link " + (accState === 'billingInfo' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('billingInfo')}>Billing information</div></li>
+                        <li className={"nav-link " + (accState === 'shippingInfo' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('shippingInfo')}>Shipping information</div></li>
+                        <li className={"nav-link " + (accState === 'reviews' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('reviews')}>My reviews</div></li>
+                        <li className={"nav-link " + (accState === 'ratedProducts' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('ratedProducts')}>Rated products</div></li>
+                        <li className={"nav-link " + (accState === 'personalInfo' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('personalInfo')}>Personal info</div></li>
+                        <li className={"nav-link " + (accState === 'resetPassword' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('resetPassword')}>Reset password</div></li>
                     </ul>
                 </div>
                 <div className="content">
@@ -122,14 +93,14 @@ const Account = () => {
                             <div className="subscription-status">Subscription: <b className="brand-color">Active</b></div>
                         </div>
                     </div>
-                    {subscription && <ManageSubscription subscription={subscription} />}
-                    {orderHistory && <OrderHistory />}
-                    {billingInformation && <BillingInformation />}
-                    {shippingInformation && <ShippingInformation />}
-                    {reviews && <UserReviews />}
-                    {ratedProducts && <RatedProducts />}
-                    {personalInfo && <PersonalInfo />}
-                    {resetPassword && <ResetPassword />}
+                    {accState === 'subscription' && <ManageSubscription subscription={!!accState} />}
+                    {accState === 'orderHistory' && <OrderHistory />}
+                    {accState === 'billingInfo' && <BillingInformation />}
+                    {accState === 'shippingInfo' && <ShippingInformation />}
+                    {accState === 'reviews' && <UserReviews />}
+                    {accState === 'ratedProducts' && <RatedProducts />}
+                    {accState === 'personalInfo' && <PersonalInfo />}
+                    {accState === 'resetPassword' && <ResetPassword />}
                 </div>
             </div>
         </div>

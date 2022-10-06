@@ -1,23 +1,58 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const AccountContext = React.createContext([]);
 
 export const AccountProvider = ({ children }) => {
-    const [headerDDLink, setHeaderDDLink] = useState(null);
+    const [accountState, setAccountState] = useState('subscription');
 
-    function resetStates() {
-        setHeaderDDLink(null);
+    // const accState = [
+    //     'subscription', 
+    //     'orderHistory', 
+    //     'billingInfo', 
+    //     'shippingInfo', 
+    //     'reviews', 
+    //     'ratedProducts', 
+    //     'personalInfo', 
+    //     'resetPassword'
+    // ];
 
-        return;
+    function setAccountPageState(state) {
+        // set the general account state
+        // based on this state, info will be showed in the account page
+        switch (state) {
+            case 'subscription':
+                setAccountState('subscription');
+                break;
+            case 'orderHistory':
+                setAccountState('orderHistory');
+                break;
+            case 'billingInfo':
+                setAccountState('billingInfo');
+                break;
+            case 'shippingInfo':
+                setAccountState('shippingInfo');
+                break;
+            case 'reviews':
+                setAccountState('reviews');
+                break;
+            case 'ratedProducts':
+                setAccountState('ratedProducts');
+                break;
+            case 'personalInfo':
+                setAccountState('personalInfo');
+                break;
+            case 'resetPassword':
+                setAccountState('resetPassword');
+                break;
+            default:
+                setAccountState('default');
+        }
     }
 
     const accountManager = {
-        headerDDLink,
-        setHeaderDDLink,
-        resetStates
+        setAccountPageState,
+        accountState,
     };
-
-    // console.log('accountcontext - headerDDLInk', headerDDLink)
     
     return (
         <AccountContext.Provider value={{ accountManager }}>
