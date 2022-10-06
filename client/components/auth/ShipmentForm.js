@@ -1,12 +1,12 @@
 import { Form, Alert, Button, Col, Row } from "react-bootstrap";
 import { useEffect, useRef, useState } from "react";
 import { Formik } from "formik";
-import CustomFormField from "../CustomFormField";
+import CustomFormField from "../global/form/CustomFormField";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 
 import axios from "../../api/axios";
-import CustomPhoneFormField from "../global/CustomPhoneFormField";
+import CustomPhoneFormField from "../global/form/CustomPhoneFormField";
 const REGISTER_URL = "/auth/local/register";
 import { loadStripe } from "@stripe/stripe-js";
 
@@ -24,12 +24,13 @@ const getStripe = () => {
 const USER_URL = "/users/me";
 const USER_DETAILS = "/user-details?populate=*"
 
-export default function ShipmentForm({ cartTotal }) {
+export default function ShipmentForm({ cartTotal, onRedirect }) {
   const router = useRouter();
   const addressRef = useRef();
   const phoneRef = useRef();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [disablePayment, setDisablePayment] = useState(true);
   const [value, setValue] = useState();
 
   // stripe item   
@@ -179,7 +180,7 @@ export default function ShipmentForm({ cartTotal }) {
               </Col>
             </Row>
             {cartTotal 
-              ? <Button className="button-second mt-5" type="submit">Total {cartTotal} lei</Button>
+              ? <Button className="button-second mt-5" type="submit" onClick={onRedirect} disabled={disablePayment} >Total {cartTotal} lei</Button>
               : <Button className="button-second mt-5" type="submit" onClick={redirectToCheckout}>Subscribe</Button>
             }
           </Form>

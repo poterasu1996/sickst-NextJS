@@ -1,7 +1,7 @@
 import { Form, Button } from "react-bootstrap";
 import { useRef, useState, useContext } from "react";
 import { Formik } from "formik";
-import CustomFormField from "../CustomFormField";
+import CustomFormField from "../global/form/CustomFormField";
 import * as Yup from 'yup';
 import AuthContext from "../../store/auth-context";
 import { useRouter } from 'next/router';

@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import PaymentContext from "../../../store/payment-context";
+import PaymentContext from "../../store/payment-context";
 
 const SuccessPayment = () => { 
     const [cart, setCart] = useState();
@@ -9,7 +9,6 @@ const SuccessPayment = () => {
     const { paymentManager } = useContext(PaymentContext);
 
     useEffect(() => {
-        console.log('SUCCES')
         const cartStorage = localStorage.getItem('cart');
         if(cartStorage) {
             setCart(cartStorage);

@@ -2,10 +2,10 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
 import { X } from "react-feather";
-import ShipmentForm from "../../../components/auth/ShipmentForm";
-import CouponeForm from "../../../components/global/CouponeForm";
-import CartContext from "../../../store/cart-context";
-import PaymentContext from "../../../store/payment-context";
+import ShipmentForm from "../../components/auth/ShipmentForm";
+import CouponeForm from "../../components/global/form/CouponeForm";
+import CartContext from "../../store/cart-context";
+import PaymentContext from "../../store/payment-context";
 import { loadStripe } from "@stripe/stripe-js";
 
 let stripePromise;
@@ -25,7 +25,6 @@ const PaymentPage = () => {
   const { paymentManager } = useContext(PaymentContext);
   const [couponValue, setCouponeValue] = useState();
   const [loading, setLoading] = useState(true);
-  const [disablePayment, setDisablePayment] = useState(true);
   const [orderList, setOrderList] = useState();
   const [checkoutOptions, setCheckoutOptions] = useState();
 
@@ -41,12 +40,10 @@ const PaymentPage = () => {
   }
 
   //test payment context
-  paymentManager.test();
+  // paymentManager.test();
 
   useEffect(() => {
     if(cartManager.cart.length > 0) {
-      // enable payment button
-      setDisablePayment(false);
       const cartList = cartManager.singlePaymentList();   // list from cart
       const items = cartList.map(item =>{                 // item list for stripe
         return {
@@ -68,8 +65,8 @@ const PaymentPage = () => {
       const stripeCheckoutOptions = {
         lineItems: [...items],
         mode: "payment",
-        successUrl: `${window.location.origin}/subscription/payment/success`,
-        cancelUrl: `${window.location.origin}/subscription/payment/cancel`,
+        successUrl: `${window.location.origin}/payment/success`,
+        cancelUrl: `${window.location.origin}/payment/cancel`,
       };
 
       setCheckoutOptions(stripeCheckoutOptions);
@@ -206,8 +203,8 @@ const PaymentPage = () => {
           <div className="right-side">
             <div className="shipment-title">Shipment details</div>
             <div className="shipment-details">
-              <ShipmentForm cartTotal={cartManager.cartTotal} />
-              <Button onClick={redirectToCheckout} disabled={disablePayment}> Pay</Button>
+              <ShipmentForm cartTotal={cartManager.cartTotal} onRedirect={redirectToCheckout} />
+              {/* <Button onClick={redirectToCheckout} disabled={disablePayment}> Pay</Button> */}
             </div>
           </div>
         </div>

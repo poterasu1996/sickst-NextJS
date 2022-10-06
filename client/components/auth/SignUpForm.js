@@ -1,7 +1,7 @@
 import { Form, Alert, Button } from "react-bootstrap";
 import { useRef, useState } from "react";
 import { Formik } from "formik";
-import CustomFormField from "../CustomFormField";
+import CustomFormField from "../global/form/CustomFormField";
 import * as Yup from 'yup';
 import { useRouter } from "next/router";
 import { Check } from 'react-feather';
