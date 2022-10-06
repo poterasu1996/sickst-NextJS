@@ -2,9 +2,10 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
 import { X } from "react-feather";
-import ShipmentForm from "../../../components/auth/ShipmentForm";
-import CouponeForm from "../../../components/global/CouponeForm";
-import CartContext from "../../../store/cart-context";
+import ShipmentForm from "../../components/auth/ShipmentForm";
+import CouponeForm from "../../components/global/form/CouponeForm";
+import CartContext from "../../store/cart-context";
+import PaymentContext from "../../store/payment-context";
 import { loadStripe } from "@stripe/stripe-js";
 
 let stripePromise;
@@ -21,9 +22,11 @@ const getStripe = () => {
 const PaymentPage = () => {
   const router = useRouter();
   const { cartManager } = useContext(CartContext);
+  const { paymentManager } = useContext(PaymentContext);
   const [couponValue, setCouponeValue] = useState();
   const [loading, setLoading] = useState(true);
-
+  const [orderList, setOrderList] = useState();
+  const [checkoutOptions, setCheckoutOptions] = useState();
 
   const orderMinus = (item) => {
     if(item.quantity > 1) {
@@ -36,61 +39,63 @@ const PaymentPage = () => {
     cartManager.quantityProduct(item, 'add');
   }
 
-  // stripe item   
-  // const item = {
-  //   price: "price_1L7IrEIdXAYNRuBx0Yi8bleX",
-  //   quantity: 1,
-  // };
-  const items = [
-    {
-      price: "price_1LhwWFIdXAYNRuBx47EmpePf",
-      quantity: 1,
-    },
-    {
-      price: "price_1LhwanIdXAYNRuBxF7l5gaAR",
-      quantity: 1,
-    }
-  ];
-
-  let checkoutOptions;
+  //test payment context
+  // paymentManager.test();
 
   useEffect(() => {
-    checkoutOptions = {
-      lineItems: [...items],
-      mode: "payment",
-      successUrl: `${window.location.origin}/subscription/payment/success`,
-      cancelUrl: `${window.location.origin}/subscription/payment/cancel`,
-    };
-    // console.log('cart: ', cartManager.cart)
-    
-    // subscription
-    // checkoutOptions = {
-    //   lineItems: [item],
-    //   mode: "subscription",
-    //   successUrl: `${window.location.origin}/subscription/payment/success`,
-    //   cancelUrl: `${window.location.origin}/subscription/payment/cancel`,
-    // };
+    if(cartManager.cart.length > 0) {
+      const cartList = cartManager.singlePaymentList();   // list from cart
+      const items = cartList.map(item =>{                 // item list for stripe
+        return {
+          price: item.product.attributes.stripe_fullpriceLink,
+          quantity: item.quantity
+        }
+      });
 
-    // if (cartManager.cart.length === 0) {
-    //     setTimeout(() => {
-    //         router.push('/');
-    //     }, 200);
-    // }
-  },[]);
+      if(cartList) {
+        const cleanProductList = createOrderProductList(cartList);
+        const ol = {
+          order_type: 'payment',
+          product_list: cleanProductList,
+          txn_status: false,
+        }
+        setOrderList(ol);
+      }
+
+      const stripeCheckoutOptions = {
+        lineItems: [...items],
+        mode: "payment",
+        successUrl: `${window.location.origin}/payment/success`,
+        cancelUrl: `${window.location.origin}/payment/cancel`,
+      };
+
+      setCheckoutOptions(stripeCheckoutOptions);
+    }
+    
+  }, [loading, cartManager.cart]);
+
+
+  function createOrderProductList(data) {
+    const orderList = data.map(item => {
+      const newData = {
+        data: {
+          productId: item.product.id,
+          brand: item.product.attributes.brand,
+          model: item.product.attributes.model,
+          quantity: item.quantity,
+          price: item.product.attributes.otb_price,          
+        }
+      }
+      return newData;
+    });
+    return orderList;
+  }
 
   const redirectToCheckout = async () => {
-    console.log("redirectToCheckout");
-
+    paymentManager.populateOrderHistory(orderList);
     const stripe = await getStripe();
     const { error } = await stripe.redirectToCheckout(checkoutOptions);
-    console.log("Stripe error", error);
   };
-
-  // useEffect(() => {
-  //     if (cartManager.cart && cartManager.cart.length === 0) {
-  //         router.push('/');
-  //     }
-  // })
 
   setTimeout(() => {
     setLoading(false);
@@ -144,6 +149,7 @@ const PaymentPage = () => {
                   <Button
                     onClick={() => {
                       // handleLoading(true);
+                      setLoading(true);
                       cartManager.removeProduct(item);
                     }}
                   >
@@ -156,19 +162,13 @@ const PaymentPage = () => {
             )}
             <div className="additional-details">
               <div className="details">
-                Subscription shipping
+                Pret Transport
                 <div className="price">
                   <b>Free</b>
                 </div>
               </div>
               <div className="details">
-                Subscription shipping
-                <div className="price">
-                  <b>Free</b>
-                </div>
-              </div>
-              <div className="details">
-                Subscription discount
+                Discount
                 <div className="price">
                   {loading ? (
                     <Spinner animation="border" style={{ color: "#cc3663" }} />
@@ -203,8 +203,8 @@ const PaymentPage = () => {
           <div className="right-side">
             <div className="shipment-title">Shipment details</div>
             <div className="shipment-details">
-              <ShipmentForm cartTotal={cartManager.cartTotal} />
-              <Button onClick={redirectToCheckout}> Pay</Button>
+              <ShipmentForm cartTotal={cartManager.cartTotal} onRedirect={redirectToCheckout} />
+              {/* <Button onClick={redirectToCheckout} disabled={disablePayment}> Pay</Button> */}
             </div>
           </div>
         </div>

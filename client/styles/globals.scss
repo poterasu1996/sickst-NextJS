@@ -179,6 +179,10 @@ body.modal-open {
   &.big {
     max-width: 200px;
   }
+  &:disabled {
+    background-color: #d24f4d;
+    border-color: #d24f4d;
+  }
 }
 
 .brand-color {

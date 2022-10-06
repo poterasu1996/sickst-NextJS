@@ -15,20 +15,23 @@
     "order_type": {
       "type": "enumeration",
       "enum": [
-        "Subscription",
-        "One time buy",
-        "Collection"
+        "subscription",
+        "payment",
+        "collection"
       ],
       "required": true
     },
-    "users_permissions_user": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user",
-      "mappedBy": "order_history"
-    },
     "product_list": {
       "type": "json"
+    },
+    "user_id": {
+      "type": "integer",
+      "required": true
+    },
+    "txn_status": {
+      "type": "boolean",
+      "default": false,
+      "required": true
     }
   }
 }

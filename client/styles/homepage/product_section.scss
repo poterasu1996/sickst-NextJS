@@ -3,8 +3,13 @@
     background-color: #f9f9f9;
     padding: 3rem 0;
     @media (max-width:700px) {
-        padding: 0 0 6rem 0;
+        padding: 3rem 0 6rem 0;
     }
+    @media (max-width:500px) {
+        padding: 0;
+        padding-top: 3rem;
+    }
+
     .container {
         padding: 0;
         .title {
@@ -14,43 +19,12 @@
             padding: 0 3rem;
             margin-bottom: 1rem;
         }
-        // to be deleted
-        .filter-tabs {
-            display: flex;
-            position: relative;
-            margin: 0 3rem;
-            margin-top: 3rem;
-
-            &::after {
-                content: '';
-                position: absolute;
-                display: block;
-                left: 0;
-                bottom: 0;
-                width: 100%;
-                height: .1rem;
-                background-color: #e6e6e6;
-            }
-            div {
-                font-size: 1.6rem;
-                line-height: 2.6rem;
-                color: #141414;
-                padding: 0 2rem;
-                cursor: pointer;
-                
-                &.active {
-                    font-weight: 600;
-                    border-bottom: .2rem solid;
-                    z-index: 2;
-                }
-                &.man {
-                    border-color: #cc3633;
-                }
-            }
-        }
 
         .filtertabs {
             margin: 0 3rem;
+            @media (max-width:700px) {
+                margin: 0 2rem;
+            }
             
             .p-tabview-nav {
                 background-color: transparent;

@@ -50,12 +50,12 @@ const Footer = () => {
                             </Link>
                         </li>
                         <li className="list-item">
-                            <Link href="/subscriptions-men">
+                            <Link href="/shop/shop-for-him">
                                 <a>Shop pentru el</a>
                             </Link>
                         </li>
                         <li className="list-item">
-                            <Link href="/subscriptions-women">
+                            <Link href="/shop/shop-for-her">
                                 <a>Shop pentru ea</a>
                             </Link>
                         </li>

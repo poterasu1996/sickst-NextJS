@@ -2,9 +2,9 @@ import { Form, Button } from "react-bootstrap";
 import { useRef, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from 'yup';
-import CustomFormField from "../CustomFormField";
+import CustomFormField from "./CustomFormField";
 
-import axios from '../../api/axios';
+import axios from '../../../api/axios';
 const COUPONE_URL = '/coupone-codes';
 
 export default function CouponeForm({ couponeValue, loading }) {

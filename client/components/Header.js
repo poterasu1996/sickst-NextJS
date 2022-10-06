@@ -46,10 +46,10 @@ const Header = () => {
 
         <ul className="nav-menu">
           <li className="nav-link">
-            <Link href="/subscription/subscriptions-women">Women</Link>
+            <Link href="/shop/shop-for-her">Women</Link>
           </li>
           <li className="nav-link">
-            <Link href="/subscription/subscriptions-men">Men</Link>
+            <Link href="/shop/shop-for-him">Men</Link>
           </li>
         </ul>
 

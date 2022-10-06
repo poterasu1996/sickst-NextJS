@@ -2,14 +2,14 @@ import { DateTime } from "luxon";
 import Head from "next/head";
 import { useContext, useEffect, useState } from "react";
 import axios from "../../api/axios";
-import BillingInformation from "../../components/account/BillingInformation";
-import ManageSubscription from "../../components/account/ManageSubscriptions";
-import OrderHistory from "../../components/account/OrderHistory";
-import ShippingInformation from "../../components/account/ShippingInformation";
-import UserReviews from "../../components/account/UserReviews";
-import RatedProducts from "../../components/account/RatedProducts";
-import PersonalInfo from "../../components/account/PersonalInfo";
-import ResetPassword from "../../components/account/ResetPassword";
+import BillingInformation from "../../components/AccountPage/BillingInformation";
+import ManageSubscription from "../../components/AccountPage/ManageSubscriptions";
+import OrderHistory from "../../components/AccountPage/OrderHistory";
+import ShippingInformation from "../../components/AccountPage/ShippingInformation";
+import UserReviews from "../../components/AccountPage/UserReviews";
+import RatedProducts from "../../components/AccountPage/RatedProducts";
+import PersonalInfo from "../../components/AccountPage/PersonalInfo";
+import ResetPassword from "../../components/AccountPage/ResetPassword";
 import AuthContext from "../../store/auth-context";
 import AccountContext from "../../store/account-context";
 import userAvatar from '../../public/img/svg/male_avatar.svg';
@@ -92,7 +92,7 @@ const Account = () => {
             <link rel="stylesheet" type="text/css" charSet="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
             <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
         </Head>
-        <div className="main-content">
+        <div className="main-content account-page">
             <div className="container account-main-body">
                 <div className="nav-section">
                     <div className="user-info">

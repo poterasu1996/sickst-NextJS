@@ -4,13 +4,11 @@ import { X } from "react-feather";
 import CartContext from "../../store/cart-context";
 
 const CartItem = ({ item, handleLoading }) => {
-    const [count, setCount] = useState(item.quantity);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);      // for loading spinner effect
     const { cartManager } = useContext(CartContext);
 
     const orderMinus = () => {
-        if(count > 1) {
-            setCount(count - 1);
+        if(item.quantity > 1) {
             setLoading(true);
             handleLoading(true);
             cartManager.quantityProduct(item, 'remove');
@@ -18,7 +16,6 @@ const CartItem = ({ item, handleLoading }) => {
     }
 
     const orderPlus = () => {
-        setCount(count + 1);
         setLoading(true);
         handleLoading(true);
         cartManager.quantityProduct(item, 'add');

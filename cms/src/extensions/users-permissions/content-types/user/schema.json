@@ -75,23 +75,15 @@
       "type": "boolean",
       "default": false
     },
-    "order_history": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::order-history.order-history",
-      "inversedBy": "users_permissions_user"
-    },
-    "user_detail": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::user-detail.user-detail",
-      "inversedBy": "user"
-    },
     "user_subscription_list": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::user-subscription-list.user-subscription-list",
       "inversedBy": "users_permissions_user"
+    },
+    "new_user": {
+      "type": "boolean",
+      "default": true
     }
   }
 }

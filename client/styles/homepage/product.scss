@@ -1,10 +1,8 @@
 .products {
     .row {
         margin: 2rem 0;
-        & >* {
-            @media (max-width:500px) {
-                padding: 1.6rem;
-            }
+        @media (max-width:500px) {
+            margin: 0;
         }
     }
     .col {
@@ -25,8 +23,11 @@
         flex-direction: column;
         box-shadow: 0 .2rem 1rem rgba($color: #3E1223, $alpha: 0.08);
         transition: ease 0.3s;
+        @media (max-width:700px) {
+            margin: 2rem .5rem;
+        }
         @media (max-width:500px) {
-            margin: 0 1rem;
+            margin: 2rem 0;
         }
         &:hover {
             box-shadow: 0 .4rem 3.2rem rgba($color: #3E1223, $alpha: 0.25);
@@ -172,6 +173,10 @@
     .modal-header {
         border-bottom: unset;
         padding: 2rem;
+
+        .btn-close {
+            font-size: 1.5rem;
+        }
     }
     .modal-body {
         padding: 0 3rem 4rem 2rem;

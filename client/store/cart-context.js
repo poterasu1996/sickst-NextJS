@@ -83,6 +83,16 @@ export const CartProvider = ({ children }) => {
     }
   }
 
+  function singlePaymentList() {
+    // return a list with single payment items from storage
+    if(storageList.length > 0) {
+      const list = storageList.filter((item) => {
+        return item.payment === "otb";
+      })
+      return list;
+    }
+  }
+
   const removeProduct = (product) => {
     const cartList = JSON.parse(localStorage.getItem("cart"));
     // return a new list without the selected item
@@ -92,9 +102,11 @@ export const CartProvider = ({ children }) => {
     if (newList.length > 0) {
       setCart(newList);
       localStorage.setItem("cart", JSON.stringify(newList)); // set new cart list with removed item
+      setResetCart(true);
     } else {
       setCart(newList);
       localStorage.removeItem("cart"); // if list is empty, remove cart from storage
+      setResetCart(true);
     }
   };
 
@@ -119,6 +131,7 @@ export const CartProvider = ({ children }) => {
       const newStoreList = storage.map((item) => {  // update product quantity
         if (item.cartId === product.cartId) {
           const qt = item.quantity;
+          setResetCart(true);
           return { ...item, quantity: qt - 1 };
         }
         return item;
@@ -136,6 +149,7 @@ export const CartProvider = ({ children }) => {
       const newStoreList = storage.map((item) => {
         if (item.cartId === product.cartId) {
           const qt = item.quantity;
+          setResetCart(true);
           return { ...item, quantity: qt + 1 };
         }
         return item;
@@ -189,6 +203,7 @@ export const CartProvider = ({ children }) => {
     productTotal,
     total,
     subscriptionList,
+    singlePaymentList,
     subsList,
     setSubsList,
     cartTotal,
