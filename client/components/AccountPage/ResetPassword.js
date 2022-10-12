@@ -1,9 +1,16 @@
+import { Formik } from "formik";
 
 
 const ResetPassword =  () => {
     return (
         <>
-            <div>Reset PW</div>
+            <Formik
+                initialValues={{
+                    
+                }}
+            >
+
+            </Formik>
         </>
     )
 }

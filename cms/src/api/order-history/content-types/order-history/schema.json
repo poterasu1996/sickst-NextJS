@@ -32,6 +32,11 @@
       "type": "boolean",
       "default": false,
       "required": true
+    },
+    "total": {
+      "type": "integer",
+      "required": true,
+      "default": 0
     }
   }
 }

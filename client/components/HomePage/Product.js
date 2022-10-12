@@ -69,10 +69,6 @@ const Product = ({ product }) => {
     setLoading(false); // to clear loading state
   }, 500);
 
-  // setTimeout(() => {
-  //   setShowToast(false);  // to clear toast state
-  // }, 3000);
-
   return (
     <>
       <div className="col col-sm-6 col-lg-4">
@@ -110,8 +106,6 @@ const Product = ({ product }) => {
             </div>
           </div>
           <div className="product-card-button">
-            {/* {console.log("auth", auth)} */}
-            {/* {console.log(cartManager.hasProduct(product))} */}
             {cartManager.hasProduct(product) ? (
               loading ? (
                 <Spinner animation="border" style={{ color: "#cc3663" }} />

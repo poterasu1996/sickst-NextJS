@@ -3,7 +3,7 @@ import Head from "next/head";
 import { useContext, useEffect, useState } from "react";
 import axios from "../../api/axios";
 import BillingInformation from "../../components/AccountPage/BillingInformation";
-import ManageSubscription from "../../components/AccountPage/ManageSubscriptions";
+import ManageSubscription from "../../components/AccountPage/ManageSubscription";
 import OrderHistory from "../../components/AccountPage/OrderHistory";
 import ShippingInformation from "../../components/AccountPage/ShippingInformation";
 import UserReviews from "../../components/AccountPage/UserReviews";
@@ -74,15 +74,15 @@ const Account = () => {
                     <ul className="nav-menu">
                         <li className={"nav-link " + (accState === 'subscription' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('subscription')}>Manage subscription</div></li>
                         <li className={"nav-link " + (accState === 'orderHistory' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('orderHistory')}>Order history</div></li>
-                        <li className={"nav-link " + (accState === 'billingInfo' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('billingInfo')}>Billing information</div></li>
+                        {/* <li className={"nav-link " + (accState === 'billingInfo' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('billingInfo')}>Billing information</div></li> */}
                         <li className={"nav-link " + (accState === 'shippingInfo' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('shippingInfo')}>Shipping information</div></li>
-                        <li className={"nav-link " + (accState === 'reviews' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('reviews')}>My reviews</div></li>
-                        <li className={"nav-link " + (accState === 'ratedProducts' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('ratedProducts')}>Rated products</div></li>
+                        {/* <li className={"nav-link " + (accState === 'reviews' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('reviews')}>My reviews</div></li> */}
+                        {/* <li className={"nav-link " + (accState === 'ratedProducts' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('ratedProducts')}>Rated products</div></li> */}
                         <li className={"nav-link " + (accState === 'personalInfo' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('personalInfo')}>Personal info</div></li>
-                        <li className={"nav-link " + (accState === 'resetPassword' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('resetPassword')}>Reset password</div></li>
+                        {/* <li className={"nav-link " + (accState === 'resetPassword' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('resetPassword')}>Reset password</div></li> */}
                     </ul>
                 </div>
-                <div className="content">
+                <div className="content" id="content">
                     <div className="user-info-mobile">
                         <div className="user-avatar">
                             <img src={userAvatar.src}></img>
@@ -95,12 +95,12 @@ const Account = () => {
                     </div>
                     {accState === 'subscription' && <ManageSubscription subscription={!!accState} />}
                     {accState === 'orderHistory' && <OrderHistory />}
-                    {accState === 'billingInfo' && <BillingInformation />}
+                    {/* {accState === 'billingInfo' && <BillingInformation />} */}
                     {accState === 'shippingInfo' && <ShippingInformation />}
-                    {accState === 'reviews' && <UserReviews />}
-                    {accState === 'ratedProducts' && <RatedProducts />}
+                    {/* {accState === 'reviews' && <UserReviews />} */}
+                    {/* {accState === 'ratedProducts' && <RatedProducts />} */}
                     {accState === 'personalInfo' && <PersonalInfo />}
-                    {accState === 'resetPassword' && <ResetPassword />}
+                    {/* {accState === 'resetPassword' && <ResetPassword />} */}
                 </div>
             </div>
         </div>

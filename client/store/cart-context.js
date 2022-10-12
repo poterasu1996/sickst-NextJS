@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 const CartContext = React.createContext([]);
 
 export const CartProvider = ({ children }) => {
-  const [resetCart, setResetCart] = useState(false);  // reset cart each time add/delete action is made
+  const [refresh, setRefresh] = useState(false);  // reset cart each time add/delete action is made
   const [cart, setCart] = useState([]);               // set the cart list
   const [cartTotal, setCartTotal] = useState();       // set cart total
   const [storageList, setStorageList] = useState([]); // set localStorage list
@@ -28,11 +28,11 @@ export const CartProvider = ({ children }) => {
         setCart([...otbList]);
       }
     }
-  }, [resetCart]);
+  }, [refresh]);
 
-  setTimeout(() => {
-    setResetCart(false);
-  }, 500);
+  // setTimeout(() => {
+  //   setRefresh(false);
+  // }, 500);
 
   function addProduct(product, quantity, payment) {
     if (localStorage.getItem("cart") !== null) {
@@ -61,14 +61,14 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem("cart", JSON.stringify(newCartList));
       }
 
-      setResetCart(true);
+      setRefresh(preVal => !preVal);
     } else {
       localStorage.setItem(
         "cart",
         JSON.stringify([{ cartId: 0, product, quantity, payment }])
       );
       setCart([{ cartId: 0, product, quantity, payment }]);
-      setResetCart(true);
+      setRefresh(preVal => !preVal);
     }
   }
 
@@ -102,11 +102,11 @@ export const CartProvider = ({ children }) => {
     if (newList.length > 0) {
       setCart(newList);
       localStorage.setItem("cart", JSON.stringify(newList)); // set new cart list with removed item
-      setResetCart(true);
+      setRefresh(preVal => !preVal);
     } else {
       setCart(newList);
       localStorage.removeItem("cart"); // if list is empty, remove cart from storage
-      setResetCart(true);
+      setRefresh(preVal => !preVal);
     }
   };
 
@@ -131,7 +131,7 @@ export const CartProvider = ({ children }) => {
       const newStoreList = storage.map((item) => {  // update product quantity
         if (item.cartId === product.cartId) {
           const qt = item.quantity;
-          setResetCart(true);
+          setRefresh(preVal => !preVal);
           return { ...item, quantity: qt - 1 };
         }
         return item;
@@ -149,7 +149,7 @@ export const CartProvider = ({ children }) => {
       const newStoreList = storage.map((item) => {
         if (item.cartId === product.cartId) {
           const qt = item.quantity;
-          setResetCart(true);
+          setRefresh(preVal => !preVal);
           return { ...item, quantity: qt + 1 };
         }
         return item;
@@ -168,9 +168,23 @@ export const CartProvider = ({ children }) => {
   const productTotal = (item) => {
     // we need to calculate total base on buy options: subscription, otb, collection
     // for moment calculate the price for subscription
-    const total = item.quantity * item.product.attributes.subscription_price;
-    return total;
+    const payment = item.payment;
+    if(payment === 'otb') {
+      const total = item.quantity * item.product.attributes.otb_price;
+      return total;
+    } else if(payment === 'subscription') {
+      const total = item.product.attributes.subscription_price;
+      return total;
+    }
   };
+
+  function subscriptionTotal(product, coupone) {
+    const price = product.product.attributes.subscription_price;
+    if(coupone) {
+      return  price - price * (coupone / 100);
+    }
+    return price;
+  }
 
   const total = (coupone) => {
     // calculate cart total for OTB products
@@ -193,9 +207,10 @@ export const CartProvider = ({ children }) => {
   };
 
   const cartManager = {
+    refresh,
     cart,
     setCart,
-    setResetCart,
+    setRefresh,
     addProduct,
     removeProduct,
     hasProduct,
@@ -207,6 +222,7 @@ export const CartProvider = ({ children }) => {
     subsList,
     setSubsList,
     cartTotal,
+    subscriptionTotal,
   };
 
   return (

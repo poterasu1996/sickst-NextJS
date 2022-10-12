@@ -1,0 +1,288 @@
+.main-content-payment {
+    background-color: #f9f9f9;
+    padding: 5rem 0;
+    flex: 1;
+    min-width: 40rem;
+
+    .container {
+        display: flex;
+        @media (max-width: 950px) {
+            padding: 0 2rem;
+        }
+        @media (max-width: 900px) {
+            flex-direction: column;
+        }
+
+        .right-side {
+            flex: 1;
+
+            .shipment-title {
+                font-size: 2.8rem;
+                line-height: 3.8rem;
+                font-weight: 600;
+                margin-bottom: 1.5rem;
+            }
+        }
+    }
+}
+
+.subs-payment-card {
+    width: 40%;
+    margin-right: 5rem;
+    padding: 4rem 3rem;
+    margin-top: .8rem;
+    background-color: #fff;
+    border: 1px solid #dcdfe5;
+    @media (max-width: 900px) {
+        margin: 0;
+        width: 100%;
+        margin-bottom: 2rem;
+    }
+
+    .title {
+        font-size: 1.8rem;
+        line-height: 2.8rem;
+        font-weight: 600;
+        margin-bottom: .4rem;
+    }
+    .subtitle {
+        font-size: 1.6rem;
+        line-height: 2rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+    }
+    .additional-details {
+        margin-top: .2rem;
+        .details {
+            font-size: 1.8rem;
+            line-height: 2.8rem;
+            font-weight: 400;
+            min-height: 7rem;
+            display: flex;
+            align-items: center;
+            padding: 1.6rem 0;
+            border-bottom: 1px solid #dcdfe5;
+
+            .price {
+                margin-left: auto;
+            }
+        }
+        .total {
+            font-size: 1.8rem;
+            line-height: 2.8rem;
+            font-weight: 400;
+            min-height: 7rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 1.6rem 0;
+        }
+        .coupone-code {
+            form {
+                width: 100%;
+                position: relative;
+                .form-field {
+                    margin-top: 2.5rem;
+                    height: 5rem;
+                    display: flex;
+                    flex-direction: column;
+                    .form-control {
+                        height: 100%;
+                        font-size: 1.8rem;
+    
+                        &:focus {
+                            border-color: #cc3633;
+                            box-shadow: 0 0 0 0.25rem rgba($color: #cc3633, $alpha: 0.25);
+                        }
+                        
+                        &.invalid-form-control {
+                            border-color: #cc3633;
+                            box-shadow: 0 0 0 0.25rem rgba($color: #cc3633, $alpha: 0.25);
+                        }
+                    }
+                    label {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        height: 100%;
+                        font-size: 1.6rem;
+                        line-height: 3.6rem;
+                        padding: .6rem 2.5rem;
+                        font-weight: 400;
+                        color: #959ba6;
+                    }
+                }
+                .form-errors {
+                    padding: 1.6rem;
+                    margin-top: 3rem;
+                    background-color: rgba($color: #cc3633, $alpha: .3);
+                    color: #cc3633;
+                    font-size: 1.6rem;
+                }
+                .button-check-code {
+                    position: absolute;
+                    top: .2rem;
+                    right: .2rem;
+                    left: auto;
+                    height: 5rem;
+                    background-color: transparent;
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                    color: #cc3633;
+                    text-transform: uppercase;
+                    border: none;
+
+                    &:hover, &:active, &:active:focus, &:focus {
+                        background-color: transparent;
+                        color: #cc3633;
+                        border-color: unset;
+                        box-shadow: unset;
+                      }
+                }
+            }
+            .form-floating>.form-control:focus~label, .form-floating>.form-control:not(:placeholder-shown)~label, .form-floating>.form-select~label {
+                opacity: .65;
+                transform: scale(.55) translateY(-.5rem) translateX(.15rem);
+            }
+        }
+    }
+    .cart-item {
+        display: flex;
+        border: solid 1px #dadada;
+        padding: 1.5rem;
+        position: relative;
+
+        &-image {
+            height: 9rem;
+            width: 9rem;
+            margin-right: 1rem;
+            text-align: center;
+
+            img {
+                height: 100%;
+            }
+        }
+        &-details {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+
+            .item-brand {
+                font-size: 1.6rem;
+                line-height: 2.6rem;
+                font-weight: 600;
+            }
+            .item-model {
+                font-size: 1.4rem;
+                line-height: 2.4rem;
+                font-weight: 400;
+                margin-top: .5rem;
+                display: flex;
+                justify-content: space-between;
+
+                .item-quantity {
+                    display: flex;
+
+                    .item-remove {
+                        width: 2.6rem;
+                        height: 2.6rem;
+                        background-color: #f1f5f8;
+                        border-radius: 50%;
+                        cursor: pointer;
+                        position: relative;
+
+                        &:hover::before {
+                            background-color: #000;
+                        }
+                        &::before {
+                            content: '';
+                            width: .8rem;
+                            height: .2rem;
+                            position: absolute;
+                            top: 0;
+                            right: 0;
+                            bottom: 0;
+                            left: 0;
+                            margin: auto;
+                            background-color: #a8abad;
+                        }
+                    }
+
+                    .item-count {
+                        text-align: center;
+                        width: 4rem;
+                    }
+
+                    .item-add {
+                        width: 2.6rem;
+                        height: 2.6rem;
+                        background-color: #f1f5f8;
+                        border-radius: 50%;
+                        cursor: pointer;
+                        position: relative;
+
+                        &:hover::before {
+                            background-color: #000;
+                        }
+                        &:hover::after {
+                            background-color: #000;
+                        }
+                        &::before {
+                            content: '';
+                            width: .8rem;
+                            height: .2rem;
+                            position: absolute;
+                            top: 0;
+                            right: 0;
+                            bottom: 0;
+                            left: 0;
+                            margin: auto;
+                            background-color: #a8abad;
+                        }
+                        &::after {
+                            content: '';
+                            width: .2rem;
+                            height: .8rem;
+                            position: absolute;
+                            top: 0;
+                            right: 0;
+                            bottom: 0;
+                            left: 0;
+                            margin: auto;
+                            background-color: #a8abad;
+                        }
+                    }
+                }
+            }
+            .item-price {
+                margin-top: auto;
+                display: flex;
+                font-size: 1.6rem;
+                line-height: 2rem;
+                font-weight: 600;
+
+                .price {
+                    margin-left: auto;
+                }
+            }
+        }
+        .btn {
+            width: 2.4rem;
+            height: 2.4rem;
+            position: absolute;
+            top: 1.5rem;
+            right: .6rem;
+            background-color: #fff;
+            border: none;
+            
+            &:focus {
+                box-shadow: none;
+            }
+            svg {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+        }
+    }
+}

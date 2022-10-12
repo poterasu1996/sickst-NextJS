@@ -55,7 +55,7 @@ export default function CouponeForm({ couponeValue, loading }) {
     return (
     <Formik
         initialValues={{
-        coupone: '',
+            coupone: '',
         }}
         validationSchema={validate}
     >

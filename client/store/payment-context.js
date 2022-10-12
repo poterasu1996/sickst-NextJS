@@ -12,6 +12,7 @@ export const PaymentProvider = ({ children }) => {
     const { cartManager } = useContext(CartContext);
     const [header, setHeader] = useState();
     const [cart, setCart] = useState();
+    const [refresh, setRefresh] = useState(false);
     
     useEffect(() => {
         const jwt = localStorage.getItem('jwt');
@@ -60,6 +61,7 @@ export const PaymentProvider = ({ children }) => {
                         user_id: currentUser.id,
                     }
                 }
+                console.log('ORDER DATA', newData)
                 return axios.post(ORDER_HISTORY, newData, header).then(resp => {
                     console.log(resp)
                 });

@@ -84,6 +84,14 @@
     "stripe_subsLink": {
       "type": "string",
       "required": true
+    },
+    "subscription_type": {
+      "type": "enumeration",
+      "enum": [
+        "basic",
+        "premium"
+      ],
+      "required": true
     }
   }
 }

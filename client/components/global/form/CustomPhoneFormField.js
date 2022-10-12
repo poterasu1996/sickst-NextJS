@@ -8,7 +8,7 @@ const FormField = (props, ref) => {
 
     function limitInput(event, value, maxLength) {
         const key = event.keyCode || event.charCode;
-        console.log('field: ', field)
+        // console.log('field: ', field)
         if(key >= 48 && key <= 57) {
             if (value != undefined && replace.length > maxLength && key != 8) {
                 event.preventDefault();

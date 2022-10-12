@@ -4,10 +4,12 @@ import { Button, Spinner } from "react-bootstrap";
 
 import CartItem from "./CartItem";
 import CartContext from "../../store/cart-context";
+import AccountContext from "../../store/account-context";
 
 const Cart = (props) => {
   const [loading, setLoading] = useState(true);
   const { cartManager } = useContext(CartContext);
+  const { accountManager } = useContext(AccountContext);
 
   setTimeout(() => {
     setLoading(false);
@@ -41,7 +43,8 @@ const Cart = (props) => {
                           />
                         ))}
                       <Link href="/account">
-                        <a className="button-second" onClick={props.onClick}>My subscriptions</a>
+                        <a className="button-second" onClick={props.onClick}
+                        >My subscriptions</a>
                       </Link>
                     </div>
                   </>
@@ -85,7 +88,7 @@ const Cart = (props) => {
                     )}
                 </span>
                 </div>
-                <Link href="/subscription/payment">
+                <Link href="/payment">
                   <a className="button-second" onClick={props.onClick}>Checkout</a>
                 </Link>
             </div>}
