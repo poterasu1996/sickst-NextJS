@@ -4,35 +4,12 @@ import { Formik } from "formik";
 import CustomFormField from "../global/form/CustomFormField";
 import { InputSwitch } from 'primereact/inputswitch';
 import * as Yup from "yup";
-import { useRouter } from "next/router";
-
 import CustomPhoneFormField from "../global/form/CustomPhoneFormField";
-const REGISTER_URL = "/auth/local/register";
-import { loadStripe } from "@stripe/stripe-js";
 import AccountContext from "../../store/account-context";
 
-// let stripePromise;
-
-// const getStripe = () => {
-//   // check if there is any stripe instance
-//   if (!stripePromise) {
-//     stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY);
-//   }
-
-//   return stripePromise;
-// };
-
-const USER_URL = "/users/me";
-const USER_DETAILS = "/user-details?populate=*"
-const SHIPPING_INFO = "/shipping-informations"
-
 export default function ShipmentForm({ onSubmit }) {
-  const router = useRouter();
   const { accountManager } = useContext(AccountContext);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [disablePayment, setDisablePayment] = useState(true);
-  const [value, setValue] = useState();
   const [primary, setPrimary] = useState(false);
   
   const addressRef = useRef();
@@ -42,12 +19,6 @@ export default function ShipmentForm({ onSubmit }) {
   const countyRef = useRef();
   const apartmentRef = useRef();
   const phoneRef = useRef();
-
-  // stripe item   
-  // const item = {
-  //   price: "price_1L7IrEIdXAYNRuBx0Yi8bleX",
-  //   quantity: 1,
-  // };
   
   const validate = Yup.object({
     address: Yup.string().required("Campul este obligatoriu*"),
@@ -57,24 +28,6 @@ export default function ShipmentForm({ onSubmit }) {
     county: Yup.string().required("Campul este obligatoriu*"),
     phone: Yup.string().required("Nr. de telefon este obligatoriu*"),
   });
-
-  // let checkoutOptions;
-  // useEffect(() => {
-  //   checkoutOptions = {
-  //     lineItems: [item],
-  //     mode: "subscription",
-  //     successUrl: `${window.location.origin}/subscription/payment/success`,
-  //     cancelUrl: `${window.location.origin}/subscription/payment/cancel`,
-  //   };
-  // }, []);
-
-  // const redirectToCheckout = async () => {
-  //   console.log("redirectToCheckout");
-
-  //   const stripe = await getStripe();
-  //   const { error } = await stripe.redirectToCheckout(checkoutOptions);
-  //   console.log("Stripe error", error);
-  // };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -89,9 +42,7 @@ export default function ShipmentForm({ onSubmit }) {
       phone: phoneRef.current.value,
       primary: primary,
     }
-           
     accountManager.addShippingInfo(data);
-
     setLoading(false);
   };
 

@@ -79,7 +79,6 @@ export const AccountProvider = ({ children }) => {
                 `${SHIPPING_INFO}?filters[user_id][$eq]=${currentUser.id}`, 
                 header
             )
-            console.log('shp lists')
             return response.data.data;
         }
     }

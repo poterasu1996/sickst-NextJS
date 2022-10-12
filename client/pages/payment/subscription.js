@@ -4,6 +4,16 @@ import { X } from "react-feather";
 import CouponeForm from "../../components/global/form/CouponeForm";
 import AccountContext from "../../store/account-context";
 import CartContext from "../../store/cart-context";
+import { loadStripe } from "@stripe/stripe-js";
+
+let stripePromise;
+const getStripe = () => {
+  // check if there is any stripe instance
+  if (!stripePromise) {
+    stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY);
+  }
+  return stripePromise;
+};
 
 const SubscriptionPage = () => {
     const { cartManager } = useContext(CartContext);
@@ -12,6 +22,7 @@ const SubscriptionPage = () => {
     const [couponValue, setCouponeValue] = useState();
     const [subItem, setSubItem] = useState(null);
     const [shippingList, setShippingList] = useState();
+    const [checkoutOptions, setCheckoutOptions] = useState({});
 
     useEffect(() => {
         if(accountManager.currentUser) {
@@ -26,8 +37,24 @@ const SubscriptionPage = () => {
     useEffect(() => {
         if (cartManager.subsList && cartManager.subsList.length > 0) {
             setSubItem(cartManager.subsList[0]);
+            const item = {
+                price: cartManager.subsList[0].product.attributes.stripe_subsLink,
+                quantity: 1, 
+            };
+            setCheckoutOptions({
+                lineItems: [item],
+                mode: "subscription",
+                successUrl: `${window.location.origin}/payment/success`,
+                cancelUrl: `${window.location.origin}/payment/cancel`,
+            })
         }
     }, [cartManager.subsList]);
+
+    async function checkout() {
+        const stripe = await getStripe();
+        const { error } = await stripe.redirectToCheckout(checkoutOptions);
+        console.log("Stripe error", error);
+    }
 
     setTimeout(() => {
         setLoading(false);
@@ -96,7 +123,7 @@ const SubscriptionPage = () => {
                             </div>
                         </div>
                         <div className="total">
-                            Total:{" "} {console.log('subItem', subItem)}
+                            Total:{" "}
                             {loading ? (
                                 <Spinner animation="border" style={{ color: "#cc3663" }} />
                             ) : couponValue && couponValue.discount ? (
@@ -114,7 +141,7 @@ const SubscriptionPage = () => {
                                 loading={(value) => setLoading(value)}
                             />
                         </div>
-                        <button className="button-second mt-5">Pay</button>
+                        <button className="button-second mt-5" onClick={() => checkout()}>Pay</button>
                     </div>
                 </div>
                 
