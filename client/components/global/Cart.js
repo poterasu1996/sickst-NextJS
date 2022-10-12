@@ -43,10 +43,8 @@ const Cart = (props) => {
                           />
                         ))}
                       <Link href="/account">
-                        <a className="button-second" onClick={() => {
-                          props.onClick
-                          accountManager.setAccountPageState("subscription");
-                        }}>My subscriptions</a>
+                        <a className="button-second" onClick={props.onClick}
+                        >My subscriptions</a>
                       </Link>
                     </div>
                   </>

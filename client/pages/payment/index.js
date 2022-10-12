@@ -92,7 +92,7 @@ const PaymentPage = () => {
   }
 
   if(orderList) {
-    console.log('orderList: ', orderList)
+    // console.log('orderList: ', orderList)
   }
   const redirectToCheckout = async () => {
     paymentManager.populateOrderHistory(orderList);
