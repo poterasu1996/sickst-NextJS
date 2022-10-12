@@ -153,71 +153,6 @@
             }
         }
 
-        .shipping-info {
-            .title {
-                font-weight: 600;
-                font-size: 2.5rem;
-            }
-            .info {
-                font-size: 1.5rem;
-                margin: 2rem 0;
-            }
-
-            .address-list {
-                .new-address {
-                    border: solid 1px #D5D6DA;
-                    border-radius: .55rem;
-                    padding: 2rem;   
-                    display: flex;
-                    align-items: center;
-                    &:hover {
-                        cursor: pointer;
-                    }
-
-                    span {
-                        font-size: 1.6rem;
-                        margin-left: 2rem;
-                    }
-                }
-
-                .address-card {
-                    position: relative;
-                    z-index: 12;
-                    border: solid 1px #D5D6DA;
-                    background-color: #fff;
-                    border-radius: .45rem;
-                    padding: 1.5rem;
-                    margin-bottom: 1rem;
-                    position: relative;
-                    
-                    .card-info {
-                        &--name {
-                            font-size: 1.4rem;
-                            font-weight: 600;
-                            text-transform: uppercase;
-                            margin-bottom: .5rem;
-                        }
-                        &--address {
-                            font-size: 1.2rem;
-                            text-transform: uppercase;
-                        }
-                    }
-
-                    .ribbon {
-                        position: absolute;
-                        top: 1rem;
-                        right: -.1rem;
-                        background-color: rgba($color: #d24f4d, $alpha: 1);
-                        padding: .4rem 1rem;
-                        padding-top: .6rem;
-                        text-transform: uppercase;
-                        font-weight: 600;
-                        color: #f9f9f9;
-                    }
-                }
-            }
-        }
-
         .order-history {
             width: 100%;
             border-radius: 2.5rem;
@@ -466,7 +401,7 @@
                 }
 
                 .benefits {
-                    margin-top: 2rem;
+                    margin-top: 3rem;
 
                     .title {
                         font-size: 1.8rem;

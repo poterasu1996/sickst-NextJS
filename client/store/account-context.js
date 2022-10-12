@@ -1,16 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "../api/axios";
+import { toast } from "react-toastify";
 import AuthContext from "./auth-context";
-
 const AccountContext = React.createContext([]);
 
 export const AccountProvider = ({ children }) => {
     const USER_ME = '/users/me';
     const SHIPPING_INFO = '/shipping-informations';
+    const { auth } = useContext(AuthContext);
     const [accountState, setAccountState] = useState('subscription');
     const [currentUser, setCurrentUser] = useState(null);
-    const [header, setHeader] = useState();
-    const [refresh, setRefresh] = useState(false);
+    const [header, setHeader] = useState(null);
+    const [refresh, setRefresh] = useState(false);  // inform other components that context has been changed
     // const accState = [
     //     'subscription', 
     //     'orderHistory', 
@@ -23,17 +24,16 @@ export const AccountProvider = ({ children }) => {
     // ];
 
     useEffect(() => {
-        const jwt = localStorage.getItem('jwt');
-        if(jwt) {
+        if(auth) {
             const head = {
                 headers: {
                     'Content-Type': 'application/json',
-                    authorization: `Bearer ${jwt}`,
+                    authorization: `Bearer ${auth}`,
                 }
             }
             setHeader(head);
         }
-    }, [])
+    }, [auth])
 
     useEffect(() => {
         if (header) {
@@ -45,11 +45,16 @@ export const AccountProvider = ({ children }) => {
         }
     }, [header])
 
-    setTimeout(() => {
-        if(refresh) {
-            setRefresh(preVal => !preVal);
-        }
-    }, 200);
+    const toastMsg = (
+        <>
+          <div className="toast-item">
+            <div className="content">
+                <div className="title">Success</div>
+                <div className="message">An address has been changed successfully!</div>            
+            </div>
+          </div>
+        </>
+    );
 
     // async function getOneShippingInfo() {
     //     return axios.get(`${SHIPPING_INFO}/2`, header)
@@ -61,14 +66,20 @@ export const AccountProvider = ({ children }) => {
     //         })
     // }
 
+    function notify() {
+        toast(toastMsg, {
+            autoClose: 2000,
+        });
+    }
+
     async function getShippingList() {
         // get current user shipping list
         if(header) {
             const response = await axios.get(
                 `${SHIPPING_INFO}?filters[user_id][$eq]=${currentUser.id}`, 
-                // const response = await axios.get(`${SHIPPING_INFO}`, {
                 header
             )
+            console.log('shp lists')
             return response.data.data;
         }
     }
@@ -145,7 +156,10 @@ export const AccountProvider = ({ children }) => {
                         `${SHIPPING_INFO}/${listId}`, 
                         newList, 
                         header)
-                        .then(resp => console.log(resp))
+                        .then(resp => {
+                            notify();
+                            setRefresh(preVal => !preVal);
+                        })
                         .catch(error => console.log(error));
                 } else {
                     // if user has no data, POST
@@ -156,10 +170,14 @@ export const AccountProvider = ({ children }) => {
                             }],
                             user_id: currentUser.id,
                         }
-                    }
+                    };
                     return axios.post(SHIPPING_INFO, newList, header)
-                        .then(resp => console.log(resp))
-                        .catch(error => console.log(error))
+                        .then(resp => {
+                            console.log(resp);
+                            notify();
+                            setRefresh(preVal => !preVal);
+                        })
+                        .catch(error => console.log(error));
                 }
             })
         }
@@ -199,6 +217,7 @@ export const AccountProvider = ({ children }) => {
     }
 
     const accountManager = {
+        refresh,
         setAccountPageState,
         accountState,
         currentUser,

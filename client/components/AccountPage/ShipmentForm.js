@@ -1,12 +1,11 @@
-import { Form, Alert, Button, Col, Row } from "react-bootstrap";
-import { useContext, useEffect, useRef, useState } from "react";
+import { Form, Button, Col, Row } from "react-bootstrap";
+import { useContext, useRef, useState } from "react";
 import { Formik } from "formik";
 import CustomFormField from "../global/form/CustomFormField";
 import { InputSwitch } from 'primereact/inputswitch';
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 
-import axios from "../../api/axios";
 import CustomPhoneFormField from "../global/form/CustomPhoneFormField";
 const REGISTER_URL = "/auth/local/register";
 import { loadStripe } from "@stripe/stripe-js";
@@ -27,7 +26,7 @@ const USER_URL = "/users/me";
 const USER_DETAILS = "/user-details?populate=*"
 const SHIPPING_INFO = "/shipping-informations"
 
-export default function ShipmentForm() {
+export default function ShipmentForm({ onSubmit }) {
   const router = useRouter();
   const { accountManager } = useContext(AccountContext);
   const [error, setError] = useState("");
@@ -69,18 +68,6 @@ export default function ShipmentForm() {
   //   };
   // }, []);
 
-  useEffect(async () => {
-    const jwt = localStorage.getItem('jwt');
-    const header = {
-      headers: {
-        authorization: `Bearer ${jwt}`,
-      }
-    }
-
-    const response = await axios.get(USER_URL, header);
-    console.log('USER: ', response.data);
-  }, [])
-
   // const redirectToCheckout = async () => {
   //   console.log("redirectToCheckout");
 
@@ -104,7 +91,7 @@ export default function ShipmentForm() {
     }
            
     accountManager.addShippingInfo(data);
-    
+
     setLoading(false);
   };
 
@@ -200,7 +187,7 @@ export default function ShipmentForm() {
                 onChange={(e) => setPrimary(e.value)}
               />
             </div>
-            <Button className="button-second mt-5" type="submit" >Add new address</Button>
+            <Button className="button-second mt-5" type="submit" onClick={onSubmit}>Add new address</Button>
           </Form>
         )}
       </Formik>

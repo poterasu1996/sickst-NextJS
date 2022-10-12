@@ -2,28 +2,35 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
 import { X } from "react-feather";
 import CouponeForm from "../../components/global/form/CouponeForm";
+import AccountContext from "../../store/account-context";
 import CartContext from "../../store/cart-context";
 
 const SubscriptionPage = () => {
     const { cartManager } = useContext(CartContext);
+    const { accountManager } = useContext(AccountContext);
     const [loading, setLoading] = useState(true);
     const [couponValue, setCouponeValue] = useState();
     const [subItem, setSubItem] = useState(null);
+    const [shippingList, setShippingList] = useState();
 
     useEffect(() => {
-        if (cartManager.cart && cartManager.cart.length > 0) {
-            cartManager.cart
-                .filter((item) => {
-                    if (item.payment === "subscription") {
-                        setSubItem(item);
-                    }
+        if(accountManager.currentUser) {
+            accountManager.getShippingList()
+                .then(resp => {
+                    setShippingList(resp[0].attributes.shipping_info_list);
                 })
+                .catch(error => console.log('Shipping list error: ', error))
         }
-    }, [cartManager.cart]);
-    
+    }, [accountManager.currentUser])
+
+    useEffect(() => {
+        if (cartManager.subsList && cartManager.subsList.length > 0) {
+            setSubItem(cartManager.subsList[0]);
+        }
+    }, [cartManager.subsList]);
+
     setTimeout(() => {
         setLoading(false);
-        console.log('item: ', subItem)
     }, 500);
 
     return (<>
@@ -60,7 +67,6 @@ const SubscriptionPage = () => {
                         </div>
                         <Button
                             onClick={() => {
-                                // handleLoading(true);
                                 setLoading(true);
                                 cartManager.removeProduct(subItem);
                             }}
@@ -90,12 +96,12 @@ const SubscriptionPage = () => {
                             </div>
                         </div>
                         <div className="total">
-                            Total:{" "}
+                            Total:{" "} {console.log('subItem', subItem)}
                             {loading ? (
                                 <Spinner animation="border" style={{ color: "#cc3663" }} />
                             ) : couponValue && couponValue.discount ? (
                                 <b className="brand-color ms-4">
-                                    RON {cartManager.total(couponValue.discount)}
+                                    RON {cartManager.subscriptionTotal(subItem, couponValue.discount)}
                                 </b>
                             ) : (
                                 <b className="brand-color ms-4">RON {cartManager.productTotal(subItem)}</b>
@@ -108,9 +114,29 @@ const SubscriptionPage = () => {
                                 loading={(value) => setLoading(value)}
                             />
                         </div>
+                        <button className="button-second mt-5">Pay</button>
                     </div>
                 </div>
                 
+                <div className="shipping-info">
+                <div className="title">Shipping information</div>
+                <div className="info">All shipping updates MUST be made 1 day prior to your next billing date in order to receive your next product at the new address.</div>
+                <div className="address-list">
+                    {shippingList && shippingList.map((item, index) => (
+                    <div className={`address-card ${item.primary ? "active" : ""}`} key={index}>
+                            <div className="card-info">
+                                <div className="card-info--name">{item.first_name} {item.last_name}</div>
+                                <div className="card-info--address">{item.address}, apt. {item.appartment}, {item.city}, {item.county}</div>
+                            </div>
+                            {item.primary && <div className="ribbon">Primary</div>}
+                        </div>
+                    ))}
+                    <div className="new-address" onClick={() => setShow(preVal => !preVal)}>
+                        <i className="pi pi-plus" style={{'fontSize': '1.8rem'}}/>
+                        <span>Add a new address</span>
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
     </>)

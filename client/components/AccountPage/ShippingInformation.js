@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Modal, ModalBody, ModalFooter, ModalHeader } from "react-bootstrap";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import AccountContext from "../../store/account-context";
 import ShipmentForm from "./ShipmentForm";
 
@@ -9,10 +9,6 @@ const ShippingInformation = () => {
     const { accountManager } = useContext(AccountContext);
     const [shippingList, setShippingList] = useState();
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-
     useEffect(() => {
         if(accountManager.currentUser) {
             accountManager.getShippingList()
@@ -21,7 +17,7 @@ const ShippingInformation = () => {
                 })
                 .catch(error => console.log('Shipping list error: ', error))
         }
-    }, [])
+    }, [accountManager.refresh])
 
     return (
         <>
@@ -38,20 +34,27 @@ const ShippingInformation = () => {
                             {item.primary && <div className="ribbon">Primary</div>}
                         </div>
                     ))}
-                    <div className="new-address" onClick={handleShow}>
+                    <div className="new-address" onClick={() => setShow(preVal => !preVal)}>
                         <i className="pi pi-plus" style={{'fontSize': '1.8rem'}}/>
                         <span>Add a new address</span>
                     </div>
                 </div>
             </div>
 
-            <Modal className="shipping-info-modal" show={show} onHide={handleClose} centered>
-                <ModalHeader closeButton>
-                    <Modal.Title>Add a new address</Modal.Title>
+            <Modal 
+                className="shipping-info-modal" 
+                show={show} 
+                centered
+                size="lg"
+                isOpen={show}
+                toggle={() => setShow(preVal => !preVal)}
+            >
+                <ModalHeader toggle={() => setShow(preVal => !preVal)}>
+                    Add a new address
                 </ModalHeader>
                 <ModalBody>
                     <div className="shipment-details">
-                        <ShipmentForm />
+                        <ShipmentForm onSubmit={() => setShow(preVal => !preVal)}/>
                     </div>
                 </ModalBody>
                 <ModalFooter>
