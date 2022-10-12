@@ -60,6 +60,7 @@ export const PaymentProvider = ({ children }) => {
                         user_id: currentUser.id,
                     }
                 }
+                console.log('ORDER DATA', newData)
                 return axios.post(ORDER_HISTORY, newData, header).then(resp => {
                     console.log(resp)
                 });

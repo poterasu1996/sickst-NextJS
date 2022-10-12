@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
 import { X } from "react-feather";
-import ShipmentForm from "../../components/auth/ShipmentForm";
+import ShipmentForm from "../../components/AccountPage/ShipmentForm";
 import CouponeForm from "../../components/global/form/CouponeForm";
 import CartContext from "../../store/cart-context";
 import PaymentContext from "../../store/payment-context";
@@ -91,6 +91,9 @@ const PaymentPage = () => {
     return orderList;
   }
 
+  if(orderList) {
+    console.log('orderList: ', orderList)
+  }
   const redirectToCheckout = async () => {
     paymentManager.populateOrderHistory(orderList);
     const stripe = await getStripe();
@@ -106,7 +109,7 @@ const PaymentPage = () => {
     <>
       <div className="main-content-payment">
         <div className="container">
-          <div className="left-side">
+          <div className="subs-payment-card">
             <div className="title">Your monthly subscription</div>
             <div className="subtitle">
               Will ship by end of month from our facility
@@ -200,11 +203,11 @@ const PaymentPage = () => {
               </div>
             </div>
           </div>
+          
           <div className="right-side">
             <div className="shipment-title">Shipment details</div>
             <div className="shipment-details">
               <ShipmentForm cartTotal={cartManager.cartTotal} onRedirect={redirectToCheckout} />
-              {/* <Button onClick={redirectToCheckout} disabled={disablePayment}> Pay</Button> */}
             </div>
           </div>
         </div>

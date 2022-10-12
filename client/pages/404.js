@@ -4,7 +4,7 @@ import img from "../public/img/svg/404.svg";
 
 const PageNotFound = () => {
     return <>
-        <div className="page-not-found mb-5">
+        <div className="page-not-found">
             <div className="wrapper">
                 <Image src={img}/>
                 <div className="wrapper--info">

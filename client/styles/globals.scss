@@ -203,10 +203,113 @@ body.modal-open {
   }
 }
 
-.shipment-details {
+// custom datepicker calendar
+.p-datepicker {
+  width: 100%;
+  .p-datepicker-calendar {
+    thead {
+      font-size: 1.4rem;
+      th {
+        text-align: center;
+      }
+    }
+    tbody {
+      font-size: 1.4rem;
+
+      .p-highlight {
+        color: #141414;
+        background: rgba($color: #d24f4d, $alpha: .3);
+      }
+    }
+  }
+  .p-link {
+    font-size: 1.6rem;
+
+    &:hover{
+      color: #cc3633 !important;
+    }
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba($color: #d24f4d, $alpha: .4);
+    }
+  }
+}
+
+.county-ac-list {
+  .p-autocomplete-item {
+    font-size: 1.5rem;
+  }
+}
+
+.shipment-details, 
+.user-details {
   width: 100%;
   form {
       width: 100%;
+
+      .date-field {
+        display: flex;
+        position: relative;
+
+        .calendar-i {
+          background-color: #cc3633;
+          position: absolute;
+          height: 4.4rem;
+          width: 4rem;
+          z-index: 999;
+          i {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+          }
+        }
+      }
+      .autocomplete-field {
+        width: 100%;
+      }
+
+      .custom-switch-input {
+        margin-top: 3rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        label {
+          font-size: 1.6rem;
+        }
+      }
+
+      .p-inputswitch {
+        width: 5rem;
+        height: 3rem;
+        margin: 0;
+        margin-left: 2rem;
+        .p-inputswitch-slider {
+          &::before {
+            width: 2.3rem;
+            height: 2.3rem;
+            left: 0.45rem;
+            margin-top: -1.15rem;
+          }
+        }
+      }
+
+      .p-inputswitch.p-focus {
+        .p-inputswitch-slider {
+          box-shadow: 0 0 0 0.25rem rgba($color: #cc3633, $alpha: 0.25);
+        }
+      }
+      .p-inputswitch.p-inputswitch-checked:not(.p-disabled):hover .p-inputswitch-slider {
+        background: #d24f4d;
+      }
+      .p-inputswitch.p-inputswitch-checked {
+        .p-inputswitch-slider {
+          background: #d24f4d;
+          &::before {
+            transform: translateX(2rem);
+          }
+        }
+      }
+
       .form-field {
           margin-top: 2.5rem;
           height: 5rem;
@@ -226,15 +329,64 @@ body.modal-open {
                   box-shadow: 0 0 0 0.25rem rgba($color: #cc3633, $alpha: 0.25);
               }
           }
-          #bdate {
-              padding-left: 2.4rem;
-          }
           label {
               font-size: 1.8rem;
               line-height: 2.8rem;
               padding: .6rem 2.5rem;
               font-weight: 600;
               color: #959ba6;
+          }
+          .autoc-form-control {
+            height: 4.4rem;
+
+            input {
+              border-radius: .25rem;
+              width: 100%;
+              font-size: 1.8rem;
+              font-weight: 600;
+              color: #959ba6;
+              padding-left: 2.5rem;
+              font-family: 'Roboto', Open Sans,Gill Sans MT,Gill Sans,Corbel,Trebuchet MS,Verdana,sans-serif;
+              text-rendering: optimizeLegibility;
+              -webkit-font-smoothing: antialiased;
+              &::placeholder {
+                opacity: .75;
+              }
+              &:hover {
+                border-color: #ced4da;
+              }
+              &:focus {
+                border-color: #cc3633;
+                box-shadow: 0 0 0 0.25rem rgba($color: #cc3633, $alpha: 0.25);
+              }
+            }
+          }
+          .date-form-control {
+            height: 4.4rem;
+
+            input, button {
+              border-radius: 0.25rem;
+            }
+
+            input {
+              font-size: 1.8rem;
+              font-weight: 600;
+              color: #959ba6;
+              padding-left: 6rem;
+              font-family: 'Roboto', Open Sans,Gill Sans MT,Gill Sans,Corbel,Trebuchet MS,Verdana,sans-serif;
+              text-rendering: optimizeLegibility;
+              -webkit-font-smoothing: antialiased;
+              &::placeholder {
+                opacity: .75;
+              }
+              &:hover {
+                border-color: #ced4da;
+              }
+              &:focus {
+                border-color: #cc3633;
+                box-shadow: 0 0 0 0.25rem rgba($color: #cc3633, $alpha: 0.25);
+              }
+            }
           }
       }
       .form-errors {

@@ -10,10 +10,10 @@
 @import './account/account';
 
 // subscription
-@import './subscription/subscription';
+@import './payment/subscription';
 
 // payment
-@import './subscription/payment';
+@import './payment/payment';
 
 // about-us
 @import './about-us/index.scss';

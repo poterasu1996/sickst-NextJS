@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "shipping_informations",
+  "info": {
+    "singularName": "shipping-information",
+    "pluralName": "shipping-informations",
+    "displayName": "shipping_information",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user_id": {
+      "type": "integer",
+      "required": true
+    },
+    "shipping_info_list": {
+      "type": "json"
+    }
+  }
+}

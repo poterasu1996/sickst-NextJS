@@ -85,7 +85,7 @@ const Cart = (props) => {
                     )}
                 </span>
                 </div>
-                <Link href="/subscription/payment">
+                <Link href="/payment">
                   <a className="button-second" onClick={props.onClick}>Checkout</a>
                 </Link>
             </div>}
