@@ -92,14 +92,14 @@ export const AccountProvider = ({ children }) => {
             // console.log('LIST AFARA then=', list)
             // console.log('LIST LENGTH AFARA then=', list.length)
             
-            let data = [];
+            let data = [];  // used for existing list
             let listId; // get the list id
+            const newList = {};
             getShippingList().then(resp => {
-                // if user has data
+                // if user has data, PUT
                 if(resp.length > 0) {
-                    listId = resp[0].id;
+                    listId = resp[0].id;    // get listId for PUT req
                     const responseArr = [...resp[0].attributes.shipping_info_list];
-                    // console.log('respArr: ', responseArr)
                     responseArr.map(el => {
                         data.push({
                             ...el
@@ -109,16 +109,15 @@ export const AccountProvider = ({ children }) => {
                     // if the user adds a primary address
                     if(newData.primary) {
                         const hasPrimary = (el) => el.primary;  
-                        const isPrimary = data.findIndex(hasPrimary) 
-                        // if a primary address exists, change it to false
+                        const isPrimary = data.findIndex(hasPrimary); 
                         if(isPrimary > -1) {
+                            // if a primary address exists, change it to false
                             data[isPrimary].primary = false;
                             const newAddress = {
                                 ...newData
                             }
                             data.unshift(newAddress);
-    
-                            const newList = {
+                            newList = {
                                 data: {
                                     shipping_info_list: [
                                         ...data
@@ -126,74 +125,43 @@ export const AccountProvider = ({ children }) => {
                                     user_id: currentUser.id
                                 }
                             }
-                            console.log('nwData: ', newList)
-                            axios.put(
-                                `${SHIPPING_INFO}/${listId}`, 
-                                newList, 
-                                header)
-                                .then(resp => {
-                                    setRefresh(true)
-                                    
-                                })
-                                .catch(error => console.log(error));
-                        } else {
-                            // if no primary address exists, add the new address
-                            const newAddress = {
-                                ...newData
-                            }
-                            data.push(newAddress);
-                            const newList = {
-                                data: {
-                                    shipping_info_list: [
-                                        ...data
-                                    ],
-                                    user_id: currentUser.id
-                                }
-                            }
-                            console.log('newData= ', newList)
-                            axios.put(
-                                `${SHIPPING_INFO}/${listId}`, 
-                                newList, 
-                                header)
-                                .then(resp => console.log(resp))
-                                .catch(error => console.log(error));
-                        }
+                        } 
                     } else {
                         // if user doesnt add a primary address
-
+                        const newAddress = {
+                            ...newData
+                        }
+                        data.push(newAddress);
+                        newList = {
+                            data: {
+                                shipping_info_list: [
+                                    ...data
+                                ],
+                                user_id: currentUser.id
+                            }
+                        }
                     }
+                    axios.put(
+                        `${SHIPPING_INFO}/${listId}`, 
+                        newList, 
+                        header)
+                        .then(resp => console.log(resp))
+                        .catch(error => console.log(error));
                 } else {
-                    // if user has no data
-                    const newList = {
+                    // if user has no data, POST
+                    newList = {
                         data: {
-                            shipping_info_list: [
+                            shipping_info_list: [{
                                 ...newData
-                            ],
+                            }],
                             user_id: currentUser.id,
                         }
                     }
-                    console.log('newData: ', newList);
                     return axios.post(SHIPPING_INFO, newList, header)
                         .then(resp => console.log(resp))
                         .catch(error => console.log(error))
                 }
-
-                // console.log('data: ', data)
             })
-
-            // if(shippingList.length) {
-            //     // facem put
-            //     console.log('data:', data)
-            //     // setShippingList(prevState => prevState.push(data))
-            //     console.log('IN IF', shippingList)
-            //     // const listId = shippingList.id; 
-            //     // const shipping_info_list = [...shippingList.attributes.shipping_info_list]
-            //     // shippingList = [...data];
-            //     // console.log('NEW LIST: ')
-            // } else {
-            //     // facem post
-            //     console.log("in else")
-            // }
         }
     }
 
