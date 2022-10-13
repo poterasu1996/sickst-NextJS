@@ -13,14 +13,14 @@ export const CartProvider = ({ children }) => {
     const storageCart = JSON.parse(localStorage.getItem("cart"));
     if (storageCart) {
       setStorageList([...storageCart]);
-      const subscriptionItem = storageCart.find((item) => {
+      const subscriptionItem = storageCart.filter((item) => {
         return item.payment === "subscription";
       });
       const otbList = storageCart.filter((item) => {
         return item.payment === "otb";
       });
       if (subscriptionItem) {
-        setCart([subscriptionItem, ...otbList]);
+        setCart([...subscriptionItem, ...otbList]);
         setSubsList(storageCart.filter((item) => {
           return item.payment === "subscription";
         }))
@@ -30,9 +30,6 @@ export const CartProvider = ({ children }) => {
     }
   }, [refresh]);
 
-  // setTimeout(() => {
-  //   setRefresh(false);
-  // }, 500);
 
   function addProduct(product, quantity, payment) {
     if (localStorage.getItem("cart") !== null) {
@@ -63,10 +60,7 @@ export const CartProvider = ({ children }) => {
 
       setRefresh(preVal => !preVal);
     } else {
-      localStorage.setItem(
-        "cart",
-        JSON.stringify([{ cartId: 0, product, quantity, payment }])
-      );
+      localStorage.setItem("cart", JSON.stringify([{ cartId: 0, product, quantity, payment }]));
       setCart([{ cartId: 0, product, quantity, payment }]);
       setRefresh(preVal => !preVal);
     }
@@ -78,7 +72,6 @@ export const CartProvider = ({ children }) => {
       const list = storageList.filter((item) => {
         return item.payment === "subscription";
       })
-      console.log('subsList', list)
       return list;
     }
     return [];
@@ -95,9 +88,7 @@ export const CartProvider = ({ children }) => {
   }
 
   const removeProduct = (product) => {
-    const cartList = JSON.parse(localStorage.getItem("cart"));
-    // return a new list without the selected item
-    const newList = cartList.filter((el) => {
+    const newList = cart.filter((el) => {
       return el.cartId !== product.cartId;
     });
     if (newList.length > 0) {

@@ -115,6 +115,9 @@ const Header = () => {
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
+              <Link href="/account">
+                <a className="mobile-user-account"><User /></a>
+              </Link>
             </>
           ) : (
             <Link href="/account/login">
