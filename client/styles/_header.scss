@@ -132,6 +132,22 @@ header {
       //   }
       // }
     }
+    .account-mobile-btn {
+      display: none;
+      background-color: #1a1a1a;
+      border: none;
+      padding: 0 2rem;
+      
+      &:focus {
+        box-shadow: none;
+      }
+      @media (max-width: 576px) {
+        display: block;
+      }
+      @media (max-width: 400px) {
+        padding: 0 1rem;
+      }
+    }
     .nav-menu {
       flex: 1%;
       height: 100%;
@@ -180,22 +196,6 @@ header {
         // padding-right: 1rem;
       }
 
-      .account-mobile-btn {
-        display: none;
-        background-color: #1a1a1a;
-        border: none;
-        padding: 0 2rem;
-        
-        &:focus {
-          box-shadow: none;
-        }
-        @media (max-width: 576px) {
-          display: block;
-        }
-        @media (max-width: 400px) {
-          padding: 0 1rem;
-        }
-      }
       .header-dropdown {
         height: 100%;
         display: flex;

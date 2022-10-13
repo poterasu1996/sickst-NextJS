@@ -74,7 +74,7 @@ const CartItem = ({ item, handleLoading }) => {
             <Button onClick={() => {
                 handleLoading(true);
                 cartManager.removeProduct(item);
-                cartManager.setResetCart(true);
+                cartManager.setRefresh(preVal => !preVal);
             }}>
                 <X stroke="#cc3663" width={20} height={20} />
             </Button>

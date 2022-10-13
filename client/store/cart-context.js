@@ -81,6 +81,7 @@ export const CartProvider = ({ children }) => {
       console.log('subsList', list)
       return list;
     }
+    return [];
   }
 
   function singlePaymentList() {
