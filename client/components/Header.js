@@ -25,9 +25,26 @@ const Header = () => {
     }, 700);
   }
 
+  function addBodyhiddenOverflow() {
+    document.body.classList.add("overflow-hidden")
+  }
+
+  function removeBodyhiddenOverflow() {
+    document.body.classList.remove("overflow-hidden")
+  }
+
   return (
     <header>
       <div className="container header sticky-header">
+        <Button
+            className="account-mobile-btn"
+            onClick={() => {
+              addBodyhiddenOverflow();
+              setAccountMobileModal(true);
+            }}
+          >
+            <Menu />
+        </Button>
         <div className="logo">
           <Link href={"/"}>
             <a className="logo-link2">
@@ -98,12 +115,9 @@ const Header = () => {
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-              <Button
-                className="account-mobile-btn"
-                onClick={() => setAccountMobileModal(true)}
-              >
-                <User />
-              </Button>
+              <Link href="/account">
+                <a className="mobile-user-account"><User /></a>
+              </Link>
             </>
           ) : (
             <Link href="/account/login">
@@ -125,17 +139,27 @@ const Header = () => {
           </Button>
 
           {/* mobile side modal */}
-          {/* <AccountMobileSideModal
+          <AccountMobileSideModal
             show={accountMobileModal}
-            onClick={() => setAccountMobileModal(false)}
-          /> */}
-          <SideModal show={showModal} onClick={() => setShowModal(false)} />
+            onClick={() => {
+              setAccountMobileModal(false);
+              removeBodyhiddenOverflow();
+            }}
+          />
+          <SideModal show={showModal} onClick={() => {
+            setShowModal(false);
+            removeBodyhiddenOverflow();
+          }} />
         </div>
       </div>
+
       <Button
         variant="menu"
         className="floating-cart"
-        onClick={() => setShowModal(true)}
+        onClick={() => {
+          setShowModal(true);
+          addBodyhiddenOverflow();
+        }}
       >
         <div className="shopping-cart">
           <ShoppingCart />{" "}

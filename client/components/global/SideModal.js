@@ -45,21 +45,21 @@ const SideModal = (props) => {
                                 <div className="side-modal-body">
                                     <div className="mid-menu">
                                         <Link href="#">
-                                            <a>Cum functioneaza</a>
+                                            <a onClick={props.onClick}>Cum functioneaza</a>
                                         </Link>
                                         <Link href="#">
-                                            <a>Gifts</a>
+                                            <a onClick={props.onClick}>Gifts</a>
                                         </Link>
                                         <Link href="#">
-                                            <a>Despre noi</a>
+                                            <a onClick={props.onClick}>Despre noi</a>
                                         </Link>
                                     </div>
                                     
                                     <Link href="/account/login">
-                                        <a className="button-second d-block d-sm-none">Log in</a>
+                                        <a className="button-second d-block d-sm-none" onClick={props.onClick}>Log in</a>
                                     </Link>
                                     <Link href="/account/register">
-                                        <a className="button-second">Autentificare</a>
+                                        <a className="button-second" onClick={props.onClick}>Autentificare</a>
                                     </Link>
                                 </div>
                             </> 

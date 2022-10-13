@@ -52,6 +52,7 @@
         position: relative;
         flex: 1 1 auto;
         padding: 1rem;
+        overflow: auto;
         @media (max-width:500px) {
             // margin: auto;
         }
@@ -60,7 +61,7 @@
             display: flex;
             flex-direction: column;
             margin-top: 17rem;
-            @media (max-width:500px) {
+            @media (max-width:576px) {
                 margin: 5rem 0;
             }
 
@@ -117,6 +118,110 @@
         }
         .log-out {
             margin-top: auto;
+        }
+    }
+}
+#mobile-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 40rem;
+    background-color: white;
+    z-index: 100;
+    padding: 3rem;
+    text-transform: none;
+    @media (max-width:576px) {
+        width: 100%;
+    }
+
+    .side-modal-header{
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+
+        .text{
+            font-size: 1.8rem;
+            line-height: 2.8rem;
+            font-weight: 600;
+        }
+
+        
+    }
+
+    .side-modal-header-mobile {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 1rem;
+
+        .btn-close {
+            font-size: 1.5rem;
+        }
+    }
+
+    .side-modal-body {
+        position: relative;
+        flex: 1 1 auto;
+        padding: 1rem;
+
+        .mid-menu {
+            display: flex;
+            flex-direction: column;
+            margin-top: 17rem;
+            @media (max-width:576px) {
+                margin: 5rem 0;
+            }
+
+            a {
+                font-size: 2.8rem;
+                line-height: 3.8rem;
+                font-weight: 600;
+                padding: 0;
+                color: #000;
+                transform-origin: 0 center;
+                transition: ease .2s;
+                
+                &:hover {
+                    background-color: unset;
+                    transform: scale3d(1.25,1.25,1.25);
+                    transition: ease .2s;
+                }
+            }
+        }
+        .mobile-mid-menu {
+            padding: 2rem 1rem;
+
+            .mid-title {
+                font-size: 2rem;
+                font-weight: 700;
+                color: #cc3633;
+                text-transform: uppercase;
+            }
+
+            a {
+                color: #1a1a1a ;
+                height: 4rem;
+                transform-origin: 0 center;
+                &:hover {
+                    transform: scale3d(1.01,1.01,1.01);
+                    font-weight: 700;
+                }
+            }
+        }
+
+        .button-second {
+            line-height: 5.4rem;
+            margin: 2rem auto;
+            color: #fff;
+            max-width: 20rem;
+            margin-top: 2rem;
+            &:hover {
+                background-color: #d24f4d;
+            }
         }
     }
 }

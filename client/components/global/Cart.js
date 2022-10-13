@@ -1,15 +1,13 @@
 import Link from "next/link";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
 
 import CartItem from "./CartItem";
 import CartContext from "../../store/cart-context";
-import AccountContext from "../../store/account-context";
 
 const Cart = (props) => {
   const [loading, setLoading] = useState(true);
   const { cartManager } = useContext(CartContext);
-  const { accountManager } = useContext(AccountContext);
 
   setTimeout(() => {
     setLoading(false);
@@ -34,7 +32,12 @@ const Cart = (props) => {
                     <div className="cart-list-title">Monthly subscription</div>
                     <div className="cart-list-subs">
                       {cartManager.cart
-                        .filter((item) => item.payment === "subscription")
+                        .filter((item, i) => { 
+                          if(i === 0) {
+                            return item.payment === "subscription"
+                          } 
+                          return
+                        })
                         .map((item, i) => (
                           <CartItem
                             key={i}

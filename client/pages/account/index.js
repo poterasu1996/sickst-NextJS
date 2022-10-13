@@ -49,6 +49,15 @@ const Account = () => {
         setAccState(accountManager.accountState);
     }, [accountManager.accountState]);
 
+    useEffect(() => {
+        console.log('accState', accState)
+        if(accState === 'orderHistory') {
+            document.getElementById('content').classList.add('overflow-scroll');
+        } else {
+            document.getElementById('content').classList.remove('overflow-scroll');
+        }
+    },[accState])
+
     function activeMenuLink(navLink) {
         accountManager.setAccountPageState(navLink);
     }
