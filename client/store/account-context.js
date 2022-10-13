@@ -7,6 +7,7 @@ const AccountContext = React.createContext([]);
 export const AccountProvider = ({ children }) => {
     const USER_ME = '/users/me';
     const SHIPPING_INFO = '/shipping-informations';
+    const ORDER_HISTORIES = '/order-histories';
     const { auth } = useContext(AuthContext);
     const [accountState, setAccountState] = useState('subscription');
     const [currentUser, setCurrentUser] = useState(null);
@@ -72,7 +73,18 @@ export const AccountProvider = ({ children }) => {
         });
     }
 
-    async function getShippingList() {
+    async function fetchOrderHistory() {
+        if(header) {
+            const response = await axios.get(
+                ORDER_HISTORIES,
+                header
+            )
+            const filteredList = response.data.data.filter(el => el.attributes.user_id === currentUser.id);
+            return filteredList;
+        }
+    }
+
+    async function fetchShippingList() {
         // get current user shipping list
         if(header) {
             const response = await axios.get(
@@ -89,7 +101,7 @@ export const AccountProvider = ({ children }) => {
 
             // what is thisss ??????
             // const list = [];
-            // getShippingList().then(resp => {
+            // fetchShippingList().then(resp => {
             //     if(resp) {
             //         const responseArr = resp[0].attributes.shipping_info_list;
             //         responseArr.map(el => {
@@ -105,7 +117,7 @@ export const AccountProvider = ({ children }) => {
             let data = [];  // used for existing list
             let listId; // get the list id
             const newList = {};
-            getShippingList().then(resp => {
+            fetchShippingList().then(resp => {
                 // if user has data, PUT
                 if(resp.length > 0) {
                     listId = resp[0].id;    // get listId for PUT req
@@ -220,8 +232,9 @@ export const AccountProvider = ({ children }) => {
         setAccountPageState,
         accountState,
         currentUser,
-        getShippingList,
+        fetchShippingList,
         addShippingInfo,
+        fetchOrderHistory,
     };
     
     return (
