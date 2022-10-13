@@ -11,12 +11,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "users_permissions_user": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user",
-      "mappedBy": "user_subscription_list"
-    },
     "subscription_list": {
       "type": "json"
     }

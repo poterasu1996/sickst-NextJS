@@ -26,7 +26,7 @@ const SubscriptionPage = () => {
 
     useEffect(() => {
         if(accountManager.currentUser) {
-            accountManager.getShippingList()
+            accountManager.fetchShippingList()
                 .then(resp => {
                     setShippingList(resp[0].attributes.shipping_info_list);
                 })

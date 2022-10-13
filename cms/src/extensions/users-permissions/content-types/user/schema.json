@@ -75,15 +75,13 @@
       "type": "boolean",
       "default": false
     },
-    "user_subscription_list": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::user-subscription-list.user-subscription-list",
-      "inversedBy": "users_permissions_user"
-    },
     "new_user": {
       "type": "boolean",
       "default": true
+    },
+    "subscribed": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
