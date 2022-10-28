@@ -120,7 +120,7 @@ const Header = () => {
               </Link>
             </>
           ) : (
-            <Link href="/account/login">
+            <Link href="/auth/login">
               <a>Log in</a>
             </Link>
           )}

@@ -46,7 +46,7 @@ const Account = () => {
     }, [auth])
 
     useEffect(() => {
-        setAccState(accountManager.accountState);
+        accountManager && setAccState(accountManager.accountState);
     }, [accountManager.accountState]);
 
     useEffect(() => {
