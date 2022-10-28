@@ -50,11 +50,10 @@ const Account = () => {
     }, [accountManager.accountState]);
 
     useEffect(() => {
-        console.log('accState', accState)
         if(accState === 'orderHistory') {
-            document.getElementById('content').classList.add('overflow-scroll');
+            document.getElementById('content').classList.add('overflowscroll');
         } else {
-            document.getElementById('content').classList.remove('overflow-scroll');
+            document.getElementById('content').classList.remove('overflowscroll');
         }
     },[accState])
 
@@ -66,6 +65,8 @@ const Account = () => {
         const date = DateTime.fromISO(userInfo.createdAt);
         return date.toFormat('dd LLL yyyy');
     }
+
+    userInfo && console.log(userInfo)
 
     return(<>
         <Head>
@@ -79,6 +80,7 @@ const Account = () => {
                         <div className="user-avatar"></div>
                         <div className="user-name">Sickst User</div>
                         <div className="joined-date">Joined: <b className="brand-color">{userInfo && getDate()}</b></div>
+                        <div className="joined-date">Subscription: <b className="brand-color">{(userInfo && userInfo.subscribed) ? 'activa' : 'neabonat'}</b></div>
                     </div>
                     <ul className="nav-menu">
                         <li className={"nav-link " + (accState === 'subscription' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('subscription')}>Manage subscription</div></li>
@@ -102,7 +104,7 @@ const Account = () => {
                             <div className="subscription-status">Subscription: <b className="brand-color">Active</b></div>
                         </div>
                     </div>
-                    {accState === 'subscription' && <ManageSubscription subscription={!!accState} />}
+                    {accState === 'subscription' && <ManageSubscription subscribed={userInfo && userInfo.subscribed} subscription={!!accState} />}
                     {accState === 'orderHistory' && <OrderHistory />}
                     {/* {accState === 'billingInfo' && <BillingInformation />} */}
                     {accState === 'shippingInfo' && <ShippingInformation />}

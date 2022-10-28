@@ -59,31 +59,38 @@ const AccountMobileSideModal = (props) => {
                                 <Link href='/shop/shop-for-her'>
                                     <a onClick={props.onClick}>Pentru ea</a>
                                 </Link>
-                                <div className="mid-title mt-5">Your membership</div>
-                                <Link href='/account'>
-                                    <a onClick={props.onClick}>Manage your membership</a>
-                                </Link>
-                                <Link href='/account'>
-                                    <a onClick={() => {
-                                        props.onClick();
-                                        accountManager.setAccountPageState("orderHistory");
-                                    }}>Order tracking & history</a>
-                                </Link>
-                                <Link href='/account'>
-                                    <a onClick={() => {
-                                        props.onClick();
-                                        accountManager.setAccountPageState("shippingInfo");
-                                    }}>Shipping infromation</a>
-                                </Link>
-                                <div className="mid-title mt-5">Your account</div>
-                                <Link href='/account'>
-                                    <a onClick={() => {
-                                        props.onClick();
-                                        accountManager.setAccountPageState("personalInfo");
-                                    }}>Personal info</a>
-                                </Link>
+
+                                {auth && <>
+                                    <div className="mid-title mt-5">Your membership</div>
+                                    <Link href='/account'>
+                                        <a onClick={() => {
+                                            props.onClick();
+                                            accountManager.setAccountPageState('subscription');
+                                        }}>Manage your membership</a>
+                                    </Link>
+                                    <Link href='/account'>
+                                        <a onClick={() => {
+                                            props.onClick();
+                                            accountManager.setAccountPageState("orderHistory");
+                                        }}>Order tracking & history</a>
+                                    </Link>
+                                    <Link href='/account'>
+                                        <a onClick={() => {
+                                            props.onClick();
+                                            accountManager.setAccountPageState("shippingInfo");
+                                        }}>Shipping information</a>
+                                    </Link>
+                                    <div className="mid-title mt-5">Your account</div>
+                                    <Link href='/account'>
+                                        <a onClick={() => {
+                                            props.onClick();
+                                            accountManager.setAccountPageState("personalInfo");
+                                        }}>Personal info</a>
+                                    </Link>
+                                </>}
+
                             </div>
-                            <Button className="button-second log-out" onClick={() => logOut()}>Log out</Button>
+                            {auth && <Button className="button-second log-out" onClick={() => logOut()}>Log out</Button>}
                         </div>
                     </div>
                 )}

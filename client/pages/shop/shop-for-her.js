@@ -1,6 +1,7 @@
-import ProductSection from "../../components/HomePage/ProductSection";
 import CollectionSection from "../../components/ShopPage/CollectionSection";
+import NewProductSection from "../../components/ShopPage/NewProductSection";
 import SubscriptionBanner from "../../components/ShopPage/SubscriptionBanner";
+import TopRatedProducts from "../../components/ShopPage/TopRatedProducts";
 
 
 const ShopWoman = () => {
@@ -8,7 +9,8 @@ const ShopWoman = () => {
     return <div className="subs-body">
         <SubscriptionBanner />
         <CollectionSection />
-        <ProductSection />
+        <NewProductSection />
+        <TopRatedProducts />
     </div>
 }
 

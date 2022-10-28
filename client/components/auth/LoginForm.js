@@ -1,4 +1,4 @@
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Spinner } from "react-bootstrap";
 import { useRef, useState, useContext } from "react";
 import { Formik } from "formik";
 import CustomFormField from "../global/form/CustomFormField";
@@ -29,7 +29,6 @@ export default function LogInForm() {
   function createCookieInHour(cookieName, cookieValue, hourToExpire) {
     let date =  new Date();
     date.setTime(date.getTime()+(hourToExpire*60*60*1000)); // number of hours
-    document.cookie = cookieName + "=" + cookieValue + "; expires = " + date.toString();
   }
 
   const submitHandler = async (event) => {
@@ -39,6 +38,7 @@ export default function LogInForm() {
     const enteredEmail = emailRef.current.value;
     const enteretPasword = passwordRef.current.value;
 
+    // setLoading(preVal => !preVal);
     try {
       const response = await axios.post(LOGIN_URL, {
         identifier: enteredEmail,
@@ -51,10 +51,8 @@ export default function LogInForm() {
       if (jwt) {
         setAuth(jwt);
         localStorage.setItem('jwt', jwt); // set jwt token in local storage
-        createCookieInHour('userJWT', jwt, 2); // create cookie with jwt
-
+        setLoading(preVal => !preVal);
         router.push('/');
-        console.log('jwt', jwt);
       }
     } catch (err) {
       // console.log(Object.keys(err))
@@ -69,9 +67,6 @@ export default function LogInForm() {
         setError('Login Failed');
       } 
     }
-
-    let cookie = document.cookie.split(';');
-    console.log('cookie: ', cookie);
   }
 
   return (
@@ -91,7 +86,12 @@ export default function LogInForm() {
               ERROR: {error}
             </div>
           }
-          <Button className="button-second mt-5" type="submit">Log In</Button>
+          { loading 
+            ? <div className="loader">
+                <Spinner animation="border" style={{color: "#cc3633"}}/>
+              </div>
+            : <Button className="button-second mt-5" type="submit">Log In</Button>
+          }
         </Form>
       )}
     </Formik>

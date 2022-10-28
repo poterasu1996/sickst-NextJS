@@ -4,7 +4,8 @@
   "info": {
     "singularName": "user-subscription-list",
     "pluralName": "user-subscription-lists",
-    "displayName": "User_subscription_list"
+    "displayName": "User_subscription_list",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -13,6 +14,10 @@
   "attributes": {
     "subscription_list": {
       "type": "json"
+    },
+    "user_id": {
+      "type": "integer",
+      "required": true
     }
   }
 }

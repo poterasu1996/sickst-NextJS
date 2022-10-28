@@ -1,4 +1,4 @@
-import { Form, Alert, Button } from "react-bootstrap";
+import { Form, Alert, Button, Spinner } from "react-bootstrap";
 import { useRef, useState } from "react";
 import { Formik } from "formik";
 import CustomFormField from "../global/form/CustomFormField";
@@ -75,7 +75,7 @@ export default function SignUpForm() {
     } catch {
       setError("Failed to create an account.");
     }
-    setLoading(false);
+    // setLoading(false);
   }
 
   return (
@@ -126,8 +126,13 @@ export default function SignUpForm() {
                 <a href="#">Privacy Policy</a>
               </span>
             </div>
-          </div>
-          <Button className="button-second mt-5" type="submit">Sign up</Button>
+          </div>{
+            loading 
+            ? <div className="loader">
+                <Spinner animation="border" style={{color: "#cc3633"}}/>
+              </div>
+            : <Button className="button-second mt-5" type="submit">Sign up</Button>
+          }
         </Form>
       )}
     </Formik>

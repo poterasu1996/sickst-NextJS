@@ -1,7 +1,9 @@
-@import './globals.scss';
 @import './header';
 @import './footer';
 @import './footer-simple';
+
+// globals
+@import './globals/globals';
 
 // homepage
 @import './homepage/homepage';
@@ -9,7 +11,10 @@
 // account
 @import './account/account';
 
-// subscription
+// subscription plans
+@import './subscriptions/subscriptions';
+
+// payment-subscription
 @import './payment/subscription';
 
 // payment
@@ -26,3 +31,6 @@
 
 // page-404
 @import './page_404';
+
+// shop
+@import './shop/index.scss';

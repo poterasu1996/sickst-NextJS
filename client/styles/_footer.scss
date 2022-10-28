@@ -45,10 +45,11 @@ footer {
                 padding-left: 4rem;
             }
             .logo {
-                font-size: 3rem;
-                line-height: 3rem;
-                color: #fff;
+                height: 4.6rem;
                 margin-bottom: 3rem;
+                img {
+                    height: 100%;
+                }
             }
             .text {
                 font-size: 1.6rem;
@@ -83,9 +84,10 @@ footer {
             }
             .social-links {
                 margin-top: 2rem;
+                display: flex;
                 a {
-                    width: 3.2rem;
-                    height: 3.2rem;
+                    width: 2.4rem;
+                    height: 2.4rem;
                     margin-left: 4rem;
                     &:first-of-type {
                         margin-left: 0;
@@ -93,10 +95,16 @@ footer {
                     &:hover {
                         color: #cc3633;
                         transition: ease 0.3s;
+                        svg {
+                            fill: #cc3633;
+                            transition: ease 0.3s;
+                        }
                     }
-                    img {
-                        width: 2.4rem;
-                        height: 2.4rem;
+                    svg {
+                        fill: #cecece;
+                        transition: ease 0.3s;
+                        height: 100%;
+                        width: 100%;
                     }
                 }
             }

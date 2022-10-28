@@ -12,6 +12,7 @@ const ProductSection = () => {
   const [maleTab, setMaleTab] = useState(true);
   const [nrOfItems, setNrOfItems] = useState(3);
   const [productList, setProductList] = useState([]);
+  // const [fetchProducts, setFetchProducts] = useState([]);
   const nullCategory = {
     data: [
       {
@@ -22,22 +23,25 @@ const ProductSection = () => {
     ]
   }
 
-  useEffect(async () => {
-    const response = await axios.get(PRODUCTS_URL);
-    const fetchProducts = [...response.data.data];
-
-    // if product doesn't have a category, we set it to null
-    const productsList = fetchProducts.map(prod => {
-      if(prod.attributes.categories.data.length <= 0) {
-        const addedCategory = {
-          id: prod.id,
-          attributes: { ...prod.attributes, categories: nullCategory }
+  useEffect(() => {
+    const fetchData = async() => {
+      const result = await axios.get(PRODUCTS_URL);
+      const fetchProducts = [...result.data.data];
+      // if product doesn't have a category, we set it to null
+      const productsList = fetchProducts.map(prod => {
+        if(prod.attributes.categories.data.length <= 0) {
+          const addedCategory = {
+            id: prod.id,
+            attributes: { ...prod.attributes, categories: nullCategory }
+          }
+          return addedCategory;
         }
-        return addedCategory;
-      }
-      return prod;
-    })
-    setProductList([...productsList]);
+        return prod;
+      })
+      setProductList([...productsList]);
+    } 
+
+    fetchData();
   }, []);
 
   const showMore = () => {
@@ -60,17 +64,15 @@ const ProductSection = () => {
           />
         ));
       } else if (productList && !maleTab){
-        
-
         return productList
-        .filter(product => product.attributes.categories.data[0].attributes.name === "Female")
-        .slice(0, nrOfItems)
-        .map((product, i) => (
-          <Product
-            key={i}
-            product={product}
-          />
-        ));
+          .filter(product => product.attributes.categories.data[0].attributes.name === "Female")
+          .slice(0, nrOfItems)
+          .map((product, i) => (
+            <Product
+              key={i}
+              product={product}
+            />
+          ));
       }
   })
 

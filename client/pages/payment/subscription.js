@@ -5,8 +5,11 @@ import CouponeForm from "../../components/global/form/CouponeForm";
 import AccountContext from "../../store/account-context";
 import CartContext from "../../store/cart-context";
 import { loadStripe } from "@stripe/stripe-js";
+import ShippingInformation from "../../components/AccountPage/ShippingInformation";
+import AuthContext from "../../store/auth-context";
 
 let stripePromise;
+
 const getStripe = () => {
   // check if there is any stripe instance
   if (!stripePromise) {
@@ -18,6 +21,7 @@ const getStripe = () => {
 const SubscriptionPage = () => {
     const { cartManager } = useContext(CartContext);
     const { accountManager } = useContext(AccountContext);
+    const { auth } = useContext(AuthContext);
     const [loading, setLoading] = useState(true);
     const [couponValue, setCouponeValue] = useState();
     const [subItem, setSubItem] = useState(null);
@@ -25,17 +29,7 @@ const SubscriptionPage = () => {
     const [checkoutOptions, setCheckoutOptions] = useState({});
 
     useEffect(() => {
-        if(accountManager.currentUser) {
-            accountManager.fetchShippingList()
-                .then(resp => {
-                    setShippingList(resp[0].attributes.shipping_info_list);
-                })
-                .catch(error => console.log('Shipping list error: ', error))
-        }
-    }, [accountManager.currentUser])
-
-    useEffect(() => {
-        if (cartManager.subsList && cartManager.subsList.length > 0) {
+        if (auth && cartManager.subsList && cartManager.subsList.length > 0) {
             setSubItem(cartManager.subsList[0]);
             const item = {
                 price: cartManager.subsList[0].product.attributes.stripe_subsLink,
@@ -47,13 +41,31 @@ const SubscriptionPage = () => {
                 successUrl: `${window.location.origin}/payment/success`,
                 cancelUrl: `${window.location.origin}/payment/cancel`,
             })
+            console.log('auth: ', auth)
         }
     }, [cartManager.subsList]);
 
+
+    useEffect(() => {
+        if(accountManager.currentUser) {
+            setCheckoutOptions({
+                ...checkoutOptions,
+                customerEmail: accountManager.currentUser.email
+            })
+        }
+    }, [accountManager.currentUser])
+
+    const options = {
+        // passing the client secret obtained from the server
+        clientSecret: `${process.env.NEXT_PUBLIC_STRIPE_KEY}`
+    };
+
+
     async function checkout() {
         const stripe = await getStripe();
-        const { error } = await stripe.redirectToCheckout(checkoutOptions);
-        console.log("Stripe error", error);
+        const { error, resp } = await stripe.redirectToCheckout(checkoutOptions);
+        // console.log("Stripe resp", resp);
+        // console.log("Stripe error", error);
     }
 
     setTimeout(() => {
@@ -145,25 +157,8 @@ const SubscriptionPage = () => {
                     </div>
                 </div>
                 
-                <div className="shipping-info">
-                <div className="title">Shipping information</div>
-                <div className="info">All shipping updates MUST be made 1 day prior to your next billing date in order to receive your next product at the new address.</div>
-                <div className="address-list">
-                    {shippingList && shippingList.map((item, index) => (
-                    <div className={`address-card ${item.primary ? "active" : ""}`} key={index}>
-                            <div className="card-info">
-                                <div className="card-info--name">{item.first_name} {item.last_name}</div>
-                                <div className="card-info--address">{item.address}, apt. {item.appartment}, {item.city}, {item.county}</div>
-                            </div>
-                            {item.primary && <div className="ribbon">Primary</div>}
-                        </div>
-                    ))}
-                    <div className="new-address" onClick={() => setShow(preVal => !preVal)}>
-                        <i className="pi pi-plus" style={{'fontSize': '1.8rem'}}/>
-                        <span>Add a new address</span>
-                    </div>
-                </div>
-            </div>
+                <ShippingInformation />
+
             </div>
         </div>
     </>)

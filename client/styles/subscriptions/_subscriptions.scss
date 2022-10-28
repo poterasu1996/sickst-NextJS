@@ -1,0 +1,16 @@
+.subscription-page {
+    flex: 1;
+    padding: 5rem 0rem;
+
+    &--description {
+        margin-bottom: 4rem;
+        .title {
+            font-weight: 600;
+            font-size: 2.5rem;
+        }
+
+        .info {
+            font-size: 1.8rem;
+        }
+    }
+}

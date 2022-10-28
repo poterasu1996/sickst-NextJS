@@ -17,7 +17,7 @@ const ShippingInformation = () => {
                 })
                 .catch(error => console.log('Shipping list error: ', error))
         }
-    }, [accountManager.refresh])
+    }, [accountManager.currentUser])
 
     return (
         <>
@@ -26,7 +26,7 @@ const ShippingInformation = () => {
                 <div className="info">All shipping updates MUST be made 1 day prior to your next billing date in order to receive your next product at the new address.</div>
                 <div className="address-list">
                     {shippingList && shippingList.map((item, index) => (
-                        <div className="address-card" key={index}>
+                        <div className={`address-card ${item.primary ? "active" : ""}`} key={index}>
                             <div className="card-info">
                                 <div className="card-info--name">{item.first_name} {item.last_name}</div>
                                 <div className="card-info--address">{item.address}, apt. {item.appartment}, {item.city}, {item.county}</div>
@@ -58,7 +58,7 @@ const ShippingInformation = () => {
                     </div>
                 </ModalBody>
                 <ModalFooter>
-                    <button className="cancel-btn">Cancel</button>
+                    <button className="cancel-btn" onClick={() => setShow(preVal => !preVal)}>Cancel</button>
                 </ModalFooter>
             </Modal>
         </>

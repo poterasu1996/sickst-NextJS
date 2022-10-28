@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import cardImg1 from '../../public/img/mystery.jpg'
 
@@ -7,7 +6,7 @@ const CollectionSection = () => {
         <div className="container collection-section">
             <div className="title">Sickst collection</div>
             <div className="description">Whether you're on that WFH grind or are dreaming of warmer climes, our curated fragrance collections are here to kick off 2021 on a scent-sational note.</div>
-            <div className="row collection-cards">
+            <div className="row black-cards">
                 {/* card */}
                 <div className="col-4 card">
                     <div className="card-image">

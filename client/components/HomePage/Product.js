@@ -49,16 +49,6 @@ const Product = ({ product }) => {
     return productPrice;
   }
 
-  function subscriptionPrice(price) {
-    // here we want the subscription to be cheaper than OTB, with -20 for example
-    
-    // subscription discount should be imported from DB;
-    const discount = 20;
-
-    const fullPrice = simplePrice(price);
-    return fullPrice - discount;
-  }
-
   const notify = () => {
     toast(toastMsg, {
       autoClose: 2000,
@@ -81,7 +71,7 @@ const Product = ({ product }) => {
                     `${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` +
                     product.attributes.image.data[0].attributes.url
                   }
-                ></img>
+                />
               </div>
               <span className="tag black">Exclussive</span>
             </div>
@@ -101,7 +91,7 @@ const Product = ({ product }) => {
             <div className="product-card-fragrance">Fragrance elements</div>
             <div className="product-card-description">
               {product.attributes.description &&
-                product.attributes.description.substring(0, 195) + "..."}
+                product.attributes.description.substring(0, 180) + "..."}
               <span>Read more</span>
             </div>
           </div>
@@ -154,9 +144,6 @@ const Product = ({ product }) => {
                 <div className="plus"></div>Add to cart
               </div>
             )}
-            <div className="price">
-              RON:&nbsp;{subscriptionPrice(product.attributes.retail_value)}
-            </div>
           </div>
         </div>
       </div>
@@ -220,9 +207,9 @@ const Product = ({ product }) => {
                         <div className="order-info">
                           <div className="volume">8 ml</div>
                           <div className="type">
-                            Subscription{" "}
+                            Requires{" "}
                             <b>
-                              RON {subscriptionPrice(product.attributes.retail_value)}
+                              {product.attributes.subscription_type} plan
                             </b>
                           </div>
                         </div>
@@ -247,35 +234,34 @@ const Product = ({ product }) => {
                     </Button>
                   </div>
                 </div>
-                <div
-                  className="submit-btn"
-                  onClick={() => {
-                    let paymentType;
-                    // check if logged in
-                    if (!auth) {
-                      router.push("/account/login");
-                    } else {
-                      if (subscription) {
-                        paymentType = "subscription";
-                        if (cartManager.subscriptionList().length >= 6) {
-                          toast(
-                            "Your subscription list hast more than 6 products!",
-                            {
-                              autoClose: 2000,
-                            }
-                          );
-                          return;
-                        }
+                <div className="submit-btn">
+                  <div 
+                    className="button-second"
+                    onClick={() => {
+                      let paymentType;
+                      // check if logged in
+                      if (!auth) {
+                        router.push("/account/login");
                       } else {
-                        paymentType = "otb";
+                        if (subscription) {
+                          paymentType = "subscription";
+                          if (cartManager.subscriptionList().length >= 6) {
+                            toast(
+                              "Your subscription list hast more than 6 products!",
+                              {
+                                autoClose: 2000,
+                              }
+                            );
+                            return;
+                          }
+                        } else {
+                          paymentType = "otb";
+                        }
+                        cartManager.addProduct(product, 1, paymentType);
+                        notify();
                       }
-                      cartManager.addProduct(product, 1, paymentType);
-                      notify();
-                    }
-                    // setLoading(true);
-                  }}
-                >
-                  <div className="button-second">Add to queue</div>
+                      // setLoading(true);
+                    }}>Add to queue</div>
                 </div>
                 <div className="fragrance-info">
                   <div className="title">About the fragrance</div>
