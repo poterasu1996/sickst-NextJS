@@ -33,6 +33,7 @@
             opacity: 1;
             width: 1.5rem;
             height: 1.5rem;
+            font-size: 1.5rem;
         }
     }
 
@@ -43,7 +44,8 @@
         .cancel-btn {
             background-color: transparent;
             border: none;
-            font-size: 1.4rem;
+            font-size: 1.6rem;
+            font-weight: 600;
         }
     }
 }
@@ -76,7 +78,7 @@
             border-bottom: 1px solid #e6e6e6;
 
             .user-avatar {
-                background-image: url('../../public/img/svg/male_avatar.svg');
+                background-image: url('/img/svg/male_avatar.svg');
                 background-size: contain;
                 width: 10rem;
                 height: 10rem;
@@ -121,6 +123,12 @@
                     color: #cc3633;
                 }
             }
+        }
+    }
+
+    .content.overflowscroll {
+        @media (max-width:990px) {
+            overflow-x: scroll;
         }
     }
 
@@ -314,12 +322,8 @@
             }
 
             .user-avatar {
-                width: 10rem;
+                width: 12rem;
                 height: 10rem;
-                @media (max-width: 400px) {
-                    width: 8rem;
-                    height: 8rem;
-                }
 
                 img {
                     width: 100%;
@@ -334,22 +338,13 @@
                     font-size: 1.8rem;
                     line-height: 2.8rem;
                     font-weight: 600;
-                    margin-bottom: .8rem;
-                    @media (max-width: 400px) {
-                        font-size: 1.6rem;
-                        line-height: 2.6rem;
-                        margin-bottom: .3rem;
-                    }
+                    
                 }
 
                 .joined-date, .subscription-status {
                     font-size: 1.4rem;
                     line-height: 2.4rem;
                     font-weight: 400;
-                    @media (max-width: 400px) {
-                        font-size: 1.2rem;
-                        line-height: 2.2rem;
-                    }
                 }
             }
         }
@@ -365,38 +360,65 @@
                 flex-direction: column;
             }
 
-            .left-side {
-                @media (max-width: 990px) {
-                    padding-right: 0;
-                }
-                @media (max-width: 600px) {
-                    padding: 0;
-                }
-
-                .subscribe-banner {
-                    text-align: center;
+            .unsubscriber {
+                flex: 1;
+                &--banner {
+                    align-items: center;
                     border: solid 1px #D5D6DA;
                     border-radius: 0.5rem;
                     overflow: hidden;
+                    flex: 1;
+                    padding: 3rem;
                     img {
                         object-fit: contain;
                         width: 100%;
                         align-self: center;
                     }
-
+    
+                    .header {
+                        font-weight: 600;
+                        text-transform: uppercase;
+                        font-size: 1.2rem;
+                        color: #cc3633;
+                    }
                     .title {
                         font-size: 1.8rem;
                         font-weight: 600;
-                        margin-top: 2rem;
+                        margin: 2rem 0;
+                        max-width: 40rem;
+                        text-align: center;
                     }
                     .text {
                         font-size: 1.2rem;
-                        margin-top: 1rem;
                     }
                     .button-second {
-                        margin: 2rem auto;
-                        max-width: 20rem;
+                        margin-top: 4rem;
+                        width: 80%;
+                        max-width: 35rem;
                         line-height: 4rem;
+                    }
+                    .axe {
+                        border-top: solid 2px #cc3633;
+                        display: flex;
+                        padding: 2rem;
+                        margin-top: 4rem;
+                        width: 80%;
+                        justify-content: space-between;
+
+                        .benefit {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            line-height: 1;
+                            text-align: center;
+                            font-weight: 600;
+                            font-size: .9rem;
+                            text-transform: uppercase;
+
+                            i {
+                                margin-top: 1rem;
+                            }
+                        }
                     }
                 }
 
@@ -415,6 +437,17 @@
                         }
                     }
                 }
+            }
+
+            .left-side {
+                @media (max-width: 990px) {
+                    padding-right: 0;
+                }
+                @media (max-width: 600px) {
+                    padding: 0;
+                }
+
+                
             }
 
             .dnd-list {

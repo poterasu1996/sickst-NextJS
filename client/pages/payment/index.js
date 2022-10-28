@@ -2,11 +2,11 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
 import { X } from "react-feather";
-import ShipmentForm from "../../components/AccountPage/ShipmentForm";
 import CouponeForm from "../../components/global/form/CouponeForm";
 import CartContext from "../../store/cart-context";
 import PaymentContext from "../../store/payment-context";
 import { loadStripe } from "@stripe/stripe-js";
+import ShippingInformation from "../../components/AccountPage/ShippingInformation";
 
 let stripePromise;
 
@@ -204,12 +204,7 @@ const PaymentPage = () => {
             </div>
           </div>
           
-          <div className="right-side">
-            <div className="shipment-title">Shipment details</div>
-            <div className="shipment-details">
-              <ShipmentForm cartTotal={cartManager.cartTotal} onRedirect={redirectToCheckout} />
-            </div>
-          </div>
+          <ShippingInformation />
         </div>
       </div>
     </>

@@ -40,12 +40,6 @@
     "type": {
       "type": "string"
     },
-    "subscription_price": {
-      "type": "integer",
-      "min": 0,
-      "required": false,
-      "default": 0
-    },
     "description": {
       "type": "text"
     },
@@ -78,10 +72,6 @@
       "default": 0
     },
     "stripe_fullpriceLink": {
-      "type": "string",
-      "required": true
-    },
-    "stripe_subsLink": {
       "type": "string",
       "required": true
     },

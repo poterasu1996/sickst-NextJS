@@ -14,13 +14,11 @@ const PersonalInfo = () => {
         <>
             <Formik
                 initialValues={{
-                    firstName: '',
-                    lastName: '',
+                    fullName: '',
+                    phoneNumber: '',
                     address: '',
                     city: '',
                     county: '',
-                    phoneNumber: '',
-                    zipCode: '',
                     birthday: '',
                     gender: '',
                 }}
@@ -31,19 +29,20 @@ const PersonalInfo = () => {
                             <Row>
                                 <Col lg={6}>
                                     <CustomFormField 
-                                        controlid="floatingFirstName"
-                                        name="firstName"
-                                        label="Nume"
+                                        controlid="floatingFullName"
+                                        name="fullName"
+                                        label="Nume si Prenume"
                                         type="text"
                                     />
                                 </Col>
                                 <Col lg={6}>
-                                    <CustomFormField 
-                                        controlid="floatingLastName"
-                                        name="lastName"
-                                        label="Prenume"
-                                        type="text"
-                                    />
+                                <CustomPhoneFormField 
+                                    controlid="floatingPhoneNumber"
+                                    name="phoneNumber"
+                                    label="Telefon"
+                                    type="tel"
+                                    ref={phoneRef}
+                                />
                                 </Col>
                             </Row>
                             <CustomFormField 
@@ -65,25 +64,6 @@ const PersonalInfo = () => {
                                     <AutocompleteFormField 
                                         placeholder="Judet"
                                         name="county"
-                                    />
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col lg={6}>
-                                    <CustomFormField 
-                                        controlid="floatingZipCode"
-                                        name="zipCode"
-                                        label="Cod postal"
-                                        type="number"
-                                    />
-                                </Col>
-                                <Col lg={6}>
-                                    <CustomPhoneFormField 
-                                       controlid="floatingPhone"
-                                       name="phone"
-                                       label="Telefon"
-                                       type="tel"
-                                       ref={phoneRef}
                                     />
                                 </Col>
                             </Row>

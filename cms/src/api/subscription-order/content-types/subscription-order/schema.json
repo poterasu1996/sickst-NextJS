@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "subscription_orders",
+  "info": {
+    "singularName": "subscription-order",
+    "pluralName": "subscription-orders",
+    "displayName": "subscription_order"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user_id": {
+      "type": "integer",
+      "required": true
+    },
+    "subscription_id": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

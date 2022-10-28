@@ -5,10 +5,10 @@ import Slider from "react-slick";
 import CartContext from "../../store/cart-context";
 import { DateTime } from 'luxon';
 import emptyBottle from '../../public/img/empty-bottle.png';
-import subscriptionBanner from '../../public/img/subscribe-banner.jpg';
-import Link from "next/link";
+import UnsubscribedUser from './UnsubscribedUser';
 
-const ManageSubscription = ({ subscription }) => {
+
+const ManageSubscription = ({ subscribed ,subscription }) => {
     // For future, here we want to manage the basic subscription list, where clients can have multiple product
     // choices at the same price, and for same subscription price, they can choose from multiple products
     const slickSettings = {
@@ -30,53 +30,55 @@ const ManageSubscription = ({ subscription }) => {
         }
     }, [cartManager.subsList]);
 
-    useEffect(() => {
-        const quickTipsElem = document.getElementById("quick-tips");
-        let elemWidth;
-        if(screen.availWidth <= 400) {
-            elemWidth = 360;
-            quickTipsElem.style.maxWidth = `${elemWidth}px`
-        } else if(screen.availWidth <= 600) {
-            let padding = 40;
-            elemWidth = screen.availWidth - padding;
-            quickTipsElem.style.maxWidth = `${elemWidth}px`
-        } else if(screen.availWidth <= 740) {
-            elemWidth = screen.availWidth - 150 - (4 * 20) - 70;
-            quickTipsElem.style.maxWidth = `${elemWidth}px`
-        } else if(screen.availWidth <= 990) {
-            elemWidth = screen.availWidth - 150 - (2 * 20) - (2 * 40) - 70;
-            quickTipsElem.style.maxWidth = `${elemWidth}px`
-        } else if(screen.availWidth <= 1200) {
-            elemWidth = screen.availWidth - 780;
-            quickTipsElem.style.maxWidth = `${elemWidth}px`
-            quickTipsElem.style.minWidth = `${320}px`
-        } else {
-            quickTipsElem.style.maxWidth = `${450}px`
-        }
+    console.log('subs: ', subscribed)
 
-        window.onresize = () => {
-            if(screen.availWidth <= 400) {
-                elemWidth = 360;
-                quickTipsElem.style.maxWidth = `${elemWidth}px`
-            } else if(screen.availWidth <= 600) {
-                let padding = 40;
-                elemWidth = screen.availWidth - padding;
-                quickTipsElem.style.maxWidth = `${elemWidth}px`
-            } else if(screen.availWidth <= 740) {
-                elemWidth = screen.availWidth - 150 - (4 * 20) - 70;
-                quickTipsElem.style.maxWidth = `${elemWidth}px`
-            } else if(screen.availWidth <= 990) {
-                elemWidth = screen.availWidth - 150 - (2 * 20) - (2 * 40) - 70;
-                quickTipsElem.style.maxWidth = `${elemWidth}px`
-            } else if(screen.availWidth <= 1200) {
-                elemWidth = screen.availWidth - 780;
-                quickTipsElem.style.maxWidth = `${elemWidth}px`
-                quickTipsElem.style.minWidth = `${320}px`
-            } else {
-                quickTipsElem.style.maxWidth = `${450}px`
-            }
-        }
-    }, [window.onresize])
+    // useEffect(() => {
+    //     const quickTipsElem = document.getElementById("quick-tips");
+    //     let elemWidth;
+    //     if(screen.availWidth <= 400) {
+    //         elemWidth = 360;
+    //         quickTipsElem.style.maxWidth = `${elemWidth}px`
+    //     } else if(screen.availWidth <= 600) {
+    //         let padding = 40;
+    //         elemWidth = screen.availWidth - padding;
+    //         quickTipsElem.style.maxWidth = `${elemWidth}px`
+    //     } else if(screen.availWidth <= 740) {
+    //         elemWidth = screen.availWidth - 150 - (4 * 20) - 70;
+    //         quickTipsElem.style.maxWidth = `${elemWidth}px`
+    //     } else if(screen.availWidth <= 990) {
+    //         elemWidth = screen.availWidth - 150 - (2 * 20) - (2 * 40) - 70;
+    //         quickTipsElem.style.maxWidth = `${elemWidth}px`
+    //     } else if(screen.availWidth <= 1200) {
+    //         elemWidth = screen.availWidth - 780;
+    //         quickTipsElem.style.maxWidth = `${elemWidth}px`
+    //         quickTipsElem.style.minWidth = `${320}px`
+    //     } else {
+    //         quickTipsElem.style.maxWidth = `${450}px`
+    //     }
+
+    //     window.onresize = () => {
+    //         if(screen.availWidth <= 400) {
+    //             elemWidth = 360;
+    //             quickTipsElem.style.maxWidth = `${elemWidth}px`
+    //         } else if(screen.availWidth <= 600) {
+    //             let padding = 40;
+    //             elemWidth = screen.availWidth - padding;
+    //             quickTipsElem.style.maxWidth = `${elemWidth}px`
+    //         } else if(screen.availWidth <= 740) {
+    //             elemWidth = screen.availWidth - 150 - (4 * 20) - 70;
+    //             quickTipsElem.style.maxWidth = `${elemWidth}px`
+    //         } else if(screen.availWidth <= 990) {
+    //             elemWidth = screen.availWidth - 150 - (2 * 20) - (2 * 40) - 70;
+    //             quickTipsElem.style.maxWidth = `${elemWidth}px`
+    //         } else if(screen.availWidth <= 1200) {
+    //             elemWidth = screen.availWidth - 780;
+    //             quickTipsElem.style.maxWidth = `${elemWidth}px`
+    //             quickTipsElem.style.minWidth = `${320}px`
+    //         } else {
+    //             quickTipsElem.style.maxWidth = `${450}px`
+    //         }
+    //     }
+    // }, [window.onresize])
 
     function handleOnDragEnd(result) {
         if (!result.destination) return;
@@ -99,26 +101,10 @@ const ManageSubscription = ({ subscription }) => {
 
     return (<>
         <div className="manage-subscription">
+            {!subscribed && <UnsubscribedUser />}
             <div className="left-side">
-                <div className="subscribe-banner card">
-                    <img src={subscriptionBanner.src} />
-                    <div className="title">Get 50% off today</div>
-                    <div className="text">Subscribe today and get your next product at $10</div>
-                    <Link href="/payment/subscription">
-                        <a className="button-second">Subscribe</a>
-                    </Link>
-                </div>
-                <div className="benefits">
-                    <div className="title">Your benefits:</div>
-                    <ul>
-                        <li><Check stroke={"#cc3633"}/> Over <span className="brand-color">600 fragrances</span> to choose from, straight from the source</li>
-                        <li><Check stroke={"#cc3633"}/> Get personal recommendations based on scents you love</li>
-                        <li><Check stroke={"#cc3633"}/> <span className="brand-color">Flexible membership plans</span> that cater to your lifestyle</li>
-                    </ul>
-                </div>
-                <button className="button-second">Update list</button>
             </div>
-            <div className="dnd-list">
+            {/* <div className="dnd-list">
                 <div className="quick-tips" id="quick-tips">
                     <div className="title">Quick tips to customize your queue</div>
                     <Slider {...slickSettings}>
@@ -181,7 +167,7 @@ const ManageSubscription = ({ subscription }) => {
                         )}
                     </Droppable>
                 </DragDropContext>
-            </div>
+            </div> */}
         </div>
     </>);
 }

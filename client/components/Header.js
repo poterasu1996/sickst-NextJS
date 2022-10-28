@@ -8,6 +8,7 @@ import CartContext from "../store/cart-context";
 import { useRouter } from "next/router";
 import AccountMobileSideModal from "./global/AccountMobileSideModal";
 import AccountContext from "../store/account-context";
+import logo from "../public/logo.svg";
 
 const Header = () => {
   const [accountMobileModal, setAccountMobileModal] = useState(false);
@@ -46,10 +47,9 @@ const Header = () => {
             <Menu />
         </Button>
         <div className="logo">
-          <Link href={"/"}>
-            <a className="logo-link2">
-              <div className="t1">Sickst</div>
-              <div className="t2">Bucharest</div>
+          <Link href="/">
+            <a className="logo-link">
+              <img src={logo.src}/>
             </a>
           </Link>
         </div>

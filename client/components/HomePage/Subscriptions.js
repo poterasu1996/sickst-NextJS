@@ -14,7 +14,7 @@ const Subscriptions = () => {
                         <div className="title">Esti o fire misterioasa? Iti place sa incerci lucruri noi?</div>
                         <div className="subtitle">Alege abonamentul "Mystery" care te va ajuta sa descoperi lunar noi arome.</div>
                     </div>
-                    <Link href="/">
+                    <Link href="/subscriptions">
                         <a className='button-second big'>Mystery</a>
                     </Link>
                 </div>

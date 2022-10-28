@@ -51,12 +51,10 @@ export default function ShipmentForm({ onSubmit }) {
       <Formik
         initialValues={{
           address: "",
-          first_name: "",
-          last_name: "",
+          full_name: "",
+          phone: "",
           city: "",
           county: "",
-          appartment: "",
-          phone: "",
           primary: ""
         }}
         validationSchema={validate}
@@ -74,19 +72,19 @@ export default function ShipmentForm({ onSubmit }) {
               <Col lg={6}>
                 <CustomFormField
                   controlid="floatingFirstName"
-                  name="first_name"
-                  label="Nume"
+                  name="full_name"
+                  label="Nume si Prenume"
                   type="text"
                   ref={firstNameRef}
                 />
               </Col>
               <Col lg={6}>
-                <CustomFormField
-                  controlid="floatingLastName"
-                  name="last_name"
-                  label="Prenume"
+                <CustomPhoneFormField
+                  controlid="floatingPhone"
+                  name="phone"
+                  label="Telefon"
                   type="text"
-                  ref={lastNameRef}
+                  ref={phoneRef}
                 />
               </Col>
             </Row>
@@ -107,26 +105,6 @@ export default function ShipmentForm({ onSubmit }) {
                   label="Judet"
                   type="text"
                   ref={countyRef}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={6}>
-                <CustomFormField
-                  controlid="floatingAppartment"
-                  name="appartment"
-                  label="App (opt)"
-                  type="text"
-                  ref={apartmentRef}
-                />
-              </Col>
-              <Col lg={6}>
-                <CustomPhoneFormField
-                  controlid="floatingPhone"
-                  name="phone"
-                  label="Telefon"
-                  type="text"
-                  ref={phoneRef}
                 />
               </Col>
             </Row>

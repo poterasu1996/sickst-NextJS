@@ -74,13 +74,13 @@ export const PaymentProvider = ({ children }) => {
         if(cart) {
             if(!cart.find(item => item.paymeny !== 'otb')) {
                 localStorage.removeItem('cart');
-                cartManager.setResetCart(true);
+                cartManager.setRefresh(preVal => !preVal);
             } else {
                 const newCart = cart.filter(item => {
                    return item.payment !== 'otb';
                 });
                 localStorage.setItem('cart', JSON.stringify(newCart));
-                cartManager.setResetCart(true);
+                cartManager.setRefresh(preVal => !preVal);
             }
         }
     }

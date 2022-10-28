@@ -5,17 +5,27 @@ import orderImg from '../../public/img/order-img.png'
 import Link from "next/link";
 
 const ProductDetailsSection = ({ product }) => {
+    const containerPrice = 50;  // price of container
+    function simplePrice(price) {
+        const mlPrice = price / 100;    // price per ml of product
+    
+        const productPrice = containerPrice + (8 * mlPrice);   // price of full product for OTB
+        return productPrice;
+    }
+
     return <>
         <div className="product container">
             <div className="product-image">
-                <img src={product.image.src}></img>
+                <img 
+                    src={`${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` + product.image.data[0].attributes.url} 
+                />
             </div>
             <div className="product-details">
                 <div className="title">{product.brand}</div>
                 <div className="model">{product.model}</div>
                 <div className="price-wrapper d-flex justify-content-between">
                     <div className="type">{product.type}</div>
-                    <div className="retail"><b className="brand-color">RON {product.price}</b> Retail value</div>
+                    <div className="retail"><b className="brand-color">RON {product.retail_value}</b> Retail value</div>
                 </div>
                 <div className="rating">
                     <Rating 
@@ -34,7 +44,7 @@ const ProductDetailsSection = ({ product }) => {
                                 <img src={orderImg.src}/>
                                 <div className="order-info">
                                     <div className="volume">8 ml</div>
-                                    <div className="type">Subscription <b>RON 60</b></div>
+                                    <div className="type">Requires{" "}<b>{product.subscription_type} plan</b></div>
                                 </div>
                             </div>
                         </Button>
@@ -45,7 +55,7 @@ const ProductDetailsSection = ({ product }) => {
                                 <img src={orderImg.src}/>
                                 <div className="order-info">
                                     <div className="volume">8 ml</div>
-                                    <div className="type">Subscription <b>RON 60</b></div>
+                                    <div className="type">Subscription <b>RON {simplePrice(product.retail_value)}</b></div>
                                 </div>
                             </div>
                         </Button>
