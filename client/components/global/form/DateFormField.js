@@ -2,7 +2,6 @@ import { Calendar } from "primereact/calendar"
 import 'primeicons/primeicons.css';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.css';
-import Head from "next/head";
 import { useState } from "react";
 
 const DateFormField = (props) => {

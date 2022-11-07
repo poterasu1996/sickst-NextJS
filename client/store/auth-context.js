@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 
 const AuthContext =  React.createContext({});
 
 export const AuthProvider = ({ children }) => {
     const [auth, setAuth] = useState();
     useEffect(() => {
-        const storageToken = localStorage.getItem('jwt');
-        setAuth(storageToken);
+        const cookie = Cookies.get('jwt');
+        setAuth(cookie);
     }, [])
 
     return (

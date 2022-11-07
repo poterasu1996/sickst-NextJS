@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "../api/axios";
+import Cookies from 'js-cookie';
 
 const PaymentContext = React.createContext([]);
 const USER_URL = "/users/me";
@@ -15,7 +16,7 @@ export const PaymentProvider = ({ children }) => {
     const [refresh, setRefresh] = useState(false);
     
     useEffect(() => {
-        const jwt = localStorage.getItem('jwt');
+        const jwt = Cookies.get('jwt');
         const cartStorage = localStorage.getItem('cart');
         if(jwt) {
             const head = {

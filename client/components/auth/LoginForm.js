@@ -27,7 +27,6 @@ export default function LogInForm() {
       .required('Password is required*'),
   });
 
-  // JWT must be store in cookie in future
   function createCookieInHour(cookieName, cookieValue, hourToExpire) {
     let date =  new Date();
     date.setTime(date.getTime()+(hourToExpire*60*60*1000)); // number of hours
@@ -53,7 +52,6 @@ export default function LogInForm() {
 
       if (jwt) {
         setAuth(jwt);
-        localStorage.setItem('jwt', jwt); // set jwt token in local storage
         createCookieInHour('jwt', jwt, 1); // create cookie with jwt
 
         setLoading(preVal => !preVal);
@@ -62,7 +60,7 @@ export default function LogInForm() {
         // adding auto-logout
         const oneHour = 1000 * 60 * 60; 
         setTimeout(() => {
-          localStorage.removeItem("jwt");
+          Cookies.remove("jwt");
           setAuth(null);
           router.push("/account/login");
         }, oneHour);
@@ -77,14 +75,10 @@ export default function LogInForm() {
       } else if (err.response?.status === 401) {
         setError(err.response.data.error.message);
       } 
-      // else {
-      //   setError('Login Failed');
-      // } 
+      else {
+        setError('Login Failed');
+      } 
     }
-
-    // let cookie = document.cookie.split(';');
-    // const cookie = Cookies.get('jwt');
-    // console.log('cookie: ', cookie);
   }
 
   return (

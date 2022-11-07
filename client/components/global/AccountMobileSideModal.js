@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { Button } from "react-bootstrap";
+import Cookies from 'js-cookie';
 import Transition from "react-transition-group/Transition";
 import AccountContext from "../../store/account-context";
 import AuthContext from "../../store/auth-context";
@@ -13,7 +14,7 @@ const AccountMobileSideModal = (props) => {
 
     function logOut() {
         setTimeout(() => {
-            localStorage.removeItem('jwt');
+            Cookies.remove("jwt");
             setAuth(null);
             router.push('/');
         }, 700);

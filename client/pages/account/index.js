@@ -1,5 +1,4 @@
 import { DateTime } from "luxon";
-import Head from "next/head";
 import { useContext, useEffect, useState } from "react";
 import axios from "../../api/axios";
 import BillingInformation from "../../components/AccountPage/BillingInformation";
@@ -69,10 +68,6 @@ const Account = () => {
     userInfo && console.log(userInfo)
 
     return(<>
-        <Head>
-            <link rel="stylesheet" type="text/css" charSet="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
-            <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
-        </Head>
         <div className="main-content account-page">
             <div className="container account-main-body">
                 <div className="nav-section">
