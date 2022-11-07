@@ -7,7 +7,7 @@ const NewProductSection = () => {
         <div className="container new-product-section">
             <div className="new-product-section--header">
                 <div className="title">New fine fragrances</div>
-                <div className="view-all">View all &gt;</div>
+                {/* <div className="view-all">View all &gt;</div> */}
             </div>
             <div className="new-product-section--content">
                 <div className="new-product">

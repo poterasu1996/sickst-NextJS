@@ -48,7 +48,8 @@ footer {
                 height: 4.6rem;
                 margin-bottom: 3rem;
                 img {
-                    height: 100%;
+                    width: 100%;
+                    max-width: 12rem;
                 }
             }
             .text {
@@ -70,6 +71,7 @@ footer {
             }
             .list-item {
                 margin: 0.4rem;
+                margin-left: 0;
                 a {
                     font-size: 1.6rem;
                     line-height: 2.6rem;

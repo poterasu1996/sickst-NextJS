@@ -1,0 +1,20 @@
+.p-autocomplete-panel {
+    z-index: 2000 !important;
+}
+
+.p-checkbox {
+    .p-checkbox-box.p-highlight {
+        border-color: #cc3633 !important;
+        background: #cc3633 !important;
+    }
+    .p-checkbox-box.p-focus {
+        box-shadow: 0 0 0 0.2rem rgba($color: #cc3633, $alpha: 0.25) !important;
+        border-color: #cc3633 !important;
+    }
+    .p-checkbox-box {
+        &:hover {
+            border-color: #cc3633 !important;
+        }
+    }
+
+}

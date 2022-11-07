@@ -93,7 +93,7 @@ const Account = () => {
                         {/* <li className={"nav-link " + (accState === 'resetPassword' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('resetPassword')}>Reset password</div></li> */}
                     </ul>
                 </div>
-                <div className="content" id="content">
+                <div className="content custom-sb custom-sb-x" id="content">
                     <div className="user-info-mobile">
                         <div className="user-avatar">
                             <img src={userAvatar.src}></img>

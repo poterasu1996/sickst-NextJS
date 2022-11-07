@@ -6,6 +6,7 @@ import { InputSwitch } from 'primereact/inputswitch';
 import * as Yup from "yup";
 import CustomPhoneFormField from "../global/form/CustomPhoneFormField";
 import AccountContext from "../../store/account-context";
+import AutocompleteFormField from "../global/form/AutocompleteFormField";
 
 export default function ShipmentForm({ onSubmit }) {
   const { accountManager } = useContext(AccountContext);
@@ -99,10 +100,17 @@ export default function ShipmentForm({ onSubmit }) {
                 />
               </Col>
               <Col lg={6}>
-                <CustomFormField
+                {/* <CustomFormField
                   controlid="floatingCounty"
                   name="county"
                   label="Judet"
+                  type="text"
+                  ref={countyRef}
+                /> */}
+                <AutocompleteFormField 
+                  controlid="floatingCounty"
+                  name="county"
+                  placeholder="Judet"
                   type="text"
                   ref={countyRef}
                 />
