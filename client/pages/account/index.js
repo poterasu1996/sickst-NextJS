@@ -1,5 +1,4 @@
 import { DateTime } from "luxon";
-import Head from "next/head";
 import { useContext, useEffect, useState } from "react";
 import axios from "../../api/axios";
 import BillingInformation from "../../components/AccountPage/BillingInformation";
@@ -46,7 +45,7 @@ const Account = () => {
     }, [auth])
 
     useEffect(() => {
-        setAccState(accountManager.accountState);
+        accountManager && setAccState(accountManager.accountState);
     }, [accountManager.accountState]);
 
     useEffect(() => {
@@ -69,10 +68,6 @@ const Account = () => {
     userInfo && console.log(userInfo)
 
     return(<>
-        <Head>
-            <link rel="stylesheet" type="text/css" charSet="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css" />
-            <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css" />
-        </Head>
         <div className="main-content account-page">
             <div className="container account-main-body">
                 <div className="nav-section">
@@ -93,7 +88,7 @@ const Account = () => {
                         {/* <li className={"nav-link " + (accState === 'resetPassword' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('resetPassword')}>Reset password</div></li> */}
                     </ul>
                 </div>
-                <div className="content" id="content">
+                <div className="content custom-sb custom-sb-x" id="content">
                     <div className="user-info-mobile">
                         <div className="user-avatar">
                             <img src={userAvatar.src}></img>

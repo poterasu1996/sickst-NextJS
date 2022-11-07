@@ -25,7 +25,7 @@ const Cart = (props) => {
         {/* ITEM */}
         {cartManager.cart.length > 0 ? (
           <>
-            <div className="mid-menu">
+            <div className="mid-menu custom-sb custom-sb-y">
               <div className="cart-list">
                 {cartManager.cart.find(
                   (el) => el.payment === "subscription"

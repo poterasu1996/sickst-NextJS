@@ -5,6 +5,7 @@ import CustomFormField from "../global/form/CustomFormField";
 import * as Yup from 'yup';
 import AuthContext from "../../store/auth-context";
 import { useRouter } from 'next/router';
+import Cookies from 'js-cookie';
 
 import axios from '../../api/axios';
 const LOGIN_URL = '/auth/local';
@@ -29,6 +30,7 @@ export default function LogInForm() {
   function createCookieInHour(cookieName, cookieValue, hourToExpire) {
     let date =  new Date();
     date.setTime(date.getTime()+(hourToExpire*60*60*1000)); // number of hours
+    document.cookie = cookieName + "=" + cookieValue + ";path = " + "/" + "; expires = " + date.toString();
   }
 
   const submitHandler = async (event) => {
@@ -36,13 +38,13 @@ export default function LogInForm() {
 
     // extract data from refs
     const enteredEmail = emailRef.current.value;
-    const enteretPasword = passwordRef.current.value;
+    const enteredPasword = passwordRef.current.value;
 
     // setLoading(preVal => !preVal);
     try {
       const response = await axios.post(LOGIN_URL, {
         identifier: enteredEmail,
-        password: enteretPasword
+        password: enteredPasword
       });
       // console.log(JSON.stringify(response?.data.user));
       const jwt = response?.data?.jwt;
@@ -50,20 +52,30 @@ export default function LogInForm() {
 
       if (jwt) {
         setAuth(jwt);
-        localStorage.setItem('jwt', jwt); // set jwt token in local storage
+        createCookieInHour('jwt', jwt, 1); // create cookie with jwt
+
         setLoading(preVal => !preVal);
         router.push('/');
+
+        // adding auto-logout
+        const oneHour = 1000 * 60 * 60; 
+        setTimeout(() => {
+          Cookies.remove("jwt");
+          setAuth(null);
+          router.push("/account/login");
+        }, oneHour);
       }
     } catch (err) {
       // console.log(Object.keys(err))
-      if (!err?.response) {
+      if (err?.response) {
         setError('No server response');
       } else if (err.response?.status === 400) {
         setError('Invalid email or password');
         console.log('Missing Username or Password'); 
       } else if (err.response?.status === 401) {
         setError(err.response.data.error.message);
-      } else {
+      } 
+      else {
         setError('Login Failed');
       } 
     }

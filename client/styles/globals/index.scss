@@ -1,7 +1,13 @@
 // @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-@import './black-cards.scss';
+@import './black-cards';
+@import './header';
+@import './footer';
+@import './footer-simple';
+@import './side-modal';
+@import './side-modal-cart';
+@import './primereact';
 
 
 html {
@@ -118,7 +124,7 @@ body.modal-open {
 .button-primary {
   display: block;
   width: 100%;
-  border: 1px solid red;
+  border: 1px solid #cc3633;
 
   padding: 0 20px;
   font-size: 1.8rem;
@@ -244,6 +250,34 @@ body.modal-open {
 .county-ac-list {
   .p-autocomplete-item {
     font-size: 1.5rem;
+  }
+}
+
+.custom-sb {
+  /* Track */
+  &::-webkit-scrollbar-track {
+      border-radius: 10px;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background: #d24f4d; 
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+      background: #b30000; 
+  }
+}
+.custom-sb-x {
+  &::-webkit-scrollbar {
+    height: 1rem;
+  }
+}
+.custom-sb-y {
+  &::-webkit-scrollbar {
+    width: 1rem;
   }
 }
 

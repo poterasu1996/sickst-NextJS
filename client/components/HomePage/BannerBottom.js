@@ -12,7 +12,7 @@ const BannerBottom = () => {
                     <span className="title">Acceseaza peste 500 de produse in fiecare luna!</span>
                 </div>
                 <div>
-                    {!auth && <Button href="/account/register" className="button-primary big mt-5">Autentificare</Button>}
+                    {!auth && <Button href="/auth/register" className="button-primary big mt-5">Autentificare</Button>}
                     {auth && <Button href="/subscriptions" className="button-primary big mt-5">Subscribe</Button>}
                 </div>
             </div>

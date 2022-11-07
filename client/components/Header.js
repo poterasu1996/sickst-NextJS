@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { Button, Dropdown } from "react-bootstrap";
 import Link from "next/link";
+import Cookies from 'js-cookie';
 import SideModal from "./global/SideModal";
 import AuthContext from "../store/auth-context";
 import { Menu, ShoppingCart, User } from "react-feather";
@@ -20,7 +21,7 @@ const Header = () => {
 
   function logOut() {
     setTimeout(() => {
-      localStorage.removeItem("jwt");
+      Cookies.remove("jwt");
       setAuth(null);
       router.push("/");
     }, 700);
@@ -120,7 +121,7 @@ const Header = () => {
               </Link>
             </>
           ) : (
-            <Link href="/account/login">
+            <Link href="/auth/login">
               <a>Log in</a>
             </Link>
           )}
