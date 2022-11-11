@@ -9,7 +9,7 @@
         @media (max-width: 950px) {
             padding: 0 2rem;
         }
-        @media (max-width: 900px) {
+        @media (max-width: 730px) {
             flex-direction: column;
         }
 
@@ -28,12 +28,13 @@
 
 .subs-payment-card {
     width: 40%;
+    min-width: 38rem;
     margin-right: 5rem;
     padding: 4rem 3rem;
     margin-top: .8rem;
     background-color: #fff;
     border: 1px solid #dcdfe5;
-    @media (max-width: 900px) {
+    @media (max-width: 730px) {
         margin: 0rem;
         width: 100%;
         margin-bottom: 2rem;
