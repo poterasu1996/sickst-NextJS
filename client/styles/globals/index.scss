@@ -75,7 +75,7 @@ body.modal-open {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-right: 1rem;
+    margin-right: 1.5rem;
   }
   .plus  {
     width: 3rem;
@@ -83,7 +83,7 @@ body.modal-open {
     border-radius: 50%;
     background-color: black;
     position: relative;
-    margin-right: 1rem;
+    margin-right: 1.5rem;
     
     &::before {
       content: "";

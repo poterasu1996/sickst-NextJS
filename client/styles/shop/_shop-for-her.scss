@@ -51,6 +51,7 @@
         margin-top: 1rem;
 
         .new-product {
+            cursor: pointer;
             width: 15%;
             background-color: #fff;
             box-shadow: 0 .2rem 1rem rgba($color: #3E1223, $alpha: 0.08);
@@ -65,7 +66,9 @@
 
             &--img-wrapper {
                 height: 15rem;
-                text-align: center;
+                display: flex;
+                justify-content: center;
+                overflow: hidden;
                 img {
                     height: 100%;
                 }
