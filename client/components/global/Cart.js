@@ -8,7 +8,7 @@ import AccountContext from "../../store/account-context";
 
 const Cart = (props) => {
   const [loading, setLoading] = useState(true);
-  const { cartManager } = useContext(CartContext);
+  const cartManager = useContext(CartContext);
   const { accountManager } = useContext(AccountContext);
 
   setTimeout(() => {

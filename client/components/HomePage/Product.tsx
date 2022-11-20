@@ -1,4 +1,4 @@
-import { useState, useContext, Fragment } from "react";
+import React, { useState, useContext } from "react";
 import Rating from "react-rating";
 import { Star, Check } from "react-feather";
 import Image from "next/image";
@@ -10,13 +10,17 @@ import AuthContext from "../../store/auth-context";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 
-const Product = ({ product }) => {
-  const [show, setShow] = useState(false); // for Read more modal
-  const { cartManager } = useContext(CartContext);
-  const { auth } = useContext(AuthContext);
-  const [addedToCart, setAddedToCart] = useState(false); // show the checkmark after added to cart
-  const [loading, setLoading] = useState(false); // used for loading animation
-  const [subscription, setSubscription] = useState(true);
+type Props = {
+    product: any
+}
+
+const Product = ({ product }: Props) => {
+  const [show, setShow] = useState<boolean>(false); // for Read more modal
+  const cartManager = useContext(CartContext);
+  const authManager = useContext(AuthContext);
+  const [addedToCart, setAddedToCart] = useState<boolean>(false); // show the checkmark after added to cart
+  const [loading, setLoading] = useState<boolean>(false); // used for loading animation
+  const [subscription, setSubscription] = useState<boolean>(true);
   const router = useRouter();
   
   // in future, we must have 2 parameters: product and container (container will be the container price from DB, atm is static price)
@@ -29,7 +33,7 @@ const Product = ({ product }) => {
           <img
             src={
               `${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` +
-              product.attributes.image.data[0].attributes.url
+              product!.attributes!.image!.data[0].attributes.url
             }
           ></img>
         </div>
@@ -42,7 +46,7 @@ const Product = ({ product }) => {
     </>
   );
 
-  function simplePrice(price) {
+  function simplePrice(price: number) {
     const mlPrice = price / 100;    // price per ml of product
 
     const productPrice = containerPrice + (8 * mlPrice);   // price of full product for OTB
@@ -76,13 +80,13 @@ const Product = ({ product }) => {
               <span className="tag black">Exclussive</span>
             </div>
             <div className="product-card-rating">
-              <Rating
-                fractions={2}
-                initialRating={product.attributes.rating}
-                readonly={true}
-                emptySymbol={<Star size={15} fill="#babfc7" stroke="#babfc7" />}
-                fullSymbol={<Star size={15} fill="#cc3633" stroke="#cc3633" />}
-              />
+                <Rating
+                    fractions={2}
+                    initialRating={product.attributes.rating}
+                    readonly={true}
+                    emptySymbol={<Star size={15} fill="#babfc7" stroke="#babfc7" />}
+                    fullSymbol={<Star size={15} fill="#cc3633" stroke="#cc3633" />}
+                />
             </div>
             <div className="product-card-title">
               <span className="brand">{product.attributes.brand}</span>
@@ -96,7 +100,7 @@ const Product = ({ product }) => {
             </div>
           </div>
           <div className="product-card-button">
-            {cartManager.hasProduct(product) ? (
+            {cartManager?.hasProduct(product) ? (
               loading ? (
                 <Spinner animation="border" style={{ color: "#cc3663" }} />
               ) : (
@@ -107,12 +111,12 @@ const Product = ({ product }) => {
                   <span>Added</span>
                 </div>
               )
-            ) : auth ? (
+            ) : authManager.auth ? (
               <div
                 className="card-button"
                 onClick={() => {
                   const paymentType = "subscription";
-                  if (cartManager.subscriptionList.length >= 6) {
+                  if (cartManager!.subscriptionList.length >= 6) {
                     const msg = (
                       <>
                         <div>
@@ -127,7 +131,7 @@ const Product = ({ product }) => {
                     return;
                   }
                   notify();
-                  cartManager.addProduct(product, 1, paymentType);
+                  cartManager!.addProduct(product, 1, paymentType);
                   setAddedToCart(true);
                   setLoading(true);
                 }}
@@ -240,12 +244,12 @@ const Product = ({ product }) => {
                     onClick={() => {
                       let paymentType;
                       // check if logged in
-                      if (!auth) {
+                      if (!authManager.auth) {
                         router.push("/account/login");
                       } else {
                         if (subscription) {
                           paymentType = "subscription";
-                          if (cartManager.subscriptionList().length >= 6) {
+                          if (cartManager!.subscriptionList().length >= 6) {
                             toast(
                               "Your subscription list hast more than 6 products!",
                               {
@@ -257,7 +261,7 @@ const Product = ({ product }) => {
                         } else {
                           paymentType = "otb";
                         }
-                        cartManager.addProduct(product, 1, paymentType);
+                        cartManager!.addProduct(product, 1, paymentType);
                         notify();
                       }
                       // setLoading(true);

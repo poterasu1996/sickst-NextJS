@@ -8,12 +8,17 @@ import axios from "../../api/axios";
 import { Spinner } from "react-bootstrap";
 const PRODUCTS_URL = "/products";
 
+type Product = {
+    id: number,
+    attributes: any
+}
+
 const ProductDetails = () => {
     const router = useRouter();
     const {asPath, pathname, query, isReady} = useRouter();
-    const [product, setProduct] = useState();
-    const [error, setError] = useState(false);
-    const [loading, setloading] = useState(true);
+    const [product, setProduct] = useState<Product | null>(null);
+    const [error, setError] = useState<boolean>(false);
+    const [loading, setloading] = useState<boolean>(true);
 
     const slickSettings = {
         dots: false,
@@ -23,7 +28,7 @@ const ProductDetails = () => {
         slidesToScroll: 1
     } 
 
-    function extractProductId(path) {
+    function extractProductId(path: string) {
         const [productId] = path.split("/").slice(-1);
         return productId
     }
@@ -36,9 +41,7 @@ const ProductDetails = () => {
             const fetchProduct = async() => {
                 await axios.get(`${PRODUCTS_URL}/${prodId}?populate=*`).then(resp => {
                     setProduct(resp.data.data);
-                    setloading(preVal => !preVal);
                 }, (error) => {
-                    setloading(preVal => !preVal);
                     setError(preVal => !preVal);
                     setTimeout(() => {
                         router.push('/');
@@ -49,6 +52,11 @@ const ProductDetails = () => {
             fetchProduct();
         }
     }, [isReady])
+
+    useEffect(() => {
+        if (product)  setloading(false);
+        if (error) setloading(false);
+    }, [product])
 
     return <>
         <div className="product-details-content" >

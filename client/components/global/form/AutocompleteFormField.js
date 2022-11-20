@@ -2,7 +2,7 @@ import 'primeicons/primeicons.css';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.css';
 import { AutoComplete } from 'primereact/autocomplete';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const counties = [
     { 'name': 'Alba', value: 'Alba' }, 
@@ -53,6 +53,10 @@ const AutocompleteFormField = (props) => {
     const [selectedCounty, setSelectedCounty] = useState(null);
     const [filteredCounties, setFilteredCounties] = useState(null);
 
+    useEffect(() => {
+        props.handlecounty(selectedCounty);
+    }, [selectedCounty])
+
     const searchCounty = (event) => {
         setTimeout(() => {
             let _filteredCountries;
@@ -76,7 +80,9 @@ const AutocompleteFormField = (props) => {
                     value={selectedCounty}
                     suggestions={filteredCounties}
                     completeMethod={searchCounty}
-                    onChange={(e) => setSelectedCounty(e.value)}
+                    onChange={(e) => {
+                        setSelectedCounty(e.value.value);
+                    }}
                     field="name"
                     panelClassName='county-ac-list'
                     {...props}

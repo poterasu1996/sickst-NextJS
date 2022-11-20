@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Product from '../HomePage/Product'
-import { Checkbox } from 'primereact/checkbox';
+import { Checkbox, CheckboxChangeParams } from 'primereact/checkbox';
 
 
 import "primereact/resources/themes/lara-light-indigo/theme.css";  //theme
@@ -10,20 +10,36 @@ import axios from '../../api/axios';
 import FiltersModal from '../global/FiltersModal';
 const BRANDS_URL = "/brands";
 
-export default function ProductFilterSection({ products }) {
-    const [basic, setBasic] = useState(false);
-    const [premium, setPremium] = useState(false);
-    const [filteredProducts, setFilteredProducts] = useState([]);
-    const [brands, setBrands] = useState([]);
-    const [brandFilter, setBrandFilter] = useState([]);
-    const [show, setShow] = useState(false);
-    const [modalTitle, setModalTitle] = useState("");
-    const [modalFilterType, setModalFilterType] = useState("");
-    const [modalOptions, setModalOptions] = useState({
-        basic: undefined,
-        premium: undefined,
-        brands: undefined,
-        brandFilter: undefined,
+type Props = {
+    products: Product[]
+}
+
+type Product = {
+    id: number,
+    attributes: any
+}
+
+type ModalOptions = {
+    basic: boolean,
+    premium: boolean,
+    brands: any[] | null,
+    brandFilter: any[] | null,
+}
+
+export default function ProductFilterSection({ products }: Props) {
+    const [basic, setBasic] = useState<boolean>(false);
+    const [premium, setPremium] = useState<boolean>(false);
+    const [filteredProducts, setFilteredProducts] = useState<Product[] | null>(null);
+    const [brands, setBrands] = useState<any[] | null>(null);
+    const [brandFilter, setBrandFilter] = useState<string[]>([]);
+    const [show, setShow] = useState<boolean>(false);
+    const [modalTitle, setModalTitle] = useState<string>("");
+    const [modalFilterType, setModalFilterType] = useState<string>("");
+    const [modalOptions, setModalOptions] = useState<ModalOptions>({
+        basic: false,
+        premium: false,
+        brands: null,
+        brandFilter: null,
     });
 
     useEffect(() => {
@@ -38,14 +54,14 @@ export default function ProductFilterSection({ products }) {
             // we need to set additional props for filter modal (what filters to show)
             const defaultProps = defaultModalProps();
             switch (modalFilterType) {
-                case 'SF':
+                case 'SF':      // subscription filter
                     setModalOptions({ 
                         ...defaultProps,
                         basic: basic,
                         premium: premium
                     });
                     break;
-                case 'BF':
+                case 'BF':      // brand filter
                     setModalOptions({
                         ...defaultProps,
                         brands: brands
@@ -66,16 +82,16 @@ export default function ProductFilterSection({ products }) {
     function defaultModalProps() {
         // default state of filters / reset filters
         return {
-            basic: undefined,
-            premium: undefined,
-            brands: undefined,
-            brandFilter: undefined,
+            basic: false,
+            premium: false,
+            brands: null,
+            brandFilter: null,
         };
     }
 
     // filter brands
-    function onBrandChange(e) {
-        let selectedBrands = [...brandFilter];
+    function onBrandChange(e: CheckboxChangeParams) {
+        let selectedBrands: string[] = [...brandFilter];
 
         if(e.checked) {
             selectedBrands.push(e.value);
@@ -100,7 +116,7 @@ export default function ProductFilterSection({ products }) {
             filteredProducts = [...premiumProducts]
         }
         if(brandFilter.length > 0) {
-            let filteredBrandProducts = [];
+            let filteredBrandProducts: Product[] = [];
             brandFilter.map(brand => {
                 filteredProducts.filter(product => {
                     product.attributes.brand.toLowerCase() === brand.toLowerCase() && filteredBrandProducts.push(product);
@@ -138,7 +154,7 @@ export default function ProductFilterSection({ products }) {
                         </div>
                         <div className='brand-filter'>
                             <div className='filter-title'>Brand</div>
-                            {brands.length > 0 && brands.map(brand => (
+                            {brands && brands.map(brand => (
                                 <div className='filter-name' key={brand.id}>
                                     <Checkbox 
                                         inputId={`${brand.attributes.brand_name}-${brand.id}`} 
@@ -169,21 +185,21 @@ export default function ProductFilterSection({ products }) {
                     <FiltersModal 
                         show={show} 
                         title={modalTitle} 
-                        handleClose={val => setShow(val)}
+                        handleClose={(val: boolean) => setShow(val)}
                         showFilters={modalFilterType}
 
                         brands={modalOptions.brands}
                         brandFilter={brandFilter}
                         basic={modalOptions.basic}
                         premium={modalOptions.premium}
-                        handleBrandChange={(val) => onBrandChange(val)}
-                        handleBasic={(val) => setBasic(val)}
-                        handlePremium={(val) => setPremium(val)}
+                        handleBrandChange={(val: any) => onBrandChange(val)}
+                        handleBasic={(val: boolean) => setBasic(val)}
+                        handlePremium={(val: boolean) => setPremium(val)}
                     />
 
                 </div>
                 <div className='products row'>
-                    {filteredProducts.length > 0 
+                    {filteredProducts?.length
                         ? filteredProducts.map(product => (<Product key={product.id} product={product}/>))
                         : <div className='no-product'>Produsul selectat nu exista!</div>
                     }

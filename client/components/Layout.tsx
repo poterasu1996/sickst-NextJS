@@ -5,16 +5,21 @@ import SimpleHeader from './SimpleHeader';
 import SimpleFooter from './SimpleFooter';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import React from 'react';
 
-const Layout = ({ children }) => {
+type Props = {
+    children: JSX.Element
+}
+
+const Layout: React.FC<Props> = ({ children }) => {
     const router = useRouter();
 
     return (
         <>
-            {(router.pathname === '/account/login' || router.pathname === '/account/register') ? <SimpleHeader /> : <Header />}
+            {(router.pathname === '/auth/login' || router.pathname === '/auth/register') ? <SimpleHeader /> : <Header />}
             {children}
             <ToastContainer limit={3}/>
-            {(router.pathname !== '/account/login' && router.pathname !== '/account/register') ? <Footer /> : <SimpleFooter />}
+            {(router.pathname !== '/auth/login' && router.pathname !== '/auth/register') ? <Footer /> : <SimpleFooter />}
         </>
     );
 }

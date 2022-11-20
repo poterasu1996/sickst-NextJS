@@ -7,8 +7,11 @@ import { DateTime } from 'luxon';
 import emptyBottle from '../../public/img/empty-bottle.png';
 import UnsubscribedUser from './UnsubscribedUser';
 
+type Props = {
+    subscribed: boolean | null
+}
 
-const ManageSubscription = ({ subscribed ,subscription }) => {
+const ManageSubscription = ({ subscribed }: Props) => {
     // For future, here we want to manage the basic subscription list, where clients can have multiple product
     // choices at the same price, and for same subscription price, they can choose from multiple products
     const slickSettings = {
@@ -18,19 +21,17 @@ const ManageSubscription = ({ subscribed ,subscription }) => {
         slidesToShow: 1,
         slidesToScroll: 1
     } 
-    
-    const { cartManager } = useContext(CartContext);
+
+    const cartManager = useContext(CartContext);
     const [winReady, setWinReady] = useState(false);
     const [subsOrder, updateSubsOrder] = useState([]);
 
     useEffect(() => {
         setWinReady(true)
-        if (cartManager.subsList) {
+        if (cartManager?.subsList) {
             updateSubsOrder(cartManager.subsList)
         }
     }, [cartManager.subsList]);
-
-    console.log('subs: ', subscribed)
 
     // useEffect(() => {
     //     const quickTipsElem = document.getElementById("quick-tips");
@@ -80,24 +81,24 @@ const ManageSubscription = ({ subscribed ,subscription }) => {
     //     }
     // }, [window.onresize])
 
-    function handleOnDragEnd(result) {
-        if (!result.destination) return;
-        if (!cartManager.subsList) return;
-        const items = Array.from(subsOrder);
-        const [reorderedItem] = items.splice(result.source.index, 1);
-        items.splice(result.destination.index, 0, reorderedItem);
+    // function handleOnDragEnd(result) {
+    //     if (!result.destination) return;
+    //     if (!cartManager.subsList) return;
+    //     const items = Array.from(subsOrder);
+    //     const [reorderedItem] = items.splice(result.source.index, 1);
+    //     items.splice(result.destination.index, 0, reorderedItem);
 
-        updateSubsOrder(items);
-    }
+    //     updateSubsOrder(items);
+    // }
 
-    function setMonth(index) {
-        let subscriptionMonth;
-        if(index >= 0) {
-            subscriptionMonth = DateTime.fromISO(DateTime.now()).plus({months: index + 1}).toFormat('LLLL');
-            return subscriptionMonth;
-        } 
-        return null;
-    }
+    // function setMonth(index) {
+    //     let subscriptionMonth;
+    //     if(index >= 0) {
+    //         subscriptionMonth = DateTime.fromISO(DateTime.now()).plus({months: index + 1}).toFormat('LLLL');
+    //         return subscriptionMonth;
+    //     } 
+    //     return null;
+    // }
 
     return (<>
         <div className="manage-subscription">

@@ -1,5 +1,5 @@
 import { Form, Button, Col, Row } from "react-bootstrap";
-import { useContext, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Formik } from "formik";
 import CustomFormField from "../global/form/CustomFormField";
 import { InputSwitch } from 'primereact/inputswitch';
@@ -7,44 +7,44 @@ import * as Yup from "yup";
 import CustomPhoneFormField from "../global/form/CustomPhoneFormField";
 import AccountContext from "../../store/account-context";
 import AutocompleteFormField from "../global/form/AutocompleteFormField";
+import IShippingInfo from "../../types/ShippingInfo.interface";
 
-export default function ShipmentForm({ onSubmit }) {
-  const { accountManager } = useContext(AccountContext);
-  const [loading, setLoading] = useState(false);
-  const [primary, setPrimary] = useState(false);
+type Props = {
+    onSubmit: () => void
+}
+
+export default function ShipmentForm({ onSubmit }: Props) {
+  const accountManager = useContext(AccountContext);
+  const [primary, setPrimary] = useState<boolean>(false);
+  const [county, setCounty] = useState<string | null>(null);
   
-  const addressRef = useRef();
-  const firstNameRef = useRef();
-  const lastNameRef = useRef();
-  const cityRef = useRef();
-  const countyRef = useRef();
-  const apartmentRef = useRef();
-  const phoneRef = useRef();
+  const addressRef = useRef<HTMLInputElement>();
+  const full_name = useRef<HTMLInputElement>();
+  const cityRef = useRef<HTMLInputElement>();
+  const phoneRef = useRef<HTMLInputElement>();
   
   const validate = Yup.object({
     address: Yup.string().required("Campul este obligatoriu*"),
-    first_name: Yup.string().required("Campul este obligatoriu*"),
-    last_name: Yup.string().required("Campul este obligatoriu*"),
+    full_name: Yup.string().required("Campul este obligatoriu*"),
     city: Yup.string().required("Campul este obligatoriu*"),
     county: Yup.string().required("Campul este obligatoriu*"),
     phone: Yup.string().required("Nr. de telefon este obligatoriu*"),
   });
 
-  const submitHandler = async (e) => {
+  const submitHandler = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    const data = {
-      address: addressRef.current.value,
-      first_name: firstNameRef.current.value,
-      last_name: lastNameRef.current.value,
-      city: cityRef.current.value,
-      county: countyRef.current.value,
-      appartment: apartmentRef.current.value,
-      phone: phoneRef.current.value,
+    const data: IShippingInfo = {
+      address: addressRef?.current?.value,
+      full_name: full_name?.current?.value,
+      city: cityRef?.current?.value,
+      county: county!,
+      phone: phoneRef?.current?.value,
       primary: primary,
     }
-    accountManager.addShippingInfo(data);
-    setLoading(false);
+    console.log(data)
+
+    accountManager!.addShippingInfo(data);
   };
 
   return (
@@ -76,7 +76,7 @@ export default function ShipmentForm({ onSubmit }) {
                   name="full_name"
                   label="Nume si Prenume"
                   type="text"
-                  ref={firstNameRef}
+                  ref={full_name}
                 />
               </Col>
               <Col lg={6}>
@@ -100,19 +100,12 @@ export default function ShipmentForm({ onSubmit }) {
                 />
               </Col>
               <Col lg={6}>
-                {/* <CustomFormField
-                  controlid="floatingCounty"
-                  name="county"
-                  label="Judet"
-                  type="text"
-                  ref={countyRef}
-                /> */}
                 <AutocompleteFormField 
                   controlid="floatingCounty"
                   name="county"
                   placeholder="Judet"
                   type="text"
-                  ref={countyRef}
+                  handlecounty={(val: string) => setCounty(val)}
                 />
               </Col>
             </Row>

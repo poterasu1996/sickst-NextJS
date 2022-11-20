@@ -8,21 +8,27 @@ const USER_DETAILS = "/user-details"
 const ORDER_HISTORY = "/order-histories"
 
 import CartContext from "./cart-context";
+import AuthContext from "./auth-context";
+import IHeader from "../types/RequestHeaderInterface";
 
-export const PaymentProvider = ({ children }) => {
+type Props = {
+    children: JSX.Element
+}
+
+export const PaymentProvider = ({ children }: Props) => {
     const cartManager = useContext(CartContext);
-    const [header, setHeader] = useState();
+    const authManager = useContext(AuthContext);
+    const [header, setHeader] = useState<IHeader | null>(null);
     const [cart, setCart] = useState();
     const [refresh, setRefresh] = useState(false);
     
     useEffect(() => {
-        const jwt = Cookies.get('jwt');
         const cartStorage = localStorage.getItem('cart');
-        if(jwt) {
+        if(authManager!.auth) {
             const head = {
                 headers: {
                     'Content-Type': 'application/json',
-                    authorization: `Bearer ${jwt}`,
+                    authorization: `Bearer ${authManager!.auth}`,
                 }
             }
             setHeader(head);
@@ -34,23 +40,26 @@ export const PaymentProvider = ({ children }) => {
 
 
     async function getCurrentUser() {
-        return axios.get(USER_URL, header)
-            .then(resp => {
-                return resp.data;
-            })
-            .catch(error => {
-                console.log(error)
-            })
+        if(header) {
+            return axios.get(USER_URL, header)
+                .then(resp => {
+                    return resp.data;
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
+        return null;
     }
     
 
-    async function test() {
-        if(cart) {
+    // async function test() {
+    //     if(cart) {
 
-            console.log('cart: ', cart)
-        }
+    //         console.log('cart: ', cart)
+    //     }
         
-    }
+    // }
 
     async function populateOrderHistory(data) {
         if(data) {
@@ -62,7 +71,6 @@ export const PaymentProvider = ({ children }) => {
                         user_id: currentUser.id,
                     }
                 }
-                console.log('ORDER DATA', newData)
                 return axios.post(ORDER_HISTORY, newData, header).then(resp => {
                     console.log(resp)
                 });

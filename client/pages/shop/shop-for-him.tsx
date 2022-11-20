@@ -8,20 +8,25 @@ import TopRatedProducts from "../../components/ShopPage/TopRatedProducts";
 
 const PRODUCTS_URL = "/products?populate=*";
 
-const ShopWoman = () => {
-    const [womanProducts, setWomanProducts] = useState([]);
+type Product = {
+    id: number,
+    attributes: any
+}
+
+const ShopMen = () => {
+    const [manProducts, setManProducts] = useState<Product[] | null>(null);
 
     useEffect(() => {
         axios.get(PRODUCTS_URL).then(resp => {
             const prodList = [...resp.data.data];
-            const filteredProducts = womanFilter(prodList);
-            setWomanProducts([...filteredProducts]);
+            const filteredProducts = manFilter(prodList);
+            setManProducts([...filteredProducts]);
         })
     }, [])
 
-    function womanFilter(products) {
+    function manFilter(products: Product[]) {
         const filteredList = products.filter(product => {
-            return product.attributes.categories?.data[0]?.attributes?.name?.toLowerCase() === 'female';
+            return product.attributes.categories?.data[0]?.attributes?.name?.toLowerCase() === 'male';
         })
         return filteredList;
     }
@@ -31,8 +36,8 @@ const ShopWoman = () => {
         <CollectionSection />
         <NewProductSection />
         <TopRatedProducts />
-        <ProductFilterSection products={womanProducts}/>
+        <ProductFilterSection products={manProducts}/>
     </div>
 }
 
-export default ShopWoman;
+export default ShopMen;

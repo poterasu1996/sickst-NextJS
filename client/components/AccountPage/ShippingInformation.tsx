@@ -5,19 +5,19 @@ import ShipmentForm from "./ShipmentForm";
 
 
 const ShippingInformation = () => {
-    const [show, setShow] = useState(false);
-    const { accountManager } = useContext(AccountContext);
-    const [shippingList, setShippingList] = useState();
+    const [show, setShow] = useState<boolean>(false);
+    const accountManager = useContext(AccountContext);
+    const [shippingList, setShippingList] = useState<any>();
 
     useEffect(() => {
-        if(accountManager.currentUser) {
-            accountManager.fetchShippingList()
+        if(accountManager!.currentUser) {
+            accountManager!.fetchShippingList()
                 .then(resp => {
-                    setShippingList(resp[0].attributes.shipping_info_list);
+                    setShippingList(resp.attributes.shipping_info_list);
                 })
                 .catch(error => console.log('Shipping list error: ', error))
         }
-    }, [accountManager.currentUser])
+    }, [accountManager!.currentUser, accountManager!.refresh])
 
     return (
         <>
@@ -25,7 +25,7 @@ const ShippingInformation = () => {
                 <div className="title">Shipping information</div>
                 <div className="info">All shipping updates MUST be made 1 day prior to your next billing date in order to receive your next product at the new address.</div>
                 <div className="address-list">
-                    {shippingList && shippingList.map((item, index) => (
+                    {shippingList && shippingList.map((item: any, index: number) => (
                         <div className={`address-card ${item.primary ? "active" : ""}`} key={index}>
                             <div className="card-info">
                                 <div className="card-info--name">{item.first_name} {item.last_name}</div>

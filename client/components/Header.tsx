@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import SideModal from "./global/SideModal";
 import AuthContext from "../store/auth-context";
 import { Menu, ShoppingCart, User } from "react-feather";
+// import CartContext from "../store/cart-context";
 import CartContext from "../store/cart-context";
 import { useRouter } from "next/router";
 import AccountMobileSideModal from "./global/AccountMobileSideModal";
@@ -14,15 +15,15 @@ import logo from "../public/logo.svg";
 const Header = () => {
   const [accountMobileModal, setAccountMobileModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const { auth, setAuth } = useContext(AuthContext);
-  const { cartManager } = useContext(CartContext);
-  const { accountManager } = useContext(AccountContext);
+  const authManager = useContext(AuthContext);
+  const cartManager = useContext(CartContext);
+  const accountManager = useContext(AccountContext);
   const router = useRouter();
 
   function logOut() {
     setTimeout(() => {
       Cookies.remove("jwt");
-      setAuth(null);
+      authManager?.setAuth(null);
       router.push("/");
     }, 700);
   }
@@ -65,7 +66,7 @@ const Header = () => {
         </ul>
 
         <div className="right-side">
-          {auth ? (
+          {authManager?.auth ? (
             <>
               <Dropdown className="header-dropdown">
                 <Dropdown.Toggle id="user-account-dd">
@@ -77,7 +78,7 @@ const Header = () => {
                   <Dropdown.Item
                     as="button"
                     onClick={() => {
-                      accountManager.setAccountPageState("subscription");
+                      accountManager!.setAccountPageState("subscription");
                       router.push("/account");
                     }}
                   >
@@ -86,7 +87,7 @@ const Header = () => {
                   <Dropdown.Item
                     as="button"
                     onClick={() => {
-                      accountManager.setAccountPageState("orderHistory");
+                      accountManager?.setAccountPageState("orderHistory");
                       router.push("/account");
                     }}
                   >
@@ -95,7 +96,7 @@ const Header = () => {
                   <Dropdown.Item 
                     as="button"
                     onClick={() => {
-                      accountManager.setAccountPageState("shippingInfo");
+                      accountManager!.setAccountPageState("shippingInfo");
                       router.push("/account");
                     }}
                   >
@@ -105,7 +106,7 @@ const Header = () => {
                   <Dropdown.Item 
                     as="button"
                     onClick={() => {
-                      accountManager.setAccountPageState("personalInfo");
+                      accountManager!.setAccountPageState("personalInfo");
                       router.push("/account");
                     }}
                   >
@@ -127,11 +128,11 @@ const Header = () => {
           )}
 
           <Button variant="menu" onClick={() => setShowModal(true)}>
-            {auth ? (
+            {authManager?.auth ? (
               <div className="shopping-cart">
                 <ShoppingCart />{" "}
-                {cartManager.cart.length > 0 && (
-                  <span className="badge">{cartManager.cart.length}</span>
+                {cartManager?.cart && (
+                  <span className="badge">{cartManager?.cart.length}</span>
                 )}
               </div>
             ) : (
@@ -164,9 +165,9 @@ const Header = () => {
       >
         <div className="shopping-cart">
           <ShoppingCart />{" "}
-          {cartManager.cart.length > 0 && (
+          {/* {cartManager.cart.length > 0 && (
             <span className="badge">{cartManager.cart.length}</span>
-          )}
+          )} */}
         </div>
       </Button>
     </header>

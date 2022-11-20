@@ -5,7 +5,7 @@ import CartContext from "../../store/cart-context";
 
 const CartItem = ({ item, handleLoading }) => {
     const [loading, setLoading] = useState(false);      // for loading spinner effect
-    const { cartManager } = useContext(CartContext);
+    const cartManager = useContext(CartContext);
 
     const orderMinus = () => {
         if(item.quantity > 1) {

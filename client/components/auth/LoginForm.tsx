@@ -12,8 +12,8 @@ const LOGIN_URL = '/auth/local';
 
 export default function LogInForm() {
   const { setAuth } = useContext(AuthContext);
-  const emailRef = useRef();
-  const passwordRef = useRef();
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -27,18 +27,18 @@ export default function LogInForm() {
       .required('Password is required*'),
   });
 
-  function createCookieInHour(cookieName, cookieValue, hourToExpire) {
+  function createCookieInHour(cookieName: string, cookieValue: any, hourToExpire: number) {
     let date =  new Date();
     date.setTime(date.getTime()+(hourToExpire*60*60*1000)); // number of hours
     document.cookie = cookieName + "=" + cookieValue + ";path = " + "/" + "; expires = " + date.toString();
   }
 
-  const submitHandler = async (event) => {
+  const submitHandler = async (event: any) => {
     event.preventDefault();
 
     // extract data from refs
-    const enteredEmail = emailRef.current.value;
-    const enteredPasword = passwordRef.current.value;
+    const enteredEmail = emailRef?.current?.value;
+    const enteredPasword = passwordRef?.current?.value;
 
     // setLoading(preVal => !preVal);
     try {
@@ -48,7 +48,7 @@ export default function LogInForm() {
       });
       // console.log(JSON.stringify(response?.data.user));
       const jwt = response?.data?.jwt;
-      const role = response?.data?.user.client_role;
+    //   const role = response?.data?.user.client_role;
 
       if (jwt) {
         setAuth(jwt);
@@ -65,17 +65,12 @@ export default function LogInForm() {
           router.push("/account/login");
         }, oneHour);
       }
-    } catch (err) {
-      // console.log(Object.keys(err))
-      if (err?.response) {
+    } catch (err: any) {
+      if (err.response?.status === 401) {
         setError('No server response');
       } else if (err.response?.status === 400) {
         setError('Invalid email or password');
-        console.log('Missing Username or Password'); 
-      } else if (err.response?.status === 401) {
-        setError(err.response.data.error.message);
-      } 
-      else {
+      } else {
         setError('Login Failed');
       } 
     }
