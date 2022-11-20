@@ -7,14 +7,19 @@ import axios from '../../api/axios';
 
 const PRODUCTS_URL = "/products?populate=*";
 
+type Product = {
+    id: number,
+    attributes: any
+}
+
 const NewProductSection = () => {
-    const [newProducts, setNewProducts] = useState();
+    const [newProducts, setNewProducts] = useState<Product[] | null>(null);
     useEffect(() => {
         try {
             axios.get(PRODUCTS_URL).then(resp => {
                 // get only first 6 new products in future
-                const newProdList = resp.data.data.filter(data => {
-                    return data.attributes.tags.data.find(tag => {
+                const newProdList = resp.data.data.filter((data: any) => {
+                    return data.attributes.tags.data.find((tag: any) => {
                         if(tag.attributes.name === 'new') {
                             return data;
                         }
@@ -35,8 +40,8 @@ const NewProductSection = () => {
             </div>
             <div className="new-product-section--content">
                 {newProducts && newProducts.map(product => (
-                    <Link href={`../product/${product.id}`}>
-                        <div className="new-product" key={product.id}>{console.log(product)}
+                    <Link href={`../product/${product.id}`} key={product.id}>
+                        <div className="new-product">
                             <div className="new-product--img-wrapper">
                                 <img src={
                                     `${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` +

@@ -6,6 +6,7 @@ import Link from "next/link";
 
 const ProductDetailsSection = ({ product }) => {
     const containerPrice = 50;  // price of container
+    
     function simplePrice(price) {
         const mlPrice = price / 100;    // price per ml of product
     

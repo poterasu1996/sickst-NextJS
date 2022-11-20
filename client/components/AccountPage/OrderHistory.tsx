@@ -2,41 +2,44 @@ import { TabPanel, TabView } from "primereact/tabview";
 import { useContext, useEffect, useState } from "react";
 import AccountContext from "../../store/account-context";
 
+import IOrderHystoryList from "../../types/OrderHystory.interface";
+
 const OrderHistory = () => {
-    const { accountManager } = useContext(AccountContext);
-    const [orderHistory, setOrderHistory] = useState([]);
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [tableFields, setTableFields] = useState();
+    const accountManager = useContext(AccountContext);
+    const [orderHistory, setOrderHistory] = useState<IOrderHystoryList[] | null>(null);
+    const [activeIndex, setActiveIndex] = useState<number>(0);
+    const [tableContent, setTableContent] = useState<IOrderHystoryList[] | null>(null);
 
     useEffect(() => {
-        if(accountManager.currentUser) {
-            accountManager.fetchOrderHistory()
+        if(accountManager!.currentUser) {
+            accountManager!.fetchOrderHistory()
                 .then(resp => {
-                    setOrderHistory([...resp]);
+                    resp.length > 0 
+                        ? setOrderHistory([...resp])
+                        :  setOrderHistory(null)
                 })
                 .catch(error => console.log("order history error: ", error));
         }
-    }, [accountManager.currentUser])
-
+    }, [accountManager!.currentUser])
 
     const filterSubscriptions = () => {
-        if(orderHistory.length > 0) {
+        if(orderHistory) {
             const subList = orderHistory.filter(el => el.attributes.order_type === 'subscription');
             if(subList.length > 0) {
-                setTableFields([...subList]);
+                setTableContent([...subList]);
             } else {
-                setTableFields(null);
+                setTableContent(null);
             }
         }
     }
 
     const filterOrders = () => {
-        if(orderHistory.length > 0) {
+        if(orderHistory) {
             const subList = orderHistory.filter(el => el.attributes.order_type === 'payment');
             if(subList.length > 0) {
-                setTableFields([...subList]);
+                setTableContent([...subList]);
             } else {
-                setTableFields(null);
+                setTableContent(null);
             }
         }
     }
@@ -53,7 +56,7 @@ const OrderHistory = () => {
                         e.index === 1 ? filterSubscriptions() : filterOrders()
                     }}>
                         <TabPanel header="All Orders">
-                            {orderHistory.length > 0 ? (
+                            {orderHistory ? (
                                 <table className="table">
                                     <thead>
                                         <tr>
@@ -77,13 +80,13 @@ const OrderHistory = () => {
                                             <td>{el.attributes.total} RON</td>
                                         </tr>
                                     ))}
-                                        <tr>
+                                        {/* <tr>
                                             <td>#4</td>
                                             <td>20-Sep-2022</td>
                                             <td>Payment</td>
                                             <td><span className="cancelled">Cancelled</span></td>
                                             <td>250 RON</td>
-                                        </tr>
+                                        </tr> */}
                                     </tbody>
                                 </table>
                             ) : (
@@ -94,7 +97,7 @@ const OrderHistory = () => {
                             )}
                         </TabPanel>
                         <TabPanel header="Subscriptions" >
-                            {tableFields ? (
+                            {tableContent ? (
                                 <table className="table">
                                     <thead>
                                         <tr>
@@ -106,7 +109,7 @@ const OrderHistory = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {tableFields.map(el => (
+                                    {tableContent.map(el => (
                                         <tr key={el.id}>
                                             <td>#{el.id}</td>
                                             <td>{el.attributes.createdAt}</td>
@@ -118,13 +121,13 @@ const OrderHistory = () => {
                                             <td>{el.attributes.total} RON</td>
                                         </tr>
                                     ))}
-                                        <tr>
+                                        {/* <tr>
                                             <td>#4</td>
                                             <td>20-Sep-2022</td>
                                             <td>Payment</td>
                                             <td><span className="cancelled">Cancelled</span></td>
                                             <td>250 RON</td>
-                                        </tr>
+                                        </tr> */}
                                     </tbody>
                                 </table>
                             ) : (
@@ -135,7 +138,7 @@ const OrderHistory = () => {
                             )}
                         </TabPanel>
                         <TabPanel header="Orders">
-                            {tableFields ? (
+                            {tableContent ? (
                                 <table className="table">
                                     <thead>
                                         <tr>
@@ -147,7 +150,7 @@ const OrderHistory = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {tableFields.map(el => (
+                                    {tableContent.map(el => (
                                         <tr key={el.id}>
                                             <td>#{el.id}</td>
                                             <td>{el.attributes.createdAt}</td>
@@ -159,13 +162,13 @@ const OrderHistory = () => {
                                             <td>{el.attributes.total} RON</td>
                                         </tr>
                                     ))}
-                                        <tr>
+                                        {/* <tr>
                                             <td>#4</td>
                                             <td>20-Sep-2022</td>
                                             <td>Payment</td>
                                             <td><span className="cancelled">Cancelled</span></td>
                                             <td>250 RON</td>
-                                        </tr>
+                                        </tr> */}
                                     </tbody>
                                 </table>
                             ) : (

@@ -6,13 +6,19 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.css';
 
 import axios from "../../api/axios";
+import IProduct from "../../types/Product.interface";
 const PRODUCTS_URL = "/products?populate=*";
 
+interface IProductCard {
+  id: number | null,
+  attributes: IProduct | null
+}
+
 const ProductSection = () => {
-  const [maleTab, setMaleTab] = useState(true);
-  const [nrOfItems, setNrOfItems] = useState(3);
-  const [productList, setProductList] = useState([]);
-  // const [fetchProducts, setFetchProducts] = useState([]);
+  const [maleTab, setMaleTab] = useState<boolean>(true);
+  const [nrOfItems, setNrOfItems] = useState<number>(3);
+  const [productList, setProductList] = useState<IProductCard[]>([]);
+  
   const nullCategory = {
     data: [
       {
@@ -53,20 +59,18 @@ const ProductSection = () => {
   }
 
   const itemsToShow = useMemo(() => {
-    if(productList && maleTab) {
+    if(maleTab) {
       return productList
-        .filter(product => product.attributes.categories.data[0].attributes.name === "Male")
-        // .slice(0, nrOfItems)
+        .filter((product: any) => product.attributes.categories.data[0].attributes.name === "male")
         .map((product, i) => (
           <Product
           key={i}
           product={product}
           />
         ));
-      } else if (productList && !maleTab){
+      } else {
         return productList
-          .filter(product => product.attributes.categories.data[0].attributes.name === "Female")
-          .slice(0, nrOfItems)
+          .filter((product: any) => product.attributes.categories.data[0].attributes.name === "Female")
           .map((product, i) => (
             <Product
               key={i}
@@ -74,7 +78,7 @@ const ProductSection = () => {
             />
           ));
       }
-  })
+  }, [productList, maleTab])
 
   return (
     <div className="products-section">
@@ -92,14 +96,14 @@ const ProductSection = () => {
           <TabPanel header="Pentru ea">
             <div className="products">
               <div className="row">
-                {itemsToShow.length > 0 ? itemsToShow : <div className="d-flex justify-content-center main-spinner"><Spinner animation="grow" style={{color: "#cc3633"}}/></div>}
+                {itemsToShow.length > 0 ? itemsToShow.slice(0, nrOfItems) : <div className="d-flex justify-content-center main-spinner"><Spinner animation="grow" style={{color: "#cc3633"}}/></div>}
               </div>
             </div>
           </TabPanel>
         </TabView>
 
         <div className="more-prod">
-          {(itemsToShow && (nrOfItems < itemsToShow.length))
+          {(nrOfItems < itemsToShow.length)
             && <Button className="button-second-empty" onClick={showMore}>
               Vezi mai multe produse
             </Button>

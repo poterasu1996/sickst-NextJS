@@ -2,17 +2,47 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "../api/axios";
 import { toast } from "react-toastify";
 import AuthContext from "./auth-context";
-const AccountContext = React.createContext([]);
 
-export const AccountProvider = ({ children }) => {
+import IHeader from "../types/RequestHeaderInterface";
+import ICurrentUser from "../types/CurrentUser.interface";
+import IShippingInfo from "../types/ShippingInfo.interface";
+
+interface IAccountContext {
+    refresh: boolean,
+    setAccountPageState: (data: string) => void,
+    accountState: string,
+    currentUser: ICurrentUser | null,
+    fetchShippingList: () => Promise<any>,
+    addShippingInfo: (data: IShippingInfo) => void,
+    fetchOrderHistory: () => Promise<any>,
+}
+
+const AccountContext = React.createContext<IAccountContext | null>(null);
+
+// type ShippingList = {
+//     attributes: {
+//         createdAt: string,
+//         publishedAt: string,
+//         shipping_info_list: IShippingInfo[] | null,
+//         updatedAt: string,
+//         user_id: number
+//     },
+//     id: number
+// }
+
+type Props = {
+    children: JSX.Element
+}
+
+export const AccountProvider = ({ children }: Props): JSX.Element => {
     const USER_ME = '/users/me';
     const SHIPPING_INFO = '/shipping-informations';
     const ORDER_HISTORIES = '/order-histories';
-    const { auth } = useContext(AuthContext);
-    const [accountState, setAccountState] = useState('subscription');
-    const [currentUser, setCurrentUser] = useState(null);
-    const [header, setHeader] = useState(null);
-    const [refresh, setRefresh] = useState(false);  // inform other components that context has been changed
+    const authManager = useContext(AuthContext);
+    const [accountState, setAccountState] = useState<string>('subscription');
+    const [currentUser, setCurrentUser] = useState<ICurrentUser | null>(null);
+    const [header, setHeader] = useState<IHeader | null>(null);
+    const [refresh, setRefresh] = useState<boolean>(false);  // inform other components that context has been changed
     // const accState = [
     //     'subscription', 
     //     'orderHistory', 
@@ -25,16 +55,16 @@ export const AccountProvider = ({ children }) => {
     // ];
 
     useEffect(() => {
-        if(auth) {
+        if(authManager!.auth) {
             const head = {
                 headers: {
                     'Content-Type': 'application/json',
-                    authorization: `Bearer ${auth}`,
+                    authorization: `Bearer ${authManager?.auth}`,
                 }
             }
             setHeader(head);
         }
-    }, [auth])
+    }, [authManager!.auth])
 
     useEffect(() => {
         if (header) {
@@ -57,16 +87,6 @@ export const AccountProvider = ({ children }) => {
         </>
     );
 
-    // async function getOneShippingInfo() {
-    //     return axios.get(`${SHIPPING_INFO}/2`, header)
-    //         .then(resp => {
-    //             return resp.data
-    //         })
-    //         .catch(error => {
-    //             console.log(error)
-    //         })
-    // }
-
     function notify() {
         toast(toastMsg, {
             autoClose: 2000,
@@ -79,7 +99,7 @@ export const AccountProvider = ({ children }) => {
                 ORDER_HISTORIES,
                 header
             )
-            const filteredList = response.data.data.filter(el => el.attributes.user_id === currentUser.id);
+            const filteredList = response.data.data.filter((el: any) => el.attributes.user_id === currentUser!.id);
             return filteredList;
         }
     }
@@ -88,14 +108,14 @@ export const AccountProvider = ({ children }) => {
         // get current user shipping list
         if(header) {
             const response = await axios.get(
-                `${SHIPPING_INFO}?filters[user_id][$eq]=${currentUser.id}`, 
+                `${SHIPPING_INFO}?filters[user_id][$eq]=${currentUser!.id}`, 
                 header
             )
-            return response.data.data;
+            return response.data.data[0];
         }
     }
 
-    function addShippingInfo(newData) {
+    function addShippingInfo(newData: IShippingInfo) {
         if(header) {
             // check if there already exist a list for current user
 
@@ -114,37 +134,33 @@ export const AccountProvider = ({ children }) => {
             // console.log('LIST AFARA then=', list)
             // console.log('LIST LENGTH AFARA then=', list.length)
             
-            let data = [];  // used for existing list
+            let existingList: any = [];  // used for existing list
             let listId; // get the list id
-            const newList = {};
+            let newList = {};
             fetchShippingList().then(resp => {
+                console.log('resp: ',resp)
                 // if user has data, PUT
-                if(resp.length > 0) {
-                    listId = resp[0].id;    // get listId for PUT req
-                    const responseArr = [...resp[0].attributes.shipping_info_list];
-                    responseArr.map(el => {
-                        data.push({
-                            ...el
-                        });
-                    })
+                if(resp) {
+                    listId = resp.id;    // get listId for PUT req
+                    existingList = [...resp.attributes.shipping_info_list];
 
                     // if the user adds a primary address
                     if(newData.primary) {
-                        const hasPrimary = (el) => el.primary;  
-                        const isPrimary = data.findIndex(hasPrimary); 
-                        if(isPrimary > -1) {
+                        const hasPrimary = (el: any) => el.primary; 
+                        const primaryAddressIndex = existingList.findIndex(hasPrimary); 
+                        if(primaryAddressIndex > -1) {
                             // if a primary address exists, change it to false
-                            data[isPrimary].primary = false;
+                            existingList[primaryAddressIndex].primary = false;
                             const newAddress = {
                                 ...newData
                             }
-                            data.unshift(newAddress);
+                            existingList.unshift(newAddress);
                             newList = {
                                 data: {
                                     shipping_info_list: [
-                                        ...data
+                                        ...existingList
                                     ],
-                                    user_id: currentUser.id
+                                    user_id: currentUser!.id
                                 }
                             }
                         } 
@@ -153,13 +169,13 @@ export const AccountProvider = ({ children }) => {
                         const newAddress = {
                             ...newData
                         }
-                        data.push(newAddress);
+                        existingList.push(newAddress);
                         newList = {
                             data: {
                                 shipping_info_list: [
-                                    ...data
+                                    ...existingList
                                 ],
-                                user_id: currentUser.id
+                                user_id: currentUser!.id
                             }
                         }
                     }
@@ -167,7 +183,7 @@ export const AccountProvider = ({ children }) => {
                         `${SHIPPING_INFO}/${listId}`, 
                         newList, 
                         header)
-                        .then(resp => {
+                        .then(() => {
                             notify();
                             setRefresh(preVal => !preVal);
                         })
@@ -179,7 +195,7 @@ export const AccountProvider = ({ children }) => {
                             shipping_info_list: [{
                                 ...newData
                             }],
-                            user_id: currentUser.id,
+                            user_id: currentUser!.id,
                         }
                     };
                     return axios.post(SHIPPING_INFO, newList, header)
@@ -194,7 +210,7 @@ export const AccountProvider = ({ children }) => {
         }
     }
 
-    function setAccountPageState(state) {
+    function setAccountPageState(state: string) {
         // set the general account state
         // based on this state, info will be showed in the account page
         switch (state) {
@@ -223,22 +239,22 @@ export const AccountProvider = ({ children }) => {
                 setAccountState('resetPassword');
                 break;
             default:
-                setAccountState('default');
+                setAccountState('subscription');
         }
     }
 
-    const accountManager = {
-        refresh,
-        setAccountPageState,
-        accountState,
-        currentUser,
-        fetchShippingList,
-        addShippingInfo,
-        fetchOrderHistory,
+    const accountManager: IAccountContext = {
+        refresh: refresh,
+        setAccountPageState: setAccountPageState,
+        accountState: accountState,
+        currentUser: currentUser,
+        fetchShippingList: fetchShippingList,
+        addShippingInfo: addShippingInfo,
+        fetchOrderHistory: fetchOrderHistory,
     };
     
     return (
-        <AccountContext.Provider value={{ accountManager }}>
+        <AccountContext.Provider value={accountManager}>
             {children}
         </AccountContext.Provider>
     );

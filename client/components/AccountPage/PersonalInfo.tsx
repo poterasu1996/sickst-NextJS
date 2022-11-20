@@ -1,5 +1,5 @@
 import { Form, Formik } from "formik";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import AutocompleteFormField from "../global/form/AutocompleteFormField";
 import CustomFormField from "../global/form/CustomFormField";
@@ -9,6 +9,7 @@ import CustomGenderFormField from "../global/form/CustomGenderFormField";
 
 const PersonalInfo = () => {
     const phoneRef = useRef();
+    const [county, setCounty] = useState<string | null>(null);
 
     return (
         <>
@@ -18,7 +19,7 @@ const PersonalInfo = () => {
                     phoneNumber: '',
                     address: '',
                     city: '',
-                    county: '',
+                    county: county!,
                     birthday: '',
                     gender: '',
                 }}
@@ -64,6 +65,8 @@ const PersonalInfo = () => {
                                     <AutocompleteFormField 
                                         placeholder="Judet"
                                         name="county"
+                                        type="text"
+                                        handlecounty={(val: string) => setCounty(val)}
                                     />
                                 </Col>
                             </Row>

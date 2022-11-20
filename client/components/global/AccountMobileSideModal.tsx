@@ -7,15 +7,20 @@ import Transition from "react-transition-group/Transition";
 import AccountContext from "../../store/account-context";
 import AuthContext from "../../store/auth-context";
 
-const AccountMobileSideModal = (props) => {
-    const { auth, setAuth } = useContext(AuthContext);
-    const { accountManager } = useContext(AccountContext);
+type Props = {
+    show: boolean,
+    onClick: () => void
+}
+
+const AccountMobileSideModal = ({show, onClick}: Props) => {
+    const authManager = useContext(AuthContext);
+    const accountManager = useContext(AccountContext);
     const router = useRouter();
 
     function logOut() {
         setTimeout(() => {
             Cookies.remove("jwt");
-            setAuth(null);
+            authManager!.setAuth(null);
             router.push('/');
         }, 700);
     }
@@ -25,20 +30,20 @@ const AccountMobileSideModal = (props) => {
             <div 
                 className="side-modal-bg"
                 style={{
-                    display: props.show === true
+                    display: show === true
                     ? "block"
                     : "none",
                 }}
-                onClick={props.onClick}
+                onClick={onClick}
             >
             </div>
             <Transition
-                in={props.show}
+                in={show}
                 timeout={10}
             >
                 {state => (
                     <div 
-                        className={`side-modal ${auth && 'cart'}`}
+                        className={`side-modal ${authManager!.auth && 'cart'}`}
                         id="mobile-nav"
                         style={{
                             transform: state === 'entered'
@@ -49,49 +54,49 @@ const AccountMobileSideModal = (props) => {
                     >   
                         <div className="side-modal-header-mobile">
                             {/* <span>Account</span> */}
-                            <Button variant="close" onClick={props.onClick}/>
+                            <Button variant="close" onClick={onClick}/>
                         </div>
                         <div className="side-modal-body">
                             <div className="mobile-mid-menu">
                                 <div className="mid-title">Shop</div>
                                 <Link href='/shop/shop-for-him'>
-                                    <a onClick={props.onClick}>Pentru el</a>
+                                    <a onClick={onClick}>Pentru el</a>
                                 </Link>
                                 <Link href='/shop/shop-for-her'>
-                                    <a onClick={props.onClick}>Pentru ea</a>
+                                    <a onClick={onClick}>Pentru ea</a>
                                 </Link>
 
-                                {auth && <>
+                                {authManager!.auth && <>
                                     <div className="mid-title mt-5">Your membership</div>
                                     <Link href='/account'>
                                         <a onClick={() => {
-                                            props.onClick();
-                                            accountManager.setAccountPageState('subscription');
+                                            onClick();
+                                            accountManager!.setAccountPageState('subscription');
                                         }}>Manage your membership</a>
                                     </Link>
                                     <Link href='/account'>
                                         <a onClick={() => {
-                                            props.onClick();
-                                            accountManager.setAccountPageState("orderHistory");
+                                            onClick();
+                                            accountManager!.setAccountPageState("orderHistory");
                                         }}>Order tracking & history</a>
                                     </Link>
                                     <Link href='/account'>
                                         <a onClick={() => {
-                                            props.onClick();
-                                            accountManager.setAccountPageState("shippingInfo");
+                                            onClick();
+                                            accountManager!.setAccountPageState("shippingInfo");
                                         }}>Shipping information</a>
                                     </Link>
                                     <div className="mid-title mt-5">Your account</div>
                                     <Link href='/account'>
                                         <a onClick={() => {
-                                            props.onClick();
-                                            accountManager.setAccountPageState("personalInfo");
+                                            onClick();
+                                            accountManager!.setAccountPageState("personalInfo");
                                         }}>Personal info</a>
                                     </Link>
                                 </>}
 
                             </div>
-                            {auth && <Button className="button-second log-out" onClick={() => logOut()}>Log out</Button>}
+                            {authManager!.auth && <Button className="button-second log-out" onClick={() => logOut()}>Log out</Button>}
                         </div>
                     </div>
                 )}

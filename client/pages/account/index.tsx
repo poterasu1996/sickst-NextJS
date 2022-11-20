@@ -10,8 +10,8 @@ import RatedProducts from "../../components/AccountPage/RatedProducts";
 import PersonalInfo from "../../components/AccountPage/PersonalInfo";
 import ResetPassword from "../../components/AccountPage/ResetPassword";
 import AuthContext from "../../store/auth-context";
-import AccountContext from "../../store/account-context";
 import userAvatar from '../../public/img/svg/male_avatar.svg';
+import AccountContext from "../../store/account-context";
 
 // const accState = [
 //     'subscription', 
@@ -23,49 +23,65 @@ import userAvatar from '../../public/img/svg/male_avatar.svg';
 //     'personalInfo', 
 //     'resetPassword'
 // ];
+
+// to be changed in future, because it shows sensitive data
+type UserInfo = {
+    blocked: boolean,
+    client_role: string,
+    confirmed: boolean,
+    createdAt: string,
+    email: string,
+    id: number,
+    new_user: boolean,
+    newsletter: boolean,
+    provider: string,
+    subscribed: boolean,
+    updatedAt: string
+    username: string
+}
+
 const Account = () => {
     const USER_ME = '/users/me';
-    const [userInfo, setUserInfo] = useState();     // fetch user info
-    const [accState, setAccState] = useState();
-    const { auth } = useContext(AuthContext);
-    const { accountManager } = useContext(AccountContext);
+    const [userInfo, setUserInfo] = useState<UserInfo | null>(null);     // fetch user info
+    const [accState, setAccState] = useState<string>('subscription');
+    const authManager  = useContext(AuthContext);
+    const accountManager = useContext(AccountContext);
 
     useEffect(() => {
-        if(auth) {
+        if(authManager.auth) {
             axios.get(USER_ME, {
                 headers: {
-                    'Authorization': 'Bearer ' + auth
+                    'Authorization': 'Bearer ' + authManager.auth
                 }
             }).then((resp) => {
-                // console.log('response',resp)
                 setUserInfo(resp.data)
             })
             .catch(error => console.log('axios error', error))
         }
-    }, [auth])
+    }, [authManager.auth])
+
+    console.log(userInfo)
 
     useEffect(() => {
-        accountManager && setAccState(accountManager.accountState);
-    }, [accountManager.accountState]);
+        setAccState(accountManager!.accountState);
+    }, [accountManager!.accountState]);
 
     useEffect(() => {
         if(accState === 'orderHistory') {
-            document.getElementById('content').classList.add('overflowscroll');
+            document?.getElementById('content')?.classList.add('overflowscroll');
         } else {
-            document.getElementById('content').classList.remove('overflowscroll');
+            document?.getElementById('content')?.classList.remove('overflowscroll');
         }
     },[accState])
 
-    function activeMenuLink(navLink) {
-        accountManager.setAccountPageState(navLink);
+    function activeMenuLink(navLink: string) {
+        accountManager!.setAccountPageState(navLink);
     }
 
     function getDate() {
-        const date = DateTime.fromISO(userInfo.createdAt);
+        const date = DateTime.fromISO(userInfo?.createdAt);
         return date.toFormat('dd LLL yyyy');
     }
-
-    userInfo && console.log(userInfo)
 
     return(<>
         <div className="main-content account-page">
@@ -99,7 +115,7 @@ const Account = () => {
                             <div className="subscription-status">Subscription: <b className="brand-color">Active</b></div>
                         </div>
                     </div>
-                    {accState === 'subscription' && <ManageSubscription subscribed={userInfo && userInfo.subscribed} subscription={!!accState} />}
+                    {accState === 'subscription' && <ManageSubscription subscribed={userInfo && userInfo.subscribed} />}
                     {accState === 'orderHistory' && <OrderHistory />}
                     {/* {accState === 'billingInfo' && <BillingInformation />} */}
                     {accState === 'shippingInfo' && <ShippingInformation />}
