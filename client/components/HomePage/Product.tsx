@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import Rating from "react-rating";
-import { Star, Check } from "react-feather";
+import { Star, Check, ChevronRight } from "react-feather";
 import Image from "next/image";
 import { Button, Spinner } from "react-bootstrap";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
@@ -9,6 +9,7 @@ import CartContext from "../../store/cart-context";
 import AuthContext from "../../store/auth-context";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 type Props = {
     product: any
@@ -175,7 +176,12 @@ const Product = ({ product }: Props) => {
             </div>
             <div className="col col-md-8 col-lg-6">
               <div className="product-details">
-                <div className="title">{product.attributes.brand}</div>
+                <div className="title">
+                  {product.attributes.brand}
+                  <Link href={`/product/${product.id}`}>
+                    <a>Detalii produs <ChevronRight height={'2rem'} width={'2rem'} /></a>
+                  </Link>  
+                </div>
                 <div className="model">{product.attributes.model}</div>
                 <div className="price-wrapper d-flex justify-content-between">
                   <div className="type">{product.attributes.type}</div>

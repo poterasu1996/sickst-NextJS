@@ -60,8 +60,6 @@ const Account = () => {
         }
     }, [authManager.auth])
 
-    console.log(userInfo)
-
     useEffect(() => {
         setAccState(accountManager!.accountState);
     }, [accountManager!.accountState]);

@@ -18,3 +18,27 @@
     }
 
 }
+
+.p-divider.p-divider-vertical:before {
+    border-left: solid 2px #dee2e6 !important;
+}
+
+.p-dropdown:not(.p-disabled):hover {
+    border-color: #cc3633 !important;
+}
+.p-dropdown:not(.p-disabled).p-focus {
+    box-shadow: unset !important;
+    border-color: #cc3633 !important;
+}
+.p-dropdown-panel {
+    border-radius: unset !important;
+    .p-dropdown-items {
+        .p-dropdown-item {
+            font-size: 1.2rem;
+        }
+        .p-dropdown-item.p-highlight {
+            color: #cc3633 !important;
+            background: rgba($color: #cc3633, $alpha: 0.15) !important;
+        }
+    }
+}
