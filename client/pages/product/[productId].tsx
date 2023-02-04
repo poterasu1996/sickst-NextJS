@@ -1,11 +1,11 @@
 import ProductDetailsSection from "../../components/ProductPage/ProductDetailsSection";
 import img from "../../public/img/versace-eros.jpg";
-import Slider from "react-slick";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import axios from "../../api/axios";
 import { Spinner } from "react-bootstrap";
+import ProductReviewsSection from "../../components/ProductPage/ProductReviewsSection";
 const PRODUCTS_URL = "/products";
 
 type Product = {
@@ -20,19 +20,10 @@ const ProductDetails = () => {
     const [error, setError] = useState<boolean>(false);
     const [loading, setloading] = useState<boolean>(true);
 
-    const slickSettings = {
-        dots: false,
-        infinite: false,
-        speed: 500,
-        slidesToShow: 5,
-        slidesToScroll: 1
-    } 
-
     function extractProductId(path: string) {
         const [productId] = path.split("/").slice(-1);
         return productId
     }
-
     
     useEffect(() => {
         if(isReady) {
@@ -72,33 +63,7 @@ const ProductDetails = () => {
 
             {product && <>
                 <ProductDetailsSection product = {product.attributes} />
-                <div className="slider">
-                    <div className="container">
-                        <Slider {...slickSettings}>
-                            <div className="item">
-                                <img src={img.src}></img>
-                            </div>
-                            <div className="item">
-                                <img src={img.src}></img>
-                            </div>
-                            <div className="item">
-                                <img src={img.src}></img>
-                            </div>
-                            <div className="item">
-                                <img src={img.src}></img>
-                            </div>
-                            <div className="item">
-                                <img src={img.src}></img>
-                            </div>
-                            <div className="item">
-                                <img src={img.src}></img>
-                            </div>
-                            <div className="item">
-                                <img src={img.src}></img>
-                            </div>
-                        </Slider>
-                    </div>
-                </div>
+                <ProductReviewsSection />
             </>}
 
         </div>

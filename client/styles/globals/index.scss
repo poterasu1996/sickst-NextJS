@@ -202,6 +202,28 @@ body.modal-open {
   color: #cc3633;
 }
 
+.avatar-gradient-1 {
+  background: linear-gradient(136deg, rgba($color: #b72645, $alpha: .6), rgba($color: #536185, $alpha: .6));
+}
+.avatar-gradient-2 {
+  background: linear-gradient(221deg, rgba($color: #ed8468, $alpha: .6), rgba($color: #96d58d, $alpha: .6));
+}
+.avatar-gradient-3 {
+  background: linear-gradient(221deg, rgba($color: #562797, $alpha: .6), rgba($color: #a9dc94, $alpha: .6));
+}
+.avatar-gradient-4 {
+  background: linear-gradient(221deg, rgba($color: #7b4c57, $alpha: .6), rgba($color: #d2ad87, $alpha: .6));
+}
+.avatar-gradient-5 {
+  background: linear-gradient(221deg, rgba($color: #987c3b, $alpha: .6), rgba($color: #42c3c4, $alpha: .6));
+}
+.avatar-gradient-6 {
+  background: linear-gradient(221deg, rgba($color: #cca737, $alpha: .6), rgba($color: #3ecc8d, $alpha: .6));
+}
+.avatar-gradient-7 {
+  background: linear-gradient(136deg, rgba($color: #b792d1, $alpha: .6), rgba($color: #77dac5, $alpha: .6));
+}
+
 .Toastify__progress-bar {
   background: #cc3633 !important;
 }

@@ -43,7 +43,7 @@ const ShippingInformation = () => {
 
             <Modal 
                 className="shipping-info-modal" 
-                show={show} 
+                show={show.toString()} 
                 centered
                 size="lg"
                 isOpen={show}

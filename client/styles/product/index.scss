@@ -1,8 +1,10 @@
 @import './product_details';
+@import './product_reviews';
 
 .product-details-content {
     padding: 5rem 0;
     flex: 1;
+    background-color: #f9f9f9;
 }
 
 .loader,

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { TabView, TabPanel } from 'primereact/tabview';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.css';
+import { getProducts } from "../../services/productsService";
 
 import axios from "../../api/axios";
 import IProduct from "../../types/Product.interface";
@@ -30,6 +31,8 @@ const ProductSection = () => {
   }
 
   useEffect(() => {
+    // getProducts().then(resp => console.log('resp', resp))
+    
     const fetchData = async() => {
       const result = await axios.get(PRODUCTS_URL);
       const fetchProducts = [...result.data.data];

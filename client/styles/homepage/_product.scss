@@ -225,9 +225,25 @@
                 font-size: 2.8rem;
                 line-height: 3.8rem;
                 font-weight: 600;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
                 @media (max-width:500px) {
                     font-size: 2.2rem;
                     line-height: 3.2rem;
+                }
+
+                a {
+                    display: flex;
+                    align-items: center;
+                    color: #cc3636;
+                    font-size: 1.8rem;
+                    line-height: 1.8rem;
+                    border-bottom: solid 2px #fff;
+                    &:hover {
+                        border-color: #cc3636;
+                        transition: all .3s ease;
+                    }
                 }
             }
             .model {
