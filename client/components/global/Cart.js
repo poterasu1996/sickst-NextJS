@@ -23,7 +23,7 @@ const Cart = (props) => {
       </div>
       <div className="side-modal-body">
         {/* ITEM */}
-        {cartManager.cart.length > 0 ? (
+        {cartManager.cart ? (
           <>
             <div className="mid-menu custom-sb custom-sb-y">
               <div className="cart-list">
