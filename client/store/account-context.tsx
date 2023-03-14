@@ -6,6 +6,7 @@ import AuthContext from "./auth-context";
 import IHeader from "../types/RequestHeaderInterface";
 import ICurrentUser from "../types/CurrentUser.interface";
 import IShippingInfo from "../types/ShippingInfo.interface";
+import { AccountStateEnums } from "../shared/enums/accountPageState.enum";
 
 interface IAccountContext {
     refresh: boolean,
@@ -214,32 +215,32 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
         // set the general account state
         // based on this state, info will be showed in the account page
         switch (state) {
-            case 'subscription':
-                setAccountState('subscription');
+            case AccountStateEnums.SUBSCRIPTION:
+                setAccountState(AccountStateEnums.SUBSCRIPTION);
                 break;
-            case 'orderHistory':
-                setAccountState('orderHistory');
+            case AccountStateEnums.ORDER_HISTORY:
+                setAccountState(AccountStateEnums.ORDER_HISTORY);
                 break;
-            case 'billingInfo':
-                setAccountState('billingInfo');
+            case AccountStateEnums.BILLING_INFO:
+                setAccountState(AccountStateEnums.BILLING_INFO);
                 break;
-            case 'shippingInfo':
-                setAccountState('shippingInfo');
+            case AccountStateEnums.SHIPPING_INFO:
+                setAccountState(AccountStateEnums.SHIPPING_INFO);
                 break;
-            case 'reviews':
-                setAccountState('reviews');
+            case AccountStateEnums.REVIEWS:
+                setAccountState(AccountStateEnums.REVIEWS);
                 break;
-            case 'ratedProducts':
-                setAccountState('ratedProducts');
+            case AccountStateEnums.RATED_PRODUCTS:
+                setAccountState(AccountStateEnums.RATED_PRODUCTS);
                 break;
-            case 'personalInfo':
-                setAccountState('personalInfo');
+            case AccountStateEnums.PERSONAL_INFO:
+                setAccountState(AccountStateEnums.PERSONAL_INFO);
                 break;
-            case 'resetPassword':
-                setAccountState('resetPassword');
+            case AccountStateEnums.RESET_PASSWORD:
+                setAccountState(AccountStateEnums.RESET_PASSWORD);
                 break;
             default:
-                setAccountState('subscription');
+                setAccountState(AccountStateEnums.SUBSCRIPTION);
         }
     }
 

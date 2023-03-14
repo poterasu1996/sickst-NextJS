@@ -4,11 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { TabView, TabPanel } from 'primereact/tabview';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.css';
-import { getProducts } from "../../services/productsService";
 
-import axios from "../../api/axios";
 import IProduct from "../../types/Product.interface";
-const PRODUCTS_URL = "/products?populate=*";
+import productService from "../../shared/services/productService";
 
 interface IProductCard {
   id: number | null,
@@ -20,34 +18,11 @@ const ProductSection = () => {
   const [nrOfItems, setNrOfItems] = useState<number>(3);
   const [productList, setProductList] = useState<IProductCard[]>([]);
   
-  const nullCategory = {
-    data: [
-      {
-        attributes: {
-          name: null
-        }
-      }
-    ]
-  }
-
   useEffect(() => {
-    // getProducts().then(resp => console.log('resp', resp))
-    
     const fetchData = async() => {
-      const result = await axios.get(PRODUCTS_URL);
-      const fetchProducts = [...result.data.data];
-      // if product doesn't have a category, we set it to null
-      const productsList = fetchProducts.map(prod => {
-        if(prod.attributes.categories.data.length <= 0) {
-          const addedCategory = {
-            id: prod.id,
-            attributes: { ...prod.attributes, categories: nullCategory }
-          }
-          return addedCategory;
-        }
-        return prod;
-      })
-      setProductList([...productsList]);
+      const products = await productService.getAllProducts();
+      
+      setProductList([...products]);
     } 
 
     fetchData();
