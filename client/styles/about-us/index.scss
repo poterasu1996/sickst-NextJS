@@ -1,19 +1,14 @@
 .aboutus-page {
   height: 100%;
-  max-width: 120rem;
+  width: 120rem;
   margin: 0 auto;
   padding-top: 5rem;
-  padding-bottom: 5rem;
   &--banner {
     width: 100%;
-    display: grid;
     max-height: 40rem;
     overflow: hidden;
     img {
       width: 100%;
-      height: 100;
-      object-fit: cover;
-      transition: 0.3s;
     }
   }
   &--summary {
@@ -25,118 +20,72 @@
     .heading {
       font-size: 3.2rem;
       font-weight: bold;
-      text-transform: capitalize;
+      text-transform: uppercase;
       padding-bottom: 1rem;
     }
     .description {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       text-align: center;
       font-weight: 500;
-      line-height: 1.5;
-      margin: auto;
-      text-transform: none;
+      line-height: 1.6;
     }
   }
   &--team {
     margin: 5rem 0;
     .heading {
       text-align: center;
-      color: #cc3633;
-      font-weight: bold;
-      text-transform: capitalize;
-      padding-bottom: 1rem;
-    }
-    .subheading {
-      text-align: center;
       font-size: 3.2rem;
       font-weight: bold;
-      text-transform: capitalize;
+      text-transform: uppercase;
       padding-bottom: 2rem;
+      
     }
     .cards {
       .card-team {
         display: flex;
         flex-direction: column;
-        align-items: left;
+        align-items: center;
         padding: 0 5rem;
-        @media (max-width: 767px) {
-          margin-bottom: 2.5rem;
-          padding: 0;
-        }
         &--image {
           width: 100%;
           max-height: 50rem;
-          object-fit: fill;
-          height: 400px;
+          object-fit: contain;
         }
         &--name {
           font-size: 2.8rem;
           font-weight: bold;
-          margin-top: 2rem;
+          padding-top: 1rem;
         }
         &--position {
           font-size: 1.6rem;
           font-weight: 500;
         }
         &--description {
-          margin-top: 0.5rem;
           font-size: 1.6rem;
-          text-align: justify;
+          text-align: center;
         }
       }
     }
   }
-  &--contact {
-    .title {
-      margin-bottom: 3rem;
-      text-align: center;
-      font-size: 2.6rem;
+  &--contact{
+    .heading{
+        text-align: center;
+      font-size: 3.2rem;
       font-weight: bold;
-      font-weight: 1500;
       text-transform: uppercase;
+      
+        
     }
-    .contact-us {
-      text-align: center;
-      .col-sm-4 {
-        position: relative;
-        min-height: 5rem;
-        &:not(:last-child):before {
-          content: "";
-          position: absolute;
-          top: 0;
-          right: 0;
-          display: block;
-          height: 100%;
-          width: 2px;
-          background-color: #cc3633;
-          @media (max-width: 576px) {
-            display: none;
-          }
+    .contact-us{
+        text-align: center;
+        .subheading{
+            font-size: 2.4rem;
         }
-      }
-      .subheading {
-        font-size: 2rem;
-        @media (max-width: 767px) {
-          font-size: 1.5rem;
-          font-weight: bold;
+        .description{
+            font-size: 1.6rem;
+            
         }
-      }
-      .description {
-        font-size: 2rem;
-        @media (max-width: 767px) {
-          font-size: 1.4rem;
-        }
-      }
-      .description a {
-        font-weight: bold;
-        font-family: "Josefin Sans", sans-serif;
-        color: #cc3633;
-        text-decoration: none;
-      }
-      .description a:hover {
-        background-color: whitesmoke;
-        text-decoration: underline;
-      }
     }
+
   }
 }
