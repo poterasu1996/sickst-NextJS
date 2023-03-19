@@ -11,6 +11,7 @@ import { dividerClasses } from "@mui/material";
 export default function index() {
   const staff = [
     {
+      id: 1,
       name: "Gicu Pericol",
       position: "Founder",
       image: people.src,
@@ -22,6 +23,7 @@ export default function index() {
         non pharetra faucibus. Duis vitae augue et lacus fringilla`,
     },
     {
+      id: 2,
       name: "Gicu Pericol",
       position: "Founder",
       image: people.src,
@@ -61,6 +63,7 @@ export default function index() {
           <div className="cards row">
             {staff.map((el) => (
               <Cards
+                key={el.id}
                 src={el.image}
                 name={el.name}
                 position={el.position}
