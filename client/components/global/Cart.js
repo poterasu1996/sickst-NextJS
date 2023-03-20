@@ -1,19 +1,28 @@
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Button, Spinner } from "react-bootstrap";
 
 import CartItem from "./CartItem";
 import CartContext from "../../store/cart-context";
 import AccountContext from "../../store/account-context";
+import CartService from "../../shared/services/cartService/index";
+import { PaymentEnums } from "../../shared/enums/payment.enums";
+import("../../types/CartProduct.interface");
 
 const Cart = (props) => {
   const [loading, setLoading] = useState(true);
   const cartManager = useContext(CartContext);
   const { accountManager } = useContext(AccountContext);
+  const [cart, setCart] = useState(null)
+  const [cartTotal, setCartTotal] = useState(0);
 
   setTimeout(() => {
     setLoading(false);
   }, 500);
+
+  useEffect(() => {
+    setCartTotal(CartService.cartTotal());
+  }, [CartService.cart])
 
   return (
     <>
@@ -23,20 +32,20 @@ const Cart = (props) => {
       </div>
       <div className="side-modal-body">
         {/* ITEM */}
-        {cartManager.cart ? (
+        {CartService.cart ? (
           <>
             <div className="mid-menu custom-sb custom-sb-y">
               <div className="cart-list">
-                {cartManager.cart.find(
-                  (el) => el.payment === "subscription"
+                {CartService.cart.find(
+                  (el) => el.payment === PaymentEnums.SUBSCRIPTION
                 ) && (
                   <>
                     <div className="cart-list-title">Monthly subscription</div>
                     <div className="cart-list-subs">
-                      {cartManager.cart
+                      {CartService.cart
                         .filter((item, i) => { 
                           if(i === 0) {
-                            return item.payment === "subscription"
+                            return item.payment === PaymentEnums.SUBSCRIPTION
                           } 
                           return
                         })
@@ -59,12 +68,12 @@ const Cart = (props) => {
                     </div>
                   </>
                 )}
-                {cartManager.cart.find((el) => el.payment === "otb") && (
+                {CartService.cart.find((el) => el.payment === PaymentEnums.FULL_PAYMENT) && (
                   <>
                     <div className="cart-list-title">Your order</div>
                     <div className="cart-list-otb">
-                      {cartManager.cart
-                        .filter((item) => item.payment === "otb")
+                      {CartService.cart
+                        .filter((item) => item.payment === PaymentEnums.FULL_PAYMENT)
                         .map((item, i) => (
                           <CartItem
                             key={i}
@@ -77,14 +86,15 @@ const Cart = (props) => {
                 )}
               </div>
             </div>
-            {cartManager.cart.find((el) => el.payment === 'otb') && <div className="cart-total-wrapper">
+            {CartService.cart.find((el) => el.payment === PaymentEnums.FULL_PAYMENT) 
+            && <div className="cart-total-wrapper">
                 <div className="cart-subtotal">
                 <span>Subtotal</span>
                 <span className="cart-price">
                     {loading ? (
                     <Spinner animation="border" style={{ color: "#cc3663" }} />
                     ) : (
-                    <>Ron {cartManager.total()}</>
+                    <>Ron {cartTotal}</>
                     )}
                 </span>
                 </div>
@@ -94,7 +104,7 @@ const Cart = (props) => {
                     {loading ? (
                     <Spinner animation="border" style={{ color: "#cc3663" }} />
                     ) : (
-                    <>Ron {cartManager.total()}</>
+                    <>Ron {cartTotal}</>
                     )}
                 </span>
                 </div>

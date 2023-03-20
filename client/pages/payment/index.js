@@ -7,6 +7,7 @@ import CartContext from "../../store/cart-context";
 import PaymentContext from "../../store/payment-context";
 import { loadStripe } from "@stripe/stripe-js";
 import ShippingInformation from "../../components/AccountPage/ShippingInformation";
+import CartService from "../../shared/services/cartService/index";
 
 let stripePromise;
 
@@ -21,12 +22,15 @@ const getStripe = () => {
 
 const PaymentPage = () => {
   const router = useRouter();
-  const { cartManager } = useContext(CartContext);
+  const cartManager = useContext(CartContext);
   const { paymentManager } = useContext(PaymentContext);
   const [couponValue, setCouponeValue] = useState();
   const [loading, setLoading] = useState(true);
   const [orderList, setOrderList] = useState();
   const [checkoutOptions, setCheckoutOptions] = useState();
+
+  // console.log('CartService: ', CartService)  // merge service-ul
+
 
   const orderMinus = (item) => {
     if(item.quantity > 1) {
@@ -41,10 +45,43 @@ const PaymentPage = () => {
 
   //test payment context
   // paymentManager.test();
+  cartManager && console.log('cartManager ', cartManager)
+
+  // useEffect(() => {
+  //   if(cartManager.cart.length > 0) {
+  //     const cartList = cartManager.singlePaymentList();   // list from cart
+  //     const items = cartList.map(item =>{                 // item list for stripe
+  //       return {
+  //         price: item.product.attributes.stripe_fullpriceLink,
+  //         quantity: item.quantity
+  //       }
+  //     });
+
+  //     if(cartList) {
+  //       const cleanProductList = createOrderProductList(cartList);
+  //       const ol = {
+  //         order_type: 'payment',
+  //         product_list: cleanProductList,
+  //         txn_status: false,
+  //       }
+  //       setOrderList(ol);
+  //     }
+
+  //     const stripeCheckoutOptions = {
+  //       lineItems: [...items],
+  //       mode: "payment",
+  //       successUrl: `${window.location.origin}/payment/success`,
+  //       cancelUrl: `${window.location.origin}/payment/cancel`,
+  //     };
+
+  //     setCheckoutOptions(stripeCheckoutOptions);
+  //   }
+    
+  // }, [loading, cartManager?.cart]);
 
   useEffect(() => {
-    if(cartManager.cart.length > 0) {
-      const cartList = cartManager.singlePaymentList();   // list from cart
+    if(CartService.cart) {
+      const cartList = CartService.singlePaymentList();   // list from cart
       const items = cartList.map(item =>{                 // item list for stripe
         return {
           price: item.product.attributes.stripe_fullpriceLink,
@@ -72,7 +109,7 @@ const PaymentPage = () => {
       setCheckoutOptions(stripeCheckoutOptions);
     }
     
-  }, [loading, cartManager.cart]);
+  }, [loading, CartService.cart]);
 
 
   function createOrderProductList(data) {
@@ -95,9 +132,16 @@ const PaymentPage = () => {
     // console.log('orderList: ', orderList)
   }
   const redirectToCheckout = async () => {
-    paymentManager.populateOrderHistory(orderList);
-    const stripe = await getStripe();
-    const { error } = await stripe.redirectToCheckout(checkoutOptions);
+    console.log('orderList: ', orderList)
+    // paymentManager.populateOrderHistory(orderList);
+    // const stripe = await getStripe();
+    // const { error } = await stripe.redirectToCheckout(checkoutOptions);
+
+    // create stripe checkout
+    // const { data: {id}, } = await axios.post('/api/checkout_sessions', {
+    //   items:
+    // })
+
   };
 
   setTimeout(() => {
@@ -108,7 +152,9 @@ const PaymentPage = () => {
   return (
     <>
       <div className="main-content-payment">
-        <div className="container">
+        <div>Payment page</div>
+
+        {/* <div className="container">
           <div className="subs-payment-card">
             <div className="title">Your monthly subscription</div>
             <div className="subtitle">
@@ -205,7 +251,7 @@ const PaymentPage = () => {
           </div>
           
           <ShippingInformation />
-        </div>
+        </div> */}
       </div>
     </>
   );
