@@ -105,6 +105,7 @@ const Product = ({ product }: Props) => {
     setLoading(false); // to clear loading state
   }, 500);
 
+  console.log('CartService: ', CartService)  // merge service-ul
   return (
     <>
       <div className="col col-sm-6 col-lg-4">

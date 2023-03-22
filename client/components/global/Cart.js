@@ -12,7 +12,7 @@ import("../../types/CartProduct.interface");
 const Cart = (props) => {
   const [loading, setLoading] = useState(true);
   const cartManager = useContext(CartContext);
-  const { accountManager } = useContext(AccountContext);
+  const accountManager = useContext(AccountContext);
   const [cart, setCart] = useState(null)
   const [cartTotal, setCartTotal] = useState(0);
 

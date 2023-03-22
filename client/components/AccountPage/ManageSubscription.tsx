@@ -6,6 +6,8 @@ import CartContext from "../../store/cart-context";
 import { DateTime } from 'luxon';
 import emptyBottle from '../../public/img/empty-bottle.png';
 import UnsubscribedUser from './UnsubscribedUser';
+import CartService from "../../shared/services/cartService";
+import ICartProduct from "../../types/CartProduct.interface";
 
 type Props = {
     subscribed: boolean | null
@@ -24,88 +26,87 @@ const ManageSubscription = ({ subscribed }: Props) => {
 
     const cartManager = useContext(CartContext);
     const [winReady, setWinReady] = useState(false);
-    const [subsOrder, updateSubsOrder] = useState([]);
+    const [subsOrder, updateSubsOrder] = useState<ICartProduct[]>([]);
 
     useEffect(() => {
         setWinReady(true)
-        if (cartManager?.subsList) {
-            updateSubsOrder(cartManager.subsList)
+        updateSubsOrder([...CartService.subscriptionList()])
+    }, [CartService.cart]);
+
+    useEffect(() => {
+        const quickTipsElem = document.getElementById("quick-tips");
+        let elemWidth;
+        if(screen.availWidth <= 400) {
+            elemWidth = 360;
+            quickTipsElem.style.maxWidth = `${elemWidth}px`
+        } else if(screen.availWidth <= 600) {
+            let padding = 40;
+            elemWidth = screen.availWidth - padding;
+            quickTipsElem.style.maxWidth = `${elemWidth}px`
+        } else if(screen.availWidth <= 740) {
+            elemWidth = screen.availWidth - 150 - (4 * 20) - 70;
+            quickTipsElem.style.maxWidth = `${elemWidth}px`
+        } else if(screen.availWidth <= 990) {
+            elemWidth = screen.availWidth - 150 - (2 * 20) - (2 * 40) - 70;
+            quickTipsElem.style.maxWidth = `${elemWidth}px`
+        } else if(screen.availWidth <= 1200) {
+            elemWidth = screen.availWidth - 780;
+            quickTipsElem.style.maxWidth = `${elemWidth}px`
+            quickTipsElem.style.minWidth = `${320}px`
+        } else {
+            quickTipsElem.style.maxWidth = `${450}px`
         }
-    }, [cartManager.subsList]);
 
-    // useEffect(() => {
-    //     const quickTipsElem = document.getElementById("quick-tips");
-    //     let elemWidth;
-    //     if(screen.availWidth <= 400) {
-    //         elemWidth = 360;
-    //         quickTipsElem.style.maxWidth = `${elemWidth}px`
-    //     } else if(screen.availWidth <= 600) {
-    //         let padding = 40;
-    //         elemWidth = screen.availWidth - padding;
-    //         quickTipsElem.style.maxWidth = `${elemWidth}px`
-    //     } else if(screen.availWidth <= 740) {
-    //         elemWidth = screen.availWidth - 150 - (4 * 20) - 70;
-    //         quickTipsElem.style.maxWidth = `${elemWidth}px`
-    //     } else if(screen.availWidth <= 990) {
-    //         elemWidth = screen.availWidth - 150 - (2 * 20) - (2 * 40) - 70;
-    //         quickTipsElem.style.maxWidth = `${elemWidth}px`
-    //     } else if(screen.availWidth <= 1200) {
-    //         elemWidth = screen.availWidth - 780;
-    //         quickTipsElem.style.maxWidth = `${elemWidth}px`
-    //         quickTipsElem.style.minWidth = `${320}px`
-    //     } else {
-    //         quickTipsElem.style.maxWidth = `${450}px`
-    //     }
+        window.onresize = () => {
+            if(screen.availWidth <= 400) {
+                elemWidth = 360;
+                quickTipsElem.style.maxWidth = `${elemWidth}px`
+            } else if(screen.availWidth <= 600) {
+                let padding = 40;
+                elemWidth = screen.availWidth - padding;
+                quickTipsElem.style.maxWidth = `${elemWidth}px`
+            } else if(screen.availWidth <= 740) {
+                elemWidth = screen.availWidth - 150 - (4 * 20) - 70;
+                quickTipsElem.style.maxWidth = `${elemWidth}px`
+            } else if(screen.availWidth <= 990) {
+                elemWidth = screen.availWidth - 150 - (2 * 20) - (2 * 40) - 70;
+                quickTipsElem.style.maxWidth = `${elemWidth}px`
+            } else if(screen.availWidth <= 1200) {
+                elemWidth = screen.availWidth - 780;
+                quickTipsElem.style.maxWidth = `${elemWidth}px`
+                quickTipsElem.style.minWidth = `${320}px`
+            } else {
+                quickTipsElem.style.maxWidth = `${450}px`
+            }
+        }
+    }, [typeof window !== 'undefined' && window.onresize])
 
-    //     window.onresize = () => {
-    //         if(screen.availWidth <= 400) {
-    //             elemWidth = 360;
-    //             quickTipsElem.style.maxWidth = `${elemWidth}px`
-    //         } else if(screen.availWidth <= 600) {
-    //             let padding = 40;
-    //             elemWidth = screen.availWidth - padding;
-    //             quickTipsElem.style.maxWidth = `${elemWidth}px`
-    //         } else if(screen.availWidth <= 740) {
-    //             elemWidth = screen.availWidth - 150 - (4 * 20) - 70;
-    //             quickTipsElem.style.maxWidth = `${elemWidth}px`
-    //         } else if(screen.availWidth <= 990) {
-    //             elemWidth = screen.availWidth - 150 - (2 * 20) - (2 * 40) - 70;
-    //             quickTipsElem.style.maxWidth = `${elemWidth}px`
-    //         } else if(screen.availWidth <= 1200) {
-    //             elemWidth = screen.availWidth - 780;
-    //             quickTipsElem.style.maxWidth = `${elemWidth}px`
-    //             quickTipsElem.style.minWidth = `${320}px`
-    //         } else {
-    //             quickTipsElem.style.maxWidth = `${450}px`
-    //         }
-    //     }
-    // }, [window.onresize])
+    function handleOnDragEnd(result: any) {
+        console.log('result', result)
+        if (!result.destination) return;
+        if (!CartService.subscriptionList()) return;
+        const items = Array.from(subsOrder);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
 
-    // function handleOnDragEnd(result) {
-    //     if (!result.destination) return;
-    //     if (!cartManager.subsList) return;
-    //     const items = Array.from(subsOrder);
-    //     const [reorderedItem] = items.splice(result.source.index, 1);
-    //     items.splice(result.destination.index, 0, reorderedItem);
+        updateSubsOrder(items);
+    }
 
-    //     updateSubsOrder(items);
-    // }
-
-    // function setMonth(index) {
-    //     let subscriptionMonth;
-    //     if(index >= 0) {
-    //         subscriptionMonth = DateTime.fromISO(DateTime.now()).plus({months: index + 1}).toFormat('LLLL');
-    //         return subscriptionMonth;
-    //     } 
-    //     return null;
-    // }
+    function setMonth(index: any) {
+        let subscriptionMonth;
+        if(index >= 0) {
+            subscriptionMonth = DateTime.fromISO(DateTime.now()).plus({months: index + 1}).toFormat('LLLL');
+            return subscriptionMonth;
+        } 
+        return null;
+    }
 
     return (<>
         <div className="manage-subscription">
             {!subscribed && <UnsubscribedUser />}
             <div className="left-side">
             </div>
-            {/* <div className="dnd-list">
+            <div className="dnd-list">
                 <div className="quick-tips" id="quick-tips">
                     <div className="title">Quick tips to customize your queue</div>
                     <Slider {...slickSettings}>
@@ -139,15 +140,14 @@ const ManageSubscription = ({ subscribed }: Props) => {
 
                     </li>
                 </ul>}
-                <DragDropContext onDragEnd={handleOnDragEnd}>
+                {subsOrder.length > 0 &&(<DragDropContext onDragEnd={handleOnDragEnd}>
                     <Droppable droppableId="subscriptions">
-                        {(provided) => (
+                        {(provided: any) => (
                             <ul className="subscriptions-list" {...provided.droppableProps} ref={provided.innerRef}>
                                 {subsOrder.map((item, index) => {
-                                    // setMonth(index);
                                     return (
-                                        winReady && <Draggable key={item.cartId} draggableId={item.cartId.toString()} index={index} style={(_isDragging, draggableStyle) => ({ ...draggableStyle, position: 'static' })}>
-                                            {(provided) => (
+                                        winReady && <Draggable key={item.cartProductId} draggableId={item.cartProductId.toString()} index={index} style={(_isDragging: any, draggableStyle: any) => ({ ...draggableStyle })}>
+                                            {(provided: any) => (
                                                 <li {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
                                                     <div className="image-wrapper">
                                                         <img src={`${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` + item.product.attributes.image.data[0].attributes.url}></img>
@@ -167,8 +167,8 @@ const ManageSubscription = ({ subscribed }: Props) => {
                             </ul>
                         )}
                     </Droppable>
-                </DragDropContext>
-            </div> */}
+                </DragDropContext>)}
+            </div>
         </div>
     </>);
 }

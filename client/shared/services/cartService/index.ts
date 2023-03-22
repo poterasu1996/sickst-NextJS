@@ -69,8 +69,10 @@ class CartService {
                 });
                 if (_subscriptionItem) {
                     this.cart = [..._subscriptionItem, ..._fullPaymentItems];
+                    this.storageList = [..._subscriptionItem, ..._fullPaymentItems];
                 } else {
                     this.cart = [..._fullPaymentItems]
+                    this.storageList = [..._fullPaymentItems]
                 }
 
                 localStorage.setItem("cart", JSON.stringify(newCartList));
@@ -78,6 +80,7 @@ class CartService {
         } else {
             localStorage.setItem('cart', JSON.stringify([{ cartProductId: 0, product, quantity, payment }]));
             this.cart = [{ cartProductId: 0, product, quantity, payment }];
+            this.storageList = [{ cartProductId: 0, product, quantity, payment }];
         }
     }
 
@@ -131,18 +134,20 @@ class CartService {
             });
             if (_newList.length > 0) {
                 this.cart = [..._newList];
+                this.storageList = [..._newList];
                 localStorage.setItem('cart', JSON.stringify(_newList));            
             } else {
                 this.cart = _newList;
+                this.storageList = _newList;
                 localStorage.removeItem('cart');
             }
         }
     }
 
     singlePaymentList() {
-        if (this.storageList) {
-            const _list = this.storageList.filter((item: ICartProduct) => {
-                return item.payment === "otb";
+        if (this.cart) {
+            const _list = this.cart.filter((item: ICartProduct) => {
+                return item.payment === PaymentEnums.FULL_PAYMENT;
             })
             return _list;
         }
@@ -150,8 +155,8 @@ class CartService {
     }
 
     subscriptionList() {
-        if(this.storageList) {
-            const list = this.storageList.filter((item: ICartProduct) => {
+        if(this.cart) {
+            const list = this.cart.filter((item: ICartProduct) => {
               return item.payment === PaymentEnums.SUBSCRIPTION;
             })
             return list;
@@ -205,9 +210,15 @@ class CartService {
         return _cartL;
     }
 
-    resetCartLength() {
+    clearCart() {
+        this.cart = null;
+        this.storageList = null;
         this.cartLength = 0;
+        localStorage.removeItem('cart');
     }
+
+    // resetCartLength() {
+    // }
 }
 
 export default new CartService();

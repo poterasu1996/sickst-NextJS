@@ -3,15 +3,17 @@ import { Button, Spinner } from "react-bootstrap";
 import { X } from "react-feather";
 import CartService from "../../shared/services/cartService";
 import { PaymentEnums } from "../../shared/enums/payment.enums";
+import CartContext from "../../store/cart-context";
 
 const CartItem = ({ item, handleLoading }) => {
     const [loading, setLoading] = useState(false);      // for loading spinner effect
-
+    const cartManager = useContext(CartContext);
     const orderMinus = () => {
         if(item.quantity > 1) {
             setLoading(true);
             handleLoading(true);
             CartService.quantityProduct(item, 'remove');
+            cartManager.setRefresh(!cartManager.refresh);
         }
     }
 
@@ -19,6 +21,7 @@ const CartItem = ({ item, handleLoading }) => {
         setLoading(true);
         handleLoading(true);
         CartService.quantityProduct(item, 'add');
+        cartManager.setRefresh(!cartManager.refresh);
     }
 
     // get the product details from cart context
@@ -74,6 +77,7 @@ const CartItem = ({ item, handleLoading }) => {
             <Button onClick={() => {
                 handleLoading(true);
                 CartService.removeProduct(item);
+                cartManager.setRefresh(!cartManager.refresh);
             }}>
                 <X stroke="#cc3663" width={20} height={20} />
             </Button>

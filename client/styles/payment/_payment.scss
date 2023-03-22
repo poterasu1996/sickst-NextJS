@@ -149,8 +149,8 @@
     }
     .cart-item {
         display: flex;
-        border: solid 1px #dadada;
-        padding: 1.5rem;
+        border-bottom: solid 1px #dadada;
+        padding: 1.5rem 0;
         position: relative;
 
         &-image {
