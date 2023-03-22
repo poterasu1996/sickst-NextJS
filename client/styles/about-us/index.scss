@@ -97,6 +97,9 @@
     }
     .contact-us {
       text-align: center;
+      @media (max-width: 576px) {
+        text-align: start;
+      }
       .col-sm-4 {
         position: relative;
         min-height: 5rem;

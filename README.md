@@ -1,6 +1,7 @@
 # sickst
 
 ### To start database
+
 ```
 docker-compose up
 ```
@@ -32,5 +33,5 @@ ADMIN_JWT_SECRET=OCRMlWgGUzq7IyJy+mJUSg==
 JWT_SECRET=aSCg9J08GKXgiYeJDQl8Sw==
 
 npm install
-npm run dev
+npm run develop
 ```
