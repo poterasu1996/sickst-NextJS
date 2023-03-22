@@ -23,6 +23,7 @@ const Cart = (props) => {
   useEffect(() => {
     setCartTotal(CartService.cartTotal());
   }, [CartService.cart])
+  
 
   return (
     <>
