@@ -12,9 +12,11 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { Rating } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import CartService from "../../shared/services/cartService/index";
+import { PaymentEnums } from "../../shared/enums/payment.enums";
 
 type Props = {
-    product: any
+  product: any
 }
 
 const StyledRating = styled(Rating)({
@@ -72,10 +74,38 @@ const Product = ({ product }: Props) => {
     });
   };
 
+  function handleAddProduct() {
+    let paymentType;
+    // check if logged in
+    if (!authManager.auth) {
+      router.push("/account/login");
+    } else {
+      if (subscription) {
+        paymentType = "subscription";
+        if (CartService.subscriptionList().length >= 6) {
+          toast(
+            "Your subscription list hast more than 6 products!",
+            {
+              autoClose: 2000,
+            }
+          );
+          return;
+        }
+      } else {
+        paymentType = "otb";
+      }
+      CartService.addProduct(product, 1, paymentType);
+      cartManager!.setRefresh(!cartManager!.refresh);
+      notify();
+    }
+    // setLoading(true);
+  }
+
   setTimeout(() => {
     setLoading(false); // to clear loading state
   }, 500);
 
+  console.log('CartService: ', CartService)  // merge service-ul
   return (
     <>
       <div className="col col-sm-6 col-lg-4">
@@ -119,7 +149,7 @@ const Product = ({ product }: Props) => {
             </div>
           </div>
           <div className="product-card-button">
-            {cartManager?.hasProduct(product) ? (
+            {CartService.hasProduct(product) ? (
               loading ? (
                 <Spinner animation="border" style={{ color: "#cc3663" }} />
               ) : (
@@ -134,8 +164,8 @@ const Product = ({ product }: Props) => {
               <div
                 className="card-button"
                 onClick={() => {
-                  const paymentType = "subscription";
-                  if (cartManager!.subscriptionList.length >= 6) {
+                  const paymentType = PaymentEnums.SUBSCRIPTION;
+                  if (CartService.subscriptionList().length >= 6) {
                     const msg = (
                       <>
                         <div>
@@ -150,7 +180,7 @@ const Product = ({ product }: Props) => {
                     return;
                   }
                   notify();
-                  cartManager!.addProduct(product, 1, paymentType);
+                  CartService.addProduct(product, 1, paymentType);
                   setAddedToCart(true);
                   setLoading(true);
                 }}
@@ -271,31 +301,7 @@ const Product = ({ product }: Props) => {
                 <div className="submit-btn">
                   <div 
                     className="button-second"
-                    onClick={() => {
-                      let paymentType;
-                      // check if logged in
-                      if (!authManager.auth) {
-                        router.push("/account/login");
-                      } else {
-                        if (subscription) {
-                          paymentType = "subscription";
-                          if (cartManager!.subscriptionList().length >= 6) {
-                            toast(
-                              "Your subscription list hast more than 6 products!",
-                              {
-                                autoClose: 2000,
-                              }
-                            );
-                            return;
-                          }
-                        } else {
-                          paymentType = "otb";
-                        }
-                        cartManager!.addProduct(product, 1, paymentType);
-                        notify();
-                      }
-                      // setLoading(true);
-                    }}>Add to queue</div>
+                    onClick={() => handleAddProduct()}>Add to queue</div>
                 </div>
                 <div className="fragrance-info">
                   <div className="title">About the fragrance</div>

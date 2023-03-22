@@ -1,12 +1,12 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Dropdown } from "react-bootstrap";
 import Link from "next/link";
 import Cookies from 'js-cookie';
 import SideModal from "./global/SideModal";
 import AuthContext from "../store/auth-context";
 import { Menu, ShoppingCart, User } from "react-feather";
-// import CartContext from "../store/cart-context";
 import CartContext from "../store/cart-context";
+import CartService from "../shared/services/cartService";
 import { useRouter } from "next/router";
 import AccountMobileSideModal from "./global/AccountMobileSideModal";
 import AccountContext from "../store/account-context";
@@ -19,6 +19,8 @@ const Header = () => {
   const cartManager = useContext(CartContext);
   const accountManager = useContext(AccountContext);
   const router = useRouter();
+
+  if (CartService.cart) CartService.getCartLength();
 
   function logOut() {
     setTimeout(() => {
@@ -35,6 +37,8 @@ const Header = () => {
   function removeBodyhiddenOverflow() {
     document.body.classList.remove("overflow-hidden")
   }
+
+  useEffect(() => {}, [cartManager?.refresh])
 
   return (
     <header>
@@ -131,9 +135,10 @@ const Header = () => {
             {authManager?.auth ? (
               <div className="shopping-cart">
                 <ShoppingCart />{" "}
-                {cartManager?.cart && (
-                  <span className="badge">{cartManager?.cart.length}</span>
-                )}
+                <span className="badge">{CartService.cartLength}</span>
+                {/* {CartService?.cart && (
+                  <span className="badge">{CartService.cartLength}</span>
+                )} */}
               </div>
             ) : (
               <Menu />
