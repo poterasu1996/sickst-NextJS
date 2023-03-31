@@ -15,7 +15,6 @@
     "order_type": {
       "type": "enumeration",
       "enum": [
-        "subscription",
         "payment",
         "collection"
       ],
@@ -37,6 +36,11 @@
       "type": "integer",
       "required": true,
       "default": 0
+    },
+    "session_id": {
+      "type": "string",
+      "required": true,
+      "unique": false
     }
   }
 }

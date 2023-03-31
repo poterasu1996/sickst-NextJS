@@ -19,7 +19,7 @@ const NewProductSection = () => {
             axios.get(PRODUCTS_URL).then(resp => {
                 // get only first 6 new products in future
                 const newProdList = resp.data.data.filter((data: any) => {
-                    return data.attributes.tags.data.find((tag: any) => {
+                    return data.attributes.tags?.data.find((tag: any) => {
                         if(tag.attributes.name === 'new') {
                             return data;
                         }

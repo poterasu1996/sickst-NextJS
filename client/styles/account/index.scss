@@ -308,6 +308,12 @@
                    
                     .cancelled {
                         color: #cc3633;
+                        font-weight: bold;
+                    }
+
+                    .success {
+                        color: #0e960b;
+                        font-weight: bold;
                     }
                 }
             }

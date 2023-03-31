@@ -16,6 +16,7 @@ interface IAccountContext {
     fetchShippingList: () => Promise<any>,
     addShippingInfo: (data: IShippingInfo) => void,
     fetchOrderHistory: () => Promise<any>,
+    activateSubscription: (id: number) => Promise<void>,
 }
 
 const AccountContext = React.createContext<IAccountContext | null>(null);
@@ -37,6 +38,7 @@ type Props = {
 
 export const AccountProvider = ({ children }: Props): JSX.Element => {
     const USER_ME = '/users/me';
+    const USERS = '/api/users'
     const SHIPPING_INFO = '/shipping-informations';
     const ORDER_HISTORIES = '/order-histories';
     const authManager = useContext(AuthContext);
@@ -92,6 +94,13 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
         toast(toastMsg, {
             autoClose: 2000,
         });
+    }
+
+    async function activateSubscription(userId: number) {
+        if(header) {
+            await axios.put(`${USERS}/${userId}`, { subscribed: true } , header)
+                .catch(error => console.log(error))
+        }
     }
 
     async function fetchOrderHistory() {
@@ -252,6 +261,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
         fetchShippingList: fetchShippingList,
         addShippingInfo: addShippingInfo,
         fetchOrderHistory: fetchOrderHistory,
+        activateSubscription: activateSubscription,
     };
     
     return (

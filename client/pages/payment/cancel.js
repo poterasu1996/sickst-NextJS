@@ -1,9 +1,22 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Button } from "react-bootstrap";
+import PaymentContext from "../../store/payment-context";
+import AuthContext from "../../store/auth-context";
 
 const CancelPayment = () => {
     const router = useRouter();
+    const { paymentManager } = useContext(PaymentContext);
+    const authManager = useContext(AuthContext);
+
+    useEffect(() => {
+        if(authManager.auth) {
+            const oh = JSON.parse(localStorage.getItem('oh'));
+            if(oh) {
+                paymentManager.populateOrderHistory(oh);
+            }
+        }
+    }, [authManager.auth])
 
     useEffect(() => {
         setTimeout(() => {
