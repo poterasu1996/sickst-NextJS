@@ -12,6 +12,7 @@ import ResetPassword from "../../components/AccountPage/ResetPassword";
 import AuthContext from "../../store/auth-context";
 import userAvatar from '../../public/img/svg/male_avatar.svg';
 import AccountContext from "../../store/account-context";
+import { IUserInfo } from "../../types/UserInfo.interface";
 
 // const accState = [
 //     'subscription', 
@@ -25,24 +26,24 @@ import AccountContext from "../../store/account-context";
 // ];
 
 // to be changed in future, because it shows sensitive data
-type UserInfo = {
-    blocked: boolean,
-    client_role: string,
-    confirmed: boolean,
-    createdAt: string,
-    email: string,
-    id: number,
-    new_user: boolean,
-    newsletter: boolean,
-    provider: string,
-    subscribed: boolean,
-    updatedAt: string
-    username: string
-}
+// type UserInfo = {
+//     blocked: boolean,
+//     client_role: string,
+//     confirmed: boolean,
+//     createdAt: string,
+//     email: string,
+//     id: number,
+//     new_user: boolean,
+//     newsletter: boolean,
+//     provider: string,
+//     subscribed: boolean,
+//     updatedAt: string
+//     username: string
+// }
 
 const Account = () => {
     const USER_ME = '/users/me';
-    const [userInfo, setUserInfo] = useState<UserInfo | null>(null);     // fetch user info
+    const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);     // fetch user info
     const [accState, setAccState] = useState<string>('subscription');
     const authManager  = useContext(AuthContext);
     const accountManager = useContext(AccountContext);

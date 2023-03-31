@@ -1,8 +1,8 @@
 import { TabPanel, TabView } from "primereact/tabview";
 import { useContext, useEffect, useState } from "react";
+import { AppUtils } from "../../shared/utils/app.utils";
 import AccountContext from "../../store/account-context";
-
-import IOrderHystoryList from "../../types/OrderHystory.interface";
+import { IOrderHystoryList } from "../../types/OrderHystory.interface";
 
 const OrderHistory = () => {
     const accountManager = useContext(AccountContext);
@@ -13,9 +13,10 @@ const OrderHistory = () => {
     useEffect(() => {
         if(accountManager!.currentUser) {
             accountManager!.fetchOrderHistory()
-                .then(resp => {
-                    resp.length > 0 
-                        ? setOrderHistory([...resp])
+                .then((resp: IOrderHystoryList[]) => {
+                    const reverse = resp.reverse();
+                    reverse.length > 0 
+                        ? setOrderHistory([...reverse])
                         :  setOrderHistory(null)
                 })
                 .catch(error => console.log("order history error: ", error));
@@ -44,8 +45,6 @@ const OrderHistory = () => {
         }
     }
 
-    
-
     return (
         <>
             <div className="order-history">
@@ -71,10 +70,12 @@ const OrderHistory = () => {
                                     {orderHistory.map(el => (
                                         <tr key={el.id}>
                                             <td>#{el.id}</td>
-                                            <td>{el.attributes.createdAt}</td>
-                                            <td>{el.attributes.order_type}</td>
+                                            {/* <td>{el.attributes.createdAt}</td> */}
+                                            <td>{AppUtils.isoToFormat(el.attributes.createdAt)}</td>
+                                            {/* <td>{el.attributes.order_type}</td> */}
+                                            <td>{AppUtils.capitalize(el.attributes.order_type)}</td>
                                             <td>{el.attributes.txn_status 
-                                                ? <span>Successfull</span>
+                                                ? <span className="success">Successfull</span>
                                                 : <span className="cancelled">Cancelled</span>}
                                             </td>
                                             <td>{el.attributes.total} RON</td>
@@ -112,10 +113,10 @@ const OrderHistory = () => {
                                     {tableContent.map(el => (
                                         <tr key={el.id}>
                                             <td>#{el.id}</td>
-                                            <td>{el.attributes.createdAt}</td>
-                                            <td>{el.attributes.order_type}</td>
+                                            <td>{AppUtils.isoToFormat(el.attributes.createdAt)}</td>
+                                            <td>{AppUtils.capitalize(el.attributes.order_type)}</td>
                                             <td>{el.attributes.txn_status 
-                                                ? <span>Successfull</span>
+                                                ? <span className="success">Successfull</span>
                                                 : <span className="cancelled">Cancelled</span>}
                                             </td>
                                             <td>{el.attributes.total} RON</td>
@@ -153,10 +154,10 @@ const OrderHistory = () => {
                                     {tableContent.map(el => (
                                         <tr key={el.id}>
                                             <td>#{el.id}</td>
-                                            <td>{el.attributes.createdAt}</td>
-                                            <td>{el.attributes.order_type}</td>
+                                            <td>{AppUtils.isoToFormat(el.attributes.createdAt)}</td>
+                                            <td>{AppUtils.capitalize(el.attributes.order_type)}</td>
                                             <td>{el.attributes.txn_status 
-                                                ? <span>Successfull</span>
+                                                ? <span className="success">Successfull</span>
                                                 : <span className="cancelled">Cancelled</span>}
                                             </td>
                                             <td>{el.attributes.total} RON</td>

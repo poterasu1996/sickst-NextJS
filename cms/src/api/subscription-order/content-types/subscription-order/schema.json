@@ -4,7 +4,8 @@
   "info": {
     "singularName": "subscription-order",
     "pluralName": "subscription-orders",
-    "displayName": "subscription_order"
+    "displayName": "subscription_order",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -15,7 +16,27 @@
       "type": "integer",
       "required": true
     },
-    "subscription_id": {
+    "expire_date": {
+      "type": "date",
+      "required": false
+    },
+    "subscription_name": {
+      "type": "string",
+      "required": true
+    },
+    "txn_status": {
+      "type": "enumeration",
+      "enum": [
+        "success",
+        "pending",
+        "canceled"
+      ],
+      "required": true
+    },
+    "subscription_list": {
+      "type": "json"
+    },
+    "session_id": {
       "type": "string",
       "required": true
     }

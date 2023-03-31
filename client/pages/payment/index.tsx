@@ -4,35 +4,50 @@ import { Button, Spinner } from "react-bootstrap";
 import { X } from "react-feather";
 import CouponeForm from "../../components/global/form/CouponeForm";
 import CartContext from "../../store/cart-context";
-import PaymentContext from "../../store/payment-context";
+// import PaymentContext from "../../store/payment-context";
+import PaymentContextTS from "../../store/payment-context";
 import { loadStripe } from "@stripe/stripe-js";
 import ShippingInformation from "../../components/AccountPage/ShippingInformation";
 import CartService from "../../shared/services/cartService/index";
 import axios from "axios";
+import CookiesServer from 'cookies';
+import Cookies from 'js-cookie';
 import { PaymentEnums } from "../../shared/enums/payment.enums";
+import ICartProduct from "../../types/CartProduct.interface";
+import { IUserInfo } from "../../types/UserInfo.interface";
 
-let stripePromise;
+let stripePromise: any;
+
+const USER_ME = 'http://localhost:1337/api/users/me';
 
 const getStripe = () => {
   // check if there is any stripe instance
   if (!stripePromise) {
-    stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY);
+    process.env.NEXT_PUBLIC_STRIPE_KEY && (stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY));
   }
 
   return stripePromise;
 };
 
-const PaymentPage = () => {
+type Props = {
+  user: {
+    id: number,
+    email: string,
+    subscribed: boolean
+  },
+}
+
+const PaymentPage = ({ user }: Props) => {
   const router = useRouter();
   const cartManager = useContext(CartContext);
-  const { paymentManager } = useContext(PaymentContext);
-  const [couponValue, setCouponeValue] = useState();
+  const paymentManager = useContext(PaymentContextTS);
+  const [couponValue, setCouponeValue] = useState<any>();
   const [loading, setLoading] = useState(true);
-  const [orderHistory, setOrderHistory] = useState();
-  const [lineItems, setLineItems] = useState([]);
-  const [cartItems, setCartItems] = useState([]);
+  const [lineItems, setLineItems] = useState<any>([]);
+  const [cartItems, setCartItems] = useState<ICartProduct[]>([]);
+  const [header, setHeader] = useState<any>();
 
-  const orderMinus = (item) => {
+  const orderMinus = (item: any) => {
     if(item.quantity > 1) {
       // modify product quantity in card + template
       setLoading(true);
@@ -41,108 +56,95 @@ const PaymentPage = () => {
     }
   }
 
-  const orderPlus = (item) => {
+  const orderPlus = (item: any) => {
     setLoading(true);
     CartService.quantityProduct(item, 'add');
     cartManager.setRefresh(preVal => !preVal);
   }
 
-  // console.log('CartService: ', CartService)  // merge service-ul
-
   useEffect(() => {
     if(CartService.cart) {
       const cartList = CartService.singlePaymentList();   // list from cart
-      setCartItems([...cartList]);
+      cartList && setCartItems([...cartList]);
 
-      const items = cartList.map(item =>{                 // item list for stripe
+      const items = cartList?.map((item: ICartProduct) =>{                 // item list for stripe
         return {
           price: item.product.attributes.stripe_fullpriceLink,
           quantity: item.quantity
         }
       });
-      setLineItems([...items]);
-
-      // if(cartList) {
-      //   const cleanProductList = createOrderProductList(cartList);
-      //   const ol = {
-      //     session_id: '-1',
-      //     order_type: 'payment',
-      //     total: CartService.cartTotal(),
-      //     product_list: cleanProductList,
-      //     txn_status: false,
-      //   }
-      //   setOrderList(ol);
-      // }
+      // prepare product list for stripe
+      items && setLineItems([...items]);
     } 
   }, [loading, CartService.cart]);
 
 
-  function createOrderProductList(data) {
-    const orderList = data.map(item => {
+  function createOrderProductList(data: any) {
+    const orderList = data.map((item: any) => {
       const newData = {
-        data: {
-          productId: item.product.id,
-          brand: item.product.attributes.brand,
-          model: item.product.attributes.model,
-          quantity: item.quantity,
-          price: item.product.attributes.otb_price,          
-        }
+        product_id: item.product.id,
+        brand: item.product.attributes.brand,
+        model: item.product.attributes.model,
+        quantity: item.quantity,
+        price: item.product.attributes.otb_price,          
       }
       return newData;
     });
     return orderList;
   }
 
-  if(orderHistory) {
-    console.log('orderList: ', orderHistory)
-  }
-
+  user && console.log(user)
   const redirectToCheckout = async () => {
     // create stripe checkout, pass line items to the body
     const { 
       data: {id}, 
     } = await axios.post('/api/checkout_sessions', {
       items: [...lineItems],
+      mode: 'payment',
+      customer_email: user.email,
     });
 
 
     if(cartItems.length > 0) {
       const cleanProductList = createOrderProductList(cartItems);
       const oh = {
+        user_id: user.id,
         session_id: id,
         order_type: 'payment',
         total: CartService.cartTotal(),
         product_list: cleanProductList,
         txn_status: false,
       }
-      setOrderHistory(oh);
+
+      // prepare our OrderHistory (default, txn_status is set to false ) 
       localStorage.setItem('oh', JSON.stringify(oh));
+      // paymentManager.populateOrderHistory(oh);
+
     }
 
-    debugger
+    // debugger
     // redirect to checkout
-    // const stripe = await getStripe();
-    // await stripe.redirectToCheckout({ sessionId: id });
+    const stripe = await getStripe();
+    await stripe.redirectToCheckout({ sessionId: id });
   }
-
-  // const redirectToCheckout = async () => {
-  //   console.log('orderList: ', orderList)
-  //   paymentManager.populateOrderHistory(orderList);
-  //   const stripe = await getStripe();
-  //   const { error } = await stripe.redirectToCheckout(checkoutOptions);
-
-  //   // create stripe checkout
-  //   // const { data: {id}, } = await axios.post('/api/checkout_sessions', {
-  //   //   items:
-  //   // })
-
-  // };
 
   setTimeout(() => {
     setLoading(false);
   }, 500);
 
-console.log('cartItems: ', cartItems)
+  useEffect(() => {
+    const jwt = Cookies.get('jwt');
+    if(jwt) {
+        const head = {
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: `Bearer ${jwt}`,
+            }
+        }
+        setHeader(head);
+    }
+  }, [])
+
   return (
     <>
       <div className="main-content-payment">
@@ -237,11 +239,12 @@ console.log('cartItems: ', cartItems)
 
               <div className="coupone-code">
                 <CouponeForm
-                  couponeValue={(value) => setCouponeValue(value)}
-                  loading={(value) => setLoading(value)}
+                  couponeValue={(value: any) => setCouponeValue(value)}
+                  loading={(value: any) => setLoading(value)}
                 />
               </div>
-              <Button className="button-second mt-5" onClick={() => redirectToCheckout()} disabled={cartItems.length === 0}>Pay</Button>
+              {/* <Button className="button-second mt-5" onClick={() => redirectToCheckout()} disabled={cartItems.length === 0}>Pay</Button> */}
+              <Button className="button-second mt-5" onClick={redirectToCheckout} disabled={cartItems.length === 0}>Pay</Button>
             </div>
           </div>
           
@@ -253,3 +256,34 @@ console.log('cartItems: ', cartItems)
 };
 
 export default PaymentPage;
+
+export async function getServerSideProps({req, res}: any) {
+  const cookies = new CookiesServer(req, res);
+  const jwt = cookies.get('jwt');
+
+  let user: any;
+
+  if(jwt) {
+    const header = {
+      headers: {
+        'Authorization': 'Bearer ' + jwt
+      }
+    }
+
+    const userData: IUserInfo = await axios.get(USER_ME, header)
+      .then(res => { return res.data})
+      .catch(error => console.log(error))
+   
+    user = {
+      id: userData.id,
+      email: userData.email,
+      subscribed: userData.subscribed
+    };
+  }
+
+  return {
+    props: {
+      user: user ?? null,
+    }
+  }
+}

@@ -34,13 +34,12 @@ export const PaymentProvider = ({ children }) => {
 
 
     async function getCurrentUser() {
-        return axios.get(USER_URL, header)
-            .then(resp => {
-                return resp.data;
-            })
-            .catch(error => {
-                console.log(error)
-            })
+        try {
+            let {data} = await axios.get(USER_URL, header);
+            return data;
+        } catch (error) {
+            console.log(error)
+        }
     }
     
 
@@ -62,7 +61,6 @@ export const PaymentProvider = ({ children }) => {
                         user_id: currentUser.id,
                     }
                 }
-                console.log('ORDER DATA', newData)
                 return axios.post(ORDER_HISTORY, newData, header).then(resp => {
                     console.log(resp)
                 });
