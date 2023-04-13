@@ -29,7 +29,8 @@ const SuccessPayment = ({ populateSH }: Props) => {
                 sh = JSON.parse(storage);
             }
             if(sh) {
-                paymentManager?.populateSubscriptionHistory(sh)
+                paymentManager?.populateSubscriptionHistory(sh);
+                localStorage.removeItem('sh');
             }
         }
     }, [])
@@ -88,8 +89,6 @@ export async function getServerSideProps({ req, res}: any) {
     const jwt = cookies.get('jwt');
 
     let populateSH = false;
-    let user: any;
-    let headerT: any;
     if(sh) {
         // send a populate prop, to populate strapi DB, then delete cookie 
         populateSH = true;
@@ -102,11 +101,9 @@ export async function getServerSideProps({ req, res}: any) {
                   'Authorization': 'Bearer ' + jwt
                 }
             }
-            headerT = {...header};
             const userData: IUserInfo = await axios.get(USER_ME, header)
                 .then(res => { return res.data})
                 .catch(error => console.log(error))
-            user = userData.id;
 
             axios.put(`${USERS}/${userData.id}`, {subscribed: true}, header)
                 .then(() => console.log('Successed activating user subscription!'))

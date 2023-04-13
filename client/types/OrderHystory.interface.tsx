@@ -25,6 +25,7 @@ export interface IPOSTSubscriptionHistory {
     user_id: number,
     expire_date: string | null,
     subscription_name: string,
+    subscription_price: number,
     txn_status: TxnStatusEnum,
     subscription_list: any
 }
@@ -34,6 +35,7 @@ export interface GETSubscription {
     attributes: {
       createdAt: string,
       name: string,
+      price: number,
       publishedAt: string,
       stripe_sub_link: string,
       updatedAt: string

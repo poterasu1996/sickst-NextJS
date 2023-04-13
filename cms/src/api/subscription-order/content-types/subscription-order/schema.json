@@ -20,10 +20,6 @@
       "type": "date",
       "required": false
     },
-    "subscription_name": {
-      "type": "string",
-      "required": true
-    },
     "txn_status": {
       "type": "enumeration",
       "enum": [
@@ -39,6 +35,30 @@
     "session_id": {
       "type": "string",
       "required": true
+    },
+    "subscription_price": {
+      "type": "integer",
+      "required": true,
+      "default": 0
+    },
+    "subscription_name": {
+      "type": "enumeration",
+      "enum": [
+        "mystery",
+        "basic",
+        "premium"
+      ],
+      "required": true
+    },
+    "subscription_status": {
+      "type": "enumeration",
+      "enum": [
+        "active",
+        "pending",
+        "cancelled"
+      ],
+      "required": true,
+      "default": "pending"
     }
   }
 }

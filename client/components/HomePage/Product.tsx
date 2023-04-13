@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-// import Rating from "react-rating";
+import Rating from "react-rating";
 import { Star, Check, ChevronRight } from "react-feather";
 import Image from "next/image";
 import { Button, Spinner } from "react-bootstrap";
@@ -10,7 +10,7 @@ import AuthContext from "../../store/auth-context";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { Rating } from "@mui/material";
+// import { Rating } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import CartService from "../../shared/services/cartService/index";
 import { PaymentEnums } from "../../shared/enums/payment.enums";
@@ -19,15 +19,15 @@ type Props = {
   product: any
 }
 
-const StyledRating = styled(Rating)({
-  '& .MuiRating-iconFilled': {
-    color: '#cc3633'
-  },
-  '& .MuiRating-iconEmpty': {
-    color: '#babfc7'
-  },
+// const StyledRating = styled(Rating)({
+//   '& .MuiRating-iconFilled': {
+//     color: '#cc3633'
+//   },
+//   '& .MuiRating-iconEmpty': {
+//     color: '#babfc7'
+//   },
 
-});
+// });
 
 const Product = ({ product }: Props) => {
   const [show, setShow] = useState<boolean>(false); // for Read more modal
@@ -105,7 +105,7 @@ const Product = ({ product }: Props) => {
     setLoading(false); // to clear loading state
   }, 500);
 
-  console.log('CartService: ', CartService)  // merge service-ul
+  // console.log('CartService: ', CartService)  // merge service-ul
   return (
     <>
       <div className="col col-sm-6 col-lg-4">
@@ -123,18 +123,12 @@ const Product = ({ product }: Props) => {
               <span className="tag black">Exclussive</span>
             </div>
             <div className="product-card-rating">
-                {/* <Rating
+                <Rating
                     fractions={2}
                     initialRating={product.attributes.rating}
                     readonly={true}
                     emptySymbol={<Star size={15} fill="#babfc7" stroke="#babfc7" />}
                     fullSymbol={<Star size={15} fill="#cc3633" stroke="#cc3633" />}
-                /> */}
-                <StyledRating 
-                  defaultValue={product.attributes.rating}
-                  precision={0.5}
-                  readOnly
-                  size="large"
                 />
             </div>
             <div className="product-card-title">
@@ -181,6 +175,7 @@ const Product = ({ product }: Props) => {
                   }
                   notify();
                   CartService.addProduct(product, 1, paymentType);
+                  cartManager!.setRefresh(!cartManager!.refresh);
                   setAddedToCart(true);
                   setLoading(true);
                 }}
@@ -241,7 +236,7 @@ const Product = ({ product }: Props) => {
                   </div>
                 </div>
                 <div className="rating">
-                  {/* <Rating
+                  <Rating
                     fractions={2}
                     initialRating={product.attributes.rating}
                     readonly={true}
@@ -251,12 +246,6 @@ const Product = ({ product }: Props) => {
                     fullSymbol={
                       <Star size={15} fill="#cc3633" stroke="#cc3633" />
                     }
-                  /> */}
-                  <StyledRating 
-                    defaultValue={product.attributes.rating}
-                    precision={0.5}
-                    readOnly
-                    size="large"
                   />
                   <div className="rating-nr">35 ratings</div>
                 </div>

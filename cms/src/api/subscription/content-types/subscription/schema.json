@@ -4,7 +4,8 @@
   "info": {
     "singularName": "subscription",
     "pluralName": "subscriptions",
-    "displayName": "subscription"
+    "displayName": "subscription",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -21,6 +22,10 @@
     },
     "stripe_sub_link": {
       "type": "string",
+      "required": true
+    },
+    "price": {
+      "type": "integer",
       "required": true
     }
   }
