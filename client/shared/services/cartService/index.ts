@@ -144,6 +144,15 @@ class CartService {
         }
     }
 
+    removeLSSubscriptioProducts() {
+        const _newList = this.storageList?.filter(prod => { return prod.payment !== PaymentEnums.SUBSCRIPTION });
+        console.log(_newList)
+        if(_newList) {
+            this.storageList = [..._newList];
+            localStorage.setItem('cart', JSON.stringify(_newList))
+        }
+    }
+
     singlePaymentList() {
         if (this.cart) {
             const _list = this.cart.filter((item: ICartProduct) => {

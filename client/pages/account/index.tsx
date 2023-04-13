@@ -1,6 +1,8 @@
 import { DateTime } from "luxon";
+import Cookies from 'cookies';
 import { useContext, useEffect, useState } from "react";
 import axios from "../../api/axios";
+import axiosServer from "axios";
 import BillingInformation from "../../components/AccountPage/BillingInformation";
 import ManageSubscription from "../../components/AccountPage/ManageSubscription";
 import OrderHistory from "../../components/AccountPage/OrderHistory";
@@ -9,10 +11,11 @@ import UserReviews from "../../components/AccountPage/UserReviews";
 import RatedProducts from "../../components/AccountPage/RatedProducts";
 import PersonalInfo from "../../components/AccountPage/PersonalInfo";
 import ResetPassword from "../../components/AccountPage/ResetPassword";
-import AuthContext from "../../store/auth-context";
 import userAvatar from '../../public/img/svg/male_avatar.svg';
 import AccountContext from "../../store/account-context";
 import { IUserInfo } from "../../types/UserInfo.interface";
+import { GetServerSideProps } from "next";
+import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
 
 // const accState = [
 //     'subscription', 
@@ -25,41 +28,18 @@ import { IUserInfo } from "../../types/UserInfo.interface";
 //     'resetPassword'
 // ];
 
-// to be changed in future, because it shows sensitive data
-// type UserInfo = {
-//     blocked: boolean,
-//     client_role: string,
-//     confirmed: boolean,
-//     createdAt: string,
-//     email: string,
-//     id: number,
-//     new_user: boolean,
-//     newsletter: boolean,
-//     provider: string,
-//     subscribed: boolean,
-//     updatedAt: string
-//     username: string
-// }
 
-const Account = () => {
-    const USER_ME = '/users/me';
-    const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);     // fetch user info
+type Props = {
+    userInfo: ILocalUserInfo,
+    subscriptionHistory: any
+}
+
+const Account = ({ userInfo, subscriptionHistory }: Props) => {
     const [accState, setAccState] = useState<string>('subscription');
-    const authManager  = useContext(AuthContext);
     const accountManager = useContext(AccountContext);
 
-    useEffect(() => {
-        if(authManager.auth) {
-            axios.get(USER_ME, {
-                headers: {
-                    'Authorization': 'Bearer ' + authManager.auth
-                }
-            }).then((resp) => {
-                setUserInfo(resp.data)
-            })
-            .catch(error => console.log('axios error', error))
-        }
-    }, [authManager.auth])
+    // console.log('user: ', userInfo)
+    // console.log('subsHist: ', subscriptionHistory)
 
     useEffect(() => {
         setAccState(accountManager!.accountState);
@@ -114,7 +94,7 @@ const Account = () => {
                             <div className="subscription-status">Subscription: <b className="brand-color">Active</b></div>
                         </div>
                     </div>
-                    {accState === 'subscription' && <ManageSubscription subscribed={userInfo && userInfo.subscribed} />}
+                    {accState === 'subscription' && <ManageSubscription userInfo={userInfo} subscriptionHistory={subscriptionHistory}/>}
                     {accState === 'orderHistory' && <OrderHistory />}
                     {/* {accState === 'billingInfo' && <BillingInformation />} */}
                     {accState === 'shippingInfo' && <ShippingInformation />}
@@ -129,3 +109,64 @@ const Account = () => {
 }
 
 export default Account;
+
+const USER_ME = '/users/me';
+const SUBSCRIPTION_HISTORY = '/subscription-orders';
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const cookies = context.req.cookies; 
+    const jwt = cookies.jwt;
+
+    let userInfo = null;
+    let subscriptionHistory = null;
+    if(jwt) {
+        const header = {
+            headers: {
+              'Authorization': `Bearer ${jwt}`
+            }
+        }
+
+        const userData: IUserInfo = await axios.get(USER_ME, header)
+            .then((res) => { return res.data })
+            .catch(error => console.log('ERES'))
+
+        if(userData?.subscribed) {
+            // ramane de vazut daca luam orderul active/pending sau nu
+            const subHistory = await axios.get(`${SUBSCRIPTION_HISTORY}?filters[user_id][$eq]=${userData.id}`, header)
+                .then(res => { return res.data})
+                .catch(error => console.log(error))
+
+            subscriptionHistory = subHistory?.data;
+        }
+
+        userInfo = {
+            id: userData.id,
+            createdAt: userData.createdAt,
+            new_user: userData.new_user,
+            subscribed: userData.subscribed
+        }
+
+        // pentru ca nu avem cookie in request, suntem blocati de middleware
+        const customHeader = {
+            headers: {
+                'Authorization': `Bearer ${jwt}`,
+                Cookie: `jwt=${jwt}`
+            }
+        }
+        // test my api
+        // const MY_DATA = 'http://localhost:3000/api/subscriptions_queue'
+        // const myData = await axiosServer.get(MY_DATA, customHeader)
+        // console.log('myData: ', myData)
+    }
+
+        // .then(resp => {return resp.data})
+    // const res = await fetch(MY_DATA)
+    // const myData = await res.json();
+
+    return {
+        props: {
+            userInfo,
+            subscriptionHistory,
+        }
+    }
+}

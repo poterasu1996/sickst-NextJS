@@ -53,7 +53,6 @@ export const Subscriptions = ({ subscriptionsStripe, user, subscriptionHistory }
         customer_email: user.email
       })
 
-
       // va trebui sa populam OH cu tipul subscrierii, { subscription_name: basic, starting_date: dataCrearii, txn_status: success/pending/canceled}
       // + va trebui creata o lista cu subscrieri (cele 6 iteme) de tipul: 
       // { id_listei, tip_subscriere, id_produs, nume_produs, luna_livrarii }
@@ -61,6 +60,7 @@ export const Subscriptions = ({ subscriptionsStripe, user, subscriptionHistory }
         session_id: id,
         user_id: user.id ,
         subscription_name: subsType,
+        subscription_price: subscriptionPrice.attributes.price,
         expire_date: null,
         txn_status: TxnStatusEnum.PENDING,
         subscription_list: null
@@ -74,7 +74,6 @@ export const Subscriptions = ({ subscriptionsStripe, user, subscriptionHistory }
       await stripe.redirectToCheckout({ sessionId: id })
     }
   }
-
 
   return (
     <div className="subscription-page">
@@ -180,7 +179,7 @@ export default Subscriptions;
 
 export async function getServerSideProps({ req, res }: any) {
   const cookies = new Cookies(req, res);
-  const jwt = cookies.get('jwt')
+  const jwt = cookies.get('jwt');
 
   let subscriptions: any;
   let user: any;

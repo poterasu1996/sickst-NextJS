@@ -7,7 +7,8 @@ export default function middleware(req) {
 
     const url = req.url;
 
-    if((url.includes("/account") 
+    if((
+        url.includes("/account") 
         || url.includes("/payment")
         || url.includes("/subscriptions")) && !jwt) {
         return NextResponse.redirect("http://localhost:3000/auth/login");
