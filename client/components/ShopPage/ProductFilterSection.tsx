@@ -8,10 +8,11 @@ import "primereact/resources/primereact.min.css";                  //core css
 import "primeicons/primeicons.css";                                //icons
 import axios from '../../api/axios';
 import FiltersModal from '../global/FiltersModal';
+import ProductResponse from '../../types/shop/ProductResponse.interface';
 const BRANDS_URL = "/brands";
 
 type Props = {
-    products: Product[]
+    products: ProductResponse
 }
 
 type Product = {
@@ -44,7 +45,7 @@ export default function ProductFilterSection({ products }: Props) {
 
     useEffect(() => {
         if(products) {
-            setFilteredProducts([...products]);
+            setFilteredProducts([...products.data]);
         }
     }, [products])
 
@@ -102,7 +103,7 @@ export default function ProductFilterSection({ products }: Props) {
     }
 
     function applyFilteres() {
-        let filteredProducts = [...products];
+        let filteredProducts = [...products.data];
         if(basic) {
             const basicProducts = filteredProducts.filter(product => {
                 return product.attributes.subscription_type.toLowerCase() === 'basic'
@@ -110,8 +111,8 @@ export default function ProductFilterSection({ products }: Props) {
             filteredProducts = [...basicProducts];
         }
         if(premium) {
-            const premiumProducts = products.filter(product => {
-                return product.attributes.subscription_type.toLowerCase() === 'premium'
+            const premiumProducts = products.data.filter((item: Product) => {
+                return item.attributes.subscription_type.toLowerCase() === 'premium'
             }); 
             filteredProducts = [...premiumProducts]
         }

@@ -7,33 +7,19 @@ import axios from '../../api/axios';
 
 const PRODUCTS_URL = "/products?populate=*";
 
+type Props = {
+    newProducts: Product[]
+}
+
 type Product = {
     id: number,
     attributes: any
 }
 
-const NewProductSection = () => {
-    const [newProducts, setNewProducts] = useState<Product[] | null>(null);
-    useEffect(() => {
-        try {
-            axios.get(PRODUCTS_URL).then(resp => {
-                // get only first 6 new products in future
-                const newProdList = resp.data.data.filter((data: any) => {
-                    return data.attributes.tags?.data.find((tag: any) => {
-                        if(tag.attributes.name === 'new') {
-                            return data;
-                        }
-                    })
-                })
-                setNewProducts([...newProdList]);
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    }, [])
+const NewProductSection = ({ newProducts }: Props) => {
 
     return(<>
-        {newProducts && <div className="container new-product-section">
+        <div className="container new-product-section">
             <div className="new-product-section--header">
                 <div className="title">New fine fragrances</div>
                 {/* <div className="view-all">View all &gt;</div> */}
@@ -63,7 +49,7 @@ const NewProductSection = () => {
                     </Link>
                 ))}
             </div>
-        </div>}
+        </div>
     </>);
 }
 

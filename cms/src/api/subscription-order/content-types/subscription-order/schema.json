@@ -17,7 +17,7 @@
       "required": true
     },
     "expire_date": {
-      "type": "date",
+      "type": "datetime",
       "required": false
     },
     "txn_status": {
@@ -59,6 +59,10 @@
       ],
       "required": true,
       "default": "pending"
+    },
+    "last_payment_date": {
+      "type": "datetime",
+      "required": true
     }
   }
 }

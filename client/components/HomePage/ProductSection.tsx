@@ -7,6 +7,7 @@ import 'primereact/resources/primereact.css';
 
 import IProduct from "../../types/Product.interface";
 import productService from "../../shared/services/productService";
+import { CategoryEnums } from "../../shared/enums/category.enum";
 
 interface IProductCard {
   id: number | null,
@@ -39,7 +40,7 @@ const ProductSection = () => {
   const itemsToShow = useMemo(() => {
     if(maleTab) {
       return productList
-        .filter((product: any) => product.attributes.categories.data[0].attributes.name === "male")
+        .filter((product: any) => product.attributes.categories.data[0].attributes.name === CategoryEnums.MALE)
         .map((product, i) => (
           <Product
           key={i}
@@ -48,7 +49,7 @@ const ProductSection = () => {
         ));
       } else {
         return productList
-          .filter((product: any) => product.attributes.categories.data[0].attributes.name === "Female")
+          .filter((product: any) => product.attributes.categories.data[0].attributes.name === CategoryEnums.FEMALE)
           .map((product, i) => (
             <Product
               key={i}
