@@ -48,6 +48,7 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
     const [updated, setUpdated] = useState<boolean>(false);
     const [header, setHeader] = useState<any>(null);
     const [winReady, setWinReady] = useState(false);
+    const [orderDetails, setOrderDetails] = useState<IGETSubscriptionHistory>();
     const [dbSubsOrder, setDBSubsOrder] = useState<SubscriptionOrderItem[]>([]);
     const [cartSubsOrder, setCartSubsOrder] = useState<ICartProduct[]>([]);
     const [fullSubOrder, setFullSubOrder] = useState<FullSubOrderProduct[]>([]);
@@ -78,8 +79,15 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
 
     async function fetchDBSubsOrders() {
         try {
-            const { data }: { data: IDTOSubscriptionhistory } = await axios.get(`/subscription-orders?filters[user_id][$eq]=${userInfo.id}`, header);
-            setDBSubsOrder(data.data[0].attributes.subscription_list);
+            const { data }: { data: IDTOSubscriptionhistory } = await 
+                axios.get(`/subscription-orders?filters[user_id][$eq]=${userInfo.id}&filters[subscription_status][$eq]=active`, header);
+            if(data.data[0].attributes.subscription_list === null) {
+                setDBSubsOrder([]);
+                setOrderDetails(data.data[0]);
+            } else {
+                setOrderDetails(data.data[0]);
+                setDBSubsOrder([...data.data[0].attributes.subscription_list]);
+            }
         } catch (error) {
             console.log(error);            
         }
@@ -235,7 +243,7 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
     return (<>
         <div className="manage-subscription">
             <div className="left-side">
-                <SubscriptionCardDetails userSubscription={subscriptionHistory} userInfo={userInfo} />
+                <SubscriptionCardDetails orderDetails={orderDetails} userSubscription={subscriptionHistory} userInfo={userInfo} />
                 {userInfo?.subscribed
                     ? <>
                             <div className="text-update">Nu uita sa apesi buton <b className="brand-color">Update</b> pentru a-ti actualiza lista de parfumuri,
@@ -282,26 +290,6 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
                     </Slider>
                 </div>
 
-                {/* {userInfo.subscribed
-                    ? <>
-                        
-                    </>
-                    : <ul className="subscriptions-list">
-                        <li>
-                            <div className="image-wrapper">
-                                <img style={{height: '80%'}} src={emptyBottle.src}></img>
-                                <div className="plus">
-                                    <Plus width={20} height={20} stroke={'#fff'} strokeWidth={2.7} />
-                                </div>
-                            </div>
-                            <div className="details">
-                                <div className="title"><span className="brand">Pick your next scent</span></div>
-                                <div className="model">If this slot is empty, we'll ship you our product of the month.</div>
-                            </div>
-
-                        </li>
-                    </ul>
-                } */}
                 {loading
                     ?  <div className="skeleton">
                             <Skeleton variant="rounded" width={310} height={140} />

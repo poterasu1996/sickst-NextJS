@@ -5,6 +5,7 @@ import NewProductSection from "../../components/ShopPage/NewProductSection";
 import ProductFilterSection from "../../components/ShopPage/ProductFilterSection";
 import SubscriptionBanner from "../../components/ShopPage/SubscriptionBanner";
 import TopRatedProducts from "../../components/ShopPage/TopRatedProducts";
+import { CategoryEnums } from "../../shared/enums/category.enum";
 
 const PRODUCTS_URL = "/products?populate=*";
 
@@ -26,7 +27,7 @@ const ShopWoman = () => {
 
     function womanFilter(products: Product[]) {
         const filteredList = products.filter(product => {
-            return product.attributes.categories?.data[0]?.attributes?.name?.toLowerCase() === 'female';
+            return product.attributes.categories?.data[0]?.attributes?.name?.toUpperCase() === CategoryEnums.FEMALE;
         })
         return filteredList;
     }

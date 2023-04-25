@@ -8,12 +8,19 @@ import image1 from '../../public/img/mystery.jpg';
 import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
 
 type Props = {
+    orderDetails: IGETSubscriptionHistory | undefined,
     userInfo: ILocalUserInfo,
     userSubscription: IGETSubscriptionHistory[],
 }
-const SubscriptionCardDetails = ({ userInfo, userSubscription }: Props) => {
+const SubscriptionCardDetails = ({ orderDetails, userInfo, userSubscription }: Props) => {
     const [showCancelPlan, setCancelPlan] = useState<boolean>(false);
 
+    let nextBillingDate = null;
+    if(orderDetails) {
+        const nextBillingMonth = AppUtils.getNextBillingDate(orderDetails.attributes.last_payment_date);
+        nextBillingDate = AppUtils.isoToFormat(nextBillingMonth);
+    }
+    
     return(<>
         <div className="subscriber-banner">
             {userSubscription
@@ -40,9 +47,9 @@ const SubscriptionCardDetails = ({ userInfo, userSubscription }: Props) => {
                             <div className="text">
                                 Member since <b>{AppUtils.isoToFormat(userSubscription[0].attributes.createdAt)}</b>
                             </div>
-                            <div className="text">
-                                Next Billing period on <b>June 8, 2022</b>
-                            </div>
+                            {(orderDetails && userInfo.subscribed) && <div className="text">
+                                Next Billing period on <b>{nextBillingDate}</b>
+                            </div>}
                         </div>
                     </>
                 : <>
