@@ -119,7 +119,7 @@
         .top-rated-card {
             display: flex;
             flex-direction: column;
-            min-width: 24.5rem;
+            min-width: 27.5rem;
             width: 30%;
             background-color: #fff;
             border-radius: 0.25rem;
@@ -179,11 +179,24 @@
                     width: 100%;
                     font-weight: 600;
                     font-size: 1.2rem;
+                    line-height: 2.8rem;
                     color: #cc3633;
                     border: solid 1px #cc3633;
                     padding: 0;
                     height: 3rem;
                     border-radius: unset;
+
+                    &:hover,
+                    &:active,
+                    &:active:focus {
+                        background-color: #cc3633;
+                        border-color: #cc3633;
+                        color: #fff;
+                    }
+                    &:focus {
+                        color: #cc3633;
+                        background-color: #fff;
+                    }
                 }
             }
         }

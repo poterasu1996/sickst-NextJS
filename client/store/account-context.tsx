@@ -4,19 +4,38 @@ import { toast } from "react-toastify";
 import AuthContext from "./auth-context";
 
 import IHeader from "../types/RequestHeaderInterface";
-import ICurrentUser from "../types/CurrentUser.interface";
 import IShippingInfo from "../types/ShippingInfo.interface";
 import { AccountStateEnums } from "../shared/enums/accountPageState.enum";
+import { IUserModel } from "../models/User.model";
+import { IProductReviewModel } from "../models/ProductReview.model";
+import { IGETUserDetails } from "../models/UserDetails.model";
 
 interface IAccountContext {
-    refresh: boolean,
-    setAccountPageState: (data: string) => void,
     accountState: string,
-    currentUser: ICurrentUser | null,
-    fetchShippingList: () => Promise<any>,
-    addShippingInfo: (data: IShippingInfo) => void,
-    fetchOrderHistory: () => Promise<any>,
     activateSubscription: (id: number) => Promise<void>,
+    addShippingInfo: (data: IShippingInfo) => void,
+    currentUser: IUserModel | null,
+    fetchOrderHistory: () => Promise<any>,
+    fetchShippingList: () => Promise<any>,
+    likeReview: (
+        userId: number, 
+        reviewId: number, 
+        totalLikes: number, 
+        usersLikedOldList: number[] | null, 
+        totalDislikes: number, 
+        usersDislikedOldList: number[] | null) => void,
+    dislikeReview: (
+        userId: number, 
+        reviewId: number, 
+        totalLikes: number, 
+        usersLikedOldList: number[] | null, 
+        totalDislikes: number, 
+        usersDislikedOldList: number[] | null) => void,
+    postReview: (review: any) => void,
+    refresh: number,
+    refreshUserTotalReviews: (id: number, totalReviews: number) => void,
+    setAccountPageState: (data: string) => void,
+    userDetails: IGETUserDetails | null,
 }
 
 const AccountContext = React.createContext<IAccountContext | null>(null);
@@ -38,14 +57,17 @@ type Props = {
 
 export const AccountProvider = ({ children }: Props): JSX.Element => {
     const USER_ME = '/users/me';
+    const USER_DETAILS = '/user-details';
     const USERS = '/api/users'
     const SHIPPING_INFO = '/shipping-informations';
+    const PRODUCT_REVIEW = '/product-reviews';
     const ORDER_HISTORIES = '/order-histories';
     const authManager = useContext(AuthContext);
     const [accountState, setAccountState] = useState<string>('subscription');
-    const [currentUser, setCurrentUser] = useState<ICurrentUser | null>(null);
+    const [currentUser, setCurrentUser] = useState<IUserModel | null>(null);
+    const [userDetails, setUserDetails] = useState<IGETUserDetails | null>(null);
     const [header, setHeader] = useState<IHeader | null>(null);
-    const [refresh, setRefresh] = useState<boolean>(false);  // inform other components that context has been changed
+    const [refresh, setRefresh] = useState<number>(0);  // inform other components that context has been changed
     // const accState = [
     //     'subscription', 
     //     'orderHistory', 
@@ -72,26 +94,34 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     useEffect(() => {
         if (header) {
             axios.get(USER_ME, header)
-            .then((resp) => {
+            .then(async (resp) => {
                 setCurrentUser(resp.data)
+                await axios.get(`${USER_DETAILS}?filters[user_id][$eq]=${resp.data.id}`, header)
+                    .then((resp) => setUserDetails(resp.data.data[0]))
+                    .catch(error => console.log(error))
+
             })
             .catch(error => console.log('axios error', error))
+
         }
     }, [header])
 
-    const toastMsg = (
+    const toastMsg = (msg: string, status: boolean) => {
+        return (
         <>
           <div className="toast-item">
             <div className="content">
-                <div className="title">Success</div>
-                <div className="message">An address has been changed successfully!</div>            
+                <div className="title">{status ? 'Success' : 'ERROR'}</div>
+                {/* <div className="title">Success</div> */}
+                {/* <div className="message">An address has been changed successfully!</div>             */}
+                <div className="message">{msg}</div>            
             </div>
           </div>
         </>
-    );
+    )};
 
-    function notify() {
-        toast(toastMsg, {
+    function notify(message: string, status: boolean) {
+        toast(toastMsg(message, status), {
             autoClose: 2000,
         });
     }
@@ -117,13 +147,164 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     async function fetchShippingList() {
         // get current user shipping list
         if(header) {
-            const response = await axios.get(
-                `${SHIPPING_INFO}?filters[user_id][$eq]=${currentUser!.id}`, 
-                header
-            )
-            return response.data.data[0];
+            try {
+                const response = await axios.get(
+                    `${SHIPPING_INFO}?filters[user_id][$eq]=${currentUser!.id}`, 
+                    header
+                )
+                return response.data.data[0];
+            } catch (error) {
+                console.log(error);
+                notify('OOPS! An error occured retrieving the list!', false);
+            }
         }
     }
+
+    async function postReview(prodReview: { data: IProductReviewModel }) {
+        if(header) {
+            return await axios.post(PRODUCT_REVIEW, prodReview, header)
+                .then(() => {
+                    notify('A review has been added successfully!', true);
+                    setRefresh(refresh + 1);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    notify('OOPS! An error occured adding the review!', false);
+                })
+        }
+    }
+
+    async function likeReview(
+        userId: number, 
+        revId: number, 
+        totalLikes: number, 
+        usersLikedOldList: number[] | null,
+        totalDislikes: number, 
+        usersDislikedOldList: number[] | null
+        ) {
+        if(header) {
+            let _newData: any = {
+                data: {
+                    likes: 0,
+                    users_liked: [],
+                    dislikes: totalDislikes,
+                    users_disliked: usersDislikedOldList ? [...usersDislikedOldList] : []
+                }
+            };
+            if(usersDislikedOldList && usersDislikedOldList.find(uId => uId === userId)) {
+                const undoDislike = usersDislikedOldList.filter(uId => uId !== userId);
+                _newData = {
+                    data: {
+                        ..._newData.data,
+                        dislikes: totalDislikes - 1,
+                        users_disliked: [...undoDislike]
+                    }
+                }
+            }
+            if(usersLikedOldList && usersLikedOldList.find(uId => uId === userId)) {
+                // if there is a list & the user already liked, undo the like
+                const undoLike = usersLikedOldList.filter(uId => uId !== userId)
+                _newData = {
+                    data: {
+                        ..._newData.data,
+                        likes: totalLikes - 1,
+                        users_liked: [...undoLike]
+                    }
+                } 
+            } else {
+                _newData = {
+                    data: {
+                        ..._newData.data,
+                        likes: totalLikes + 1,
+                        users_liked: usersLikedOldList ? [...usersLikedOldList, userId] : [userId],
+                    }
+                }
+            }
+
+            try {
+                await axios.put(`${PRODUCT_REVIEW}/${revId}`, _newData, header)
+                    .then(() => setRefresh(refresh + 1));
+            } catch (error) {
+                console.log(error);
+                notify('OOPS! An error occured while updating reviews!', false);
+            }            
+        }
+    }
+
+    async function dislikeReview(
+        userId: number, 
+        revId: number, 
+        totalLikes: number, 
+        usersLikedOldList: number[] | null,
+        totalDislikes: number, 
+        usersDislikedOldList: number[] | null
+    ) {
+        if(header) {
+            let _newData: any = {
+                data: {
+                    likes: totalLikes,
+                    users_liked: usersLikedOldList ? [...usersLikedOldList] : [],
+                    dislikes: 0,
+                    users_disliked: []
+                }
+            };
+            if(usersLikedOldList && usersLikedOldList.find(uId => uId === userId)) {
+                const undoLike = usersLikedOldList.filter(uId => uId !== userId);
+                _newData = {
+                    data: {
+                        ..._newData.data,
+                        likes: totalLikes - 1,
+                        users_liked: [...undoLike]
+                    }
+                }
+            }
+            if(usersDislikedOldList && usersDislikedOldList.find(uId => uId === userId)) {
+                // if there is a list & the user already liked, undo the dislike
+                const undoDislike = usersDislikedOldList.filter(uId => uId !== userId)
+                _newData = {
+                    data: {
+                        ..._newData.data,
+                        dislikes: totalDislikes - 1,
+                        users_disliked: [...undoDislike]
+                    }
+                } 
+            } else {
+                _newData = {
+                    data: {
+                        ..._newData.data,
+                        dislikes: totalDislikes + 1,
+                        users_disliked: usersDislikedOldList ? [...usersDislikedOldList, userId] : [userId],
+                    }
+                }
+            }
+           
+            try {
+                await axios.put(`${PRODUCT_REVIEW}/${revId}`, _newData, header)
+                    .then(() => setRefresh(refresh + 1));
+            } catch (error) {
+                console.log(error);
+                notify('OOPS! An error occured while updating reviews!', false);
+            }            
+        }
+    }
+
+    async function refreshUserTotalReviews(id: number, totalReviews: number) {
+        if(header) {
+            const newData = {
+                data: {
+                    reviews: totalReviews + 1,
+                }
+            }
+            try {
+                await axios.put(`${USER_DETAILS}/${id}`, newData, header)
+                    .then(() => setRefresh(refresh + 1))
+            } catch (error) {
+                console.log(error);
+                notify('OOPS! An error occured while updating reviews!', false);
+            }
+        }
+    }
+
 
     function addShippingInfo(newData: IShippingInfo) {
         if(header) {
@@ -194,10 +375,13 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
                         newList, 
                         header)
                         .then(() => {
-                            notify();
-                            setRefresh(preVal => !preVal);
+                            notify('An address has been changed successfully!', true);
+                            setRefresh(preVal => preVal++);
                         })
-                        .catch(error => console.log(error));
+                        .catch(error => {
+                            console.log(error)
+                            notify('OOPS! An error occured while updating the list!', false);
+                        });
                 } else {
                     // if user has no data, POST
                     newList = {
@@ -211,10 +395,13 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
                     return axios.post(SHIPPING_INFO, newList, header)
                         .then(resp => {
                             console.log(resp);
-                            notify();
-                            setRefresh(preVal => !preVal);
+                            notify('An address has been changed successfully!', true);
+                            setRefresh(preVal => preVal++);
                         })
-                        .catch(error => console.log(error));
+                        .catch(error => {
+                            console.log(error)
+                            notify('OOPS! An error occured adding the address!', false);
+                        });
                 }
             })
         }
@@ -254,14 +441,19 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     }
 
     const accountManager: IAccountContext = {
-        refresh: refresh,
-        setAccountPageState: setAccountPageState,
         accountState: accountState,
-        currentUser: currentUser,
-        fetchShippingList: fetchShippingList,
-        addShippingInfo: addShippingInfo,
-        fetchOrderHistory: fetchOrderHistory,
         activateSubscription: activateSubscription,
+        addShippingInfo: addShippingInfo,
+        currentUser: currentUser,
+        dislikeReview: dislikeReview,
+        fetchOrderHistory: fetchOrderHistory,
+        fetchShippingList: fetchShippingList,
+        likeReview: likeReview,
+        postReview: postReview,
+        refresh: refresh,
+        refreshUserTotalReviews: refreshUserTotalReviews,
+        setAccountPageState: setAccountPageState,
+        userDetails: userDetails,
     };
     
     return (

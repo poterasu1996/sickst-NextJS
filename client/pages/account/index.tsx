@@ -13,9 +13,9 @@ import PersonalInfo from "../../components/AccountPage/PersonalInfo";
 import ResetPassword from "../../components/AccountPage/ResetPassword";
 import userAvatar from '../../public/img/svg/male_avatar.svg';
 import AccountContext from "../../store/account-context";
-import { IUserInfo } from "../../types/UserInfo.interface";
 import { GetServerSideProps } from "next";
 import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
+import { IUserModel } from "../../models/User.model";
 
 // const accState = [
 //     'subscription', 
@@ -126,10 +126,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             }
         }
 
-        const userData: IUserInfo = await axios.get(USER_ME, header)
+        const userData: IUserModel = await axios.get(USER_ME, header)
             .then((res) => { return res.data })
             .catch(error => console.log('ERES'))
-
+        
         if(userData?.subscribed) {
             // ramane de vazut daca luam orderul active/pending sau nu
             const subHistory = await axios.get(`${SUBSCRIPTION_HISTORY}?filters[user_id][$eq]=${userData.id}`, header)
@@ -154,7 +154,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             }
         }
         // test my api
-        // const MY_DATA = 'http://localhost:3000/api/subscriptions_queue'
+        // const MY_DATA = 'http://localhost:3000/api/v1/subscriptions_queue'
         // const myData = await axiosServer.get(MY_DATA, customHeader)
         // console.log('myData: ', myData)
     }

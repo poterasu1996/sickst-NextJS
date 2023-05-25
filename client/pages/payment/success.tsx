@@ -5,7 +5,7 @@ import PaymentContextTS from "../../store/payment-contextTS";
 import CartService from "../../shared/services/cartService";
 import Cookies from 'cookies';
 import axios from "axios";
-import { IUserInfo } from "../../types/UserInfo.interface";
+import { IUserModel } from "../../models/User.model";
 // import CookiesReact from 'js-cookie';
 
 const USERS = 'http://localhost:1337/api/users'
@@ -101,7 +101,7 @@ export async function getServerSideProps({ req, res}: any) {
                   'Authorization': 'Bearer ' + jwt
                 }
             }
-            const userData: IUserInfo = await axios.get(USER_ME, header)
+            const userData: IUserModel = await axios.get(USER_ME, header)
                 .then(res => { return res.data})
                 .catch(error => console.log(error))
 

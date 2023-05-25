@@ -1,4 +1,4 @@
-export interface IUserInfo {
+export interface IUserModel {
     blocked: boolean,
     client_role: string,
     confirmed: boolean,
@@ -9,6 +9,6 @@ export interface IUserInfo {
     newsletter: boolean,
     provider: string,
     subscribed: boolean,
-    updatedAt: string
+    updatedAt: string,
     username: string
 }

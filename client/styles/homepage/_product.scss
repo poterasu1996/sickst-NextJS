@@ -175,7 +175,8 @@
         }
     }
 }
-.product-card-modal {
+.product-card-modal, 
+.custom-modal {
     @media (min-width:576px) and (max-width:1200px) {
         max-width: unset;
     } 
@@ -195,6 +196,9 @@
         @media (max-width:500px) {
             padding: 0 2rem;
         }
+    }
+    .modal-footer {
+        padding: 2rem;
     }
     .modal-container {
         .img-wrapper {

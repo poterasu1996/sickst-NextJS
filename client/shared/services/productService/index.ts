@@ -87,6 +87,21 @@ class ProductsService {
       return {error: error.response.data.error}      
     }
   }
+
+  async getTopRatedFemaleProducst() {
+    // get 6 top rated products
+    try {
+      const result = await axios.get(`${PRODUCTS_URL}&filters[categories][name][$eq]=${CategoryEnums.FEMALE}&sort[0]=rating%3Adesc`);
+      return {
+        ...result.data,
+        data: result.data.data.slice(0,6)
+      }
+    } catch (error: any) {
+      return {error: error.response.data.error}    
+    }
+  }
+
+  // async 
 }
 
 export default new ProductsService();

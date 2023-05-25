@@ -14,7 +14,7 @@ import CookiesServer from 'cookies';
 import Cookies from 'js-cookie';
 import { PaymentEnums } from "../../shared/enums/payment.enums";
 import ICartProduct from "../../types/CartProduct.interface";
-import { IUserInfo } from "../../types/UserInfo.interface";
+import { IUserModel } from "../../models/User.model";
 
 let stripePromise: any;
 
@@ -98,7 +98,7 @@ const PaymentPage = ({ user }: Props) => {
     // create stripe checkout, pass line items to the body
     const { 
       data: {id}, 
-    } = await axios.post('/api/checkout_sessions', {
+    } = await axios.post('/api/v1/checkout_sessions', {
       items: [...lineItems],
       mode: 'payment',
       customer_email: user.email,
@@ -270,7 +270,7 @@ export async function getServerSideProps({req, res}: any) {
       }
     }
 
-    const userData: IUserInfo = await axios.get(USER_ME, header)
+    const userData: IUserModel = await axios.get(USER_ME, header)
       .then(res => { return res.data})
       .catch(error => console.log(error))
    

@@ -1,6 +1,11 @@
 .reviews-section {
-    max-width: 1024px;
+    max-width: 1320px;
     margin: 0 auto;
+    padding: 1.6rem;
+    @media (max-width: 440px) {
+        padding: 0 0 1.6rem 0;
+    }
+    
 
     &--title {
         font-size: 3rem;
@@ -13,6 +18,83 @@
         margin: 3rem 0;
         display: flex;
         justify-content: space-around;
+        max-width: 115rem;
+        @media (max-width: 510px) {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .p-divider {
+            @media (max-width: 510px) {
+                display: none;
+            } 
+        }
+
+        .left {
+            display: flex;
+            padding-right: 1rem;
+            @media (max-width: 860px) {
+                flex-direction: column;
+                justify-content: center;
+            }
+            @media (max-width: 510px) {
+                margin-bottom: 2rem;
+                padding-right: 0;
+                text-align: center;
+            }
+
+            .title {
+                font-size: 3rem;
+                font-weight: 600;
+            }
+    
+            .subtitle {
+                font-size: 1.6rem;
+            }
+
+            .rating {
+                margin-right: 5rem;
+                @media (max-width: 510px) {
+                    margin: 0 auto;
+                }
+            }
+        }
+
+        .left.no-rating {
+            display: block;
+            @media (max-width: 860px) {
+                margin-bottom: 3rem;
+            } 
+        }
+        .right.no-rating {
+            @media (max-width: 860px) {
+                padding-left: 0;
+                .review-button {
+                    margin-left: auto;
+                }
+            } 
+            @media (max-width: 520px) {
+                display: block;
+                .review-button {
+                    margin-top: 2rem;
+                    width: auto;
+                }
+            }
+        }
+
+        .right {
+            display: flex;
+            align-items: center;
+            min-width: 31.8rem;
+            padding-left: 1rem;
+            @media (max-width: 860px) {
+                flex-direction: column;
+                align-items: unset;
+            }
+            @media (max-width: 700px) {
+                min-width: unset;
+            }
+        }
 
         .rating {
             display: flex;
@@ -51,9 +133,14 @@
         }
 
         .review-button {
-            width: 25%;
             display: flex;
             align-items: center;
+            margin-left: 5rem;
+            @media (max-width: 860px) {
+                margin-left: 0;
+                margin-top: 2rem;
+                max-width: 22.5rem;
+            }
         }
 
     }
@@ -84,8 +171,12 @@
             .review {
                 margin-top: 3rem;
                 display: flex;
+                max-width: 42rem;
+                justify-content: space-between;
+                @media (max-width: 490px) {
+                    justify-content: unset;
+                }
                 &--user {
-                    
                     .user {
                         display: flex;
                         align-items: center;
@@ -123,18 +214,36 @@
                         text-transform: uppercase;
                         margin-left: 1.4rem;
                     }
+                    .no-review-img {
+                        max-width: 20rem;
+                        height: auto;
+                    }
+                    p {
+                        font-size: 1.4rem;
+                    }
                 }
                 &--details {
                     margin-left: 2rem;
+                    @media (max-width: 490px) {
+                        margin: auto;
+                    }
                     .rating-wrapper {
                         display: flex;
                         align-items: center;
+                        @media (max-width: 490px) {
+                            flex-direction: column;
+                            align-items: flex-start;
+                        }
 
                         .date {
                             margin-left: 2rem;
                             font-size: 1.8rem;
                             font-weight: 600;
                             color: #babfc7;
+                            @media (max-width: 490px) {
+                                margin-left: 0;
+                                margin-top: .4rem;
+                            }
                         }
                     }
                     .subject {
@@ -146,11 +255,16 @@
                     .text {
                         font-size: 1.6rem;
                     }
-                    .like-buttons {
+                    .appreciate-review {
                         margin-top: 1.4rem;
                         color: #babfc7;
-                        .pi {
+                        
+                        button {
+                            color: #babfc7;
+                            background-color: transparent;
+                            border: unset;
                             margin-right: 2rem;
+
                         }
                         .pi-thumbs-up-fill::before {
                             margin-right: .8rem;
@@ -158,9 +272,80 @@
                         .pi-thumbs-down-fill::before {
                             margin-right: .8rem;
                         }
+                        .active {
+                            color: #cc3636;
+                        }
                     }
                 }
             }
         } 
+    }
+}
+
+.custom-modal {
+    .modal-body {
+        padding-bottom: 0;
+    }
+
+    .modal-review-content {
+        p {
+            font-size: 1.4rem;
+        }
+        .prod-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3rem;
+            max-width: 40rem;
+    
+            img {
+                height: 8rem;
+            }
+    
+            .prod-details {
+                margin-left: 1rem;
+    
+                .prod-brand {
+                    font-size: 1.6rem;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                }
+                .prod-model {
+                    font-size: 1.4rem;
+                }
+            }
+            .rate-wrapper {
+                margin-left: auto;
+    
+                p {
+                    padding-left: .2rem;
+                }
+
+                .rating-msg {
+                    font-size: 1.2rem;
+                    margin-top: .5rem;
+                    font-weight: bold;
+                    color: #cc3636;
+                }
+            }
+        }
+    
+        form {
+            padding: 0 4rem;
+            .form-label {
+                font-size: 1.4rem;
+                font-weight: bold;
+            }
+    
+            input,
+            textarea {
+                font-size: 1.4rem;
+                width: 100%;
+            }
+
+            .button-second {
+                max-width: 25rem;
+                margin: 0 auto;
+            }
+        }
     }
 }
