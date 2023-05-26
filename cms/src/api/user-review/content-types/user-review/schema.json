@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_reviews",
+  "info": {
+    "singularName": "user-review",
+    "pluralName": "user-reviews",
+    "displayName": "user_review"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "likes": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "dislikes": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    }
+  }
+}

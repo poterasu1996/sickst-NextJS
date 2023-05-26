@@ -8,9 +8,9 @@ import axios from "axios";
 import { SubscriptionEnums } from "../../shared/enums/subscription.enum";
 import Cookies from 'cookies';
 import CookiesReact from 'js-cookie';
-import { IUserInfo } from "../../types/UserInfo.interface";
 import { GETSubscription, IPOSTSubscriptionHistory } from "../../types/OrderHystory.interface";
 import { TxnStatusEnum } from "../../shared/enums/txn.enum";
+import { IUserModel } from "../../models/User.model";
 
 const SUBSCRIPTION_URL = 'http://localhost:1337/api/subscriptions';
 const USER_ME = 'http://localhost:1337/api/users/me'
@@ -47,7 +47,7 @@ export const Subscriptions = ({ subscriptionsStripe, user, subscriptionHistory }
 
       const {
         data: {id}
-      } = await axios.post('/api/checkout_sessions', {
+      } = await axios.post('/api/v1/checkout_sessions', {
         items: [lineItems],
         mode: 'subscription', 
         customer_email: user.email
@@ -197,7 +197,7 @@ export async function getServerSideProps({ req, res }: any) {
       })
       .catch(error => console.log(error))
 
-    const userData: IUserInfo = await axios.get(USER_ME, header)
+    const userData: IUserModel = await axios.get(USER_ME, header)
       .then(res => { return res.data})
       .catch(error => console.log(error))
 

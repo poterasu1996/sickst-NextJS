@@ -1,0 +1,42 @@
+.chip {
+    padding: 0.2rem 1rem;
+    font-weight: bold;
+    background-color: transparent;
+    position: relative;
+    height: 2rem;
+    max-width: 100%;
+    
+    &__underlay {
+        color: inherit;
+        border-radius: 0.5rem;
+        opacity: 0.26;
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        max-width: 100%;
+    }
+}
+
+.chip-success {
+    color: #0e960b;
+    &__underlay {
+        background-color: #0e960b;
+    }
+}
+
+.chip-pending {
+    color: #ff9e43;
+    &__underlay {
+        background-color: #ff9e43;
+    }
+}
+
+.chip-cancel {
+    color: #cc3633;
+    &__underlay {
+        background-color: #cc3633;
+    }
+}
+

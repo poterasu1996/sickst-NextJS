@@ -11,6 +11,12 @@
 
 export default async function handler(req, res) {
     // res.status(200).json({ message: 'bun' })
+    try {
+        const ratingList = axios
+    } catch (error) {
+        
+    }
+
     const data = {message: 'bun'}
     res.status(200).json(data);
 

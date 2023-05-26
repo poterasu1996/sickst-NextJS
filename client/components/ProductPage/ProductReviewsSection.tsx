@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useContext, useLayoutEffect } from "react";
 import { Star } from "react-feather";
 import Rating from "react-rating";
 import { Dropdown } from 'primereact/dropdown';
@@ -6,35 +6,154 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.css';
 import 'primeicons/primeicons.css';
 import ProductCardReview from "./ProductCardReview";
+import { ReviewCount } from "../../types/product/ProductReviews.interface";
+import RequestMeta from "../../types/Axios.interface";
+import axios from "../../api/axios";
+import { AppUtils } from "../../shared/utils/app.utils";
+import noReview from "../../public/img/svg/no-reviews.svg";
+import IProduct from "../../types/Product.interface";
+import AccountContext from "../../store/account-context";
+import { IGETProductReview } from "../../models/ProductReview.model";
+import AuthContext from "../../store/auth-context";
+import { useRouter } from "next/router";
 
-const ProductReviewsSection = () => {
-    const [selectedStarValue, setSelectedStarValue] = useState(null);
+type Props = {
+    product: IProduct,
+    productRating: ReviewCount | null
+}
+
+type AxiosProductReviewResponse = {
+    data: IGETProductReview[],
+    meta: RequestMeta
+}
+
+
+const ProductReviewsSection = ({ product, productRating }: Props) => {
+    const [dateValue, setDateValue] = useState<string>('desc');
+    const [selectedStarValue, setSelectedStarValue] = useState(0);
+    const [reviews, setReviews] = useState<AxiosProductReviewResponse>();
+    const [likedReviews, setLikedReviews] = useState<number[]>([]);
+    const [dislikedReviews, setDislikedReviews] = useState<number[]>([]);
+    const accountManager = useContext(AccountContext);
+    const authManager = useContext(AuthContext);
+    const router = useRouter();
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+
+    const dateOptions = [
+        { name: 'Cele mai recente', value: 'desc'},
+        { name: 'Cele mai vechi', value: 'asc'},
+    ]
 
     const starsOptions = [
-        { name: 'Toate', code: 0},
-        { name: '5 stars', code: 5},
-        { name: '4 stars', code: 4},
-        { name: '3 stars', code: 3},
-        { name: '2 stars', code: 2},
-        { name: '1 stars', code: 1}
+        { name: 'Toate', value: 0},
+        { name: '5 stars', value: 5},
+        { name: '4 stars', value: 4},
+        { name: '3 stars', value: 3},
+        { name: '2 stars', value: 2},
+        { name: '1 stars', value: 1}
     ];
     
+    const onDateChange = (e: any) => {
+        setDateValue(e.value);
+    }
+
     const onStarChange = (e: any) => {
         setSelectedStarValue(e.value);
     }
 
+    useLayoutEffect(() => {
+        window.scrollTo(scrollX, scrollY);
+    });
+
+    useEffect(() => {
+        let queryUrl = `/product-reviews?populate=*&filters[product_id][$eq]=${product.id}`
+        if (selectedStarValue > 0) {
+            queryUrl = queryUrl + `&filters[rating][$eq]=${selectedStarValue}`
+        }
+        if (dateValue) {
+            queryUrl = queryUrl + `&sort[0]=createdAt%3A${dateValue}`
+        } 
+
+        axios.get(queryUrl)
+            .then((resp: any) => setReviews(resp.data))
+    }, [selectedStarValue, dateValue, accountManager?.refresh]);
+
+    useEffect(() => {
+        let _likedReviews: number[] = [];
+        let _dislikedReviews: number[] = [];
+        console.log('USER ID',accountManager?.userDetails?.id)
+        reviews?.data.map((rev: IGETProductReview) => {
+            if(rev.attributes.users_liked && rev.attributes.users_liked.find(uID => uID === accountManager?.userDetails?.id)) {
+                _likedReviews.push(rev.id);
+                console.log("_likedL", _likedReviews)
+            }
+            if(rev.attributes.users_disliked && rev.attributes.users_disliked.find(uID => uID === accountManager?.userDetails?.id)) {
+                _dislikedReviews.push(rev.id);
+            }
+        })
+        setLikedReviews([..._likedReviews]);
+        setDislikedReviews([..._dislikedReviews]);
+    }, [reviews, accountManager?.refresh])
+
+    function handleLikeReviews(review: IGETProductReview) {
+        if(!authManager.auth) {
+            router.push('/account/login');
+            return
+        }
+        accountManager!.likeReview(
+            accountManager!.userDetails!.id, 
+            review.id, 
+            review.attributes.likes, 
+            review.attributes.users_liked,
+            review.attributes.dislikes,
+            review.attributes.users_disliked
+        );
+    }
+
+    function handleDislikeReviews(review: IGETProductReview) {
+        if(!authManager.auth) {
+            router.push('/account/login');
+            return
+        }
+        accountManager!.dislikeReview(
+            accountManager!.userDetails!.id, 
+            review.id, 
+            review.attributes.likes, 
+            review.attributes.users_liked,
+            review.attributes.dislikes,
+            review.attributes.users_disliked
+        );
+    }
+
+    function handleActiveLikes(revId: number) {
+        if(likedReviews.find(lr => lr === revId)) {
+            return 'active'
+        } else {
+            return ''
+        }
+    }
+
+    function handleActiveDislikes(revId: number) {
+        if(dislikedReviews.find(dr => dr === revId)) {
+            return 'active';
+        } else {
+            return '';
+        }
+    }
+
     return(<>
         <div className="reviews-section">
-            <ProductCardReview />
-            <div className="reviews-section--filter">
+            {(productRating && reviews) && <ProductCardReview product={product} reviewList={reviews.data} productRating={productRating} />}
+
+            {(reviews) && <div className="reviews-section--filter">
                 <div className="title">Filter reviews</div>
                 <div className="dd-filters">
-
                     <Dropdown 
                         className="custom-filter-dd"
-                        value={selectedStarValue} 
-                        options={starsOptions} 
-                        onChange={onStarChange} 
+                        value={dateValue} 
+                        options={dateOptions} 
+                        onChange={onDateChange} 
                         optionLabel="name" 
                         placeholder="Recente" 
                     />
@@ -47,89 +166,67 @@ const ProductReviewsSection = () => {
                         placeholder="All rating" 
                     />
                 </div>
+
                 <div className="review-list">
-                    <div className="review">
-                        <div className="review--user">
-                            <div className="user">
-                                <div className="avatar avatar-gradient-1">tc</div>
-                                <div className="name">Taylor C.</div>
-                            </div>
-                            <div className="user-details">
-                                <div className="c1">
-                                    <div className="d-flex"><span>Reviews</span>15</div>
-                                    <div className="d-flex"><span>Up votes</span>0</div>
-                                </div>
-                                <div className="c2">
-                                    <div><span>Down votes</span>0</div>
-                                    <div><span>Products received</span>10</div>
-                                </div>
-                            </div>
+                    {reviews.data.length === 0 && <div className="review--user">
+                        <div className="text-center">
+                            <img className="no-review-img" src={noReview.src} />
+                            <h4 className="h1 strong mt-4">0 rezultate...</h4>
+                            <p>Filtrele aplicate nu au generat niciun rezultat.</p>
                         </div>
-                        <div className="review--details">
-                            <div className="rating-wrapper">
-                                <Rating 
-                                    fractions={2}
-                                    initialRating={4}
-                                    readonly={true}
-                                    emptySymbol={<Star size={18} fill="#babfc7" stroke="#babfc7" />}
-                                    fullSymbol={<Star size={18} fill="#cc3633" stroke="#cc3633" />}
-                                />
-                                <div className="date">04/19/2022</div>
-                            </div>
-                            <div className="subject">Want to smell like a literature professor?</div>
-                            <div className="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                                Perspiciatis, sed odit. Fugiat consequuntur architecto cumque tempora assumenda pariatur quos officiis 
-                                totam soluta sequi rerum, incidunt veritatis eos. Magnam eaque explicabo cum eos facere ipsum ullam 
-                                sint praesentium modi, porro cupiditate minus. Laboriosam neque obcaecati delectus sed, esse nisi animi placeat.
-                            </div>
-                            <div className="like-buttons">
-                                <i className="pi pi-thumbs-up-fill" style={{'fontSize': '1.8rem'}}>0</i>
-                                <i className="pi pi-thumbs-down-fill" style={{'fontSize': '1.8rem'}}>0</i>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="review">
-                        <div className="review--user">
-                            <div className="user">
-                                <div className="avatar avatar-gradient-7">tc</div>
-                                <div className="name">Taylor C.</div>
-                            </div>
-                            <div className="user-details">
-                                <div className="c1">
-                                    <div className="d-flex"><span>Reviews</span>15</div>
-                                    <div className="d-flex"><span>Up votes</span>0</div>
+                    </div>}
+                    {reviews.data.map((review: IGETProductReview) => (<div className="review" key={review.id}>
+                            <div className="review--user">
+                                <div className="user">
+                                    <div className={`avatar avatar-gradient-${AppUtils.random7()}`}>
+                                        {AppUtils.userFullNameInitials(
+                                            review.attributes.user_details.data.attributes.first_name, 
+                                            review.attributes.user_details.data.attributes.last_name)}
+                                    </div>
+                                    <div className="name">
+                                        {review.attributes.user_details.data.attributes.first_name+" "
+                                        +AppUtils.firstInitial(review.attributes.user_details.data.attributes.last_name)}
+                                    </div>
                                 </div>
-                                <div className="c2">
-                                    <div><span>Down votes</span>0</div>
-                                    <div><span>Products received</span>10</div>
+                                <div className="user-details">
+                                    <div className="c1">
+                                        <div className="d-flex"><span>Reviews</span>{review.attributes.user_details.data.attributes.reviews}</div>
+                                        <div><span>Products received</span>{review.attributes.user_details.data.attributes.products_received}</div>
+                                    </div>
+                                    {/* <div className="c2">
+                                        <div className="d-flex"><span>Up votes</span>0</div>
+                                        <div><span>Down votes</span>0</div>
+                                    </div> */}
                                 </div>
                             </div>
-                        </div>
-                        <div className="review--details">
-                            <div className="rating-wrapper">
-                                <Rating 
-                                    fractions={2}
-                                    initialRating={4}
-                                    readonly={true}
-                                    emptySymbol={<Star size={18} fill="#babfc7" stroke="#babfc7" />}
-                                    fullSymbol={<Star size={18} fill="#cc3633" stroke="#cc3633" />}
-                                />
-                                <div className="date">04/19/2022</div>
+                            <div className="review--details">
+                                <div className="rating-wrapper">
+                                    <Rating 
+                                        fractions={1}
+                                        initialRating={review.attributes.rating}
+                                        readonly={true}
+                                        emptySymbol={<Star size={18} fill="#babfc7" stroke="#babfc7" />}
+                                        fullSymbol={<Star size={18} fill="#cc3633" stroke="#cc3633" />}
+                                    />
+                                    <div className="date">{AppUtils.isoToFormat(review.attributes.updatedAt)}</div>
+                                </div>
+                                <div className="subject">{review.attributes.title_review}</div>
+                                <div className="text">{review.attributes.review}</div>
+                                <div className="appreciate-review">
+                                    <button onClick={() => handleLikeReviews(review)}>
+                                        <i className={`pi pi-thumbs-up-fill ${handleActiveLikes(review.id)}`} style={{'fontSize': '1.8rem'}}>{review.attributes.likes}</i>
+                                    </button>
+                                    <button onClick={() => handleDislikeReviews(review)}>
+                                        <i className={`pi pi-thumbs-down-fill ${handleActiveDislikes(review.id)}`} style={{'fontSize': '1.8rem'}}>{review.attributes.dislikes}</i>
+                                    </button>
+                                </div>
                             </div>
-                            <div className="subject">Want to smell like a literature professor?</div>
-                            <div className="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                                Perspiciatis, sed odit. Fugiat consequuntur architecto cumque tempora assumenda pariatur quos officiis 
-                                totam soluta sequi rerum, incidunt veritatis eos. Magnam eaque explicabo cum eos facere ipsum ullam 
-                                sint praesentium modi, porro cupiditate minus. Laboriosam neque obcaecati delectus sed, esse nisi animi placeat.
-                            </div>
-                            <div className="like-buttons">
-                                <i className="pi pi-thumbs-up-fill" style={{'fontSize': '1.8rem'}}>0</i>
-                                <i className="pi pi-thumbs-down-fill" style={{'fontSize': '1.8rem'}}>0</i>
-                            </div>
-                        </div>
-                    </div>
+                        </div>)
+                    )}
                 </div>
-            </div>
+                
+            </div>}
+
         </div>
     </>)
 }

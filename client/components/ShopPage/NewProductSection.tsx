@@ -1,19 +1,10 @@
-import { useEffect, useState } from "react";
 import { Star } from "react-feather";
 import Rating from "react-rating";
-import img from '../../public/img/creed-aventus.jpg';
 import Link from "next/link";
-import axios from '../../api/axios';
-
-const PRODUCTS_URL = "/products?populate=*";
+import IProduct from "../../types/Product.interface";
 
 type Props = {
-    newProducts: Product[]
-}
-
-type Product = {
-    id: number,
-    attributes: any
+    newProducts: IProduct[]
 }
 
 const NewProductSection = ({ newProducts }: Props) => {

@@ -6,9 +6,24 @@ export class AppUtils {
         return newDate.toFormat('dd LLL yyyy');
     }
 
+    static random7() {
+        // apply random gradient
+        const max = 7;
+        const min = 1;
+        return Math.floor(Math.random()* (max - min) + min)
+    }
+
     static capitalize(data: string) {
         const capData = data.charAt(0).toUpperCase() + data.slice(1);
         return capData;
+    }
+
+    static userFullNameInitials(firstName: string, lastName: string) {
+        return firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
+    }
+
+    static firstInitial(name: string) {
+        return name.charAt(0).toUpperCase()+".";
     }
 
     static getNextBillingDate(isoDate: string) {

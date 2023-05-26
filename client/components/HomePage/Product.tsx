@@ -1,4 +1,3 @@
-import React, { useState, useContext } from "react";
 import Rating from "react-rating";
 import { Star, Check, ChevronRight } from "react-feather";
 import Image from "next/image";
@@ -11,23 +10,14 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import Link from "next/link";
 // import { Rating } from "@mui/material";
-import { styled } from "@mui/material/styles";
+// import { styled } from "@mui/material/styles";
 import CartService from "../../shared/services/cartService/index";
 import { PaymentEnums } from "../../shared/enums/payment.enums";
+import React, { useState, useContext } from "react";
 
-type Props = {
+interface Props {
   product: any
 }
-
-// const StyledRating = styled(Rating)({
-//   '& .MuiRating-iconFilled': {
-//     color: '#cc3633'
-//   },
-//   '& .MuiRating-iconEmpty': {
-//     color: '#babfc7'
-//   },
-
-// });
 
 const Product = ({ product }: Props) => {
   const [show, setShow] = useState<boolean>(false); // for Read more modal
