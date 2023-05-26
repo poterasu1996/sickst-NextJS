@@ -9,8 +9,8 @@ export interface IProductReviewModel {
     review?: string,
     title_review?: string,
     user_details: number[],
-    users_disliked: number[] | null,
-    users_liked: number[] | null,
+    users_disliked?: number[] | null,
+    users_liked?: number[] | null,
 }
 
 export interface IGETProductReview {

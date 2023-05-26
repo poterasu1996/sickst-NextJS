@@ -96,12 +96,6 @@ const ProductReviewsSection = ({ product, productRating }: Props) => {
         setDislikedReviews([..._dislikedReviews]);
     }, [reviews, accountManager?.refresh])
 
-
-    console.log("reviews:", reviews)
-    console.log('likedRev ', likedReviews)
-    console.log('dislikedRev ', dislikedReviews)
-    // console.log('userDetails ', accountManager?.userDetails)
-
     function handleLikeReviews(review: IGETProductReview) {
         if(!authManager.auth) {
             router.push('/account/login');

@@ -20,9 +20,11 @@
 
         img {
             height: 100%;
-            max-height: 500px;
+            max-height: 40rem;
             width: auto;
             max-width: 100%;
+            mix-blend-mode: multiply;
+            filter: contrast(1);
         }
     }
     
@@ -36,6 +38,7 @@
             &--l {
                 display: none;
                 width: 49%;
+                text-align: center;
                 @media (max-width: 950px) {
                     display: block;
                 } 
@@ -45,6 +48,8 @@
                     max-height: 30rem;
                     width: auto;
                     max-width: 100%;
+                    mix-blend-mode: multiply;
+                    filter: contrast(1);
                 }
             }
             &--r {
@@ -103,8 +108,8 @@
             } 
             &-nr {
                 margin-left: 1rem;
-                font-size: 1.4rem;
-                line-height: 1.6rem;
+                font-size: 1.6rem;
+                line-height: 2rem;
                 font-weight: 400;
                 color: #666;
             }

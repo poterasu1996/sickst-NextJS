@@ -69,6 +69,9 @@
         @media (max-width: 990px) {
            margin-right: 7rem;
         }
+        @media (max-width: 800px) {
+            margin-right: 4rem;
+         }
         @media (max-width: 600px) {
             display: none;
         }
@@ -575,6 +578,7 @@
 
                     ul {
                         list-style: none;
+                        padding-left: unset;
                         li {
                             margin: 2rem 0;
                             font-size: 1.4rem;
@@ -605,7 +609,7 @@
                         display: flex;
                         margin: 2.4rem 0;
                         color: #141414;
-                        @media (max-width: 500px) {
+                        @media (max-width: 730px) {
                             flex-direction: column;
                         }
 
@@ -627,7 +631,7 @@
 
                         .banner-buttons {
                             margin-left: auto;
-                            @media (max-width: 500px) {
+                            @media (max-width: 730px) {
                                 margin-left: unset;
                                 margin-right: auto;
                                 margin-top: 1.4rem;
@@ -791,7 +795,8 @@
                         padding: 0;
                     }
     
-                    li {
+                    .dnd-card {
+                        position: relative;
                         display: flex;
                         padding: 2rem 1rem;
                         border-radius: .5rem;
@@ -850,29 +855,31 @@
                                     font-weight: 600;
                                     color: #cc3633;
                                     text-transform: uppercase;
-                                    margin-right: auto;
                                     @media (max-width: 400px) {
                                         font-size: 1.5rem;
                                     }
                                 }
     
-                                .date {
-                                    font-size: 1.4rem;
-                                    line-height: 2.6rem;
-                                    font-weight: 600;
-                                    text-transform: uppercase;
-                                    @media (max-width: 400px) {
-                                        line-height: 2.4rem;
-                                        margin-left: .5rem;
-                                    }
-                                }
                             }
-    
+                            
                             .model {
+                                display: flex;
                                 font-size: 1.6rem;
                                 margin-top: .8rem;
                                 @media (max-width: 400px) {
                                     font-size: 1.4rem;
+                                }
+
+                                .date {
+                                    font-size: 1.4rem;
+                                    line-height: 1.6rem;
+                                    font-weight: 600;
+                                    text-transform: uppercase;
+                                    margin-left: auto;
+                                    @media (max-width: 400px) {
+                                        line-height: 2.4rem;
+                                        margin-left: .5rem;
+                                    }
                                 }
                             }
     
@@ -898,9 +905,17 @@
                             .move {
                                 position: absolute;
                                 right: 0;
-                                top: 50%;
+                                top: 65%;
                                 transform: rotate(90deg);
                             }
+                        }
+
+                        .remove-card {
+                            position: absolute;
+                            top: .4rem;
+                            right: .4rem;
+                            border: unset;
+                            background-color: transparent;
                         }
                     }
                 }

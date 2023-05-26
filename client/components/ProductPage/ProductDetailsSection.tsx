@@ -7,12 +7,14 @@ import AuthContext from "../../store/auth-context";
 import { useRouter } from "next/router";
 import IProduct from "../../types/Product.interface";
 import axios from "../../api/axios";
+import { ReviewCount } from "../../types/product/ProductReviews.interface";
 
 type Props = {
     product: IProduct,
+    productRating: ReviewCount | null,
 }
 
-const ProductDetailsSection = ({ product }: Props) => {
+const ProductDetailsSection = ({ product, productRating }: Props) => {
     const authManager = useContext(AuthContext);
     const [subscription, setSubscription] = useState<boolean>(true);
     const router = useRouter();    
@@ -56,12 +58,12 @@ const ProductDetailsSection = ({ product }: Props) => {
                         <div className="rating">
                             <Rating 
                                 fractions={2}
-                                initialRating={4}
+                                initialRating={productRating?.medium_rate}
                                 readonly={true}
-                                emptySymbol={<Star size={15} fill="#babfc7" stroke="#babfc7" />}
-                                fullSymbol={<Star size={15} fill="#cc3633" stroke="#cc3633" />}
+                                emptySymbol={<Star size={18} fill="#babfc7" stroke="#babfc7" />}
+                                fullSymbol={<Star size={18} fill="#cc3633" stroke="#cc3633" />}
                             />
-                            <div className="rating-nr">35 ratings</div>
+                            <div className="rating-nr">{productRating?.total_reviews} ratings</div>
                         </div>
                     </div>
                     

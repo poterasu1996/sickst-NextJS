@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { ArrowRight, Check, Code, Move, Plus } from "react-feather";
+import { ArrowRight, Check, Code, Move, Plus, X } from "react-feather";
 import Slider from "react-slick";
 import { DateTime } from 'luxon';
 import emptyBottle from '../../public/img/empty-bottle.png';
@@ -58,25 +58,6 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
         }
     }>();
 
-    useEffect(() => {
-        const jwt = Cookies.get("jwt");
-        if(jwt) {
-            setHeader({
-                headers: {
-                    'Authorization': `Bearer ${jwt}`,
-                }
-            })
-        }
-    }, [])
-
-    useEffect(() => {
-        (cartSubsOrder.length > 0) && setUpdated(true);
-    }, [cartSubsOrder])
-
-    useEffect(() => {
-        header && fetchDBSubsOrders();
-    }, [header]);
-
     async function fetchDBSubsOrders() {
         try {
             const { data }: { data: IDTOSubscriptionhistory } = await 
@@ -92,62 +73,6 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
             console.log(error);            
         }
     }
-
-    useEffect(() => {
-        setWinReady(true)
-        setCartSubsOrder([...CartService.subscriptionList()])
-    }, [CartService.cart]);
-
-    useEffect(() => {
-        if(userInfo?.subscribed) {
-            setFullSubOrder([...dbSubsOrder, ...cartSubsOrder]);
-        } else {
-            setFullSubOrder([...cartSubsOrder]);
-        }
-    }, [dbSubsOrder, cartSubsOrder])
-
-    useEffect(() => {
-        const quickTipsElem = document.getElementById("quick-tips");
-        let elemWidth;
-        if(screen.availWidth <= 400) {
-            elemWidth = 360;
-            quickTipsElem!.style.maxWidth = `${elemWidth}px`
-        } else if(screen.availWidth <= 600) {
-            let padding = 40;
-            elemWidth = screen.availWidth - padding;
-            quickTipsElem!.style.maxWidth = `${elemWidth}px`
-        } else if(screen.availWidth <= 1150) {
-            let padding = 280;
-            elemWidth = screen.availWidth - padding;
-            quickTipsElem!.style.maxWidth = `${elemWidth}px`;
-        } else {
-            quickTipsElem!.style.maxWidth = `${450}px`
-        }
-
-        window.onresize = () => {
-            if(screen.availWidth <= 400) {
-                elemWidth = 360;
-                quickTipsElem!.style.maxWidth = `${elemWidth}px`
-            } else if(screen.availWidth <= 600) {
-                let padding = 40;
-                elemWidth = screen.availWidth - padding;
-                quickTipsElem!.style.maxWidth = `${elemWidth}px`
-            } else if(screen.availWidth <= 1150) {
-                let padding = 280;
-                elemWidth = screen.availWidth - padding;
-                quickTipsElem!.style.maxWidth = `${elemWidth}px`;
-            } else {
-                quickTipsElem!.style.maxWidth = `${450}px`
-            }
-        }
-    }, [typeof window !== 'undefined' && window.onresize])
-
-    useEffect(() => {
-        setTimeout(() => {
-            loading && setLoading(false);
-            loadingButton && setLoadingButton(false);
-        }, 500);
-    }, [loading, loadingButton]);
 
     function notify(message: string) {
         toast(message, { autoClose: 2000 });
@@ -206,6 +131,11 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
         });
     }
 
+    function handleDeleteCard(index: number) {
+        const newList = fullSubOrder.filter((el, idx) => idx !== index);
+        setFullSubOrder(newList);
+    }
+
     interface IDTOSubscriptionhistory {
         data: IGETSubscriptionHistory[]
     }
@@ -236,9 +166,83 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
     }
 
     useEffect(() => {
+        const jwt = Cookies.get("jwt");
+        if(jwt) {
+            setHeader({
+                headers: {
+                    'Authorization': `Bearer ${jwt}`,
+                }
+            })
+        }
+    }, [])
+
+    useEffect(() => {
+        (cartSubsOrder.length > 0) && setUpdated(true);
+    }, [cartSubsOrder])
+
+    useEffect(() => {
+        header && fetchDBSubsOrders();
+    }, [header]);
+
+    useEffect(() => {
+        setWinReady(true)
+        setCartSubsOrder([...CartService.subscriptionList()])
+    }, [CartService.cart]);
+
+    useEffect(() => {
+        if(userInfo?.subscribed) {
+            setFullSubOrder([...dbSubsOrder, ...cartSubsOrder]);
+        } else {
+            setFullSubOrder([...cartSubsOrder]);
+        }
+    }, [dbSubsOrder, cartSubsOrder])
+
+    useEffect(() => {
+        const quickTipsElem = document.getElementById("quick-tips");
+        let elemWidth;
+        if(screen.availWidth <= 400) {
+            elemWidth = 360;
+            quickTipsElem!.style.maxWidth = `${elemWidth}px`
+        } else if(screen.availWidth <= 600) {
+            let padding = 40;
+            elemWidth = screen.availWidth - padding;
+            quickTipsElem!.style.maxWidth = `${elemWidth}px`
+        } else if(screen.availWidth <= 1150) {
+            let padding = 280;
+            elemWidth = screen.availWidth - padding;
+            quickTipsElem!.style.maxWidth = `${elemWidth}px`;
+        } else {
+            quickTipsElem!.style.maxWidth = `${450}px`
+        }
+
+        window.onresize = () => {
+            if(screen.availWidth <= 400) {
+                elemWidth = 360;
+                quickTipsElem!.style.maxWidth = `${elemWidth}px`
+            } else if(screen.availWidth <= 600) {
+                let padding = 40;
+                elemWidth = screen.availWidth - padding;
+                quickTipsElem!.style.maxWidth = `${elemWidth}px`
+            } else if(screen.availWidth <= 1150) {
+                let padding = 280;
+                elemWidth = screen.availWidth - padding;
+                quickTipsElem!.style.maxWidth = `${elemWidth}px`;
+            } else {
+                quickTipsElem!.style.maxWidth = `${450}px`
+            }
+        }
+    }, [typeof window !== 'undefined' && window.onresize])
+
+    useEffect(() => {
+        setTimeout(() => {
+            loading && setLoading(false);
+            loadingButton && setLoadingButton(false);
+        }, 500);
+    }, [loading, loadingButton]);
+
+    useEffect(() => {
         prepareSubscriptionList(fullSubOrder);
     }, [fullSubOrder])
-
 
     return (<>
         <div className="manage-subscription">
@@ -310,7 +314,7 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
                                 </div>
 
                             </li>
-                        </ul>}
+                        </ul>}{console.log(fullSubOrder)}
                         {fullSubOrder.length > 0 && (<DragDropContext onDragEnd={handleOnDragEnd}>
                                 <Droppable droppableId="subscriptions">
                                     {(provided: any) => (
@@ -320,16 +324,17 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
                                                     return (
                                                         winReady && <Draggable key={index.toString()} draggableId={index.toString()} index={index} style={(_isDragging: any, draggableStyle: any) => ({ ...draggableStyle })}>
                                                             {(provided: any) => (
-                                                                <li {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+                                                                <li className="dnd-card" {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
                                                                     <div className="image-wrapper">
                                                                         <img src={`${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` +  item.product.attributes.image.data[0].attributes.url }></img>
                                                                     </div>
                                                                     <div className="details">
-                                                                        <div className="title"><span className="brand">{item.product.attributes.brand}</span> <div className="date">{setMonth(index)}</div></div>
-                                                                        <div className="model">{item.product.attributes.model}</div>
+                                                                        <div className="title"><span className="brand">{item.product.attributes.brand}</span></div>
+                                                                        <div className="model">{item.product.attributes.model}<div className="date">{setMonth(index)}</div></div>
                                                                         <a className="link">Details <ArrowRight width={40} height={20} /></a>
                                                                         <div className="move"><Code /></div>
                                                                     </div>
+                                                                    <button className="remove-card" onClick={() => handleDeleteCard(index)}><X stroke={"#cc3633"}/></button>
                                                                 </li>
                                                             )}
                                                         </Draggable>
@@ -338,16 +343,17 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
                                                     return (
                                                         winReady && <Draggable key={index.toString()} draggableId={index.toString()} index={index} style={(_isDragging: any, draggableStyle: any) => ({ ...draggableStyle })}>
                                                             {(provided: any) => (
-                                                                <li {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+                                                                <li className="dnd-card" {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
                                                                     <div className="image-wrapper">
                                                                         <img src={`${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` +  item.image }></img>
                                                                     </div>
                                                                     <div className="details">
-                                                                        <div className="title"><span className="brand">{item.brand}</span> <div className="date">{setMonth(index)}</div></div>
-                                                                        <div className="model">{item.model}</div>
+                                                                        <div className="title"><span className="brand">{item.brand}</span> </div>
+                                                                        <div className="model">{item.model}<div className="date">{setMonth(index)}</div></div>
                                                                         <a className="link">Details <ArrowRight width={40} height={20} /></a>
                                                                         <div className="move"><Code /></div>
                                                                     </div>
+                                                                    <button className="remove-card" onClick={() => handleDeleteCard(index)}><X stroke={"#cc3633"}/></button>
                                                                 </li>
                                                             )}
                                                         </Draggable>

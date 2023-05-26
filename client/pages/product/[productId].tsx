@@ -82,7 +82,7 @@ const ProductDetails = ({ productRating }: Props) => {
             </div>}
 
             {product && <>
-                <ProductDetailsSection product = {product} />
+                <ProductDetailsSection product = {product} productRating={productRating} />
                 <ProductReviewsSection product={product} productRating={productRating} />
             </>}
 

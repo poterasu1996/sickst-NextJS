@@ -5,17 +5,18 @@ import { Star } from "react-feather";
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.css';
 import 'primeicons/primeicons.css';
-import { GetProductReview, ReviewCount } from '../../types/product/ProductReviews.interface';
+import { ReviewCount } from '../../types/product/ProductReviews.interface';
 import { useContext, useState } from 'react';
 import SickstModal from '../global/SickstModal';
 import IProduct from '../../types/Product.interface';
 import ReviewForm from './ReviewForm';
 import AuthContext from '../../store/auth-context';
 import { useRouter } from 'next/router';
+import { IGETProductReview } from '../../models/ProductReview.model';
 
 type Props = {
     product: IProduct,
-    reviewList: GetProductReview[];
+    reviewList: IGETProductReview[];
     productRating: ReviewCount
 }
 
