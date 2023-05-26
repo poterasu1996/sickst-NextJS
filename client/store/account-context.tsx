@@ -9,22 +9,24 @@ import { AccountStateEnums } from "../shared/enums/accountPageState.enum";
 import { IUserModel } from "../models/User.model";
 import { IProductReviewModel } from "../models/ProductReview.model";
 import { IGETUserDetails } from "../models/UserDetails.model";
+import { IShippingInformationModel } from "../models/ShippingInformation.model";
 
 interface IAccountContext {
     accountState: string,
     activateSubscription: (id: number) => Promise<void>,
     addShippingInfo: (data: IShippingInfo) => void,
     currentUser: IUserModel | null,
-    fetchOrderHistory: () => Promise<any>,
-    fetchShippingList: () => Promise<any>,
-    likeReview: (
+    dislikeReview: (
         userId: number, 
         reviewId: number, 
         totalLikes: number, 
         usersLikedOldList: number[] | null, 
         totalDislikes: number, 
         usersDislikedOldList: number[] | null) => void,
-    dislikeReview: (
+    editShippingAddress: (siIndex: number, newData: {data: IShippingInformationModel}) => void,
+    fetchOrderHistory: () => Promise<any>,
+    fetchShippingList: () => Promise<any>,
+    likeReview: (
         userId: number, 
         reviewId: number, 
         totalLikes: number, 
@@ -160,6 +162,22 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
         }
     }
 
+    async function editShippingAddress(siIndex: number, siNewData: {data: IShippingInformationModel}) {
+        // used for set primary / edit / delete address
+        if(header) {
+            try {
+                await axios.put(`${SHIPPING_INFO}/${siIndex}`, siNewData, header)
+                    .then(() => {
+                        notify('Adresa a fost modificata cu succes!', true);
+                        setRefresh(refresh + 1);
+                    })
+            } catch (error) {
+                console.log(error);
+                notify('OOPS! An error occured while deleting the address!', false);
+            }
+        }
+    }
+
     async function postReview(prodReview: { data: IProductReviewModel }) {
         if(header) {
             return await axios.post(PRODUCT_REVIEW, prodReview, header)
@@ -173,6 +191,16 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
                 })
         }
     }
+
+    // async function setPrimaryAddress(siIndex: number, siNewData: { data: IShippingInformationModel }) {
+    //     if(header) {
+    //         try {
+    //             await axios.put(`${SHIPPING_INFO}/${siIndex}`, siNewData)
+    //         } catch (error) {
+                
+    //         }
+    //     }
+    // }
 
     async function likeReview(
         userId: number, 
@@ -376,7 +404,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
                         header)
                         .then(() => {
                             notify('An address has been changed successfully!', true);
-                            setRefresh(preVal => preVal++);
+                            setRefresh(refresh + 1);
                         })
                         .catch(error => {
                             console.log(error)
@@ -396,7 +424,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
                         .then(resp => {
                             console.log(resp);
                             notify('An address has been changed successfully!', true);
-                            setRefresh(preVal => preVal++);
+                            setRefresh(refresh + 1);
                         })
                         .catch(error => {
                             console.log(error)
@@ -446,6 +474,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
         addShippingInfo: addShippingInfo,
         currentUser: currentUser,
         dislikeReview: dislikeReview,
+        editShippingAddress: editShippingAddress,
         fetchOrderHistory: fetchOrderHistory,
         fetchShippingList: fetchShippingList,
         likeReview: likeReview,

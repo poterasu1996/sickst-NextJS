@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { AppUtils } from "../../shared/utils/app.utils";
 import AccountContext from "../../store/account-context";
 import { IOrderHystoryList } from "../../types/OrderHystory.interface";
+import Chip from "../global/Chip";
 
 const OrderHistory = () => {
     const accountManager = useContext(AccountContext);
@@ -75,8 +76,8 @@ const OrderHistory = () => {
                                             {/* <td>{el.attributes.order_type}</td> */}
                                             <td>{AppUtils.capitalize(el.attributes.order_type)}</td>
                                             <td>{el.attributes.txn_status 
-                                                ? <span className="success">Successfull</span>
-                                                : <span className="cancelled">Cancelled</span>}
+                                                ? <Chip status="success" label="Success"/>
+                                                : <Chip status="cancel" label="Cancelled"/>}
                                             </td>
                                             <td>{el.attributes.total} RON</td>
                                         </tr>
@@ -116,8 +117,8 @@ const OrderHistory = () => {
                                             <td>{AppUtils.isoToFormat(el.attributes.createdAt)}</td>
                                             <td>{AppUtils.capitalize(el.attributes.order_type)}</td>
                                             <td>{el.attributes.txn_status 
-                                                ? <span className="success">Successfull</span>
-                                                : <span className="cancelled">Cancelled</span>}
+                                                ? <Chip status="success" label="Success"/>
+                                                : <Chip status="cancel" label="Cancelled"/>}
                                             </td>
                                             <td>{el.attributes.total} RON</td>
                                         </tr>
@@ -157,8 +158,8 @@ const OrderHistory = () => {
                                             <td>{AppUtils.isoToFormat(el.attributes.createdAt)}</td>
                                             <td>{AppUtils.capitalize(el.attributes.order_type)}</td>
                                             <td>{el.attributes.txn_status 
-                                                ? <span className="success">Successfull</span>
-                                                : <span className="cancelled">Cancelled</span>}
+                                                ? <Chip status="success" label="Success"/>
+                                                : <Chip status="cancel" label="Cancelled"/>}
                                             </td>
                                             <td>{el.attributes.total} RON</td>
                                         </tr>

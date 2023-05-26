@@ -1,0 +1,91 @@
+// shipping info cards
+.shipping-info {
+    .title {
+      font-weight: 600;
+      font-size: 2.5rem;
+    }
+    .info {
+      font-size: 1.5rem;
+      margin: 2rem 0;
+    }
+  
+    .address-list {
+      .new-address {
+        border: solid 1px #d5d6da;
+        border-radius: 0.55rem;
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        max-width: 45rem;
+        &:hover {
+          cursor: pointer;
+        }
+  
+        span {
+          font-size: 1.6rem;
+          margin-left: 2rem;
+        }
+      }
+  
+      .address-card {
+        position: relative;
+        z-index: 12;
+        border: solid 1px #d5d6da;
+        background-color: #fff;
+        border-radius: 0.45rem;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        position: relative;
+        max-width: 45rem;
+  
+        .card-info {
+          &--name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+          }
+          &--address {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+          }
+        }
+  
+        .ribbon {
+          position: absolute;
+          top: .4rem;
+          right: 0rem;
+          background-color: rgba($color: #d24f4d, $alpha: 1);
+          padding: 0.4rem 1rem;
+          padding-top: 0.6rem;
+          text-transform: uppercase;
+          font-weight: 600;
+          color: #f9f9f9;
+
+          svg {
+            margin-right: .4rem;
+          }
+        }
+
+        .info-options {
+            position: absolute;
+            top: 3.4rem;
+            right: 0.4rem;
+            border: unset;
+            background-color: transparent;
+            width: 3.4rem;
+            height: 3rem;
+            border-radius: 50%;
+        }
+
+        .info-options:hover {
+            background-color: rgba($color: #cc3633, $alpha: .15);
+            color: #1a1a1a;
+        }
+      }
+  
+      .address-card.active {
+        border: solid 1px #cc3633;
+      }
+    }
+  }

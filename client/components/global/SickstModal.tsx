@@ -1,7 +1,7 @@
 import { ModalBody, ModalFooter } from "react-bootstrap";
 import { Modal, ModalHeader } from "reactstrap"
 
-type Props = {
+interface Props {
     show: boolean,
     setShow: () => void,
     headerTitle?: string,
