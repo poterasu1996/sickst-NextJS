@@ -1,161 +1,58 @@
-if (process.env.NODE_ENV === "development") {
-  require('dotenv').config();
-  // app.use(morgan("dev"));
-}
+/* eslint-disable prettier/prettier */
+const express = require('express')
+const morgan = require('morgan')
 
-const path = require("path");
-const express = require("express");
+const AppError = require('./utils/appError')
+const globalErrorHandler = require('./controllers/errorController')
+const categoryRouter = require('./routes/categoryRoutes')
+const userRouter = require('./routes/userRoutes')
+const productRouter = require('./routes/productRouter')
+const subscriptionRouter = require('./routes/subscriptionRoutes')
+
 const app = express();
-const dotenv = require("dotenv");
-const morgan = require("morgan");
-const passport = require("passport");
-const session = require("express-session");
-const flash = require("express-flash");
-const bodyParser = require("body-parser");
-// const pool = require("./config/databasepg");
-const { pool, createTables } = require("./config/databasepg");
-const jwt = require("jsonwebtoken");
-const methodOverride = require("method-override");
 
-// Middleware
-app.use(express.json());  // to access body from json
-// app.use(bodyParser.urlencoded({ extended: true }));
-
-// create tables
-// createTables();
-
-// Load config
-// dotenv.config({ path: "./config/config.env" });
-
-// Passport config
-// require("./config/passport")(passport);
-
-
-// const posts = [
-//   {
-//     username: 'Kayle',
-//     title: 'Post 1'
-//   },
-//   {
-//     username: 'Doe',
-//     title: 'Post 2'
-//   }
-// ]
-
-// test JWT
-// app.get('/posts', authenticateToken, (req, res) => {
-//   res.json(posts.filter(post => post.username === req.user.name))
-// })
-
-// app.post('/login', (req, res) => {
-//   // Authenticate user
-
-//   const username = req.body.username;
-//   const user = { name: username };
-
-//   console.log('username', username);
-//   console.log('user', user);
-
-//   const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
-//   res.json({ accessToken: accessToken })
-// })
-
-// function authenticateToken(req, res, next) {
-//   const authHeader = req.headers['authorization']
-//   const token = authHeader && authHeader.split(' ')[1]
-//   if (token === null) return res.sendStatus(401)
-
-//   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-//     if (err) return res.sendStatus(403);
-//     req.user = user
-//     next();
-//   })
-// }
-
-// function getUsers() {
-//   pool.query(`SELECT * FROM "user"`)  // create category table
-//       .then(res => {
-//           console.log(res.rows);
-//       })
-//       .catch(e => console.error(e.stack));
-// }
-
-// console.log('users',getUsers());
-
-// const initializePassport = require('./passport-config');
-// initializePassport(
-//   passport, 
-//   email => users.find(user => user.email === email),
-//   id => users.find(user => user.id === id)
-// );
-
-
-// optional if we work with React
-app.set("view engine", "ejs");
-app.use(express.urlencoded({ extended: false })); // this allows us to access form fields 
-app.use(flash());
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false
-}));
-app.use(passport.initialize());
-app.use(passport.session());  // persist to the entire session
-app.use(methodOverride('_method'));
-
-
-app.get('/', checkAuthenticated, (req, res) => {
-  res.render('index.ejs', { name: req.user.name });
-})
-
-app.delete('/logout', (req, res) => {
-  req.logOut();
-  res.redirect('/login')
-})
-
-function checkAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next()
-  }
-
-  res.redirect('/login');
+// 1) ---- middleware stack ----
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev')); // an http request logger, it shows us in terminat the lates route accessed
 }
-
-function checkNotAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return res.redirect('/');
-  }
+// app.use(morgan('dev'));             // an http request logger, it shows us in terminat the lates route accessed
+app.use(express.json()); // because express doesn't include data in the body in a POST api, we need a middleware for it to do that
+// if we want to access static files: for example /overview.html and we want to give
+// the user access to the HTML file, we use express.static middleware
+// this won't work as routes, /public will get an error, but only for getting static files
+app.use(express.static(`${__dirname}/public`));
+// app.use((req, res, next) => {
+//   console.log('Hi from middleware');
+//   next();
+// });
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
   next();
-}
+});
 
-// Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
+// 3) ---- routes ----
+// since we have so many endpoints, it's time to separate them in separate files
+// we separate them using routers(separated in individual modules)
 
-// Static folder
-app.use(express.static(path.join(__dirname, "public")));
+app.use('/api/v1/categories', categoryRouter);
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/products', productRouter);
+app.use('/api/v1/subscriptions', subscriptionRouter);
 
-// Import Routes
-const authRoute = require('./routes/auth');
-app.use('/api/user', authRoute);
+// 4) ---- handle unhandled routes ----
 
-const category =  require('./routes/category');
-app.use('/api/category', category);
+app.all('*', (req, res, next) => {
+  // better way of handling errors
+  // const err = new Error(`Can't find ${req.originalUrl} on this server!`)
+  // err.status = 'fail'
+  // err.statusCode = 404;
 
-const userList = require('./routes/user');
-app.use('/api/users', userList);
+  // if next has an argument, express will asume that it is an error
+  // this will skip all other middlewares from stack, and go straight to the error middleware
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404)); 
+})
 
-const review = require('./routes/review');
-app.use('/api/review', review);
+// 5) ---- Global ERROR handling middleware ----
+app.use(globalErrorHandler)
 
-// app.use("/", require("./routes/index"));
-// app.use("/login2", require("./routes/login"));
-
-// app.use("/api", require("./api/index"));
-
-const PORT = process.env.PORT || 8000;
-
-app.listen(
-  PORT,
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
-);
+module.exports = app;

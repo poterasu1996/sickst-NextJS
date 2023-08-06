@@ -2,50 +2,85 @@ import { TabPanel, TabView } from "primereact/tabview";
 import { useContext, useEffect, useState } from "react";
 import { AppUtils } from "../../shared/utils/app.utils";
 import AccountContext from "../../store/account-context";
-import { IOrderHystoryList } from "../../types/OrderHystory.interface";
 import Chip from "../global/Chip";
+import { useRouter } from "next/router";
+import { TxnStatusEnum } from "../../shared/enums/txn.enum";
+import { IGETOrderHistory, OrderTypeEnum } from "../../models/OrderHistory.model";
+import { IGETSubscriptionOrder, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
 
 const OrderHistory = () => {
     const accountManager = useContext(AccountContext);
-    const [orderHistory, setOrderHistory] = useState<IOrderHystoryList[] | null>(null);
     const [activeIndex, setActiveIndex] = useState<number>(0);
-    const [tableContent, setTableContent] = useState<IOrderHystoryList[] | null>(null);
+    const [orderHistory, setOrderHistory] = useState<IGETOrderHistory[] | null>(null);
+    const [subscriptionHistory, setSubscriptionHistory] = useState<IGETSubscriptionOrder[] | null>(null);
+    const [tableContent, setTableContent] = useState<(IGETOrderHistory | IGETSubscriptionOrder)[] | null>(null);
+    const router = useRouter();
 
+    // we no longer have payment and subscription in same table
+    // we have payment / collection AND subscription separate
     useEffect(() => {
         if(accountManager!.currentUser) {
             accountManager!.fetchOrderHistory()
-                .then((resp: IOrderHystoryList[]) => {
+                .then((resp: IGETOrderHistory[]) => {
                     const reverse = resp.reverse();
-                    reverse.length > 0 
-                        ? setOrderHistory([...reverse])
-                        :  setOrderHistory(null)
+                    if(reverse.length > 0) {
+                        setOrderHistory([...reverse]);
+                    } else {
+                        setOrderHistory(null)
+                    }
                 })
                 .catch(error => console.log("order history error: ", error));
+            accountManager!.fetchSubscriptionHistory()
+                .then((resp: IGETSubscriptionOrder[]) => {
+                    if(resp.length > 0) {
+                        setSubscriptionHistory(resp.reverse())
+                    }
+                })
+                .catch(error => console.log(error))
         }
     }, [accountManager!.currentUser])
 
-    const filterSubscriptions = () => {
-        if(orderHistory) {
-            const subList = orderHistory.filter(el => el.attributes.order_type === 'subscription');
-            if(subList.length > 0) {
-                setTableContent([...subList]);
-            } else {
-                setTableContent(null);
-            }
+    useEffect(() => {
+        if(orderHistory && subscriptionHistory) {
+            setTableContent([...orderHistory, ...subscriptionHistory])
+        } else if(orderHistory) {
+            setTableContent(orderHistory);
+        } else {
+            setTableContent(subscriptionHistory);
+        } 
+    }, [orderHistory, subscriptionHistory])
+
+    function isSubscription(data: IGETSubscriptionOrder | IGETOrderHistory): data is IGETSubscriptionOrder {
+        return (data as IGETSubscriptionOrder).attributes.subscription_name !== undefined;
+    }
+
+    function allOrders() {
+        if(orderHistory && subscriptionHistory) {
+            setTableContent([...orderHistory, ...subscriptionHistory])
+        } else if(orderHistory) {
+            setTableContent(orderHistory);
+        } else {
+            setTableContent(subscriptionHistory);
+        } 
+    }
+
+    function filterSubscriptions() {
+        if(subscriptionHistory) {
+            setTableContent(subscriptionHistory);
+        } else {
+            setTableContent(null);
         }
     }
 
-    const filterOrders = () => {
+    function filterOrders() {
         if(orderHistory) {
-            const subList = orderHistory.filter(el => el.attributes.order_type === 'payment');
-            if(subList.length > 0) {
-                setTableContent([...subList]);
-            } else {
-                setTableContent(null);
-            }
+            setTableContent(orderHistory);
+        } else {
+            setTableContent(null);
         }
     }
 
+    {console.log('tableContent',tableContent)}
     return (
         <>
             <div className="order-history">
@@ -53,10 +88,14 @@ const OrderHistory = () => {
                 <div className="table-content">
                     <TabView className="filtertabs" activeIndex={activeIndex} onTabChange={(e) => {
                         setActiveIndex(e.index);
-                        e.index === 1 ? filterSubscriptions() : filterOrders()
+                        e.index === 1 
+                            ? filterSubscriptions() 
+                            : e.index === 2
+                                ? filterOrders()
+                                : allOrders()
                     }}>
                         <TabPanel header="All Orders">
-                            {orderHistory ? (
+                            {tableContent ? (
                                 <table className="table">
                                     <thead>
                                         <tr>
@@ -68,27 +107,36 @@ const OrderHistory = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {orderHistory.map(el => (
-                                        <tr key={el.id}>
+                                    {tableContent.map(el => (
+                                        // check if subscription
+                                        isSubscription(el) 
+                                        ? <tr key={el.id}>
                                             <td>#{el.id}</td>
-                                            {/* <td>{el.attributes.createdAt}</td> */}
                                             <td>{AppUtils.isoToFormat(el.attributes.createdAt)}</td>
-                                            {/* <td>{el.attributes.order_type}</td> */}
+                                            <td>Abonament - {AppUtils.capitalize(el.attributes.subscription_name)}</td>
+                                            <td>{el.attributes.subscription_status === SubscriptionStatusEnum.ACTIVE
+                                                ? <Chip status="success" label="Activa"/>
+                                                : el.attributes.subscription_status === SubscriptionStatusEnum.PAUSED
+                                                    ? <Chip status="pending" label="Paused"/>
+                                                    : <Chip status="cancel" label="Cancelled"/>}
+                                            </td>
+                                            <td>{el.attributes.subscription_price} RON</td>
+                                        </tr>
+                                        : <tr key={el.id}>
+                                            <td>#{el.id}</td>
+                                            <td>{AppUtils.isoToFormat(el.attributes.createdAt)}</td>
                                             <td>{AppUtils.capitalize(el.attributes.order_type)}</td>
-                                            <td>{el.attributes.txn_status 
+                                            <td>{el.attributes.txn_status === TxnStatusEnum.SUCCESS 
                                                 ? <Chip status="success" label="Success"/>
-                                                : <Chip status="cancel" label="Cancelled"/>}
+                                                : el.attributes.txn_status === TxnStatusEnum.PENDING
+                                                    ? <Chip status="pending" label="Pending"/>
+                                                    : el.attributes.txn_status === TxnStatusEnum.FAILED
+                                                        ? <Chip status="failed" label="Failed"/>
+                                                        : <Chip status="cancel" label="Cancelled"/>}
                                             </td>
                                             <td>{el.attributes.total} RON</td>
                                         </tr>
                                     ))}
-                                        {/* <tr>
-                                            <td>#4</td>
-                                            <td>20-Sep-2022</td>
-                                            <td>Payment</td>
-                                            <td><span className="cancelled">Cancelled</span></td>
-                                            <td>250 RON</td>
-                                        </tr> */}
                                     </tbody>
                                 </table>
                             ) : (
@@ -112,24 +160,19 @@ const OrderHistory = () => {
                                     </thead>
                                     <tbody>
                                     {tableContent.map(el => (
-                                        <tr key={el.id}>
+                                        isSubscription(el) && <tr key={el.id}>
                                             <td>#{el.id}</td>
                                             <td>{AppUtils.isoToFormat(el.attributes.createdAt)}</td>
-                                            <td>{AppUtils.capitalize(el.attributes.order_type)}</td>
-                                            <td>{el.attributes.txn_status 
-                                                ? <Chip status="success" label="Success"/>
-                                                : <Chip status="cancel" label="Cancelled"/>}
+                                            <td>{AppUtils.capitalize(el.attributes.subscription_name)}</td>
+                                            <td>{el.attributes.subscription_status === SubscriptionStatusEnum.ACTIVE
+                                                ? <Chip status="success" label="Activa"/>
+                                                : el.attributes.subscription_status === SubscriptionStatusEnum.PAUSED
+                                                    ? <Chip status="pending" label="Paused"/>
+                                                    : <Chip status="cancel" label="Cancelled"/>}
                                             </td>
-                                            <td>{el.attributes.total} RON</td>
+                                            <td>{el.attributes.subscription_price} RON</td>
                                         </tr>
                                     ))}
-                                        {/* <tr>
-                                            <td>#4</td>
-                                            <td>20-Sep-2022</td>
-                                            <td>Payment</td>
-                                            <td><span className="cancelled">Cancelled</span></td>
-                                            <td>250 RON</td>
-                                        </tr> */}
                                     </tbody>
                                 </table>
                             ) : (
@@ -140,37 +183,39 @@ const OrderHistory = () => {
                             )}
                         </TabPanel>
                         <TabPanel header="Orders">
-                            {tableContent ? (
+                            {(tableContent && tableContent.length > 0) ? (
                                 <table className="table">
                                     <thead>
                                         <tr>
                                             <th>Id</th>
                                             <th>Date</th>
                                             <th>Payment</th>
-                                            <th>Status</th>
+                                            <th>Status plata</th>
+                                            <th>Status comanda</th>
                                             <th>Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     {tableContent.map(el => (
-                                        <tr key={el.id}>
+                                        !isSubscription(el) && <tr key={el.id} onClick={() => router.push(`/account/order/${el.id}`)}>
                                             <td>#{el.id}</td>
                                             <td>{AppUtils.isoToFormat(el.attributes.createdAt)}</td>
                                             <td>{AppUtils.capitalize(el.attributes.order_type)}</td>
-                                            <td>{el.attributes.txn_status 
+                                            <td>{el.attributes.txn_status === TxnStatusEnum.SUCCESS 
                                                 ? <Chip status="success" label="Success"/>
-                                                : <Chip status="cancel" label="Cancelled"/>}
+                                                : el.attributes.txn_status === TxnStatusEnum.PENDING
+                                                    ? <Chip status="pending" label="Pending"/>
+                                                    : el.attributes.txn_status === TxnStatusEnum.FAILED
+                                                        ? <Chip status="failed" label="Failed"/>
+                                                        : <Chip status="cancel" label="Cancelled"/>}
                                             </td>
+                                            <td>{el.attributes.is_cancelled
+                                                ? <Chip status="cancel" label="Anulata"/>    
+                                                : <Chip status="success" label="Activa"/>
+                                            }</td>
                                             <td>{el.attributes.total} RON</td>
                                         </tr>
                                     ))}
-                                        {/* <tr>
-                                            <td>#4</td>
-                                            <td>20-Sep-2022</td>
-                                            <td>Payment</td>
-                                            <td><span className="cancelled">Cancelled</span></td>
-                                            <td>250 RON</td>
-                                        </tr> */}
                                     </tbody>
                                 </table>
                             ) : (

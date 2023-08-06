@@ -1,10 +1,10 @@
-import { useState, useEffect, useContext, useLayoutEffect } from "react";
+import React, { useState, useEffect, useContext, useLayoutEffect } from "react";
 import { Star } from "react-feather";
 import Rating from "react-rating";
 import { Dropdown } from 'primereact/dropdown';
-import 'primereact/resources/themes/lara-light-indigo/theme.css';
-import 'primereact/resources/primereact.css';
-import 'primeicons/primeicons.css';
+// import 'primereact/resources/themes/lara-light-indigo/theme.css';
+// import 'primereact/resources/primereact.css';
+// import 'primeicons/primeicons.css';
 import ProductCardReview from "./ProductCardReview";
 import { ReviewCount } from "../../types/product/ProductReviews.interface";
 import RequestMeta from "../../types/Axios.interface";

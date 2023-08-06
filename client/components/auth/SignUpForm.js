@@ -11,6 +11,7 @@ import femaleIcon from "../../public/img/female-icon.jpg"
 import axios from "../../api/axios";
 import Image from "next/image";
 const REGISTER_URL = '/auth/local/register';
+const USER_DETAILS = '/user-profile-details';
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -58,22 +59,45 @@ export default function SignUpForm() {
     const pw = passwordRef.current.value;
 
     try {
-      setError("");
       setLoading(true);
 
       const response = await axios.post(REGISTER_URL, {
         username: username,
         email: email,
         password: pw,
-        sex: cbFemale ? 'female' : 'male',
-        newsletter: newsletter
       })
 
+      // create user-details profile
+      const header = {
+        headers: {
+          'Authorization': `Bearer ${response.data.jwt}`,
+        }
+      }
+      const data = {
+        data: {
+          user_id: response.data.user.id,
+          client_role: 'client',
+          gender: cbFemale ? 'female' : 'male',
+          newsletter: newsletter
+        }
+      }
+
+      await axios.post(USER_DETAILS, data, header)
+        .then(resp => console.log(resp))
+        .catch(err => console.log(err))
+      
       if (response.status === 200) {
         router.push('/account/login');
       }
-    } catch {
-      setError("Failed to create an account.");
+    } catch (err) {
+      if(err.response?.status === 400) {
+        console.log(err)
+        setError(err.response?.data.error.message);
+        setLoading(false);
+      } else {
+        setError("Failed to create an account.");
+        setLoading(false);
+      }
     }
     // setLoading(false);
   }
@@ -107,6 +131,7 @@ export default function SignUpForm() {
               <p>Masculin</p>
             </Form.Check>
           </div>
+          {error && <div className="form-errors">ERROR: {error}</div>}
           <CustomFormField controlid='floatingEmail' name='email' label='Email address' type='email' ref={emailRef}  />
           <CustomFormField controlid='floatingPassword' name='password' label='Password' type='password' ref={passwordRef}  />
           <CustomFormField controlid='floatingPasswordConfirm' name='confirmPassword' label='Password confirmation' type='password' ref={passwordConfirmRef}  />

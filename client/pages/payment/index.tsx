@@ -15,10 +15,17 @@ import Cookies from 'js-cookie';
 import { PaymentEnums } from "../../shared/enums/payment.enums";
 import ICartProduct from "../../types/CartProduct.interface";
 import { IUserModel } from "../../models/User.model";
+import { IOrderHistoryModel, OrderTypeEnum } from "../../models/OrderHistory.model";
+import { TxnStatusEnum } from "../../shared/enums/txn.enum";
+import { useRecoilValue } from "recoil";
+import { shippingListR } from "../../shared/recoil-states";
+import { IShippingInfo } from "../../models/ShippingInformation.model";
+import { IGETUserDetails } from "../../models/UserDetails.model";
 
 let stripePromise: any;
 
 const USER_ME = 'http://localhost:1337/api/users/me';
+const USER_DETAILS = 'http://localhost:1337/api/user-profile-details';
 
 const getStripe = () => {
   // check if there is any stripe instance
@@ -46,6 +53,17 @@ const PaymentPage = ({ user }: Props) => {
   const [lineItems, setLineItems] = useState<any>([]);
   const [cartItems, setCartItems] = useState<ICartProduct[]>([]);
   const [header, setHeader] = useState<any>();
+  const shippingListRecoil = useRecoilValue(shippingListR);
+
+  let activeShippingDetails: IShippingInfo | undefined = undefined;
+  if(shippingListRecoil) {
+    activeShippingDetails = shippingListRecoil.find((si: IShippingInfo) => si.primary)
+  }
+
+  // disable the pay button if there is no product / no primary address set
+  const disablePayButton = (cartItems.length === 0 || activeShippingDetails === undefined);
+  console.log('RECOILDSL', shippingListRecoil)
+  console.log('cartItems', cartItems)
 
   const orderMinus = (item: any) => {
     if(item.quantity > 1) {
@@ -93,7 +111,6 @@ const PaymentPage = ({ user }: Props) => {
     return orderList;
   }
 
-  user && console.log(user)
   const redirectToCheckout = async () => {
     // create stripe checkout, pass line items to the body
     const { 
@@ -107,22 +124,24 @@ const PaymentPage = ({ user }: Props) => {
 
     if(cartItems.length > 0) {
       const cleanProductList = createOrderProductList(cartItems);
-      const oh = {
-        user_id: user.id,
-        session_id: id,
-        order_type: 'payment',
-        total: CartService.cartTotal(),
+      const oh: IOrderHistoryModel = {
+        cancelled_order: null,
+        is_cancelled: false,
+        is_delivered: false,
+        order_type: OrderTypeEnum.PAYMENT,
         product_list: cleanProductList,
-        txn_status: false,
+        session_id: id,
+        shipping_details: shippingListRecoil,
+        total: CartService.cartTotal(),
+        txn_status: TxnStatusEnum.PENDING,
+        user_id: user.id,
       }
 
       // prepare our OrderHistory (default, txn_status is set to false ) 
       localStorage.setItem('oh', JSON.stringify(oh));
-      // paymentManager.populateOrderHistory(oh);
 
     }
 
-    // debugger
     // redirect to checkout
     const stripe = await getStripe();
     await stripe.redirectToCheckout({ sessionId: id });
@@ -237,14 +256,13 @@ const PaymentPage = ({ user }: Props) => {
                 )}
               </div>
 
-              <div className="coupone-code">
+              {/* <div className="coupone-code">
                 <CouponeForm
                   couponeValue={(value: any) => setCouponeValue(value)}
                   loading={(value: any) => setLoading(value)}
                 />
-              </div>
-              {/* <Button className="button-second mt-5" onClick={() => redirectToCheckout()} disabled={cartItems.length === 0}>Pay</Button> */}
-              <Button className="button-second mt-5" onClick={redirectToCheckout} disabled={cartItems.length === 0}>Pay</Button>
+              </div> */}
+              <Button className="button-second mt-5" onClick={redirectToCheckout} disabled={disablePayButton}>Pay</Button>
             </div>
           </div>
           
@@ -273,12 +291,17 @@ export async function getServerSideProps({req, res}: any) {
     const userData: IUserModel = await axios.get(USER_ME, header)
       .then(res => { return res.data})
       .catch(error => console.log(error))
-   
-    user = {
-      id: userData.id,
-      email: userData.email,
-      subscribed: userData.subscribed
-    };
+    
+    if(userData.id) {
+      const userDetails: IGETUserDetails = await axios.get(`${USER_DETAILS}?filters[user_id][$eq]=${userData.id}`, header) 
+        .then(resp => resp.data.data[0]);
+
+      user = {
+        id: userData.id,
+        email: userData.email,
+        subscribed: userDetails.attributes.subscribed
+      };
+    }
   }
 
   return {

@@ -2,6 +2,9 @@
 @import './order_history';
 @import './shipping_information';
 
+// order page
+@import './order/index.scss';
+
 .account-page {
     flex: 1;
     background-color: #f9f9f9;
@@ -154,6 +157,16 @@
         }
 
         .user-details {
+            .title {
+                font-size: 2.5rem;
+                font-weight: 600;
+            }
+
+            .info {
+                font-size: 1.5rem;
+                margin-top: 2rem;
+            }
+
             &-form {
                 .form-select {
                     height: 4.4rem;

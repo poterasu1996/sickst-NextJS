@@ -26,6 +26,13 @@
     }
 }
 
+.chip-failed {
+    color: #a8aaae;
+    &__underlay {
+        background-color: #a8aaae;
+    }
+}
+
 .chip-pending {
     color: #ff9e43;
     &__underlay {

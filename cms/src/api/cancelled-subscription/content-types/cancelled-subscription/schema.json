@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cancelled_subscriptions",
+  "info": {
+    "singularName": "cancelled-subscription",
+    "pluralName": "cancelled-subscriptions",
+    "displayName": "cancelled_subscription",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "user_id": {
+      "type": "integer",
+      "required": true
+    },
+    "order_refunded": {
+      "type": "boolean",
+      "default": false
+    },
+    "subscription_order": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::subscription-order.subscription-order",
+      "mappedBy": "cancelled_subscription"
+    }
+  }
+}

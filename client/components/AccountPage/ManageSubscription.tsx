@@ -7,7 +7,7 @@ import emptyBottle from '../../public/img/empty-bottle.png';
 import UnsubscribedUser from './UnsubscribedUser';
 import CartService from "../../shared/services/cartService";
 import ICartProduct from "../../types/CartProduct.interface";
-import IGETSubscriptionHistory from "../../types/Subscription.interface";
+import { IGETSubscriptionOrder } from "../../models/SubscriptionOrder.model";
 import Cookies from 'js-cookie';
 import axios from "../../api/axios";
 import { Spinner } from "react-bootstrap";
@@ -19,7 +19,7 @@ import SubscriptionCardDetails from "./SubscriptionCardDetails";
 
 type Props = {
     userInfo: ILocalUserInfo,
-    subscriptionHistory: IGETSubscriptionHistory[]
+    subscriptionHistory: IGETSubscriptionOrder[]
 }
 
 type SubscriptionOrderItem = {
@@ -48,7 +48,7 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
     const [updated, setUpdated] = useState<boolean>(false);
     const [header, setHeader] = useState<any>(null);
     const [winReady, setWinReady] = useState(false);
-    const [orderDetails, setOrderDetails] = useState<IGETSubscriptionHistory>();
+    const [orderDetails, setOrderDetails] = useState<IGETSubscriptionOrder>();
     const [dbSubsOrder, setDBSubsOrder] = useState<SubscriptionOrderItem[]>([]);
     const [cartSubsOrder, setCartSubsOrder] = useState<ICartProduct[]>([]);
     const [fullSubOrder, setFullSubOrder] = useState<FullSubOrderProduct[]>([]);
@@ -137,7 +137,7 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
     }
 
     interface IDTOSubscriptionhistory {
-        data: IGETSubscriptionHistory[]
+        data: IGETSubscriptionOrder[]
     }
     async function handleUpdateList() {
         // update order list
@@ -301,7 +301,7 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
                         </div>
                     : <>
                         {fullSubOrder.length === 0 && <ul className="subscriptions-list">
-                            <li>
+                            <li className="dnd-card">
                                 <div className="image-wrapper">
                                     <img style={{height: '80%'}} src={emptyBottle.src}></img>
                                     <div className="plus">
@@ -314,7 +314,7 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
                                 </div>
 
                             </li>
-                        </ul>}{console.log(fullSubOrder)}
+                        </ul>}
                         {fullSubOrder.length > 0 && (<DragDropContext onDragEnd={handleOnDragEnd}>
                                 <Droppable droppableId="subscriptions">
                                     {(provided: any) => (

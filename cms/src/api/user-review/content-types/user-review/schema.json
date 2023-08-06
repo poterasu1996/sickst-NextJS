@@ -4,7 +4,8 @@
   "info": {
     "singularName": "user-review",
     "pluralName": "user-reviews",
-    "displayName": "user_review"
+    "displayName": "user_review",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true

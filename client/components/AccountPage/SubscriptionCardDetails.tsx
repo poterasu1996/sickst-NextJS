@@ -3,35 +3,51 @@ import { useState } from "react";
 import { Check, Slash } from "react-feather";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { AppUtils } from "../../shared/utils/app.utils";
-import IGETSubscriptionHistory from "../../types/Subscription.interface";
 import image1 from '../../public/img/mystery.jpg';
 import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
+import { IGETSubscriptionOrder, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
 
 type Props = {
-    orderDetails: IGETSubscriptionHistory | undefined,
+    orderDetails: IGETSubscriptionOrder | undefined,
     userInfo: ILocalUserInfo,
-    userSubscription: IGETSubscriptionHistory[],
+    userSubscription: IGETSubscriptionOrder[],
 }
 const SubscriptionCardDetails = ({ orderDetails, userInfo, userSubscription }: Props) => {
     const [showCancelPlan, setCancelPlan] = useState<boolean>(false);
+    let activeSubscription = null;
+    if(userSubscription) {
+        activeSubscription = userSubscription
+            .reverse().find((subs: IGETSubscriptionOrder) => subs.attributes.subscription_status === SubscriptionStatusEnum.ACTIVE);
+    }
 
     let nextBillingDate = null;
-    if(orderDetails) {
+    if(orderDetails?.attributes.last_payment_date) {
         const nextBillingMonth = AppUtils.getNextBillingDate(orderDetails.attributes.last_payment_date);
         nextBillingDate = AppUtils.isoToFormat(nextBillingMonth);
+    } else {
+        nextBillingDate = ' - ';
     }
     
+    console.log(activeSubscription)
+
+    const handleCloseModal = () => {
+        setCancelPlan(!showCancelPlan);
+    }
+
+    const handleCancelSubscription = () => {
+        
+    }
+
     return(<>
         <div className="subscriber-banner">
-            {userSubscription
-                ?   userSubscription.length > 0 &&
+            {activeSubscription ?
                     <>
                         <div className="title">Current Plan</div>
                         <div className="banner-content">
                             <div className="subscription-type">
                                 <div className="type">
-                                    {AppUtils.capitalize(userSubscription[0].attributes.subscription_name)}
-                                    <div className="tag">{userSubscription[0].attributes.subscription_price} Lei / luna</div>
+                                    {AppUtils.capitalize(activeSubscription.attributes.subscription_name)}
+                                    <div className="tag">{activeSubscription.attributes.subscription_price} Lei / luna</div>
                                 </div>
                                 <div className="banner-buttons">
                                     <button className="button-second" onClick={() => setCancelPlan(!showCancelPlan)}>Dezabonare</button>
@@ -45,7 +61,7 @@ const SubscriptionCardDetails = ({ orderDetails, userInfo, userSubscription }: P
                                 </p>
                             </div>
                             <div className="text">
-                                Member since <b>{AppUtils.isoToFormat(userSubscription[0].attributes.createdAt)}</b>
+                                Member since <b>{AppUtils.isoToFormat(activeSubscription.attributes.createdAt)}</b>
                             </div>
                             {(orderDetails && userInfo.subscribed) && <div className="text">
                                 Next Billing period on <b>{nextBillingDate}</b>
@@ -122,11 +138,12 @@ const SubscriptionCardDetails = ({ orderDetails, userInfo, userSubscription }: P
                         <div className="text">Ne pare rau ca drumurile noastre se despart aici! Feedback-ul tau ne ajuta sa ne imbunatatim serviciile!</div>
                         <div className="text">Daca vrei sa renunti si la newsletter, bifeaza casuta de mai jos</div>
                         <div className="button-wrapper">
-                            <button className="button-second" onClick={() => setCancelPlan(!showCancelPlan)}>Cancel</button>
+                            <button className="button-second" onClick={handleCloseModal}>Cancel</button>
+                            <button className="button-primary" onClick={handleCancelSubscription}>Dezabonare</button>
                             {/* de trecut linkul in .env */}
-                            <Link href={'https://billing.stripe.com/p/login/test_eVa5kJ5yo4S82nC288'} >
+                            {/* <Link href={'https://billing.stripe.com/p/login/test_eVa5kJ5yo4S82nC288'} >
                                 <a className="button-primary">Dezabonare</a>
-                            </Link>
+                            </Link> */}
                         </div>
                     </div>
                 </div>

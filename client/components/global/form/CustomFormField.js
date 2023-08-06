@@ -4,6 +4,7 @@ import { ErrorMessage, useField } from 'formik';
 
 const FormField = (props, ref) => {
     const [field, meta] = useField(props);
+
     return (
         <>
             <FloatingLabel
@@ -16,6 +17,7 @@ const FormField = (props, ref) => {
                     placeholder="Email address"
                     name={props.name}
                     ref={ref}
+                    onChange={props.onChange}
                     required
                     {...field}{...props}
                     className={`${meta.touched && meta.error && 'invalid-form-control'}`}

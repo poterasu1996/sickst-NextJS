@@ -13,7 +13,7 @@ import AccountContext from "../../store/account-context";
 import { IGETProductReview } from "../../models/ProductReview.model";
 const PRODUCTS_URL = "/products";
 
-type Props = {
+interface Props {
     productRating: ReviewCount | null,
 }
 

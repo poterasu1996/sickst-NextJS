@@ -3,7 +3,7 @@ import logo from "../public/logo.svg";
 
 const SimpleHeader = () => {
     return <header>
-        <div className="container header register">
+        <div className="container header register print">
             <div className='logo'>
                 <Link href="/" >
                     <a className='logo-link'>

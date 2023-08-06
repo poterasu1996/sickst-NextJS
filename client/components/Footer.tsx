@@ -3,7 +3,7 @@ import logo from "../public/logo.svg";
 
 const Footer = () => {
     return <footer>
-        <div className="container footer">
+        <div className="container footer print">
             <div className="row">
                 <div className="col-6 col-sm-3 col-md-3">
                     <div className="logo">

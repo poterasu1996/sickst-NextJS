@@ -8,7 +8,7 @@ export interface IProductReviewModel {
     rating: number,
     review?: string,
     title_review?: string,
-    user_details: number[],
+    user_profile_detail: number[],
     users_disliked?: number[] | null,
     users_liked?: number[] | null,
 }
@@ -25,7 +25,7 @@ export interface IGETProductReview {
         review: string,
         title_review: string,
         updatedAt: string,
-        user_details: {
+        user_profile_detail: {
             data: IGETUserDetails
         },
         users_disliked: number[] | null,

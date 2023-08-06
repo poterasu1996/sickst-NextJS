@@ -62,27 +62,6 @@
       "target": "plugin::users-permissions.role",
       "inversedBy": "users",
       "configurable": false
-    },
-    "client_role": {
-      "type": "enumeration",
-      "enum": [
-        "client",
-        "admin"
-      ],
-      "default": "client"
-    },
-    "newsletter": {
-      "type": "boolean",
-      "default": false
-    },
-    "new_user": {
-      "type": "boolean",
-      "default": true
-    },
-    "subscribed": {
-      "type": "boolean",
-      "default": false,
-      "required": true
     }
   }
 }
