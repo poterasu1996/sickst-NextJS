@@ -16,10 +16,10 @@ export interface IGETShippingInformation {
 
 
 export interface IShippingInfo {
-    address: string,
-    city: string,
-    county: string,
-    full_name: string,
-    phone: string,
+    address: string | undefined,
+    city: string | undefined,
+    county: string | undefined,
+    full_name: string | undefined,
+    phone: string | undefined,
     primary: boolean
 }

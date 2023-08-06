@@ -17,7 +17,7 @@
       "required": true
     },
     "expire_date": {
-      "type": "datetime",
+      "type": "date",
       "required": false
     },
     "txn_status": {
@@ -25,7 +25,8 @@
       "enum": [
         "success",
         "pending",
-        "canceled"
+        "failed",
+        "cancelled"
       ],
       "required": true
     },
@@ -50,19 +51,26 @@
       ],
       "required": true
     },
+    "last_payment_date": {
+      "type": "date"
+    },
     "subscription_status": {
       "type": "enumeration",
       "enum": [
         "active",
-        "pending",
+        "paused",
         "cancelled"
-      ],
-      "required": true,
-      "default": "pending"
+      ]
     },
-    "last_payment_date": {
-      "type": "datetime",
-      "required": true
+    "cancelled_subscription": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::cancelled-subscription.cancelled-subscription",
+      "inversedBy": "subscription_order"
+    },
+    "is_cancelled": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

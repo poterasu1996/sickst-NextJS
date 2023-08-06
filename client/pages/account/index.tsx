@@ -16,6 +16,7 @@ import AccountContext from "../../store/account-context";
 import { GetServerSideProps } from "next";
 import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
 import { IUserModel } from "../../models/User.model";
+import { IGETUserDetails } from "../../models/UserDetails.model";
 
 // const accState = [
 //     'subscription', 
@@ -37,9 +38,6 @@ type Props = {
 const Account = ({ userInfo, subscriptionHistory }: Props) => {
     const [accState, setAccState] = useState<string>('subscription');
     const accountManager = useContext(AccountContext);
-
-    // console.log('user: ', userInfo)
-    // console.log('subsHist: ', subscriptionHistory)
 
     useEffect(() => {
         setAccState(accountManager!.accountState);
@@ -112,6 +110,7 @@ export default Account;
 
 const USER_ME = '/users/me';
 const SUBSCRIPTION_HISTORY = '/subscription-orders';
+const USER_DETAILS = '/user-profile-details';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const cookies = context.req.cookies; 
@@ -129,39 +128,50 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         const userData: IUserModel = await axios.get(USER_ME, header)
             .then((res) => { return res.data })
             .catch(error => console.log('ERES'))
-        
-        if(userData?.subscribed) {
-            // ramane de vazut daca luam orderul active/pending sau nu
-            const subHistory = await axios.get(`${SUBSCRIPTION_HISTORY}?filters[user_id][$eq]=${userData.id}`, header)
-                .then(res => { return res.data})
-                .catch(error => console.log(error))
 
-            subscriptionHistory = subHistory?.data;
-        }
+        if(userData?.id) {
+            try {
+                const userDetailsResponse = await axios.get(`${USER_DETAILS}?filters[user_id][$eq]=${userData.id}`, header);
+                    // .then((res) => res.data.data[0]);
+                const userDetails: IGETUserDetails = userDetailsResponse.data.data[0];
 
-        userInfo = {
-            id: userData.id,
-            createdAt: userData.createdAt,
-            new_user: userData.new_user,
-            subscribed: userData.subscribed
-        }
+                userInfo = {
+                    id: userDetails.attributes.user_id,
+                    createdAt: userDetails.attributes.createdAt,
+                    new_user: userDetails.attributes.new_user,
+                    subscribed: userDetails.attributes.subscribed
+                }
 
-        // pentru ca nu avem cookie in request, suntem blocati de middleware
-        const customHeader = {
-            headers: {
-                'Authorization': `Bearer ${jwt}`,
-                Cookie: `jwt=${jwt}`
+                if(userDetails.attributes.subscribed) {
+                    try {
+                        // ramane de vazut daca luam orderul active/pending sau nu
+                        const subHistory = await axios.get(`${SUBSCRIPTION_HISTORY}?filters[user_id][$eq]=${userDetails.attributes.user_id}`, header)
+                            .then(res => { return res.data})
+                            .catch(error => console.log(error))
+            
+                        subscriptionHistory = subHistory?.data;
+                        
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+            } catch (error) {
+                console.log(error)
             }
         }
+        
+        // pentru ca nu avem cookie in request, suntem blocati de middleware
+        // const customHeader = {
+        //     headers: {
+        //         'Authorization': `Bearer ${jwt}`,
+        //         Cookie: `jwt=${jwt}`
+        //     }
+        // }
         // test my api
         // const MY_DATA = 'http://localhost:3000/api/v1/subscriptions_queue'
         // const myData = await axiosServer.get(MY_DATA, customHeader)
         // console.log('myData: ', myData)
     }
-
-        // .then(resp => {return resp.data})
-    // const res = await fetch(MY_DATA)
-    // const myData = await res.json();
 
     return {
         props: {

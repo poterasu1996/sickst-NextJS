@@ -1,6 +1,6 @@
 
 
-type ChipStatus = 'success' | 'pending' | 'cancel'
+type ChipStatus = 'success' | 'pending' | 'failed' | 'cancel'
 
 interface Props {
     label: string,

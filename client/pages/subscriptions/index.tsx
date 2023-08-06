@@ -5,15 +5,21 @@ import stripeLogo1 from "../../public/img/svg/Stripe-Badge-Logo.svg";
 import stripeLogo2 from "../../public/img/svg/Stripe-Outline-Logo.svg";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
-import { SubscriptionEnums } from "../../shared/enums/subscription.enum";
 import Cookies from 'cookies';
 import CookiesReact from 'js-cookie';
 import { GETSubscription, IPOSTSubscriptionHistory } from "../../types/OrderHystory.interface";
 import { TxnStatusEnum } from "../../shared/enums/txn.enum";
 import { IUserModel } from "../../models/User.model";
+import { ISubscriptionOrderModel, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
+import { SubscriptionEnums } from "../../models/Subscription.model";
+import { IGETUserDetails } from "../../models/UserDetails.model";
+// import axios from "../../api/axios";
 
 const SUBSCRIPTION_URL = 'http://localhost:1337/api/subscriptions';
+const SUBS_HISTORY = 'http://localhost:1337/api/subscription-orders';
 const USER_ME = 'http://localhost:1337/api/users/me'
+const USER_DETAILS = 'http://localhost:1337/api/user-profile-details';
+
 
 let stripePromise: any;
 const getStripe = () => {
@@ -56,14 +62,16 @@ export const Subscriptions = ({ subscriptionsStripe, user, subscriptionHistory }
       // va trebui sa populam OH cu tipul subscrierii, { subscription_name: basic, starting_date: dataCrearii, txn_status: success/pending/canceled}
       // + va trebui creata o lista cu subscrieri (cele 6 iteme) de tipul: 
       // { id_listei, tip_subscriere, id_produs, nume_produs, luna_livrarii }
-      const sh: IPOSTSubscriptionHistory = {
+      const sh: ISubscriptionOrderModel = {
+        expire_date: null,
+        last_payment_date: null,
         session_id: id,
-        user_id: user.id ,
+        subscription_list: null,
         subscription_name: subsType,
         subscription_price: subscriptionPrice.attributes.price,
-        expire_date: null,
+        subscription_status: SubscriptionStatusEnum.PAUSED,
         txn_status: TxnStatusEnum.PENDING,
-        subscription_list: null
+        user_id: user.id ,
       }
 
       // prepare the SubscriptionHistory
@@ -177,6 +185,7 @@ export const Subscriptions = ({ subscriptionsStripe, user, subscriptionHistory }
 
 export default Subscriptions;
 
+
 export async function getServerSideProps({ req, res }: any) {
   const cookies = new Cookies(req, res);
   const jwt = cookies.get('jwt');
@@ -201,18 +210,22 @@ export async function getServerSideProps({ req, res }: any) {
       .then(res => { return res.data})
       .catch(error => console.log(error))
 
-    const SUBS_HISTORY = 'http://localhost:1337/api/subscription-orders'
-    const subsHist = await axios.get(SUBS_HISTORY, header)
-      .then(res => { return res.data?.data })
-      .catch(error => console.log(error))
+    if(userData.id) {
+      const userDetails: IGETUserDetails = await axios.get(`${USER_DETAILS}?filters[user_id][$eq]=${userData.id}`, header)
+        .then(resp => resp.data.data[0]);
 
-    subscriptions = [...data];
-    user = {
-      id: userData.id,
-      email: userData.email,
-      subscribed: userData.subscribed
-    };
-    subsHistory = {...subsHist};
+        const subsHist = await axios.get(SUBS_HISTORY, header)
+          .then(res => { return res.data?.data })
+          .catch(error => console.log(error))
+    
+        subscriptions = [...data];
+        user = {
+          id: userData.id,
+          email: userData.email,
+          subscribed: userDetails.attributes.subscribed,
+        };
+        subsHistory = {...subsHist};
+    }
   }
 
   return {

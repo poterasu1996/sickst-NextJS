@@ -4,8 +4,9 @@
   "description": "Sickst server application",
   "main": "server.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node app",
-    "dev": "cross-env NODE_ENV=development nodemon app"
+    "start": "nodemon server.js",
+    "start:prod": "SET NODE_ENV=production&& nodemon server.js",
+    "debug": "ndb server.js"
   },
   "author": "Poterasu Ionut",
   "license": "ISC",

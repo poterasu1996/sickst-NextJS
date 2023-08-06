@@ -40,12 +40,6 @@
       "min": 0,
       "default": 0
     },
-    "user_details": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::user-detail.user-detail",
-      "inversedBy": "product_reviews"
-    },
     "blocked": {
       "type": "boolean",
       "default": false
@@ -55,6 +49,12 @@
     },
     "users_disliked": {
       "type": "json"
+    },
+    "user_profile_detail": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::user-profile-detail.user-profile-detail",
+      "inversedBy": "product_reviews"
     }
   }
 }

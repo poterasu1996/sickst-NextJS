@@ -41,7 +41,7 @@ const Header = () => {
   useEffect(() => {}, [cartManager?.refresh])
 
   return (
-    <header>
+    <header className="print">
       <div className="container header sticky-header">
         <Button
             className="account-mobile-btn"

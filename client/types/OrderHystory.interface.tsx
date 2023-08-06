@@ -43,14 +43,14 @@ export interface GETSubscription {
 }
 
 // DTO for POST an order history
-export interface IPOSTOrderHistory {
-    order_type: string,
-    product_list: FullPriceProductList[],
-    session_id: string,
-    total: number,
-    txn_status: boolean,
-    user_id: number
-}
+// export interface IPOSTOrderHistory {
+//     order_type: string,
+//     product_list: FullPriceProductList[],
+//     session_id: string,
+//     total: number,
+//     txn_status: boolean,
+//     user_id: number
+// }
 
 // DTO from get/order-history
 export interface IOrderHystoryList {

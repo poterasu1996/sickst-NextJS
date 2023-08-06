@@ -18,18 +18,13 @@
         "payment",
         "collection"
       ],
-      "required": true
+      "required": false
     },
     "product_list": {
       "type": "json"
     },
     "user_id": {
       "type": "integer",
-      "required": true
-    },
-    "txn_status": {
-      "type": "boolean",
-      "default": false,
       "required": true
     },
     "total": {
@@ -41,6 +36,36 @@
       "type": "string",
       "required": true,
       "unique": false
+    },
+    "cancelled_order": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::cancelled-order.cancelled-order",
+      "inversedBy": "order_history"
+    },
+    "is_cancelled": {
+      "type": "boolean",
+      "default": false
+    },
+    "txn_status": {
+      "type": "enumeration",
+      "enum": [
+        "success",
+        "pending",
+        "failed",
+        "cancelled"
+      ],
+      "default": "pending",
+      "required": true
+    },
+    "is_delivered": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "shipping_details": {
+      "type": "json",
+      "required": true
     }
   }
 }

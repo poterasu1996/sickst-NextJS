@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "company_details",
+  "info": {
+    "singularName": "company-detail",
+    "pluralName": "company-details",
+    "displayName": "company_detail"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "cif": {
+      "type": "string"
+    },
+    "reg_com": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "iban": {
+      "type": "string"
+    },
+    "bank": {
+      "type": "string"
+    }
+  }
+}

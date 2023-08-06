@@ -6,6 +6,29 @@ export class AppUtils {
         return newDate.toFormat('dd LLL yyyy');
     }
 
+    static parseBirthdayDate(date: Date | string) {
+        // date should be of type dd/mm/yyyy
+        const newDate = new Date(date)
+        const year = newDate.getFullYear();
+        const month = String(newDate.getMonth() + 1).padStart(2, '0');
+        const day = String(newDate.getDate()).padStart(2, '0');
+
+        return year + '-' + month + '-' + day;
+    }
+
+    static parseDBBirthdayDate(date: string | null | undefined) {
+        if(date) {
+            const parts = date.split('-');
+            console.log(date, parts)
+            const year = parseInt(parts[0]);
+            const month = parseInt(parts[1]) - 1;
+            const day = parseInt(parts[2]);
+            
+            return new Date(year, month, day);
+        }
+        return '';
+    }
+
     static random7() {
         // apply random gradient
         const max = 7;
@@ -20,6 +43,22 @@ export class AppUtils {
 
     static userFullNameInitials(firstName: string, lastName: string) {
         return firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
+    }
+
+    static splitUserFullName(fullName: string) {
+        const words = fullName.trim().split(/\s+/);
+        let firstName = '';
+        let lastName = 'Default';
+
+        if (words.length > 0) {
+            firstName = words.shift()!;
+            lastName = words.join(' ');
+        }
+
+        return {
+            first_name: firstName,
+            last_name: lastName
+        };
     }
 
     static firstInitial(name: string) {

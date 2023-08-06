@@ -6,6 +6,8 @@ import { IShippingInfo, IGETShippingInformation } from "../../models/ShippingInf
 import { Bookmark, MoreVertical } from "react-feather";
 import { Menu } from "primereact/menu";
 import { MenuItem } from "primereact/menuitem";
+import { useRecoilState } from "recoil";
+import { shippingListR } from "../../shared/recoil-states";
 
 
 const ShippingInformation = () => {
@@ -14,6 +16,7 @@ const ShippingInformation = () => {
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const accountManager = useContext(AccountContext);
     const optionsMenu = useRef<Menu>(null);
+    const [, setShippingListR] = useRecoilState(shippingListR);
     const items: MenuItem[] = [
         {
             label: 'Options',
@@ -32,7 +35,7 @@ const ShippingInformation = () => {
         }
     ]
 
-    // console.log(shippingInfo)
+    // console.log('shippingInfo',shippingInfo)
     function handleDeleteAddress(adrsIndex: number | null) {
         if(adrsIndex !== null) {
             const newList: IShippingInfo[] | undefined = shippingInfo?.attributes.shipping_info_list!.filter((item, index) => index !== adrsIndex);
@@ -72,8 +75,9 @@ const ShippingInformation = () => {
     useEffect(() => {
         if(accountManager!.currentUser) {
             accountManager!.fetchShippingList()
-                .then(resp => {
+                .then((resp: IGETShippingInformation) => {
                     setShippingInfo(resp);
+                    setShippingListR(resp.attributes.shipping_info_list);
                 })
                 .catch(error => console.log('Shipping list error: ', error))
         }
@@ -82,8 +86,9 @@ const ShippingInformation = () => {
     return (
         <>
             <div className="shipping-info">
-                <div className="title">Shipping information</div>
-                <div className="info">All shipping updates <b className="brand-color">MUST</b> be made <b className="brand-color">1 day</b> prior to your next billing date in order to receive your next product at the new address.</div>
+                <div className="title">Detalii livrare</div>
+                <div className="info">Toate detaliile<b className="brand-color"> TREBUIESC</b> a fi modificate cu cel putin <b className="brand-color">1 zi</b> inainte de data urmatoarei facturari, pentru a primi produsul la noua adresa.</div>
+                <div className="info">Poti avea una sau mai multe adrese de livrare. Te rugam sa adaugi cel putin o adresa si sa fie setata ca adresa principala!</div>
                 <div className="address-list">
                     {shippingInfo?.attributes.shipping_info_list && shippingInfo.attributes.shipping_info_list.map((item: IShippingInfo, index: number) => (
                         <div className={`address-card ${item.primary ? "active" : ""}`} key={index}>

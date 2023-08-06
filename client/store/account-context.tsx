@@ -4,17 +4,21 @@ import { toast } from "react-toastify";
 import AuthContext from "./auth-context";
 
 import IHeader from "../types/RequestHeaderInterface";
-import IShippingInfo from "../types/ShippingInfo.interface";
 import { AccountStateEnums } from "../shared/enums/accountPageState.enum";
 import { IUserModel } from "../models/User.model";
 import { IProductReviewModel } from "../models/ProductReview.model";
-import { IGETUserDetails } from "../models/UserDetails.model";
-import { IShippingInformationModel } from "../models/ShippingInformation.model";
+import { IGETUserDetails, IUserDetailsModel } from "../models/UserDetails.model";
+import { IShippingInfo, IShippingInformationModel } from "../models/ShippingInformation.model";
+import { IGETOrderHistory, IOrderHistoryModel } from "../models/OrderHistory.model";
+import { IGETSubscriptionOrder } from "../models/SubscriptionOrder.model";
 
 interface IAccountContext {
     accountState: string,
     activateSubscription: (id: number) => Promise<void>,
+    addPersonalInfo: (data: IUserDetailsModel, piID: number) => void,
     addShippingInfo: (data: IShippingInfo) => void,
+    cancelOrder: (orderId: number, order: IGETOrderHistory | null) => void,
+    cancelSubscription: (subId: number, subOrder: IGETSubscriptionOrder | null) => void,
     currentUser: IUserModel | null,
     dislikeReview: (
         userId: number, 
@@ -25,7 +29,9 @@ interface IAccountContext {
         usersDislikedOldList: number[] | null) => void,
     editShippingAddress: (siIndex: number, newData: {data: IShippingInformationModel}) => void,
     fetchOrderHistory: () => Promise<any>,
+    fetchPersonalInfo: () => Promise<any>,
     fetchShippingList: () => Promise<any>,
+    fetchSubscriptionHistory: () => Promise<any>,
     likeReview: (
         userId: number, 
         reviewId: number, 
@@ -42,27 +48,19 @@ interface IAccountContext {
 
 const AccountContext = React.createContext<IAccountContext | null>(null);
 
-// type ShippingList = {
-//     attributes: {
-//         createdAt: string,
-//         publishedAt: string,
-//         shipping_info_list: IShippingInfo[] | null,
-//         updatedAt: string,
-//         user_id: number
-//     },
-//     id: number
-// }
-
-type Props = {
+interface Props {
     children: JSX.Element
 }
 
 export const AccountProvider = ({ children }: Props): JSX.Element => {
     const USER_ME = '/users/me';
-    const USER_DETAILS = '/user-details';
+    const USER_DETAILS = '/user-profile-details';
     const USERS = '/api/users'
     const SHIPPING_INFO = '/shipping-informations';
+    const SUBSCRIPTION_ORDER = '/subscription-orders';
     const PRODUCT_REVIEW = '/product-reviews';
+    const CANCELLED_ORDERS = '/cancelled-orders';
+    const CANCELLED_SUBSCRIPTIONS = '/cancelled-subscriptions';
     const ORDER_HISTORIES = '/order-histories';
     const authManager = useContext(AuthContext);
     const [accountState, setAccountState] = useState<string>('subscription');
@@ -114,8 +112,6 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
           <div className="toast-item">
             <div className="content">
                 <div className="title">{status ? 'Success' : 'ERROR'}</div>
-                {/* <div className="title">Success</div> */}
-                {/* <div className="message">An address has been changed successfully!</div>             */}
                 <div className="message">{msg}</div>            
             </div>
           </div>
@@ -132,6 +128,18 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
         if(header) {
             await axios.put(`${USERS}/${userId}`, { subscribed: true } , header)
                 .catch(error => console.log(error))
+        }
+    }
+
+    async function fetchSubscriptionHistory() {
+        if(header) {
+            console.log('cui',currentUser!.id)
+            try {
+                const response = await axios.get(`${SUBSCRIPTION_ORDER}?filters[user_id][$eq]=${currentUser!.id}`, header)
+                return response.data.data;
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 
@@ -178,6 +186,66 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
         }
     }
 
+    async function cancelOrder(orderId: number, order: IGETOrderHistory | null) {
+        if(header && order) {
+            const {createdAt, publishedAt, updatedAt, ...data} = order['attributes'];
+            const cancelData = {
+                data: {
+                    ...data,
+                    is_cancelled: true
+                }
+            }
+            const cancelledOrderData = {
+                data: {
+                    user_id: order.attributes.user_id,
+                    order_history: [order.id]
+                }
+            }
+
+            try {
+                await axios.post(CANCELLED_ORDERS, cancelledOrderData, header)
+                    .then(() => {
+                        axios.put(`${ORDER_HISTORIES}/${orderId}`, cancelData, header)
+                        notify('Comanda a fost anulata cu succes!', true); 
+                        setRefresh(refresh + 1);
+                    })
+            } catch (error) {
+                console.log(error);
+                notify('OOPS! An error occured while canceling the order!', false);
+            }
+        }
+    }
+
+    async function cancelSubscription(subscriptionId: number, subscriptionOrder: IGETSubscriptionOrder | null) {
+        if(header && subscriptionOrder) {
+            const {createdAt, publishedAt   , updatedAt, ...data} = subscriptionOrder['attributes'];
+            const cancelData = {
+                data: {
+                    ...data,
+                    is_cancelled: true,
+                }
+            }
+            const cancelledSubscription = {
+                data: {
+                    user_id: subscriptionOrder.attributes.user_id,
+                    subscription_order: [subscriptionOrder.id],
+                }
+            }
+
+            try {
+                await axios.post(CANCELLED_SUBSCRIPTIONS, cancelledSubscription, header)
+                    .then(() => {
+                        axios.put(`${SUBSCRIPTION_ORDER}/${subscriptionId}`, cancelData, header);
+                        notify('Te-ai dezabonat cu succes!', true);
+                        setRefresh(refresh + 1);
+                    })
+            } catch (error) {
+                console.log(error);
+                notify('OOPS! An error occured while canceling the subscription!', false);
+            }
+        }
+    }
+
     async function postReview(prodReview: { data: IProductReviewModel }) {
         if(header) {
             return await axios.post(PRODUCT_REVIEW, prodReview, header)
@@ -191,16 +259,6 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
                 })
         }
     }
-
-    // async function setPrimaryAddress(siIndex: number, siNewData: { data: IShippingInformationModel }) {
-    //     if(header) {
-    //         try {
-    //             await axios.put(`${SHIPPING_INFO}/${siIndex}`, siNewData)
-    //         } catch (error) {
-                
-    //         }
-    //     }
-    // }
 
     async function likeReview(
         userId: number, 
@@ -333,6 +391,32 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
         }
     }
 
+    async function fetchPersonalInfo() {
+        if(header) {
+            return await axios.get(`${USER_DETAILS}?filters[user_id][$eq]=${currentUser?.id}`, header)
+                .then(result => result.data)
+        }
+    }
+
+    async function addPersonalInfo(data: IUserDetailsModel, piID: number) {
+        if(header) {
+            const newData = {
+                data: {
+                    ...data
+                }
+            }
+            try {
+                await axios.put(`${USER_DETAILS}/${piID}`, newData, header)
+                    .then(() => {
+                        setRefresh(refresh + 1);
+                        notify('Datele personale au fost actualizate cu success!', true);
+                    })
+            } catch (error) {
+                console.log(error);
+                notify('OOPS! An error occured while updating personal info!', false);
+            }
+        }
+    }
 
     function addShippingInfo(newData: IShippingInfo) {
         if(header) {
@@ -383,12 +467,17 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
                                 }
                             }
                         } 
-                    } else {
-                        // if user doesnt add a primary address
-                        const newAddress = {
-                            ...newData
+                        existingList.push(newData);
+                        newList = {
+                            data: {
+                                shipping_info_list: [
+                                    ...existingList
+                                ],
+                                user_id: currentUser!.id
+                            }
                         }
-                        existingList.push(newAddress);
+                    } else {
+                        existingList.push(newData);
                         newList = {
                             data: {
                                 shipping_info_list: [
@@ -468,15 +557,24 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
         }
     }
 
+    // async function getCompanyDetails() {
+    //     if(header) {}
+    // }
+
     const accountManager: IAccountContext = {
         accountState: accountState,
         activateSubscription: activateSubscription,
+        addPersonalInfo: addPersonalInfo,
         addShippingInfo: addShippingInfo,
+        cancelOrder: cancelOrder,
+        cancelSubscription: cancelSubscription,
         currentUser: currentUser,
         dislikeReview: dislikeReview,
         editShippingAddress: editShippingAddress,
         fetchOrderHistory: fetchOrderHistory,
+        fetchPersonalInfo: fetchPersonalInfo,
         fetchShippingList: fetchShippingList,
+        fetchSubscriptionHistory: fetchSubscriptionHistory,
         likeReview: likeReview,
         postReview: postReview,
         refresh: refresh,
