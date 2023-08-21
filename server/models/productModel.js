@@ -10,11 +10,11 @@ const productSchema = new mongoose.Schema({
         require: [true, 'Model is required'] 
     },
     type: { type: String },
-    price: { type: Number },
-    category: { 
-        type: Schema.Types.ObjectId,
-        ref: "Category" 
-    }
+    price: { type: Number }
+    // category: { 
+    //     type: Schema.Types.ObjectId,
+    //     ref: "Category" 
+    // }
 });
 
 const Product = mongoose.model("Product", productSchema);

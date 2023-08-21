@@ -30,7 +30,8 @@
     "passport": "^0.5.2",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
-    "pg": "^8.7.3"
+    "pg": "^8.7.3",
+    "validator": "^13.11.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
