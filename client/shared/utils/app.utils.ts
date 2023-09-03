@@ -19,14 +19,13 @@ export class AppUtils {
     static parseDBBirthdayDate(date: string | null | undefined) {
         if(date) {
             const parts = date.split('-');
-            console.log(date, parts)
             const year = parseInt(parts[0]);
             const month = parseInt(parts[1]) - 1;
             const day = parseInt(parts[2]);
             
             return new Date(year, month, day);
         }
-        return '';
+        return null;
     }
 
     static random7() {
@@ -51,8 +50,8 @@ export class AppUtils {
         let lastName = 'Default';
 
         if (words.length > 0) {
-            firstName = words.shift()!;
-            lastName = words.join(' ');
+            lastName = words.shift()!;
+            firstName = words.join(' ');
         }
 
         return {

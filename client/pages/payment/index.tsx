@@ -1,17 +1,12 @@
-import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
 import { X } from "react-feather";
-import CouponeForm from "../../components/global/form/CouponeForm";
+// import CouponeForm from "../../components/global/form/CouponeForm";
 import CartContext from "../../store/cart-context";
-// import PaymentContext from "../../store/payment-context";
-import PaymentContextTS from "../../store/payment-context";
-import { loadStripe } from "@stripe/stripe-js";
 import ShippingInformation from "../../components/AccountPage/ShippingInformation";
 import CartService from "../../shared/services/cartService/index";
 import axios from "axios";
 import CookiesServer from 'cookies';
-import Cookies from 'js-cookie';
 import { PaymentEnums } from "../../shared/enums/payment.enums";
 import ICartProduct from "../../types/CartProduct.interface";
 import { IUserModel } from "../../models/User.model";
@@ -21,20 +16,10 @@ import { useRecoilValue } from "recoil";
 import { shippingListR } from "../../shared/recoil-states";
 import { IShippingInfo } from "../../models/ShippingInformation.model";
 import { IGETUserDetails } from "../../models/UserDetails.model";
-
-let stripePromise: any;
+import getStripe from "../../lib/get-stripe";
 
 const USER_ME = 'http://localhost:1337/api/users/me';
 const USER_DETAILS = 'http://localhost:1337/api/user-profile-details';
-
-const getStripe = () => {
-  // check if there is any stripe instance
-  if (!stripePromise) {
-    process.env.NEXT_PUBLIC_STRIPE_KEY && (stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY));
-  }
-
-  return stripePromise;
-};
 
 type Props = {
   user: {
@@ -45,14 +30,11 @@ type Props = {
 }
 
 const PaymentPage = ({ user }: Props) => {
-  const router = useRouter();
   const cartManager = useContext(CartContext);
-  const paymentManager = useContext(PaymentContextTS);
   const [couponValue, setCouponeValue] = useState<any>();
   const [loading, setLoading] = useState(true);
   const [lineItems, setLineItems] = useState<any>([]);
   const [cartItems, setCartItems] = useState<ICartProduct[]>([]);
-  const [header, setHeader] = useState<any>();
   const shippingListRecoil = useRecoilValue(shippingListR);
 
   let activeShippingDetails: IShippingInfo | undefined = undefined;
@@ -63,6 +45,7 @@ const PaymentPage = ({ user }: Props) => {
   // disable the pay button if there is no product / no primary address set
   const disablePayButton = (cartItems.length === 0 || activeShippingDetails === undefined);
   console.log('RECOILDSL', shippingListRecoil)
+  console.log('activeSL', activeShippingDetails)
   console.log('cartItems', cartItems)
 
   const orderMinus = (item: any) => {
@@ -85,7 +68,7 @@ const PaymentPage = ({ user }: Props) => {
       const cartList = CartService.singlePaymentList();   // list from cart
       cartList && setCartItems([...cartList]);
 
-      const items = cartList?.map((item: ICartProduct) =>{                 // item list for stripe
+      const items = cartList?.map((item: ICartProduct) =>{  // item list for stripe
         return {
           price: item.product.attributes.stripe_fullpriceLink,
           quantity: item.quantity
@@ -94,6 +77,8 @@ const PaymentPage = ({ user }: Props) => {
       // prepare product list for stripe
       items && setLineItems([...items]);
     } 
+
+    setLoading(false);
   }, [loading, CartService.cart]);
 
 
@@ -131,7 +116,7 @@ const PaymentPage = ({ user }: Props) => {
         order_type: OrderTypeEnum.PAYMENT,
         product_list: cleanProductList,
         session_id: id,
-        shipping_details: shippingListRecoil,
+        shipping_details: activeShippingDetails,
         total: CartService.cartTotal(),
         txn_status: TxnStatusEnum.PENDING,
         user_id: user.id,
@@ -151,19 +136,6 @@ const PaymentPage = ({ user }: Props) => {
     setLoading(false);
   }, 500);
 
-  useEffect(() => {
-    const jwt = Cookies.get('jwt');
-    if(jwt) {
-        const head = {
-            headers: {
-                'Content-Type': 'application/json',
-                authorization: `Bearer ${jwt}`,
-            }
-        }
-        setHeader(head);
-    }
-  }, [])
-
   return (
     <>
       <div className="main-content-payment">
@@ -174,6 +146,7 @@ const PaymentPage = ({ user }: Props) => {
             <div className="subtitle">
               Will ship by end of month from our facility
             </div>
+            
             {cartItems.length > 0 && (
               cartItems.filter(item => {
                   if(item.payment === PaymentEnums.FULL_PAYMENT) {
@@ -221,9 +194,7 @@ const PaymentPage = ({ user }: Props) => {
                 </div>
               ))
             )} 
-            {/* // : (
-            //   <div className="cart-empty">Your cart is empty</div>
-            // )} */}
+
             <div className="additional-details">
               <div className="details">
                 Pret Transport
@@ -262,10 +233,12 @@ const PaymentPage = ({ user }: Props) => {
                   loading={(value: any) => setLoading(value)}
                 />
               </div> */}
+
+
               <Button className="button-second mt-5" onClick={redirectToCheckout} disabled={disablePayButton}>Pay</Button>
             </div>
+
           </div>
-          
           <ShippingInformation />
         </div>
       </div>

@@ -1,0 +1,47 @@
+.custom-input {
+    margin-top: 2.5rem;
+    // height: 5rem;
+    justify-content: center;
+
+    input {
+        background-color: #fff;
+        font-size: 1.8rem;
+        font-weight: 400;
+        padding: 0.9rem;
+    }
+
+    label {
+        font-size: 1.8rem;
+        line-height: 1.6rem;
+        font-weight: 600;
+        color: #959ba6;
+    }
+
+    .css-1sumxir-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+        color: #cc3633;
+    }
+
+    .css-14lo706 {
+        display: inline-block;
+        span {
+            padding-right: 1.5rem;
+        }
+    }
+    
+
+    .MuiInputBase-root:hover {
+        fieldset {
+            border-color: #ced4da;
+        }
+    }
+
+    .MuiInputBase-root.Mui-focused {
+        fieldset {
+            border-color: #cc3633;
+        }
+    }
+
+    .MuiFormHelperText-root {
+        font-size: 1.2rem;
+    }
+}

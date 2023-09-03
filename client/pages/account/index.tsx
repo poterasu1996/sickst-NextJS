@@ -1,8 +1,6 @@
 import { DateTime } from "luxon";
-import Cookies from 'cookies';
 import { useContext, useEffect, useState } from "react";
 import axios from "../../api/axios";
-import axiosServer from "axios";
 import BillingInformation from "../../components/AccountPage/BillingInformation";
 import ManageSubscription from "../../components/AccountPage/ManageSubscription";
 import OrderHistory from "../../components/AccountPage/OrderHistory";
@@ -29,6 +27,10 @@ import { IGETUserDetails } from "../../models/UserDetails.model";
 //     'resetPassword'
 // ];
 
+function getDate(dateString: string) {
+    const date = DateTime.fromISO(dateString);
+    return date.toFormat('dd LLL yyyy');
+}
 
 type Props = {
     userInfo: ILocalUserInfo,
@@ -55,11 +57,6 @@ const Account = ({ userInfo, subscriptionHistory }: Props) => {
         accountManager!.setAccountPageState(navLink);
     }
 
-    function getDate() {
-        const date = DateTime.fromISO(userInfo?.createdAt);
-        return date.toFormat('dd LLL yyyy');
-    }
-
     return(<>
         <div className="main-content account-page">
             <div className="container account-main-body">
@@ -67,7 +64,7 @@ const Account = ({ userInfo, subscriptionHistory }: Props) => {
                     <div className="user-info">
                         <div className="user-avatar"></div>
                         <div className="user-name">Sickst User</div>
-                        <div className="joined-date">Joined: <b className="brand-color">{userInfo && getDate()}</b></div>
+                        <div className="joined-date">Joined: <b className="brand-color">{userInfo && getDate(userInfo.createdAt)}</b></div>
                         <div className="joined-date">Subscription: <b className="brand-color">{(userInfo && userInfo.subscribed) ? 'activa' : 'neabonat'}</b></div>
                     </div>
                     <ul className="nav-menu">
@@ -88,7 +85,7 @@ const Account = ({ userInfo, subscriptionHistory }: Props) => {
                         </div>
                         <div className="user-details">
                             <div className="name">Sickst User</div>
-                            <div className="joined-date">Joined: <b className="brand-color">{userInfo && getDate()}</b></div>
+                            <div className="joined-date">Joined: <b className="brand-color">{userInfo && getDate(userInfo.createdAt)}</b></div>
                             <div className="subscription-status">Subscription: <b className="brand-color">Active</b></div>
                         </div>
                     </div>
@@ -159,18 +156,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 console.log(error)
             }
         }
-        
-        // pentru ca nu avem cookie in request, suntem blocati de middleware
-        // const customHeader = {
-        //     headers: {
-        //         'Authorization': `Bearer ${jwt}`,
-        //         Cookie: `jwt=${jwt}`
-        //     }
-        // }
-        // test my api
-        // const MY_DATA = 'http://localhost:3000/api/v1/subscriptions_queue'
-        // const myData = await axiosServer.get(MY_DATA, customHeader)
-        // console.log('myData: ', myData)
     }
 
     return {

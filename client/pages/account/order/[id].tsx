@@ -5,7 +5,7 @@ import { IGETOrderHistory } from "../../../models/OrderHistory.model";
 import { AppUtils } from "../../../shared/utils/app.utils";
 import { IOHProduct } from "../../../models/OrderHistory.model";
 import { Table } from 'react-bootstrap';
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import AccountContext from "../../../store/account-context";
 import { useRouter } from "next/router";
 import { ICompanyDetail, ICompanyDetailModel } from "../../../models/CompanyDetail.model";
@@ -55,7 +55,8 @@ const OrderId = ({ order, companyDet }: Props) => {
     }
 
     function handleCancelOrder() {
-        accountManager!.cancelOrder(order!.id, order);
+        if (!order) return;
+        accountManager!.cancelOrder(order.id, order).then(() => router.replace(router.asPath)); 
         router.replace(router.asPath);
         setShowCancelOrder(false);
     }
@@ -64,98 +65,107 @@ const OrderId = ({ order, companyDet }: Props) => {
         <div className="layout order-content">
             <div className="container">
                 <div className="row">
-                    <div className="col-lg-8 col-xl-9 col-12">
-                        <div className="order-card">
-                            <div className="order-card--text">
-                                <div className="mx-3 my-3">
-                                    <img className="logo mb-5" src={logo.src} />
-                                    {companyDet && <>
-                                        <p style={{textTransform: "uppercase", fontWeight: "bold"}}>{companyDet.attributes.name}</p>
-                                        <p>CIF: {companyDet.attributes.cif}</p>
-                                        <p>Reg. com.: {companyDet.attributes.reg_com}</p>
-                                        <p>Adresa: {companyDet.attributes.address}</p>
-                                        <p>IBAN: {companyDet.attributes.iban}</p>
-                                        <p>Banca: {companyDet.attributes.bank}</p>
-                                    </>}
-                                </div>
-                                <div className="mx-3 my-3">
-                                    {order && <>
-                                        <h3 className="mb-5"><b>Order #{order.id}</b></h3>
-                                        <p>Order Date: {AppUtils.isoToFormat(order.attributes.createdAt)}</p>
-                                    </>}
+                    {!order
+                        ? <h3 className="text-center mt-5 fw-bold">Din pacate aceasta comanda nu a fost gasita!</h3>
+                        : <>
+                            <div className="col-lg-8 col-xl-9 col-12">
+                                <div className="order-card">
+                                    <div className="order-card--text">
+                                        <div className="mx-3 my-3">
+                                            <img className="logo mb-5" src={logo.src} />
+                                            {companyDet && <>
+                                                <p style={{textTransform: "uppercase", fontWeight: "bold"}}>{companyDet.attributes.name}</p>
+                                                <p>CIF: {companyDet.attributes.cif}</p>
+                                                <p>Reg. com.: {companyDet.attributes.reg_com}</p>
+                                                <p>Adresa: {companyDet.attributes.address}</p>
+                                                <p>IBAN: {companyDet.attributes.iban}</p>
+                                                <p>Banca: {companyDet.attributes.bank}</p>
+                                            </>}
+                                        </div>
+                                        <div className="mx-3 my-3">
+                                            {order && <>
+                                                <h3 className="mb-5"><b>Order #{order.id}</b></h3>
+                                                <p>Order Date: {AppUtils.isoToFormat(order.attributes.createdAt)}</p>
+                                            </>}
+                                        </div>
+                                    </div>
+                                    <hr className="divider"></hr>
+                                    <div className="order-card--text">
+                                        <div className="mx-3 my-3">
+                                            <p className="my-4"><b>Invoice to:</b></p>
+                                            <p className="mb-1">Poterasu Ionut</p>
+                                            <p className="mb-1">Alexandru cel Bun nr. 2</p>
+                                        </div>
+                                    </div>
+                                    <Table>
+                                        <thead>
+                                            <tr>
+                                                {columns.map((col, i) => (
+                                                    <th key={i} className={(i!== 0 && i!== 1) ? 'text-center' : ''}>{col.header}</th>
+                                                ))}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {tableContent?.map((el: TableContent, i) => (
+                                                <tr key={i}>
+                                                    <td>{el.id}</td>
+                                                    <td>{el.product}</td>
+                                                    <td className="text-center">{el.quantity}</td>
+                                                    <td className="text-center">{el.price}</td>
+                                                    <td className="text-center">{el.total}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </Table>
+                                    <div className="order-card--text">
+                                        <div className="mx-3 my-3">
+                                            <p className="my-4"><b>Invoice to:</b></p>
+                                            <p className="mb-1">Poterasu Ionut</p>
+                                            <p className="mb-1">Alexandru cel Bun nr. 2</p>
+                                        </div>
+                                        <div className="mx-3 my-3">
+                                            <table style={{border: 'none'}}>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <p className="my-1 me-5">Subtotal:</p>
+                                                            <p className="mb-1">Discount:</p>
+                                                            <p className="mb-1">Transport:</p>
+                                                            <p className="mb-1">Total:</p>
+                                                        </td>
+                                                        <td>
+                                                            <p className="my-1"><b>Lei 140</b></p>
+                                                            <p className="my-1"><b>Lei 0.00</b></p>
+                                                            <p className="my-1"><b>Lei 15.00</b></p>
+                                                            <p className="my-1"><b>Lei 155.00</b></p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <hr className="divider"></hr>
-                            <div className="order-card--text">
-                                <div className="mx-3 my-3">
-                                    <p className="my-4"><b>Invoice to:</b></p>
-                                    <p className="mb-1">Poterasu Ionut</p>
-                                    <p className="mb-1">Alexandru cel Bun nr. 2</p>
+                            <div className="col-lg-4 col-xl-3 col-12 print">
+                                <div className="order-card">
+                                    <div className="order-buttons">
+                                        <button className="button-primary order-details-btn">Download</button>
+                                        <button 
+                                            className="button-primary order-details-btn"
+                                            onClick={() => handlePrint()}
+                                        >Print</button>
+                                        <button 
+                                            className="button-second order-details-btn"
+                                            disabled={order?.attributes.is_cancelled}
+                                            onClick={() => setShowCancelOrder(true)}
+                                        >{order?.attributes.is_cancelled ? "Anulata" : "Anulare"}</button>
+                                    </div>
                                 </div>
                             </div>
-                            <Table>
-                                <tr>
-                                    {columns.map((col, i) => (
-                                        <th key={i} className={(i!== 0 && i!== 1) ? 'text-center' : ''}>{col.header}</th>
-                                    ))}
-                                </tr>
-                                <tbody>
-                                    {tableContent?.map((el: TableContent, i) => (
-                                        <tr key={i}>
-                                            <td>{el.id}</td>
-                                            <td>{el.product}</td>
-                                            <td className="text-center">{el.quantity}</td>
-                                            <td className="text-center">{el.price}</td>
-                                            <td className="text-center">{el.total}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </Table>
-                            <div className="order-card--text">
-                                <div className="mx-3 my-3">
-                                    <p className="my-4"><b>Invoice to:</b></p>
-                                    <p className="mb-1">Poterasu Ionut</p>
-                                    <p className="mb-1">Alexandru cel Bun nr. 2</p>
-                                </div>
-                                <div className="mx-3 my-3">
-                                    <table style={{border: 'none'}}>
-                                        <tr>
-                                            <td>
-                                                <p className="my-1 me-5">Subtotal:</p>
-                                                <p className="mb-1">Discount:</p>
-                                                <p className="mb-1">Transport:</p>
-                                                <p className="mb-1">Total:</p>
-                                            </td>
-                                            <td>
-                                                <p className="my-1"><b>Lei 140</b></p>
-                                                <p className="my-1"><b>Lei 0.00</b></p>
-                                                <p className="my-1"><b>Lei 15.00</b></p>
-                                                <p className="my-1"><b>Lei 155.00</b></p>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-lg-4 col-xl-3 col-12 print">
-                        <div className="order-card">
-                            <div className="order-buttons">
-                                <button className="button-primary order-details-btn">Download</button>
-                                <button 
-                                    className="button-primary order-details-btn"
-                                    onClick={() => handlePrint()}
-                                >Print</button>
-                                <button 
-                                    className="button-second order-details-btn"
-                                    disabled={order?.attributes.is_cancelled}
-                                    onClick={() => setShowCancelOrder(true)}
-                                >Anulare</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        </>
+                    }
 
+                </div>
             </div>
         </div>
 
@@ -191,18 +201,21 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
 
     let order: IGETOrderHistory | null = null;
     let companyDet: ICompanyDetail | null = null;
-
     if(jwt) {
         const header = {
             headers: {
                 'Authorization': `Bearer ${jwt}`
             }
         };
-        order = await axios.get(`${ORDER_HISTORIES}/${id}`, header)
-            .then(res => res.data.data);
+        try {
+            const orderResponse = await axios.get(`${ORDER_HISTORIES}/${id}`, header)
+            order = orderResponse.data.data;
 
-            companyDet = await axios.get(COMPANY_DETAILS, header)
-            .then(res => res.data.data[0]);
+            const compDetResponse = await axios.get(COMPANY_DETAILS, header);
+            companyDet = compDetResponse.data.data[0]
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return {

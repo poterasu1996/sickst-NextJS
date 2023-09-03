@@ -5,7 +5,7 @@ import AccountContext from "../../store/account-context";
 import Chip from "../global/Chip";
 import { useRouter } from "next/router";
 import { TxnStatusEnum } from "../../shared/enums/txn.enum";
-import { IGETOrderHistory, OrderTypeEnum } from "../../models/OrderHistory.model";
+import { IGETOrderHistory } from "../../models/OrderHistory.model";
 import { IGETSubscriptionOrder, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
 
 const OrderHistory = () => {
@@ -22,9 +22,8 @@ const OrderHistory = () => {
         if(accountManager!.currentUser) {
             accountManager!.fetchOrderHistory()
                 .then((resp: IGETOrderHistory[]) => {
-                    const reverse = resp.reverse();
-                    if(reverse.length > 0) {
-                        setOrderHistory([...reverse]);
+                    if(resp.length > 0) {
+                        setOrderHistory([...resp]);
                     } else {
                         setOrderHistory(null)
                     }
@@ -39,6 +38,8 @@ const OrderHistory = () => {
                 .catch(error => console.log(error))
         }
     }, [accountManager!.currentUser])
+
+    useEffect(() => {}, [accountManager!.refresh])
 
     useEffect(() => {
         if(orderHistory && subscriptionHistory) {
