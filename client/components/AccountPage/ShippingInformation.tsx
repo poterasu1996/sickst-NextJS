@@ -83,6 +83,7 @@ const ShippingInformation = () => {
         }
     }, [accountManager!.currentUser, accountManager!.refresh])
 
+
     return (
         <>
             <div className="shipping-info">

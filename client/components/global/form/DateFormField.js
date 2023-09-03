@@ -12,6 +12,7 @@ const DateFormField = (props) => {
                 </div>
                 <Calendar 
                     className="date-form-control"
+                    dateFormat="dd/mm/yy"
                     {...props}
                     value={props.value}
                     onChange={props.onChange}

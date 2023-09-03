@@ -10,18 +10,26 @@ import { AppUtils } from "../../shared/utils/app.utils";
 import AccountContext from "../../store/account-context";
 import { GenderEnum, IUserDetailsModel } from "../../models/UserDetails.model";
 
+interface FormData {
+    address: string,
+    birthday: Date | string | null,
+    city: string,
+    county: string,
+    full_name: string,
+    gender: {title: string, value: string}[],
+    phone: string,
+}
+
+interface Values {
+    city: string
+}
+
 const PersonalInfo = () => {
-    const [formData, setFormData] = useState<{
-        address: string,
-        birthday: Date | string,
-        city: string,
-        county: string,
-        full_name: string,
-        gender: {title: string, value: string}[],
-        phone: string,
-    }>({
+    const defaultFirstName = "Sickst"; // default value safed in database
+    const defaultBirthdayDate = "1970-01-01"; // default date from DB
+    const [formData, setFormData] = useState<FormData>({
         address: '',
-        birthday: '',
+        birthday: null,
         city: '',
         county: '',
         full_name: '',
@@ -30,6 +38,7 @@ const PersonalInfo = () => {
         ],
         phone: '',
     })
+    const [isDirty, setIsDirty] = useState<boolean>(false);
 
     const countyList = countyService.getCountyList();
     const [personalInfo, setPersonalInfo] = useState<IUserDetailsModel | null>(null);
@@ -51,6 +60,12 @@ const PersonalInfo = () => {
         gender: Yup.string().required('Campul este obligatoriu'),
     })
 
+    const handleDirty = () => {
+        if (!isDirty) {
+            setIsDirty(true);
+        }
+    }
+
     const submitHandler = async (e: React.SyntheticEvent) => {
         e.preventDefault();
 
@@ -61,7 +76,7 @@ const PersonalInfo = () => {
 
         const data: IUserDetailsModel = {
             address: formData.address,
-            birthday: AppUtils.parseBirthdayDate(formData.birthday),
+            birthday: formData.birthday && AppUtils.parseBirthdayDate(formData.birthday),
             city: formData.city,
             client_role: personalInfo!.client_role,
             county: formData.county,
@@ -86,11 +101,11 @@ const PersonalInfo = () => {
         if(personalInfo) {
             setFormData({
                 address: personalInfo.address ? personalInfo.address : '',
-                birthday: AppUtils.parseDBBirthdayDate(personalInfo.birthday),
+                birthday: personalInfo.birthday === defaultBirthdayDate ? null : AppUtils.parseDBBirthdayDate(personalInfo.birthday),
                 city: personalInfo.city ? personalInfo.city : '',
                 county: personalInfo.county ? personalInfo.county : '',
                 phone: personalInfo.phone_number ? personalInfo.phone_number : '',
-                full_name: personalInfo.first_name + " " + personalInfo.last_name,
+                full_name: personalInfo.first_name === defaultFirstName ? "" : personalInfo.first_name + " " + personalInfo.last_name,
                 gender: [personalInfo.gender === GenderEnum.MALE 
                     ? {title: 'Domnul', value: 'male'}
                     : personalInfo.gender === GenderEnum.FEMALE 
@@ -119,18 +134,21 @@ const PersonalInfo = () => {
                     <div className="user-details">
                         <div className="title">Detalii cont</div>
                         <div className="info">Detaliile personale pot ajuta la imbunatatirea serviciului nostru.</div>
-                        <Form onSubmit={submitHandler} className="user-details-form">
+                        <Form 
+                            onSubmit={submitHandler} 
+                            className="user-details-form">
                             <Row>
                                 <Col lg={6}>
                                     <CustomFormField 
                                         controlid="floatingFullName"
                                         name="full_name"
-                                        label="Nume si Prenume"
+                                        label="Nume si Prenume*"
                                         type="text"
                                         value={formData.full_name}
                                         onChange={(e: any) => {
                                             setFormData({...formData, full_name: e.target.value});
                                             formik.setFieldValue('full_name', e.target.value);
+                                            handleDirty()
                                         }}
                                     />
                                 </Col>
@@ -138,12 +156,13 @@ const PersonalInfo = () => {
                                     <CustomFormField 
                                         controlid="floatingPhone"
                                         name="phone"
-                                        label="Telefon"
+                                        label="Telefon*"
                                         type="text"
                                         value={formData.phone}
                                         onChange={(e: any) => {
                                             setFormData({...formData, phone: e.target.value});
                                             formik.setFieldValue('phone', e.target.value);
+                                            handleDirty()
                                         }}
                                     />
                                 </Col>
@@ -151,12 +170,13 @@ const PersonalInfo = () => {
                             <CustomFormField 
                                 controlid="floatingAddress"
                                 name="address"
-                                label="Adresa"
+                                label="Adresa*"
                                 type="text"
                                 value={formData.address}
                                 onChange={(e: any) => {
                                     setFormData({...formData, address: e.target.value});
-                                    formik.setFieldValue('address', e.target.value);
+                                    formik.handleChange(e);
+                                    handleDirty()
                                 }}
                             />
                             <Row>
@@ -164,12 +184,13 @@ const PersonalInfo = () => {
                                     <CustomFormField 
                                         controlid="floatingCity"
                                         name="city"
-                                        label="Oras"
+                                        label="Oras*"
                                         type="text"
                                         value={formData.city}
                                         onChange={(e: React.BaseSyntheticEvent) => {
                                             setFormData({...formData, city: e.target.value});
                                             formik.setFieldValue('city', e.target.value);
+                                            handleDirty()
                                         }}
                                     />
                                 </Col>
@@ -183,13 +204,14 @@ const PersonalInfo = () => {
                                         onChange={(event, value) => {
                                             formik.setFieldValue('county', value);
                                             setFormData({...formData, county: value!})
+                                            handleDirty()
                                         }}
                                         inputValue={formik.values.county || ""}
                                         onInputChange={(event, value) => {
                                             formik.setFieldValue('county', value);
                                             setFormData({...formData, county: value!})
                                         }}
-                                        renderInput={(params) => <TextField {...params} label="Judet" />}
+                                        renderInput={(params) => <TextField {...params} label="Judet*" />}
                                     />
                                 </Col>
                             </Row>
@@ -201,6 +223,7 @@ const PersonalInfo = () => {
                                         onChange={(val: React.BaseSyntheticEvent) => {
                                             formik.setFieldValue('birthday', val.target.value.toLocaleDateString('en-GB'));
                                             setFormData({...formData, birthday: val.target.value});
+                                            handleDirty()
                                         }}
                                     />
                                 </Col>
@@ -215,6 +238,7 @@ const PersonalInfo = () => {
                                         onChange={(event, value) => {
                                             formik.setFieldValue('gender', value?.value);
                                             setFormData({...formData, gender: [{...value!}]});
+                                            handleDirty()
                                         }}
                                         renderInput={(params) => <TextField {...params} label="Forma de adresare" />}
                                     />
@@ -223,7 +247,7 @@ const PersonalInfo = () => {
                             <Button 
                                 className="button-second mt-5" 
                                 type="submit"
-                                disabled={!(formik.isValid || formik.dirty)}
+                                disabled={!(formik.isValid && isDirty)}
                             >Update information</Button>
                         </Form>
                     </div>

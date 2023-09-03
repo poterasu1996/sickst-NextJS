@@ -4,19 +4,9 @@ import { X } from "react-feather";
 import CouponeForm from "../../components/global/form/CouponeForm";
 import AccountContext from "../../store/account-context";
 import CartContext from "../../store/cart-context";
-import { loadStripe } from "@stripe/stripe-js";
 import ShippingInformation from "../../components/AccountPage/ShippingInformation";
 import AuthContext from "../../store/auth-context";
-
-let stripePromise;
-
-const getStripe = () => {
-  // check if there is any stripe instance
-  if (!stripePromise) {
-    stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY);
-  }
-  return stripePromise;
-};
+import getStripe from "../../lib/get-stripe";
 
 const SubscriptionPage = () => {
     const { cartManager } = useContext(CartContext);
@@ -25,7 +15,6 @@ const SubscriptionPage = () => {
     const [loading, setLoading] = useState(true);
     const [couponValue, setCouponeValue] = useState();
     const [subItem, setSubItem] = useState(null);
-    const [shippingList, setShippingList] = useState();
     const [checkoutOptions, setCheckoutOptions] = useState({});
 
     useEffect(() => {
@@ -63,9 +52,7 @@ const SubscriptionPage = () => {
 
     async function checkout() {
         const stripe = await getStripe();
-        const { error, resp } = await stripe.redirectToCheckout(checkoutOptions);
-        // console.log("Stripe resp", resp);
-        // console.log("Stripe error", error);
+        await stripe.redirectToCheckout(checkoutOptions);
     }
 
     setTimeout(() => {

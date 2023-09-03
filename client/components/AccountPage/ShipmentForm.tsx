@@ -11,7 +11,7 @@ import countyService from "../../shared/services/countyService";
 import { Autocomplete, TextField } from "@mui/material";
 
 type Props = {
-    onSubmit: () => void
+  onSubmit: () => void
 }
 
 export default function ShipmentForm({ onSubmit }: Props) {

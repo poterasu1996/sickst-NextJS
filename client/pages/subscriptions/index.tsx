@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import cardImg1 from "../../public/img/mystery.jpg";
 import shield from "../../public/img/svg/shield.svg";
 import stripeLogo1 from "../../public/img/svg/Stripe-Badge-Logo.svg";
 import stripeLogo2 from "../../public/img/svg/Stripe-Outline-Logo.svg";
-import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import Cookies from 'cookies';
 import CookiesReact from 'js-cookie';
@@ -13,23 +12,13 @@ import { IUserModel } from "../../models/User.model";
 import { ISubscriptionOrderModel, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
 import { SubscriptionEnums } from "../../models/Subscription.model";
 import { IGETUserDetails } from "../../models/UserDetails.model";
-// import axios from "../../api/axios";
+import getStripe from "../../lib/get-stripe";
+
 
 const SUBSCRIPTION_URL = 'http://localhost:1337/api/subscriptions';
 const SUBS_HISTORY = 'http://localhost:1337/api/subscription-orders';
 const USER_ME = 'http://localhost:1337/api/users/me'
 const USER_DETAILS = 'http://localhost:1337/api/user-profile-details';
-
-
-let stripePromise: any;
-const getStripe = () => {
-  // check if there is any stripe instance
-  if (!stripePromise) {
-    process.env.NEXT_PUBLIC_STRIPE_KEY && (stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY));
-  }
-
-  return stripePromise;
-};
 
 type Props = {
   subscriptionsStripe: GETSubscription[],
@@ -64,6 +53,7 @@ export const Subscriptions = ({ subscriptionsStripe, user, subscriptionHistory }
       // { id_listei, tip_subscriere, id_produs, nume_produs, luna_livrarii }
       const sh: ISubscriptionOrderModel = {
         expire_date: null,
+        is_cancelled: false,
         last_payment_date: null,
         session_id: id,
         subscription_list: null,
