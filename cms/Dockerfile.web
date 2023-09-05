@@ -1,0 +1,55 @@
+# FROM node:16-alpine
+
+# RUN apk add --no-cache openssl
+
+# ENV DOCKERIZE_VERSION v0.6.1
+# RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+#     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+#     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
+# ENV NODE_ENV=production
+
+# WORKDIR /cms
+
+# COPY . /cms
+
+# RUN npm install
+# RUN NODE_ENV=production npm run build
+
+# EXPOSE 1337
+
+# CMD [ "dockerize", "-wait", "tcp://db:5432", "npm", "run", "start" ]
+
+FROM node:16-alpine
+
+RUN apk add --no-cache openssl
+
+ENV DOCKERIZE_VERSION v0.6.1
+RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
+ENV NODE_ENV=production
+
+WORKDIR /cms
+
+COPY . /cms
+
+ENV DATABASE_HOST=db
+ENV DATABASE_NAME=sickst
+ENV DATABASE_USERNAME=admin
+ENV DATABASE_PASSWORD=admin
+ENV APP_KEYS=Um0yLSt1Wk1cOE4jPkpL,MjU1N3R6JnJUTVE9Ozcs
+ENV JWT_SECRET=-Tz!;cD(}/D57>zC9U9aAd5sP{Cya96S
+ENV API_TOKEN_SALT=w7ERujMT4m#S)n^hS-,/LJ4BYwk@;?Dz
+ENV ADMIN_JWT_SECRET=+g`\8A`d\yV~Gs-D3-xpZ-3>6:@dY3)Q
+ENV PUBLIC_URL=https://sickst.ro
+ENV NODE_ENV=production
+# ENV IS_PROXY=true
+
+RUN npm install
+RUN NODE_ENV=production npm run build
+
+EXPOSE 1337
+
+CMD [ "dockerize", "-wait", "tcp://db:5432", "npm", "run", "start" ]
