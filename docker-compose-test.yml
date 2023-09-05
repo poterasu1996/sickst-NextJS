@@ -1,27 +1,6 @@
 version: "3"
 
 services:
-  # proxy:
-  #   image: nginx:latest
-  #   volumes:
-  #     - ./nginx.conf:/etc/nginx/conf.d/sickst.ro.conf
-  #   restart: unless-stopped
-  #   networks:
-  #     - default
-  #     - traefik_web
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.sickst_http.rule=Host(`sickst.ro`)"
-  #     - "traefik.http.routers.sickst_http.entrypoints=web"
-  #     - "traefik.http.routers.sickst_http.middlewares=https_redirect"
-  #     - "traefik.http.routers.sickst_https.rule=Host(`sickst.ro`)"
-  #     - "traefik.http.routers.sickst_https.entrypoints=websecure"
-  #     - "traefik.http.routers.sickst_https.tls.certresolver=lencrypt"
-  #     - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
-
-    # ports:
-    #   - 80:80
-
   db:
     image: postgres:12
     volumes:
@@ -34,7 +13,7 @@ services:
 
   cms:
     build:
-      context: ../cms
+      context: /cms
     restart: unless-stopped
     environment:
       - DATABASE_HOST=db
@@ -50,19 +29,19 @@ services:
       - IS_PROXY=true
     volumes:
       - uploads:/cms/public/uploads
-    # ports:
-    #   - 1337:1337
+    ports:
+      - 1337:1337
 
   client:
     build:
-      context: ../client
+      context: /client
     restart: unless-stopped
     # environment:
     #   - NEXT_PUBLIC_STRAPI_APIURL=https://sickst.ro/api
     #   - NEXT_PUBLIC_STRAPI_ROOTURL=https://sickst.ro
     #   - NEXT_PUBLIC_BASEURL=https://sickst.ro
-    # ports:
-    #   - 3000:3000
+    ports:
+      - 3000:3000
 
 volumes:
   data: {}

@@ -322,7 +322,12 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
                                             {fullSubOrder.map((item, index) => {
                                                 if(isCartOrder(item)) {
                                                     return (
-                                                        winReady && <Draggable key={index.toString()} draggableId={index.toString()} index={index} style={(_isDragging: any, draggableStyle: any) => ({ ...draggableStyle })}>
+                                                        winReady && <Draggable 
+                                                            key={index.toString()} 
+                                                            draggableId={index.toString()} 
+                                                            index={index} 
+                                                            // style={(_isDragging: any, draggableStyle: any) => ({ ...draggableStyle })}
+                                                        >
                                                             {(provided: any) => (
                                                                 <li className="dnd-card" {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
                                                                     <div className="image-wrapper">
@@ -341,7 +346,12 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
                                                     )
                                                 } else {
                                                     return (
-                                                        winReady && <Draggable key={index.toString()} draggableId={index.toString()} index={index} style={(_isDragging: any, draggableStyle: any) => ({ ...draggableStyle })}>
+                                                        winReady && <Draggable 
+                                                            key={index.toString()} 
+                                                            draggableId={index.toString()} 
+                                                            index={index} 
+                                                            // style={(_isDragging: any, draggableStyle: any) => ({ ...draggableStyle })}
+                                                        >
                                                             {(provided: any) => (
                                                                 <li className="dnd-card" {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
                                                                     <div className="image-wrapper">
