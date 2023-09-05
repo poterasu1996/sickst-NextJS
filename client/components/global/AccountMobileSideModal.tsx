@@ -2,10 +2,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { Button } from "react-bootstrap";
-import Cookies from 'js-cookie';
 import Transition from "react-transition-group/Transition";
 import AccountContext from "../../store/account-context";
 import AuthContext from "../../store/auth-context";
+
+// @ts-ignore
+import Cookies from 'js-cookie';
 
 type Props = {
     show: boolean,

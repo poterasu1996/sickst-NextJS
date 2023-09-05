@@ -118,6 +118,7 @@ const PersonalInfo = () => {
 
     return (
         <>
+            {/* @ts-ignore */}
             <Formik
                 enableReinitialize
                 initialValues={{

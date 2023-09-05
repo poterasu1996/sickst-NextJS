@@ -1,6 +1,6 @@
 import React from "react";
 
-function Cards(props) {
+function Cards(props: any) {
   return (
     <div className="card-team col-12 col-md-6">
       <img className="card-team--image" src={props.src}></img>

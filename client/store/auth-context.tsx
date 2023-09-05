@@ -1,4 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+
+// @ts-ignore
 import Cookies from 'js-cookie';
 
 interface IAuthContext {

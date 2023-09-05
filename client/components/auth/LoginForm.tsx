@@ -5,6 +5,8 @@ import CustomFormField from "../global/form/CustomFormField";
 import * as Yup from 'yup';
 import AuthContext from "../../store/auth-context";
 import { useRouter } from 'next/router';
+
+// @ts-ignore
 import Cookies from 'js-cookie';
 
 import axios from '../../api/axios';
@@ -77,31 +79,34 @@ export default function LogInForm() {
   }
 
   return (
-    <Formik
-      initialValues={{
-        email: '',
-        password: ''
-      }}
-      validationSchema={validate}
-    >
-      {formik => (
-        <Form onSubmit={submitHandler}>
-          <CustomFormField controlid='floatingEmail' name='email' label='Email address' type='email' ref={emailRef}  />
-          <CustomFormField controlid='floatingPassword' name='password' label='Password' type='password' ref={passwordRef}  />
-          {error && 
-            <div className="form-errors">
-              ERROR: {error}
-            </div>
-          }
-          { loading 
-            ? <div className="loader">
-                <Spinner animation="border" style={{color: "#cc3633"}}/>
+    <>
+      {/* @ts-ignore */}
+      <Formik
+        initialValues={{
+          email: '',
+          password: ''
+        }}
+        validationSchema={validate}
+      >
+        {formik => (
+          <Form onSubmit={submitHandler}>
+            <CustomFormField controlid='floatingEmail' name='email' label='Email address' type='email' ref={emailRef}  />
+            <CustomFormField controlid='floatingPassword' name='password' label='Password' type='password' ref={passwordRef}  />
+            {error && 
+              <div className="form-errors">
+                ERROR: {error}
               </div>
-            : <Button className="button-second mt-5" type="submit">Log In</Button>
-          }
-        </Form>
-      )}
-    </Formik>
+            }
+            { loading 
+              ? <div className="loader">
+                  <Spinner animation="border" style={{color: "#cc3633"}}/>
+                </div>
+              : <Button className="button-second mt-5" type="submit">Log In</Button>
+            }
+          </Form>
+        )}
+      </Formik>
+    </>
   );
 };
 

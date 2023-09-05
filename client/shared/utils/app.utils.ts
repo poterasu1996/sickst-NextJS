@@ -1,3 +1,4 @@
+// @ts-ignore
 import { DateTime } from "luxon";
 
 export class AppUtils {

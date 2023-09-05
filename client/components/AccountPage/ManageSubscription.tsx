@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { ArrowRight, Check, Code, Move, Plus, X } from "react-feather";
-import Slider from "react-slick";
-import { DateTime } from 'luxon';
 import emptyBottle from '../../public/img/empty-bottle.png';
 import UnsubscribedUser from './UnsubscribedUser';
 import CartService from "../../shared/services/cartService";
 import ICartProduct from "../../types/CartProduct.interface";
 import { IGETSubscriptionOrder } from "../../models/SubscriptionOrder.model";
-import Cookies from 'js-cookie';
 import axios from "../../api/axios";
 import { Spinner } from "react-bootstrap";
 import { Skeleton } from "@mui/material";
@@ -16,6 +12,15 @@ import { toast } from "react-toastify";
 import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
 import Link from "next/link";
 import SubscriptionCardDetails from "./SubscriptionCardDetails";
+
+// @ts-ignore
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+// @ts-ignore
+import Slider from "react-slick";
+// @ts-ignore
+import { DateTime } from 'luxon';
+// @ts-ignore
+import Cookies from 'js-cookie';
 
 type Props = {
     userInfo: ILocalUserInfo,

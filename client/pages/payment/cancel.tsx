@@ -2,11 +2,13 @@ import { useRouter } from "next/router";
 import { useContext, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import PaymentContextTS from "../../store/payment-context";
-import Cookies from 'cookies';
 import { IOrderHistoryModel } from "../../models/OrderHistory.model";
 import { TxnStatusEnum } from "../../shared/enums/txn.enum";
 import { ISubscriptionOrderModel, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
 import cartService from "../../shared/services/cartService";
+
+// @ts-ignore
+import Cookies from 'cookies';
 
 interface Props {
     populateSH: boolean,

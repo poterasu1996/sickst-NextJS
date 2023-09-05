@@ -40,7 +40,7 @@ export default function ReviewForm({ product, setShow }: Props) {
                     rating: rating,
                     title_review: titleRef?.current?.value,
                     review: reviewRef?.current?.value,
-                    user_details: [accountManager!.userDetails!.id],
+                    user_profile_detail: [accountManager!.userDetails!.id],
                 }
             }
             accountManager?.refreshUserTotalReviews(accountManager.userDetails!.id, accountManager.userDetails!.attributes.reviews);
@@ -51,6 +51,7 @@ export default function ReviewForm({ product, setShow }: Props) {
 
     return (
         <div className='modal-review-content'>
+            {/* @ts-ignore */}
             <Formik
                 initialValues={{
                     rating: "",
@@ -70,6 +71,7 @@ export default function ReviewForm({ product, setShow }: Props) {
                             </div>
                             <div className="rate-wrapper">
                                 <p>Acorda o nota *</p>
+                                {/* @ts-ignore */}
                                 <Rating 
                                     fractions={1} 
                                     initialRating={rating} 

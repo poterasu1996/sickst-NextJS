@@ -38,7 +38,7 @@ const ShopMen = () => {
             </div>}
         {newProducts?.data && <NewProductSection newProducts={newProducts.data}/>}
         {topRatedProducts?.data && <TopRatedProducts topProducts={topRatedProducts.data} />}
-        <ProductFilterSection products={manProducts}/>
+        {manProducts && <ProductFilterSection products={manProducts}/>}
     </div>
 }
 

@@ -23,7 +23,7 @@ interface IAccountContext {
   activateSubscription: (id: number) => Promise<void>;
   addPersonalInfo: (data: IUserDetailsModel, piID: number) => void;
   addShippingInfo: (data: IShippingInfo) => void;
-  cancelOrder: (orderId: number, order: IGETOrderHistory | null) => Promise<any>;
+  cancelOrder: (orderId: number, order: IGETOrderHistory | null) => Promise<void>;
   cancelSubscription: (
     subId: number,
     subOrder: IGETSubscriptionOrder | null
@@ -214,8 +214,8 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     }
   }
 
-  async function cancelOrder(orderId: number, order: IGETOrderHistory) {
-    if (!header) return;
+  async function cancelOrder(orderId: number, order: IGETOrderHistory | null) {
+    if (!header || !order) return;
 
     const { createdAt, publishedAt, updatedAt, ...data } = order["attributes"];
     const cancelData = {

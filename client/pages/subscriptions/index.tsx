@@ -4,8 +4,6 @@ import shield from "../../public/img/svg/shield.svg";
 import stripeLogo1 from "../../public/img/svg/Stripe-Badge-Logo.svg";
 import stripeLogo2 from "../../public/img/svg/Stripe-Outline-Logo.svg";
 import axios from "axios";
-import Cookies from 'cookies';
-import CookiesReact from 'js-cookie';
 import { GETSubscription, IPOSTSubscriptionHistory } from "../../types/OrderHystory.interface";
 import { TxnStatusEnum } from "../../shared/enums/txn.enum";
 import { IUserModel } from "../../models/User.model";
@@ -13,6 +11,11 @@ import { ISubscriptionOrderModel, SubscriptionStatusEnum } from "../../models/Su
 import { SubscriptionEnums } from "../../models/Subscription.model";
 import { IGETUserDetails } from "../../models/UserDetails.model";
 import getStripe from "../../lib/get-stripe";
+
+// @ts-ignore
+import Cookies from 'cookies';
+// @ts-ignore
+import CookiesReact from 'js-cookie';
 
 
 const SUBSCRIPTION_URL = 'http://localhost:1337/api/subscriptions';

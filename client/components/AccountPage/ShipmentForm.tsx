@@ -50,6 +50,7 @@ export default function ShipmentForm({ onSubmit }: Props) {
 
   return (
     <>
+      {/* @ts-ignore */}
       <Formik
         initialValues={{
           address: "",

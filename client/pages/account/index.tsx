@@ -1,3 +1,4 @@
+// @ts-ignore
 import { DateTime } from "luxon";
 import { useContext, useEffect, useState } from "react";
 import axios from "../../api/axios";
