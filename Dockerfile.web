@@ -1,0 +1,10 @@
+# Dockerfile.db
+FROM postgres:12
+
+ENV POSTGRES_DB=sickst
+ENV POSTGRES_USER=admin
+ENV POSTGRES_PASSWORD=admin
+
+VOLUME /var/lib/postgresql/data
+
+EXPOSE 5432
