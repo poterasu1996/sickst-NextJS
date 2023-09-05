@@ -1,55 +1,16 @@
 version: "3"
 
-services:
+volumes: 
+  data: {}
+
+services: 
   db:
     image: postgres:12
     volumes:
-      - data:/var/lib/postgresql/data
-    restart: unless-stopped
+      - data:/var/lib/postgresql/data 
+    ports:
+      - 5432:5432
     environment:
       - POSTGRES_DB=sickst
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
-    ports:
-      - 5432:5432
-  cms:
-    build:
-      context: /cms
-    restart: unless-stopped
-    environment:
-      - DATABASE_HOST=db
-      - DATABASE_NAME=sickst
-      - DATABASE_USERNAME=admin
-      - DATABASE_PASSWORD=admin
-      - APP_KEYS=Um0yLSt1Wk1cOE4jPkpL,MjU1N3R6JnJUTVE9Ozcs
-      - JWT_SECRET=-Tz!;cD(}/D57>zC9U9aAd5sP{Cya96S
-      - API_TOKEN_SALT=w7ERujMT4m#S)n^hS-,/LJ4BYwk@;?Dz
-      - ADMIN_JWT_SECRET=+g`\8A`d\yV~Gs-D3-xpZ-3>6:@dY3)Q
-      - PUBLIC_URL=https://sickst.ro
-      - NODE_ENV=production
-      - IS_PROXY=true
-    volumes:
-      - uploads:/cms/public/uploads
-    ports:
-      - 1337:1337
-
-  client:
-    build:
-      context: /client
-    restart: unless-stopped
-    # environment:
-    #   - NEXT_PUBLIC_STRAPI_APIURL=https://sickst.ro/api
-    #   - NEXT_PUBLIC_STRAPI_ROOTURL=https://sickst.ro
-    #   - NEXT_PUBLIC_BASEURL=https://sickst.ro
-    ports:
-      - 3000:3000
-
-volumes:
-  data: {}
-  uploads: {}
-  # caddy_data: {}
-  # caddy_config: {}
-
-networks:
-  traefik_web:
-    external: true
