@@ -1,23 +1,23 @@
 version: "3"
 
 services:
-  # proxy:
-  #   image: nginx:latest
-  #   volumes:
-  #     - ./nginx.conf:/etc/nginx/conf.d/sickst.ro.conf
-  #   restart: unless-stopped
-  #   networks:
-  #     - default
-  #     - traefik_web
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.sickst_http.rule=Host(`sickst.ro`)"
-  #     - "traefik.http.routers.sickst_http.entrypoints=web"
-  #     - "traefik.http.routers.sickst_http.middlewares=https_redirect"
-  #     - "traefik.http.routers.sickst_https.rule=Host(`sickst.ro`)"
-  #     - "traefik.http.routers.sickst_https.entrypoints=websecure"
-  #     - "traefik.http.routers.sickst_https.tls.certresolver=lencrypt"
-  #     - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+  proxy:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/sickst.ro.conf
+    restart: unless-stopped
+    networks:
+      - default
+      - traefik_web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sickst_http.rule=Host(`sickst.ro`)"
+      - "traefik.http.routers.sickst_http.entrypoints=web"
+      - "traefik.http.routers.sickst_http.middlewares=https_redirect"
+      - "traefik.http.routers.sickst_https.rule=Host(`sickst.ro`)"
+      - "traefik.http.routers.sickst_https.entrypoints=websecure"
+      - "traefik.http.routers.sickst_https.tls.certresolver=lencrypt"
+      - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
 
     # ports:
     #   - 80:80
