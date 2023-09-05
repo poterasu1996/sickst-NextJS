@@ -46,6 +46,7 @@ const ProductCardReview = ({ product, reviewList, productRating }: Props) => {
                 <div className='left'>
                     <div className="rating">{productRating.medium_rate.toFixed(1)}</div>
                     <div className="stars">
+                        {/* @ts-ignore */}
                         <Rating 
                             fractions={2}
                             initialRating={productRating.medium_rate}
@@ -60,6 +61,7 @@ const ProductCardReview = ({ product, reviewList, productRating }: Props) => {
                 <div className='right'>
                     <div className="rating-list">
                         <div className="rating-counter">
+                            {/* @ts-ignore */}
                             <Rating 
                                 initialRating={5}
                                 readonly={true}
@@ -75,6 +77,7 @@ const ProductCardReview = ({ product, reviewList, productRating }: Props) => {
                             {productRating.five_star}
                         </div>
                         <div className="rating-counter">
+                            {/* @ts-ignore */}
                             <Rating 
                                 initialRating={4}
                                 readonly={true}
@@ -90,6 +93,7 @@ const ProductCardReview = ({ product, reviewList, productRating }: Props) => {
                             {productRating.four_star}
                         </div>
                         <div className="rating-counter">
+                            {/* @ts-ignore */}
                             <Rating 
                                 initialRating={3}
                                 readonly={true}
@@ -105,6 +109,7 @@ const ProductCardReview = ({ product, reviewList, productRating }: Props) => {
                             {productRating.three_star}
                         </div>
                         <div className="rating-counter">
+                            {/* @ts-ignore */}
                             <Rating 
                                 initialRating={2}
                                 readonly={true}
@@ -120,6 +125,7 @@ const ProductCardReview = ({ product, reviewList, productRating }: Props) => {
                             {productRating.two_star}
                         </div>
                         <div className="rating-counter">
+                            {/* @ts-ignore */}
                             <Rating 
                                 initialRating={1}
                                 readonly={true}
@@ -148,6 +154,7 @@ const ProductCardReview = ({ product, reviewList, productRating }: Props) => {
                 <Divider layout="vertical" />
                 <div className='right no-rating'>
                     <div className="stars">
+                        {/* @ts-ignore */}
                         <Rating 
                             fractions={1}
                             initialRating={0}

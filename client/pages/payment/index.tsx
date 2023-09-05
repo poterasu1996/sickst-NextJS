@@ -6,7 +6,6 @@ import CartContext from "../../store/cart-context";
 import ShippingInformation from "../../components/AccountPage/ShippingInformation";
 import CartService from "../../shared/services/cartService/index";
 import axios from "axios";
-import CookiesServer from 'cookies';
 import { PaymentEnums } from "../../shared/enums/payment.enums";
 import ICartProduct from "../../types/CartProduct.interface";
 import { IUserModel } from "../../models/User.model";
@@ -17,6 +16,9 @@ import { shippingListR } from "../../shared/recoil-states";
 import { IShippingInfo } from "../../models/ShippingInformation.model";
 import { IGETUserDetails } from "../../models/UserDetails.model";
 import getStripe from "../../lib/get-stripe";
+
+// @ts-ignore
+import CookiesServer from 'cookies';
 
 const USER_ME = 'http://localhost:1337/api/users/me';
 const USER_DETAILS = 'http://localhost:1337/api/user-profile-details';

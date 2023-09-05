@@ -56,6 +56,7 @@ const ProductDetailsSection = ({ product, productRating }: Props) => {
                             <div className="retail"><b className="brand-color">RON {product.attributes.retail_value}</b> Retail value</div>
                         </div>
                         <div className="rating">
+                            {/* @ts-ignore */}
                             <Rating 
                                 fractions={2}
                                 initialRating={productRating?.medium_rate}
@@ -73,6 +74,7 @@ const ProductDetailsSection = ({ product, productRating }: Props) => {
                     <div className="retail"><b className="brand-color">RON {product.attributes.retail_value}</b> Retail value</div>
                 </div>
                 <div className="rating">
+                    {/* @ts-ignore */}
                     <Rating 
                         fractions={2}
                         initialRating={4}

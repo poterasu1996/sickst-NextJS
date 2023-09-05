@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "../api/axios";
-import Cookies from 'js-cookie';
 import { toast } from "react-toastify";
+// @ts-ignore
+import Cookies from 'js-cookie';
 
 const ORDER_HISTORY = "/order-histories"
 const SUBSCRIPTION_ORDERS = "/subscription-orders"

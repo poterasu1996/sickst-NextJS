@@ -33,6 +33,7 @@ const TopRatedProducts = ({ topProducts }: Props) => {
                             <div className="product--details">
                                 <div className="name">{pair[0].attributes.brand}</div>
                                 <div className="model">{pair[0].attributes.model}</div>
+                                {/* @ts-ignore */}
                                 <Rating
                                     fractions={2}
                                     initialRating={pair[0].attributes.rating}
@@ -54,6 +55,7 @@ const TopRatedProducts = ({ topProducts }: Props) => {
                             <div className="product--details">
                                 <div className="name">{pair[1].attributes.brand}</div>
                                 <div className="model">{pair[1].attributes.model}</div>
+                                {/* @ts-ignore */}
                                 <Rating
                                     fractions={2}
                                     initialRating={pair[1].attributes.rating}

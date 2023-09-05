@@ -53,6 +53,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/react-beautiful-dnd": "^13.1.4",
+    "@types/react-slick": "^0.23.10",
     "dotenv": "^16.0.0",
     "eslint": "8.13.0",
     "eslint-config-next": "^12.3.1"

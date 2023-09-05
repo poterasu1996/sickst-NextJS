@@ -113,6 +113,7 @@ const Product = ({ product }: Props) => {
               <span className="tag black">Exclussive</span>
             </div>
             <div className="product-card-rating">
+                {/* @ts-ignore */}
                 <Rating
                     fractions={2}
                     initialRating={product.attributes.rating}
@@ -226,6 +227,7 @@ const Product = ({ product }: Props) => {
                   </div>
                 </div>
                 <div className="rating">
+                  {/* @ts-ignore */}
                   <Rating
                     fractions={2}
                     initialRating={product.attributes.rating}

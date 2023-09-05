@@ -13,3 +13,5 @@
 //     },
 //     id: number
 // }
+
+export {}

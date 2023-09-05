@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Button, Dropdown } from "react-bootstrap";
 import Link from "next/link";
-import Cookies from 'js-cookie';
 import SideModal from "./global/SideModal";
 import AuthContext from "../store/auth-context";
 import { Menu, ShoppingCart, User } from "react-feather";
@@ -11,6 +10,9 @@ import { useRouter } from "next/router";
 import AccountMobileSideModal from "./global/AccountMobileSideModal";
 import AccountContext from "../store/account-context";
 import logo from "../public/logo.svg";
+
+// @ts-ignore
+import Cookies from 'js-cookie';
 
 const Header = () => {
   const [accountMobileModal, setAccountMobileModal] = useState(false);

@@ -180,18 +180,18 @@ const ProductReviewsSection = ({ product, productRating }: Props) => {
                                 <div className="user">
                                     <div className={`avatar avatar-gradient-${AppUtils.random7()}`}>
                                         {AppUtils.userFullNameInitials(
-                                            review.attributes.user_details.data.attributes.first_name, 
-                                            review.attributes.user_details.data.attributes.last_name)}
+                                            review.attributes.user_profile_detail.data.attributes.first_name, 
+                                            review.attributes.user_profile_detail.data.attributes.last_name)}
                                     </div>
                                     <div className="name">
-                                        {review.attributes.user_details.data.attributes.first_name+" "
-                                        +AppUtils.firstInitial(review.attributes.user_details.data.attributes.last_name)}
+                                        {review.attributes.user_profile_detail.data.attributes.first_name+" "
+                                        +AppUtils.firstInitial(review.attributes.user_profile_detail.data.attributes.last_name)}
                                     </div>
                                 </div>
                                 <div className="user-details">
                                     <div className="c1">
-                                        <div className="d-flex"><span>Reviews</span>{review.attributes.user_details.data.attributes.reviews}</div>
-                                        <div><span>Products received</span>{review.attributes.user_details.data.attributes.products_received}</div>
+                                        <div className="d-flex"><span>Reviews</span>{review.attributes.user_profile_detail.data.attributes.reviews}</div>
+                                        <div><span>Products received</span>{review.attributes.user_profile_detail.data.attributes.products_received}</div>
                                     </div>
                                     {/* <div className="c2">
                                         <div className="d-flex"><span>Up votes</span>0</div>
@@ -201,6 +201,7 @@ const ProductReviewsSection = ({ product, productRating }: Props) => {
                             </div>
                             <div className="review--details">
                                 <div className="rating-wrapper">
+                                    {/* @ts-ignore */}
                                     <Rating 
                                         fractions={1}
                                         initialRating={review.attributes.rating}

@@ -9,8 +9,8 @@ import AuthContext from "../../store/auth-context";
 import getStripe from "../../lib/get-stripe";
 
 const SubscriptionPage = () => {
-    const { cartManager } = useContext(CartContext);
-    const { accountManager } = useContext(AccountContext);
+    const cartManager = useContext(CartContext);
+    const accountManager = useContext(AccountContext);
     const { auth } = useContext(AuthContext);
     const [loading, setLoading] = useState(true);
     const [couponValue, setCouponeValue] = useState();
@@ -18,10 +18,10 @@ const SubscriptionPage = () => {
     const [checkoutOptions, setCheckoutOptions] = useState({});
 
     useEffect(() => {
-        if (auth && cartManager.subsList && cartManager.subsList.length > 0) {
-            setSubItem(cartManager.subsList[0]);
+        if (auth && cartManager?.subsList && cartManager?.subsList.length > 0) {
+            setSubItem(cartManager?.subsList[0]);
             const item = {
-                price: cartManager.subsList[0].product.attributes.stripe_subsLink,
+                price: cartManager?.subsList[0].product.attributes.stripe_subsLink,
                 quantity: 1, 
             };
             setCheckoutOptions({
@@ -32,17 +32,17 @@ const SubscriptionPage = () => {
             })
             console.log('auth: ', auth)
         }
-    }, [cartManager.subsList]);
+    }, [cartManager?.subsList]);
 
 
     useEffect(() => {
-        if(accountManager.currentUser) {
+        if(accountManager?.currentUser) {
             setCheckoutOptions({
                 ...checkoutOptions,
-                customerEmail: accountManager.currentUser.email
+                customerEmail: accountManager?.currentUser.email
             })
         }
-    }, [accountManager.currentUser])
+    }, [accountManager?.currentUser])
 
     const options = {
         // passing the client secret obtained from the server
@@ -94,7 +94,7 @@ const SubscriptionPage = () => {
                         <Button
                             onClick={() => {
                                 setLoading(true);
-                                cartManager.removeProduct(subItem);
+                                cartManager?.removeProduct(subItem);
                             }}
                         >
                             <X stroke="#cc3663" width={20} height={20} />
@@ -127,10 +127,10 @@ const SubscriptionPage = () => {
                                 <Spinner animation="border" style={{ color: "#cc3663" }} />
                             ) : couponValue && couponValue.discount ? (
                                 <b className="brand-color ms-4">
-                                    RON {cartManager.subscriptionTotal(subItem, couponValue.discount)}
+                                    RON {cartManager?.subscriptionTotal(subItem, couponValue.discount)}
                                 </b>
                             ) : (
-                                <b className="brand-color ms-4">RON {cartManager.productTotal(subItem)}</b>
+                                <b className="brand-color ms-4">RON {cartManager?.productTotal(subItem)}</b>
                             )}
                         </div>
 

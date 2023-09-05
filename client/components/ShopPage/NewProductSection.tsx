@@ -26,6 +26,7 @@ const NewProductSection = ({ newProducts }: Props) => {
                                 }/>
                             </div>
                             <div className="new-product--details">
+                                {/* @ts-ignore */}
                                 <Rating
                                     fractions={2}
                                     initialRating={product.attributes.rating}

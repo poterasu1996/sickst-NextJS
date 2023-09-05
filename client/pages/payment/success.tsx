@@ -3,13 +3,15 @@ import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import PaymentContextTS from "../../store/payment-context";
 import CartService from "../../shared/services/cartService";
-import Cookies from 'cookies';
 import { IUserModel } from "../../models/User.model";
 import { TxnStatusEnum } from "../../shared/enums/txn.enum";
 import { IOrderHistoryModel } from "../../models/OrderHistory.model";
 import { ISubscriptionOrderModel, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
 import axios from "../../api/axios";
 import { IGETUserDetails } from "../../models/UserDetails.model";
+
+// @ts-ignore
+import Cookies from 'cookies';
 
 
 interface Props {

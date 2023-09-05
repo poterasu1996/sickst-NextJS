@@ -29,8 +29,8 @@ const CustomLabeledField = forwardRef<Ref, Props>((props, ref) => {
             {props.type === InputType.TEXTAREA
                 ? <Form.Control 
                     ref={ref}
-                    as={props.type}
-                    rows={4}
+                    // as={props.type}
+                    // rows={4}
                     placeholder={props.placeholder}
                     {...field}
                     />
