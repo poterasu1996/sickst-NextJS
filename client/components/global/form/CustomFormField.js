@@ -3,8 +3,9 @@ import React from 'react';
 import { ErrorMessage, useField } from 'formik';
 
 const FormField = (props, ref) => {
-    const [field, meta] = useField(props);
+    // const [field, meta] = useField(props);
 
+    // {console.log(props.error)}
     return (
         <>
             <FloatingLabel
@@ -19,11 +20,14 @@ const FormField = (props, ref) => {
                     ref={ref}
                     onChange={props.onChange}
                     required
-                    {...field}{...props}
-                    className={`${meta.touched && meta.error && 'invalid-form-control'}`}
+                    // {...field}
+                    {...props}
+                    // className={`${meta.touched && meta.error && 'invalid-form-control'}`}
+                    className={`${props.error && 'invalid-form-control'}`}
                 />
                 <div className='invalid-field'>
-                    <ErrorMessage name={field.name} />
+                    <>{props.error}</>
+                    {/* <ErrorMessage name={field.name} /> */}
                 </div>
             </FloatingLabel>
         </>
