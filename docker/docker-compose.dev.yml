@@ -22,42 +22,6 @@ services:
   #   ports:
   #     - 80:80
 
-  traefik:
-    image: traefik:v2.5
-    container_name: traefik
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.http.address=:80"
-      - "--log.level=INFO"
-      - "--log.filePath=/var/log/traefik.log"
-      - "--accesslog.filePath=/var/log/access.log"
-      - "--accesslog.bufferingsize=0"
-      - "--api.dashboard=true"
-      - "--api.debug=true"
-      - "--api.statistics=true"
-      - "--api.statistics.recenterrors=10"
-    ports:
-      - "80:80"
-      - "8080:8080"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik.toml:/etc/traefik/traefik.toml
-      - ./logs:/var/log
-    networks:
-      - traefik_web
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.sickst.ro`)"
-      - "traefik.http.routers.traefik.entrypoints=http"
-      - "traefik.http.routers.traefik.middlewares=https_redirect"
-      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.sickst.ro`)"
-      - "traefik.http.routers.traefik-secure.entrypoints=https"
-      - "traefik.http.routers.traefik-secure.tls.certresolver=lencrypt"
-      - "traefik.http.routers.traefik-secure.service=api@internal"
-      - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
-
   # caddy: 
   #   image: caddy/caddy:2.2.1-alpine
   #   container_name: caddy-service
