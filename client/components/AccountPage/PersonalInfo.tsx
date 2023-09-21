@@ -281,7 +281,7 @@ const PersonalInfo = () => {
           <Button
             className="button-second mt-5"
             type="submit"
-            disabled={isFormSubmitted || !(isValid && isDirty) || isSubmitting}
+            // disabled={isFormSubmitted || !(isValid && isDirty) || isSubmitting}
           >
             Update information
           </Button>
