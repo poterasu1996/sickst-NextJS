@@ -7,7 +7,7 @@ sickst.ro {
         path /cms*
     }
     rewrite @redirect_cms {
-        tp /cms{uri}
+        to /cms{uri}
     }
 
     reverse_proxy /cms* cms:1337
