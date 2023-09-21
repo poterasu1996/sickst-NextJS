@@ -1,4 +1,6 @@
-caddy.snipd.io {
+sickst.ro {
+    tls i.poterasu@yahoo.com
+
     reverse_proxy client:3000 
     reverse_proxy cms:1337
 }
