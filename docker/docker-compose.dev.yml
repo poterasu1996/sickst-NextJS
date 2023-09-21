@@ -1,13 +1,13 @@
 version: "3"
 
 services:
-  nginx:
-    image: nginx:latest
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/sickst.ro.conf
-    restart: unless-stopped
-    networks:
-      - default
+  # nginx:
+  #   image: nginx:latest
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/conf.d/sickst.ro.conf
+  #   restart: unless-stopped
+  #   networks:
+  #     - default
       # - traefik_web
     # labels:
     #   - "traefik.enable=true"
@@ -22,18 +22,18 @@ services:
   #   ports:
   #     - 80:80
 
-  # caddy: 
-  #   image: caddy/caddy:2.2.1-alpine
-  #   container_name: caddy-service
-  #   restart: unless-stopped
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   volumes:
-  #     - $PWD/Caddyfile:/etc/caddy/Caddyfile
-  #     - $PWD/site:/srv
-  #     - caddy_data:/data
-  #     - caddy_config:/config
+  caddy: 
+    image: caddy/caddy:2.2.1-alpine
+    container_name: caddy-service
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - $PWD/Caddyfile:/etc/caddy/Caddyfile
+      - $PWD/site:/srv
+      - caddy_data:/data
+      - caddy_config:/config
 
   db:
     image: postgres:12
@@ -80,8 +80,8 @@ services:
 volumes:
   data: {}
   uploads: {}
-  # caddy_data: {}
-  # caddy_config: {}
+  caddy_data: {}
+  caddy_config: {}
 
 # networks:
 #   traefik_web:

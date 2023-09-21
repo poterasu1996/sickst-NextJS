@@ -1,14 +1,12 @@
 sickst.ro {
     tls i.poterasu@yahoo.com
 
-    reverse_proxy client:3000 
-
     @redirect_cms {
         path /cms*
     }
-    rewrite @redirect_cms {
-        to /cms{uri}
+    route @redirect_cms {
+        reverse_proxy cms:1337
     }
 
-    reverse_proxy /cms* cms:1337
+    reverse_proxy client:3000 
 }
