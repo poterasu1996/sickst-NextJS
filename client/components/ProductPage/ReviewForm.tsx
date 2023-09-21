@@ -1,6 +1,4 @@
-import { useContext, useRef, useState } from "react";
-import { Formik } from 'formik';
-import { Form } from 'react-bootstrap';
+import { useContext, useState } from "react";
 import Rating from "react-rating";
 import { Star } from "react-feather";
 import IProduct from '../../types/Product.interface';
@@ -9,7 +7,6 @@ import AccountContext from "../../store/account-context";
 import { IProductReviewModel } from "../../models/ProductReview.model";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import CustomFormField from "../global/form/CustomFormField";
 
 const reviewSchema = z
@@ -33,15 +30,9 @@ export default function ReviewForm({ product, setShow }: Props) {
         handleSubmit,
         formState: { errors, isSubmitting },
         reset,
-        getValues,
-    } = useForm<TReviewSchema>({
-        // resolver: zodResolver(reviewSchema)
-    });
+    } = useForm<TReviewSchema>();
 
-    // console.log("getValues ", getValues())
-    // console.log(accountManager?.userDetails)
     const onSubmit = async (formInputData: TReviewSchema) => {
-        console.log("formData: ", formInputData)
         if (rating === 0) {
             setRatingMsg("Nota este obligatorie")
         } else {
@@ -57,6 +48,7 @@ export default function ReviewForm({ product, setShow }: Props) {
             }
             accountManager?.refreshUserTotalReviews(accountManager.userDetails!.id, accountManager.userDetails!.attributes.reviews);
             accountManager?.postReview(data);
+            reset();
             setShow();
         }
     }
