@@ -1,5 +1,5 @@
 import { Form, Button } from "react-bootstrap";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import CustomFormField from "../global/form/CustomFormField";
 import { useRouter } from "next/router";
 import { Check } from "react-feather";
@@ -37,6 +37,7 @@ export default function SignUpForm() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setValue,
     reset,
   } = useForm<TSignUpSchema>({
     resolver: zodResolver(signUpSchema),
@@ -58,7 +59,6 @@ export default function SignUpForm() {
 
   const onSubmit = async (formData: TSignUpSchema) => {
     try {
-
       const response = await axios.post(REGISTER_URL, {
         username: formData.email ,
         email: formData .email,
@@ -81,7 +81,6 @@ export default function SignUpForm() {
       }
 
       await axios.post(USER_DETAILS, data, header)
-        .then(resp => console.log(resp))
         .catch(err => console.log(err))
 
       if (response.status === 200) {
@@ -149,27 +148,24 @@ export default function SignUpForm() {
 
         <CustomFormField
           {...register("email")}
-          error={errors.email?.message}
-          controlid="floatingEmail"
-          name="email"
           label="Email address"
           type="email"
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setValue("email", e.target.value)}
+          error={errors.email?.message}
         />
         <CustomFormField
           {...register("password")}
-          error={errors.password?.message}
-          controlid="floatingPassword"
-          name="password"
           label="Password"
           type="password"
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setValue("password", e.target.value)}
+          error={errors.password?.message}
         />
         <CustomFormField
           {...register("confirmPassword")}
-          error={errors.confirmPassword?.message}
-          controlid="floatingPasswordConfirm"
-          name="confirmPassword"
           label="Password confirmation"
           type="password"
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setValue("confirmPassword", e.target.value)}
+          error={errors.confirmPassword?.message}
         />
 
         <div className="form-field newsletter">

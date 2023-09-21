@@ -1,7 +1,7 @@
 import { Form, Button } from "react-bootstrap";
 import { useRef, useState } from "react";
-import { Formik } from "formik";
-import * as Yup from 'yup';
+// import { Formik } from "formik";
+// import * as Yup from 'yup';
 import CustomFormField from "./CustomFormField";
 
 import axios from '../../../api/axios';
@@ -53,24 +53,24 @@ export default function CouponeForm({ couponeValue, loading }) {
       }
 
     return (
-    <Formik
-        initialValues={{
-            coupone: '',
-        }}
-        validationSchema={validate}
-    >
-        {formik => (
-        <Form onSubmit={submitHandler}>
-            <CustomFormField controlid='floatingCoupone' name='coupone' label='Have a coupone?' type='text' ref={couponeRef}/>
-            {error && 
-                <div className="form-errors">
-                    ERROR: {error}
-                </div>
-            }
-            <Button className="button-check-code" type="submit">Apply</Button>
-        </Form>
-        )}
-    </Formik>
+    // <Formik
+    //     initialValues={{
+    //         coupone: '',
+    //     }}
+    //     validationSchema={validate}
+    // >
+    //     {formik => (
+    //     <Form onSubmit={submitHandler}>
+    //         <CustomFormField controlid='floatingCoupone' name='coupone' label='Have a coupone?' type='text' ref={couponeRef}/>
+    //         {error && 
+    //             <div className="form-errors">
+    //                 ERROR: {error}
+    //             </div>
+    //         }
+    //         <Button className="button-check-code" type="submit">Apply</Button>
+    //     </Form>
+    //     )}
+    // </Formik>
     );
     
 }

@@ -1,5 +1,6 @@
+import { ChangeEvent } from "react";
 import { Button } from "react-bootstrap";
-import { useState, useContext } from "react";
+import { useState, useContext, ReactEventHandler, ReactElement, SyntheticEvent } from "react";
 import CustomFormField from "../global/form/CustomFormField";
 import AuthContext from "../../store/auth-context";
 import { useRouter } from 'next/router';
@@ -27,8 +28,10 @@ export default function LogInForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
     reset,
+    getValues,
+    setValue
   } = useForm<TLogInSchema>({
     resolver: zodResolver(logInSchema)
   });
@@ -77,19 +80,17 @@ export default function LogInForm() {
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CustomFormField 
-          {...register("email")}
-          controlid="floatingEmail" 
-          name="email" 
+          {...register("email", { value: getValues("email") || ""})}
           label="Email address" 
           type="email" 
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setValue("email", e.target.value)}
           error={errors?.email?.message}
         />
         <CustomFormField 
-          {...register("password")}
-          controlid="floatingPassword" 
-          name="password" 
+          {...register("password", { value: getValues("password") || ""})}
           label="Password" 
           type="password" 
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setValue("password", e.target.value)}
           error={errors?.password?.message}
         />
         {error && 

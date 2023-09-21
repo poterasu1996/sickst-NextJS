@@ -66,8 +66,10 @@ const ProductReviewsSection = ({ product, productRating }: Props) => {
         window.scrollTo(scrollX, scrollY);
     });
 
+    // console.log("auth" , authManager.auth)
     useEffect(() => {
-        let queryUrl = `/product-reviews?populate=*&filters[product_id][$eq]=${product.id}`
+        let queryUrl = `/product-reviews?populate=*&sort[0]=createdAt#3A${dateValue}`
+        // let queryUrl = `/product-reviews?populate=*&filters[product_id][$eq]=${product.id}&sort[0]=createdAt#3A${dateValue}`
         if (selectedStarValue > 0) {
             queryUrl = queryUrl + `&filters[rating][$eq]=${selectedStarValue}`
         }
@@ -141,7 +143,7 @@ const ProductReviewsSection = ({ product, productRating }: Props) => {
             return '';
         }
     }
-
+    
     return(<>
         <div className="reviews-section">
             {(productRating && reviews) && <ProductCardReview product={product} reviewList={reviews.data} productRating={productRating} />}
@@ -193,14 +195,16 @@ const ProductReviewsSection = ({ product, productRating }: Props) => {
                                         <div className="d-flex"><span>Reviews</span>{review.attributes.user_profile_detail.data.attributes.reviews}</div>
                                         <div><span>Products received</span>{review.attributes.user_profile_detail.data.attributes.products_received}</div>
                                     </div>
-                                    {/* <div className="c2">
+
+                                    <div className="c2">
                                         <div className="d-flex"><span>Up votes</span>0</div>
                                         <div><span>Down votes</span>0</div>
-                                    </div> */}
+                                    </div>
                                 </div>
                             </div>
                             <div className="review--details">
                                 <div className="rating-wrapper">
+
                                     {/* @ts-ignore */}
                                     <Rating 
                                         fractions={1}
@@ -224,6 +228,7 @@ const ProductReviewsSection = ({ product, productRating }: Props) => {
                             </div>
                         </div>)
                     )}
+                    
                 </div>
                 
             </div>}

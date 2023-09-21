@@ -21,9 +21,9 @@ a {
   color: #cecece;
   text-decoration: none !important;
 }
-span {
-  color: #141414;
-}
+// span {
+//   color: #141414;
+// }
 body {
   box-sizing: border-box;
   margin: 0;
@@ -481,14 +481,24 @@ body.modal-open {
       .css-1sumxir-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
         color: #cc3633;
       }
-
-
+      
       .css-l3ln04-MuiAutocomplete-root {
         .MuiOutlinedInput-root {
           padding: .8rem;
           border-radius: 2px;
         }
       } 
+    }
+    .custom-autocomplete.invalid-field {
+      padding-top: unset;
+      height: unset;
+      font-size: unset;
+      font-weight: unset;
+      margin-left: unset;
+      .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+        border-color: #cc3633 !important;
+        border-width: 2px !important;
+      }
     }
     .form-field {
       margin-top: 2.5rem;
@@ -640,6 +650,51 @@ body.modal-open {
   .form-floating > .form-select ~ label {
     opacity: 0.65;
     transform: scale(0.55) translateY(-0.5rem) translateX(0.15rem);
+  }
+}
+
+.MuiSwitch-root {
+  padding: 0px;
+  height: 2.6rem;
+  width: 4.2rem;
+  margin: 0 .8rem;
+  .MuiSwitch-switchBase {
+    padding: 0px;
+    margin: 2px;
+    transition-duration: 300ms;
+    &.Mui-checked {
+      transform: translateX(16px);
+      color: #fff;
+      & + .MuiSwitch-track {
+        background-color: #cc3633;
+        opacity: 1;
+        border: 0;
+      }
+      &.Mui-disabled + .MuiSwitch-track {
+        opacity: 0.5;
+      }
+    }
+    &.Mui-focusVisible .MuiSwitch-thumb {
+      color: #33cf4d;
+      border: 6px solid #fff;
+    }
+    &.Mui-disabled .MuiSwitch-thumb {
+      color: #39393D;
+    }
+    // &.Mui-disabled + .MuiSwitch-track {
+    //   opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
+    // }
+  }
+  .MuiSwitch-thumb {
+    box-sizing: border-box;
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+  .MuiSwitch-track {
+    border-radius: 1.3rem;
+    background-color: #A9A9AD;
+    // background-color: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D';
+    opacity: 1;
   }
 }
 
