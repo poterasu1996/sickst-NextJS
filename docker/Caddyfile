@@ -1,0 +1,4 @@
+caddy.snipd.io {
+    reverse_proxy client:3000 
+    reverse_proxy cms:1337
+}

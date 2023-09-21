@@ -1,35 +1,26 @@
 import { FloatingLabel, Form } from 'react-bootstrap';
 import React from 'react';
-import { ErrorMessage, useField } from 'formik';
 
-const FormField = (props, ref) => {
-    const [field, meta] = useField(props);
-
+const CustomFormField = (props) => {
+    const { label, type, error } = props;
     return (
         <>
             <FloatingLabel
-                controlid={props.controlid}
-                label={props.label}
+                label={label}
                 className="form-field"
-            >
+                >
                 <Form.Control 
-                    type={props.type}
-                    placeholder="Email address"
-                    name={props.name}
-                    ref={ref}
-                    onChange={props.onChange}
-                    required
-                    {...field}{...props}
-                    className={`${meta.touched && meta.error && 'invalid-form-control'}`}
+                    type={type}
+                    placeholder={label}
+                    {...props}
+                    className={`${error && 'invalid-form-control'}`}
                 />
                 <div className='invalid-field'>
-                    <ErrorMessage name={field.name} />
+                    <>{error}</>
                 </div>
             </FloatingLabel>
         </>
     );
 }
-
-const CustomFormField = React.forwardRef(FormField);
 
 export default CustomFormField;

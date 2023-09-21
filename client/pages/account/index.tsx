@@ -8,7 +8,6 @@ import OrderHistory from "../../components/AccountPage/OrderHistory";
 import ShippingInformation from "../../components/AccountPage/ShippingInformation";
 import UserReviews from "../../components/AccountPage/UserReviews";
 import RatedProducts from "../../components/AccountPage/RatedProducts";
-import PersonalInfo from "../../components/AccountPage/PersonalInfo";
 import ResetPassword from "../../components/AccountPage/ResetPassword";
 import userAvatar from '../../public/img/svg/male_avatar.svg';
 import AccountContext from "../../store/account-context";
@@ -16,6 +15,7 @@ import { GetServerSideProps } from "next";
 import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
 import { IUserModel } from "../../models/User.model";
 import { IGETUserDetails } from "../../models/UserDetails.model";
+import PersonalInfo from "../../components/AccountPage/PersonalInfo";
 
 // const accState = [
 //     'subscription', 

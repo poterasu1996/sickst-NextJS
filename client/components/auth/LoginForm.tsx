@@ -1,32 +1,39 @@
-import { Form, Button, Spinner } from "react-bootstrap";
-import { useRef, useState, useContext } from "react";
-import { Formik } from "formik";
+import { ChangeEvent } from "react";
+import { Button } from "react-bootstrap";
+import { useState, useContext, ReactEventHandler, ReactElement, SyntheticEvent } from "react";
 import CustomFormField from "../global/form/CustomFormField";
-import * as Yup from 'yup';
 import AuthContext from "../../store/auth-context";
 import { useRouter } from 'next/router';
+import axios from '../../api/axios';
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 // @ts-ignore
 import Cookies from 'js-cookie';
 
-import axios from '../../api/axios';
 const LOGIN_URL = '/auth/local';
+const logInSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8, "Parola trebuie sa contina minim 8 caractere"),
+})
+
+type TLogInSchema = z.infer<typeof logInSchema>
 
 export default function LogInForm() {
   const { setAuth } = useContext(AuthContext);
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const validate = Yup.object({
-    email: Yup.string()
-      .email('Email is invalid*')
-      .required('Email is required*'),
-    password: Yup.string()
-      .min(6, 'Password must be at least 6 characters*')
-      .required('Password is required*'),
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting, isValid },
+    reset,
+    getValues,
+    setValue
+  } = useForm<TLogInSchema>({
+    resolver: zodResolver(logInSchema)
   });
 
   function createCookieInHour(cookieName: string, cookieValue: any, hourToExpire: number) {
@@ -35,28 +42,17 @@ export default function LogInForm() {
     document.cookie = cookieName + "=" + cookieValue + ";path = " + "/" + "; expires = " + date.toString();
   }
 
-  const submitHandler = async (event: any) => {
-    event.preventDefault();
-
-    // extract data from refs
-    const enteredEmail = emailRef?.current?.value;
-    const enteredPasword = passwordRef?.current?.value;
-
-    // setLoading(preVal => !preVal);
+  const onSubmit = async (data: TLogInSchema) => {
     try {
       const response = await axios.post(LOGIN_URL, {
-        identifier: enteredEmail,
-        password: enteredPasword
+        identifier: data.email,
+        password: data.password
       });
-      // console.log(JSON.stringify(response?.data.user));
       const jwt = response?.data?.jwt;
-    //   const role = response?.data?.user.client_role;
 
       if (jwt) {
         setAuth(jwt);
         createCookieInHour('jwt', jwt, 1); // create cookie with jwt
-
-        setLoading(preVal => !preVal);
         router.push('/');
 
         // adding auto-logout
@@ -76,36 +72,39 @@ export default function LogInForm() {
         setError('Login Failed');
       } 
     }
+
+    reset();
   }
 
   return (
     <>
-      {/* @ts-ignore */}
-      <Formik
-        initialValues={{
-          email: '',
-          password: ''
-        }}
-        validationSchema={validate}
-      >
-        {formik => (
-          <Form onSubmit={submitHandler}>
-            <CustomFormField controlid='floatingEmail' name='email' label='Email address' type='email' ref={emailRef}  />
-            <CustomFormField controlid='floatingPassword' name='password' label='Password' type='password' ref={passwordRef}  />
-            {error && 
-              <div className="form-errors">
-                ERROR: {error}
-              </div>
-            }
-            { loading 
-              ? <div className="loader">
-                  <Spinner animation="border" style={{color: "#cc3633"}}/>
-                </div>
-              : <Button className="button-second mt-5" type="submit">Log In</Button>
-            }
-          </Form>
-        )}
-      </Formik>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <CustomFormField 
+          {...register("email", { value: getValues("email") || ""})}
+          label="Email address" 
+          type="email" 
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setValue("email", e.target.value)}
+          error={errors?.email?.message}
+        />
+        <CustomFormField 
+          {...register("password", { value: getValues("password") || ""})}
+          label="Password" 
+          type="password" 
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setValue("password", e.target.value)}
+          error={errors?.password?.message}
+        />
+        {error && 
+          <div className="form-errors">
+            ERROR: {error}
+          </div>
+        }
+        <Button 
+          disabled={isSubmitting}
+          className="button-second mt-5" 
+          type="submit"
+        >Log In</Button>
+      </form>
+
     </>
   );
 };

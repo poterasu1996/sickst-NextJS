@@ -9,7 +9,6 @@ import { MenuItem } from "primereact/menuitem";
 import { useRecoilState } from "recoil";
 import { shippingListR } from "../../shared/recoil-states";
 
-
 const ShippingInformation = () => {
     const [show, setShow] = useState<boolean>(false);
     const [shippingInfo, setShippingInfo] = useState<IGETShippingInformation | null>(null);
