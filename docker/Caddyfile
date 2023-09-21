@@ -3,7 +3,12 @@ sickst.ro {
 
     reverse_proxy client:3000 
 
-    route /cms/* {
-        reverse_proxy cms:1337
+    @redirect_cms {
+        path /cms*
     }
+    rewrite @redirect_cms {
+        tp /cms{uri}
+    }
+
+    reverse_proxy /cms* cms:1337
 }
