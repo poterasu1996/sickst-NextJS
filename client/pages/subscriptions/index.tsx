@@ -33,7 +33,7 @@ type Props = {
   subscriptionHistory: any
 }
 
-export const Subscriptions = ({ subscriptionsStripe, user, subscriptionHistory }: Props) => {
+const Subscriptions = ({ subscriptionsStripe, user, subscriptionHistory }: Props) => {
   async function getSubscriptionPrice(subsType: SubscriptionEnums) {
     const subscriptionPrice: GETSubscription | undefined = subscriptionsStripe.find(sub => sub.attributes.name === subsType)
     if(subscriptionPrice) {
