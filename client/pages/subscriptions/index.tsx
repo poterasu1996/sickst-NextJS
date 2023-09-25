@@ -17,11 +17,11 @@ import Cookies from 'cookies';
 // @ts-ignore
 import CookiesReact from 'js-cookie';
 
-
-const SUBSCRIPTION_URL = 'http://localhost:1337/api/subscriptions';
-const SUBS_HISTORY = 'http://localhost:1337/api/subscription-orders';
-const USER_ME = 'http://localhost:1337/api/users/me'
-const USER_DETAILS = 'http://localhost:1337/api/user-profile-details';
+const BASE_URL = process.env.NEXT_PUBLIC_STRAPI_APIURL;
+const SUBSCRIPTION_URL = `${BASE_URL}/subscriptions`;
+const SUBS_HISTORY = `${BASE_URL}/subscription-orders`;
+const USER_ME = `${BASE_URL}/users/me`;
+const USER_DETAILS = `${BASE_URL}/user-profile-details`;
 
 type Props = {
   subscriptionsStripe: GETSubscription[],
