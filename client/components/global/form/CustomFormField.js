@@ -3,6 +3,7 @@ import React from 'react';
 
 const CustomFormField = (props) => {
     const { label, type, error } = props;
+    // console.log("props", props)
     return (
         <>
             <FloatingLabel

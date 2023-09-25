@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import CustomFormField from "../global/form/CustomFormField";
 import DateFormField from "../global/form/DateFormField";
@@ -24,28 +24,42 @@ interface FormData {
 const personalInfoSchema = z.object({
   address: z
     .string({ required_error: "Campul este obligatoriu" })
-    .min(2, "Campul este obligatoriu"),
+    .min(1, "Campul este obligatoriu")
+    .min(6, "Adresa nu este valida"),
   city: z
     .string({
-        required_error: "Campul este obligatoriu",
-        invalid_type_error: "Campul poate contine doar litere",
+      required_error: "Campul este obligatoriu",
+      invalid_type_error: "Campul poate contine doar litere",
     })
     .refine((val) => val.length > 0, { message: "Campul este obligatoriu" }),
   county: z
     .string({ required_error: "Campul este obligatoriu" })
     .refine((val) => val.length > 0, { message: "Campul este obligatoriu" }),
-  full_name: z.
-    string({
-        required_error: "Campul este obligatoriu",
-        invalid_type_error: "Campul poate contine doar litere",
-    })
-    .min(5, "Campul este obligatoriu"),
+  full_name: z
+    .string()
+    .transform((val) => val.trim())
+    .refine(
+      (val) => {
+        const cleanedName = val.replace(/\s+/g, " ");
+        const nameParts = cleanedName.split(" ");
+        return nameParts.length >= 2;
+      },
+      { message: "Introduceti numele complet" }
+    )
+    .refine(
+      (val) => {
+        const regex = /^[0-9]+$/;
+        return !regex.test(val);
+      },
+      { message: "Campul nu este valid" }
+    ),
   gender: z.string({ required_error: "Campul este obligatoriu" }),
   phone: z
     .string({ required_error: "Campul este obligatoriu" })
     .refine((val) => val.length > 0, { message: "Campul este obligatoriu" })
-    .refine((val) => val.length === 10, { message: "Numarul de telefon nu este corect"})
-    ,
+    .refine((val) => val.length === 10, {
+      message: "Numarul de telefon nu este corect",
+    }),
 });
 
 type TPersonalInfoSchema = z.infer<typeof personalInfoSchema>;
@@ -83,7 +97,7 @@ const PersonalInfo = () => {
     reset,
     setValue,
     getValues,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting },
   } = useForm<TPersonalInfoSchema>({
     resolver: zodResolver(personalInfoSchema),
   });
@@ -172,51 +186,51 @@ const PersonalInfo = () => {
           <Row>
             <Col lg={6}>
               <CustomFormField
-                {...register("full_name")}
                 label="Nume si Prenume*"
                 type="text"
                 value={formData.full_name}
                 error={errors.full_name?.message}
-                onChange={(e: any) => {
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   setFormData({ ...formData, full_name: e.target.value });
+                  setValue("full_name", e.target.value)
                   handleDirty();
                 }}
               />
             </Col>
             <Col lg={6}>
               <CustomFormField
-                {...register("phone")}
                 label="Telefon*"
                 type="text"
                 value={formData.phone}
                 error={errors.phone?.message}
-                onChange={(e: any) => {
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  console.log("eee", e)
                   setFormData({ ...formData, phone: e.target.value });
+                  setValue("phone", e.target.value)
                   handleDirty();
                 }}
               />
             </Col>
           </Row>
           <CustomFormField
-            {...register("address")}
             label="Adresa*"
             type="text"
             value={formData.address}
             error={errors.address?.message}
-            onChange={(e: any) => {
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
               setFormData({ ...formData, address: e.target.value });
+              setValue("address", e.target.value)
               handleDirty();
             }}
           />
           <Row>
             <Col lg={6}>
               <CustomFormField
-                {...register("city")}
                 label="Oras*"
                 type="text"
                 value={formData.city}
                 error={errors.city?.message}
-                onChange={(e: React.BaseSyntheticEvent) => {
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
                   setFormData({ ...formData, city: e.target.value });
                   handleDirty();
                 }}
@@ -225,7 +239,9 @@ const PersonalInfo = () => {
             <Col lg={6}>
               <Autocomplete
                 {...register("county")}
-                className={`custom-autocomplete ${errors.county?.message ? "invalid-field" : ""}`}
+                className={`custom-autocomplete ${
+                  errors.county?.message ? "invalid-field" : ""
+                }`}
                 disablePortal
                 id="county"
                 options={countyList}
@@ -251,7 +267,7 @@ const PersonalInfo = () => {
               <DateFormField
                 placeholder="Data de nastere"
                 value={formData.birthday}
-                onChange={(val: React.BaseSyntheticEvent) => {
+                onChange={(val: ChangeEvent<HTMLInputElement>) => {
                   setFormData({
                     ...formData,
                     birthday: val.target.value,
@@ -281,7 +297,7 @@ const PersonalInfo = () => {
           <Button
             className="button-second mt-5"
             type="submit"
-            // disabled={isFormSubmitted || !(isValid && isDirty) || isSubmitting}
+            disabled={isFormSubmitted || !isDirty || isSubmitting}
           >
             Update information
           </Button>

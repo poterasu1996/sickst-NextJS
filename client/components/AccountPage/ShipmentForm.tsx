@@ -17,7 +17,7 @@ const shippingInfoSchema = z.object({
   address: z
     .string()
     .min(1, "Campul este obligatoriu")
-    .min(10, "Adresa nu este valida"),
+    .min(6, "Adresa nu este valida"),
   city: z
     .string()
     .min(1, "Campul este obligatoriu")
