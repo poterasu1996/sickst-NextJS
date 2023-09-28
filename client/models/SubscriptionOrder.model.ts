@@ -43,3 +43,9 @@ export enum SubscriptionStatusEnum {
     PAUSED = 'paused',
     CANCELLED = 'cancelled',
 }
+
+export enum SubscriptionNameEnum {
+    MYSTERY = 'mystery',
+    BASIC = 'basic',
+    PREMIUM = 'premium'
+}
