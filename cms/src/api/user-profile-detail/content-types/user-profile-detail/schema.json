@@ -97,6 +97,14 @@
       "relation": "oneToMany",
       "target": "api::product-review.product-review",
       "mappedBy": "user_profile_detail"
+    },
+    "subscription_name": {
+      "type": "enumeration",
+      "enum": [
+        "mystery",
+        "basic",
+        "premium"
+      ]
     }
   }
 }

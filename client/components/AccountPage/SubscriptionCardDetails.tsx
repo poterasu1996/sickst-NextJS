@@ -8,34 +8,32 @@ import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
 import { IGETSubscriptionOrder, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
 
 type Props = {
-    orderDetails: IGETSubscriptionOrder | undefined,
     userInfo: ILocalUserInfo,
     userSubscription: IGETSubscriptionOrder[],
 }
-const SubscriptionCardDetails = ({ orderDetails, userInfo, userSubscription }: Props) => {
+const SubscriptionCardDetails = ({ userInfo, userSubscription }: Props) => {
     const [showCancelPlan, setCancelPlan] = useState<boolean>(false);
-    let activeSubscription = null;
+    let activeSubscription: IGETSubscriptionOrder | undefined = undefined;
     if(userSubscription) {
         activeSubscription = userSubscription
             .reverse().find((subs: IGETSubscriptionOrder) => subs.attributes.subscription_status === SubscriptionStatusEnum.ACTIVE);
     }
 
     let nextBillingDate = null;
-    if(orderDetails?.attributes.last_payment_date) {
-        const nextBillingMonth = AppUtils.getNextBillingDate(orderDetails.attributes.last_payment_date);
+    if(activeSubscription?.attributes.last_payment_date) {
+        const nextBillingMonth = AppUtils.getNextBillingDate(activeSubscription.attributes.last_payment_date);
         nextBillingDate = AppUtils.isoToFormat(nextBillingMonth);
     } else {
         nextBillingDate = ' - ';
     }
     
-    console.log(activeSubscription)
-
     const handleCloseModal = () => {
         setCancelPlan(!showCancelPlan);
     }
 
     const handleCancelSubscription = () => {
-        
+        // aici trebuie facuta un POST catre cancelled_subscription, cu id-ul sesiunii
+        // si va trebui ca manual sa fac cancel
     }
 
     return(<>
@@ -63,7 +61,7 @@ const SubscriptionCardDetails = ({ orderDetails, userInfo, userSubscription }: P
                             <div className="text">
                                 Member since <b>{AppUtils.isoToFormat(activeSubscription.attributes.createdAt)}</b>
                             </div>
-                            {(orderDetails && userInfo.subscribed) && <div className="text">
+                            {(userInfo.subscribed) && <div className="text">
                                 Next Billing period on <b>{nextBillingDate}</b>
                             </div>}
                         </div>
@@ -91,7 +89,7 @@ const SubscriptionCardDetails = ({ orderDetails, userInfo, userSubscription }: P
                                 </p>
                             </div>
                             <div className="text">
-                                Member since <b>{AppUtils.isoToFormat(userInfo.createdAt)}</b>
+                                {/* Member since <b>{AppUtils.isoToFormat(userInfo.createdAt)}</b> */}
                             </div>
                     </div>
                 </>

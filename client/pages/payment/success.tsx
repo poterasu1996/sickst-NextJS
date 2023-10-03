@@ -3,15 +3,14 @@ import { useContext, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import PaymentContextTS from "../../store/payment-context";
 import CartService from "../../shared/services/cartService";
-import { IUserModel } from "../../models/User.model";
 import { TxnStatusEnum } from "../../shared/enums/txn.enum";
 import { IOrderHistoryModel } from "../../models/OrderHistory.model";
 import { ISubscriptionOrderModel, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
-import axios from "../../api/axios";
-import { IGETUserDetails } from "../../models/UserDetails.model";
 
 // @ts-ignore
 import Cookies from 'cookies';
+import AuthContext from "../../store/auth-context";
+import userService from "../../shared/services/userService";
 
 
 interface Props {
@@ -21,6 +20,13 @@ interface Props {
 const SuccessPayment = ({ populateSH }: Props) => { 
     const router = useRouter();
     const paymentManager = useContext(PaymentContextTS);
+    const authManager = useContext(AuthContext);
+
+    async function updateUserSubscriptionInfo(subName: string) {
+        const header = authManager.header;
+        const uDetailsID = await userService.getUserDetailsID(header);
+        await userService.updateUserSubscription(header, uDetailsID, subName);
+    }
 
     useEffect(() => {
         // populate subscription table
@@ -31,15 +37,17 @@ const SuccessPayment = ({ populateSH }: Props) => {
             if(storage) {
                 sh = JSON.parse(storage);
             }
-            if(sh) {
+            if(sh && authManager.header) {
                 sh.txn_status = TxnStatusEnum.SUCCESS;
                 sh.subscription_status = SubscriptionStatusEnum.ACTIVE;
                 sh.last_payment_date = new Date().toISOString();
+
                 paymentManager?.populateSubscriptionHistory(sh);
+                updateUserSubscriptionInfo(sh.subscription_name);
                 localStorage.removeItem('sh');
             }
         }
-    }, [])
+    }, [authManager.header])
 
     useEffect(() => {
         // populate order-history table
@@ -82,44 +90,21 @@ const SuccessPayment = ({ populateSH }: Props) => {
 }
 
 // server side:
-// verificam cookie 'si'
+// verificam cookie 'sh'
 // daca da, setam subscription status -> success
 // facem POST cu subscription_history in tabela
 // daca nu, doar stergem cookie pe pagina de cancel
 export default SuccessPayment;
 
-const USER_ME = '/users/me';
-const USER_DETAILS = '/user-profile-details';
-
 export async function getServerSideProps({ req, res}: any) {
     const cookies = new Cookies(req, res);
     const sh = cookies.get('sh');
-    const jwt = cookies.get('jwt');
-
+    
     let populateSH = false;
     if(sh) {
         // send a populate prop, to populate strapi DB, then delete cookie 
         populateSH = true;
         cookies.set('sh');
-
-        // also, set the user flag as subscribed
-        if(jwt) {
-            const header = {
-                headers: {
-                  'Authorization': 'Bearer ' + jwt
-                }
-            }
-            const userData: IUserModel = await axios.get(USER_ME, header)
-                .then(res => { return res.data})
-                .catch(error => console.log(error))
-
-            const userDetails: IGETUserDetails = await axios.get(`${USER_DETAILS}?filters[user_id][$eq]=${userData.id}`, header)
-                .then(resp => resp.data.data[0])
-
-            axios.put(`${USER_DETAILS}/${userDetails.id}`, {data: {subscribed: true}}, header)
-                .then(() => console.log('Successed activating user subscription!'))
-                .catch(error => console.log(error))
-        }
     }
     return {
         props: {

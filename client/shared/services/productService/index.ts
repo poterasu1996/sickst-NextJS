@@ -1,7 +1,9 @@
 import axios from "../../../api/axios";
+import IProduct from "../../../types/Product.interface";
 import { CategoryEnums } from "../../enums/category.enum";
 import { TagEnums } from "../../enums/tag.enum";
-const PRODUCTS_URL = "/products?populate=*";
+import { PRODUCTS_URL } from "../../utils/constants";
+
 const nullCategoryData = {
     data: [
       {
@@ -14,21 +16,21 @@ const nullCategoryData = {
 class ProductsService {
 
   async getAllProducts() {
-      const result = await axios.get(PRODUCTS_URL);
-      const fetchProducts = [...result.data.data];
-      // if product doesn't have a category, we set it to null
-      const productsList = fetchProducts.map(prod => {
-        if(prod.attributes.categories.data.length <= 0) {
-          const nullCategory = {
-            id: prod.id,
-            attributes: { ...prod.attributes, categories: nullCategoryData }
-          }
-          return nullCategory;
+    const result = await axios.get(PRODUCTS_URL);
+    const fetchProducts = [...result.data.data];
+    // if product doesn't have a category, we set it to null
+    const productsList = fetchProducts.map((prod: IProduct) => {
+      if(prod.attributes.categories.data.length <= 0) {
+        const nullCategory = {
+          id: prod.id,
+          attributes: { ...prod.attributes, categories: nullCategoryData }
         }
-        return prod;
-      })
+        return nullCategory;
+      }
+      return prod;
+    })
 
-      return productsList;
+    return productsList;
   }
 
   async getMaleProducts() {
@@ -101,7 +103,6 @@ class ProductsService {
     }
   }
 
-  // async 
 }
 
 export default new ProductsService();
