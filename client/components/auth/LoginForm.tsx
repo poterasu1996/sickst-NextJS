@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 // @ts-ignore
 import Cookies from 'js-cookie';
+import { removeToken, setToken } from "../../shared/utils/auth.utils";
 
 const LOGIN_URL = '/auth/local';
 const logInSchema = z.object({
@@ -51,14 +52,16 @@ export default function LogInForm() {
       const jwt = response?.data?.jwt;
 
       if (jwt) {
-        setAuth(jwt);
+        setToken(jwt); // set localStorage token
         createCookieInHour('jwt', jwt, 1); // create cookie with jwt
+        setAuth(jwt);
         router.push('/');
 
         // adding auto-logout
         const oneHour = 1000 * 60 * 60; 
         setTimeout(() => {
           Cookies.remove("jwt");
+          removeToken();
           setAuth(null);
           router.push("/account/login");
         }, oneHour);

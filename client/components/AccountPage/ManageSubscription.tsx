@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { ArrowRight, Check, Code, Move, Plus, X } from "react-feather";
+import { Check, Plus } from "react-feather";
 import emptyBottle from "../../public/img/empty-bottle.png";
 import UnsubscribedUser from "./UnsubscribedUser";
 import CartService from "../../shared/services/cartService";
@@ -33,6 +33,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { pickersLayoutClasses } from "@mui/x-date-pickers/PickersLayout";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers/PickersDay";
 import { DateCalendar } from "@mui/x-date-pickers";
+import DndCard from "./DndCard";
 
 type Props = {
   userInfo: ILocalUserInfo;
@@ -75,7 +76,7 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
   const [highlightedDays, setHighlightedDays] = useState([15, 30]);
   const [updatedSubList, setUpdatedSubList] = useState<{
     data: {
-      subscription_list: SubscriptionOrderItem[];
+      subscription_list: SubscriptionOrderItem[] | null;
     };
   }>();
 
@@ -123,24 +124,13 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
     setUpdated(true);
   }
 
-  function setMonth(index: any) {
-    let subscriptionMonth;
-    if (index >= 0) {
-      subscriptionMonth = DateTime.fromISO(DateTime.now())
-        .plus({ months: index + 1 })
-        .toFormat("LLLL");
-      return subscriptionMonth;
-    }
-    return null;
-  }
-
   function isCartOrder(item: FullSubOrderProduct): item is ICartProduct {
     return (item as ICartProduct).product !== undefined;
   }
 
   function prepareSubscriptionList(rawList: FullSubOrderProduct[]) {
     // prepare the subscription list that we need
-    const newList = rawList.map(
+    const newList: any[] = rawList.map(
       (product: FullSubOrderProduct, index: number) => {
         if (isCartOrder(product)) {
           return {
@@ -168,7 +158,7 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
 
     setUpdatedSubList({
       data: {
-        subscription_list: newList,
+        subscription_list: newList.length > 0 ? newList : null,
       },
     });
   }
@@ -176,6 +166,7 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
   function handleDeleteCard(index: number) {
     const newList = fullSubOrder.filter((el, idx) => idx !== index);
     setFullSubOrder(newList);
+    setUpdated(true);
   }
 
   interface IDTOSubscriptionhistory {
@@ -306,6 +297,7 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
         setFullSubOrder([...dbSubsOrder, ...cartSubsOrder]);
       } else if (checkIfMystery()) {
         const mysteryProduct = await getMysteryProduct();
+        console.log("mProd", mysteryProduct);
         setFullSubOrder([...mysteryProduct]);
       } else {
         setFullSubOrder([...cartSubsOrder]);
@@ -382,6 +374,43 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
               </p>
             </div>
           )}
+          {checkIfBasicOrPremium() && (
+            <div className="quick-tips" id="quick-tips">
+              <div className="title">Quick tips to customize your queue</div>
+              <Slider {...slickSettings}>
+                <div className="item">
+                  <div className="title">
+                    <b className="brand-color">1 of 3</b> - Edit your queue
+                  </div>
+                  <div className="details">
+                    Switch the order of your items by holding down the two lines
+                    on the right side, then dragging the product to move it
+                    accordingly.
+                  </div>
+                </div>
+                <div className="item">
+                  <div className="title">
+                    <b className="brand-color">2 of 3</b> - Edit your queue
+                  </div>
+                  <div className="details">
+                    Switch the order of your items by holding down the two lines
+                    on the right side, then dragging the product to move it
+                    accordingly.
+                  </div>
+                </div>
+                <div className="item">
+                  <div className="title">
+                    <b className="brand-color">3 of 3</b> - Edit your queue
+                  </div>
+                  <div className="details">
+                    Switch the order of your items by holding down the two lines
+                    on the right side, then dragging the product to move it
+                    accordingly.
+                  </div>
+                </div>
+              </Slider>
+            </div>
+          )}
 
           {activeSubscription && checkIfBasicOrPremium() ? (
             <>
@@ -433,44 +462,6 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
           )}
         </div>
         <div className="dnd-list">
-          {checkIfBasicOrPremium() && (
-            <div className="quick-tips" id="quick-tips">
-              <div className="title">Quick tips to customize your queue</div>
-              <Slider {...slickSettings}>
-                <div className="item">
-                  <div className="title">
-                    <b className="brand-color">1 of 3</b> - Edit your queue
-                  </div>
-                  <div className="details">
-                    Switch the order of your items by holding down the two lines
-                    on the right side, then dragging the product to move it
-                    accordingly.
-                  </div>
-                </div>
-                <div className="item">
-                  <div className="title">
-                    <b className="brand-color">2 of 3</b> - Edit your queue
-                  </div>
-                  <div className="details">
-                    Switch the order of your items by holding down the two lines
-                    on the right side, then dragging the product to move it
-                    accordingly.
-                  </div>
-                </div>
-                <div className="item">
-                  <div className="title">
-                    <b className="brand-color">3 of 3</b> - Edit your queue
-                  </div>
-                  <div className="details">
-                    Switch the order of your items by holding down the two lines
-                    on the right side, then dragging the product to move it
-                    accordingly.
-                  </div>
-                </div>
-              </Slider>
-            </div>
-          )}
-
           <div className="service-description">
             <div className="delivery-details">
               <div className="title">Detalii referitoare la livrare</div>
@@ -541,122 +532,18 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
                         ref={provided.innerRef}
                       >
                         {fullSubOrder.map((item, index) => {
-                          if (isCartOrder(item)) {
-                            return (
-                              winReady && (
-                                <Draggable
-                                  key={index.toString()}
-                                  draggableId={index.toString()}
-                                  index={index}
-                                  // style={(_isDragging: any, draggableStyle: any) => ({ ...draggableStyle })}
-                                >
-                                  {(provided: any) => (
-                                    <li
-                                      className="dnd-card"
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                      ref={provided.innerRef}
-                                    >
-                                      <div className="image-wrapper">
-                                        <img
-                                          src={
-                                            `${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` +
-                                            item.product.attributes.image
-                                              .data[0].attributes.url
-                                          }
-                                        ></img>
-                                      </div>
-                                      <div className="details">
-                                        <div className="title">
-                                          <span className="brand">
-                                            {item.product.attributes.brand}
-                                          </span>
-                                        </div>
-                                        <div className="model">
-                                          {item.product.attributes.model}
-                                          <div className="date">
-                                            {setMonth(index)}
-                                          </div>
-                                        </div>
-                                        <a className="link">
-                                          Details{" "}
-                                          <ArrowRight width={40} height={20} />
-                                        </a>
-                                        <div className="move">
-                                          <Code />
-                                        </div>
-                                      </div>
-                                      <button
-                                        className="remove-card"
-                                        onClick={() => handleDeleteCard(index)}
-                                      >
-                                        <X stroke={"#cc3633"} />
-                                      </button>
-                                    </li>
-                                  )}
-                                </Draggable>
-                              )
-                            );
-                          } else {
-                            return (
-                              winReady && (
-                                <Draggable
-                                  key={index.toString()}
-                                  draggableId={index.toString()}
-                                  index={index}
-                                  // style={(_isDragging: any, draggableStyle: any) => ({ ...draggableStyle })}
-                                >
-                                  {(provided: any) => (
-                                    <li
-                                      className="dnd-card"
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                      ref={provided.innerRef}
-                                    >
-                                      <div className="image-wrapper">
-                                        <img
-                                          src={
-                                            `${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` +
-                                            item.image
-                                          }
-                                        ></img>
-                                      </div>
-                                      <div className="details">
-                                        <div className="title">
-                                          <span className="brand">
-                                            {item.brand}
-                                          </span>{" "}
-                                        </div>
-                                        <div className="model">
-                                          {item.model}
-                                          <div className="date">
-                                            {setMonth(index)}
-                                          </div>
-                                        </div>
-                                        <a className="link">
-                                          Details{" "}
-                                          <ArrowRight width={40} height={20} />
-                                        </a>
-                                        <div className="move">
-                                          <Code />
-                                        </div>
-                                      </div>
-                                      {!checkIfMystery() && (
-                                        <button
-                                          className="remove-card"
-                                          onClick={() =>
-                                            handleDeleteCard(index)
-                                          }
-                                        >
-                                          <X stroke={"#cc3633"} />
-                                        </button>
-                                      )}
-                                    </li>
-                                  )}
-                                </Draggable>
-                              )
-                            );
-                          }
+                          return (
+                            winReady && (
+                              <DndCard
+                                key={index}
+                                index={index}
+                                item={item}
+                                isMystery={checkIfMystery()}
+                                deleteCard={(idx) => handleDeleteCard(idx)}
+                                mysteryProduct={undefined}
+                              />
+                            )
+                          );
                         })}
                         {provided.placeholder}
                       </ul>

@@ -1,8 +1,18 @@
 .subscription-page {
     flex: 1;
     padding: 5rem 0rem;
+    min-width: 40rem;
+    // @media (max-width: 576px) {
+    //     min-width: unset;
+    // }
 
-    &--description {
+    &--content {
+        display: flex;
+        justify-content: space-between;
+        @media (max-width: 900px) {
+            display: block;
+        }
+
         .title {
             font-size: 3.8rem;
             line-height: 4.8rem;
@@ -16,44 +26,70 @@
             font-weight: 400;
             margin-bottom: 2.4rem;
         }
+
+        .description {
+            width: 45%;
+            @media (max-width: 900px) {
+                width: 100%;
+                margin-bottom: 4rem;
+            }
+        }
     }
 
-    .black-cards {
-        margin: 0 auto;
-        display: flex;
-        flex-wrap: wrap;
-        margin-bottom: 5rem;
-    }
-
-    .security-info {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .disclaimer {
+    .payment-info {
         width: 45%;
-        font-size: 1.4rem;
-        color: #cc3633;
-    }
-
-    .safe-checkout {
-        padding: 2rem;
-        padding-top: 2.4rem;
-        border: 1px solid #0e960b;
-        position: relative;
-        text-align: center;
-        width: 45%;
-
-        .title {
-            position: absolute;
-            left: 50%;
-            top: 0;
-            background: #fff;
-            padding: 0 2rem;
-            color: #0e960b;
+        @media (max-width: 900px) {
+            width: 100%;
+            margin-bottom: 4rem;
+        }
+        .disclaimer {
             font-size: 1.4rem;
-            font-weight: 600;
-            transform: translate(-50%, -50%);
+            color: #cc3633;
+            margin-bottom: 1.2rem;
+        }
+    
+        .safe-checkout {
+            padding: 2rem;
+            padding-top: 2.4rem;
+            margin-bottom: 2rem;
+            border: 1px solid #0e960b;
+            position: relative;
+            text-align: center;
+            width: 46rem;
+            @media (max-width: 460px) {
+                width: 36rem;
+                padding: 0;
+            }
+    
+            .title {
+                position: absolute;
+                left: 50%;
+                top: 0;
+                background: #fff;
+                padding: 0 2rem;
+                color: #0e960b;
+                font-size: 1.4rem;
+                font-weight: 600;
+                transform: translate(-50%, -50%);
+                @media (max-width: 460px) {
+                    font-size: 1.1rem;
+                    line-height: 1;
+                }
+            }
+        }
+        .payment-security {
+            svg {
+                margin-right: 1rem;
+            }
+            .title {
+                font-size: 1.5rem;
+                display: flex;
+                align-items: center;
+                margin: 0;
+            }
+            p {
+                font-size: 1.2rem;
+            }
         }
     }
 }

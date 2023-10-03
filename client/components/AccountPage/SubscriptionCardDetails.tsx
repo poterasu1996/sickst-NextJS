@@ -89,7 +89,7 @@ const SubscriptionCardDetails = ({ userInfo, userSubscription }: Props) => {
                                 </p>
                             </div>
                             <div className="text">
-                                Member since <b>{AppUtils.isoToFormat(userInfo.createdAt)}</b>
+                                {/* Member since <b>{AppUtils.isoToFormat(userInfo.createdAt)}</b> */}
                             </div>
                     </div>
                 </>

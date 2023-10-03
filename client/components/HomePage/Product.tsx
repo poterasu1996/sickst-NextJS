@@ -12,11 +12,12 @@ import Link from "next/link";
 // import { Rating } from "@mui/material";
 // import { styled } from "@mui/material/styles";
 import CartService from "../../shared/services/cartService/index";
-import { PaymentEnums } from "../../shared/enums/payment.enums";
 import React, { useState, useContext } from "react";
+import { useCheckMysterySub } from "../../shared/hooks/useCheckMysterySub";
+import { PaymentEnums } from "../../shared/enums/payment.enums";
 
 interface Props {
-  product: any
+  product: any;
 }
 
 const Product = ({ product }: Props) => {
@@ -27,9 +28,10 @@ const Product = ({ product }: Props) => {
   const [loading, setLoading] = useState<boolean>(false); // used for loading animation
   const [subscription, setSubscription] = useState<boolean>(true);
   const router = useRouter();
-  
+  const { isMystery } = useCheckMysterySub();
+
   // in future, we must have 2 parameters: product and container (container will be the container price from DB, atm is static price)
-  const containerPrice = 50;  // price of container
+  const containerPrice = 50; // price of container
 
   const toastMsg = (
     <>
@@ -52,9 +54,9 @@ const Product = ({ product }: Props) => {
   );
 
   function simplePrice(price: number) {
-    const mlPrice = price / 100;    // price per ml of product
+    const mlPrice = price / 100; // price per ml of product
 
-    const productPrice = containerPrice + (8 * mlPrice);   // price of full product for OTB
+    const productPrice = containerPrice + 8 * mlPrice; // price of full product for OTB
     return productPrice;
   }
 
@@ -73,12 +75,9 @@ const Product = ({ product }: Props) => {
       if (subscription) {
         paymentType = "subscription";
         if (CartService.subscriptionList().length >= 6) {
-          toast(
-            "Your subscription list hast more than 6 products!",
-            {
-              autoClose: 2000,
-            }
-          );
+          toast("Your subscription list hast more than 6 products!", {
+            autoClose: 2000,
+          });
           return;
         }
       } else {
@@ -88,14 +87,48 @@ const Product = ({ product }: Props) => {
       cartManager!.setRefresh(!cartManager!.refresh);
       notify();
     }
-    // setLoading(true);
   }
+
+  const handleQueueProduct = () => {
+    if (!authManager.auth) {
+      // if not logged in, route to login page
+      router.push("/account/login");
+      return;
+    }
+    if (isMystery) {
+      // check if user is subscribed with mystery plan
+      toast("You need to change subscription plan", {
+        autoClose: 2000,
+      });
+    } else {
+      const paymentType = PaymentEnums.SUBSCRIPTION;
+      if (CartService.subscriptionList().length >= 6) {
+        const msg = (
+          <>
+            <div>
+              Your subscription list hast more than{" "}
+              <b className="brand-color">6 products</b>!
+            </div>
+          </>
+        );
+        toast(msg, {
+          autoClose: 2000,
+        });
+        return;
+      }
+      notify();
+      CartService.addProduct(product, 1, paymentType);
+      cartManager!.setRefresh(!cartManager!.refresh);
+      setAddedToCart(true);
+      setLoading(true);
+    
+    }
+  };
 
   setTimeout(() => {
     setLoading(false); // to clear loading state
   }, 500);
 
-  // console.log('CartService: ', CartService)  // merge service-ul
   return (
     <>
       <div className="col col-sm-6 col-lg-4">
@@ -113,14 +146,14 @@ const Product = ({ product }: Props) => {
               <span className="tag black">Exclussive</span>
             </div>
             <div className="product-card-rating">
-                {/* @ts-ignore */}
-                <Rating
-                    fractions={2}
-                    initialRating={product.attributes.rating}
-                    readonly={true}
-                    emptySymbol={<Star size={15} fill="#babfc7" stroke="#babfc7" />}
-                    fullSymbol={<Star size={15} fill="#cc3633" stroke="#cc3633" />}
-                />
+              {/* @ts-ignore */}
+              <Rating
+                fractions={2}
+                initialRating={product.attributes.rating}
+                readonly={true}
+                emptySymbol={<Star size={15} fill="#babfc7" stroke="#babfc7" />}
+                fullSymbol={<Star size={15} fill="#cc3633" stroke="#cc3633" />}
+              />
             </div>
             <div className="product-card-title">
               <span className="brand">{product.attributes.brand}</span>
@@ -134,59 +167,67 @@ const Product = ({ product }: Props) => {
             </div>
           </div>
           <div className="product-card-button">
-            {CartService.hasProduct(product) ? (
-              loading ? (
-                <Spinner animation="border" style={{ color: "#cc3663" }} />
-              ) : (
-                <div className="card-button disabled">
-                  <div className="check">
-                    <Check stroke={"#fff"} height={22} width={22} />
+            {
+              CartService.hasProduct(product) ? (
+                loading ? (
+                  <Spinner animation="border" style={{ color: "#cc3663" }} />
+                ) : (
+                  <div className="card-button disabled">
+                    <div className="check">
+                      <Check stroke={"#fff"} height={22} width={22} />
+                    </div>
+                    <span>Added</span>
                   </div>
-                  <span>Added</span>
+                )
+              ) : (
+                <div className="card-button" onClick={handleQueueProduct}>
+                  <div className="plus"></div>Add to cart
                 </div>
               )
-            ) : authManager.auth ? (
-              <div
-                className="card-button"
-                onClick={() => {
-                  const paymentType = PaymentEnums.SUBSCRIPTION;
-                  if (CartService.subscriptionList().length >= 6) {
-                    const msg = (
-                      <>
-                        <div>
-                          Your subscription list hast more than{" "}
-                          <b className="brand-color">6 products</b>!
-                        </div>
-                      </>
-                    );
-                    toast(msg, {
-                      autoClose: 2000,
-                    });
-                    return;
-                  }
-                  notify();
-                  CartService.addProduct(product, 1, paymentType);
-                  cartManager!.setRefresh(!cartManager!.refresh);
-                  setAddedToCart(true);
-                  setLoading(true);
-                }}
-              >
-                <div className="plus"></div>Add to cart
-              </div>
-            ) : (
-              <div
-                className="card-button"
-                onClick={() => {
-                  router.push("/account/login");
-                }}
-              >
-                <div className="plus"></div>Add to cart
-              </div>
-            )}
+              // here we make the check in a function
+              // authManager.auth ? (
+              //   <div
+              //     className="card-button"
+              //     onClick={() => {
+              //       const paymentType = PaymentEnums.SUBSCRIPTION;
+              //       if (CartService.subscriptionList().length >= 6) {
+              //         const msg = (
+              //           <>
+              //             <div>
+              //               Your subscription list hast more than{" "}
+              //               <b className="brand-color">6 products</b>!
+              //             </div>
+              //           </>
+              //         );
+              //         toast(msg, {
+              //           autoClose: 2000,
+              //         });
+              //         return;
+              //       }
+              //       notify();
+              //       CartService.addProduct(product, 1, paymentType);
+              //       cartManager!.setRefresh(!cartManager!.refresh);
+              //       setAddedToCart(true);
+              //       setLoading(true);
+              //     }}
+              //   >
+              //     <div className="plus"></div>Add to cart
+              //   </div>
+              // ) : (
+              //   <div
+              //     className="card-button"
+              //     onClick={() => {
+              //       router.push("/account/login");
+              //     }}
+              //   >
+              //     <div className="plus"></div>Add to cart
+              //   </div>
+              // )
+            }
           </div>
         </div>
       </div>
-      
+
       {/* product modal */}
       <Modal
         className="product-card-modal"
@@ -213,8 +254,11 @@ const Product = ({ product }: Props) => {
                 <div className="title">
                   {product.attributes.brand}
                   <Link href={`/product/${product.id}`}>
-                    <a>Detalii produs <ChevronRight height={'2rem'} width={'2rem'} /></a>
-                  </Link>  
+                    <a>
+                      Detalii produs{" "}
+                      <ChevronRight height={"2rem"} width={"2rem"} />
+                    </a>
+                  </Link>
                 </div>
                 <div className="model">{product.attributes.model}</div>
                 <div className="price-wrapper d-flex justify-content-between">
@@ -253,9 +297,7 @@ const Product = ({ product }: Props) => {
                           <div className="volume">8 ml</div>
                           <div className="type">
                             Requires{" "}
-                            <b>
-                              {product.attributes.subscription_type} plan
-                            </b>
+                            <b>{product.attributes.subscription_type} plan</b>
                           </div>
                         </div>
                       </div>
@@ -272,7 +314,9 @@ const Product = ({ product }: Props) => {
                           <div className="volume">8 ml</div>
                           <div className="type">
                             One time{" "}
-                            <b>RON {simplePrice(product.attributes.retail_value)}</b>
+                            <b>
+                              RON {simplePrice(product.attributes.retail_value)}
+                            </b>
                           </div>
                         </div>
                       </div>
@@ -280,15 +324,16 @@ const Product = ({ product }: Props) => {
                   </div>
                 </div>
                 <div className="submit-btn">
-                  <div 
+                  <div
                     className="button-second"
-                    onClick={() => handleAddProduct()}>Add to queue</div>
+                    onClick={() => handleAddProduct()}
+                  >
+                    Add to queue
+                  </div>
                 </div>
                 <div className="fragrance-info">
                   <div className="title">About the fragrance</div>
-                  <div className="info">
-                    {product.attributes.description}
-                  </div>
+                  <div className="info">{product.attributes.description}</div>
                 </div>
               </div>
             </div>

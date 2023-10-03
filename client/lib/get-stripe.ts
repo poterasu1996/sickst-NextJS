@@ -1,7 +1,6 @@
 import { loadStripe } from "@stripe/stripe-js";
 
-
-let stripePromise = null;
+let stripePromise: Promise<any> | null = null;
 
 const getStripe = () => {
     if(!stripePromise) {

@@ -13,6 +13,7 @@ import logo from "../public/logo.svg";
 
 // @ts-ignore
 import Cookies from 'js-cookie';
+import { removeToken } from "../shared/utils/auth.utils";
 
 const Header = () => {
   const [accountMobileModal, setAccountMobileModal] = useState(false);
@@ -27,6 +28,7 @@ const Header = () => {
   function logOut() {
     setTimeout(() => {
       Cookies.remove("jwt");
+      removeToken();
       authManager?.setAuth(null);
       router.push("/");
     }, 700);

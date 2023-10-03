@@ -64,7 +64,7 @@ const Account = ({ userInfo, subscriptionHistory }: Props) => {
                 <div className="nav-section">
                     <div className="user-info">
                         <div className="user-avatar"></div>
-                        <div className="user-name">{userInfo.full_name ? userInfo.full_name : "Sickst User"}</div>
+                        <div className="user-name">{userInfo?.full_name ? userInfo.full_name : "Sickst User"}</div>
                         <div className="joined-date">Joined: <b className="brand-color">{userInfo && getDate(userInfo.createdAt)}</b></div>
                         <div className="joined-date">Subscription: <b className="brand-color">{(userInfo && userInfo.subscribed) ? 'activa' : 'neabonat'}</b></div>
                     </div>
@@ -130,7 +130,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         if(userData?.id) {
             try {
                 const userDetailsResponse = await axios.get(`${USER_DETAILS}?filters[user_id][$eq]=${userData.id}`, header);
-                    // .then((res) => res.data.data[0]);
                 const userDetails: IGETUserDetails = userDetailsResponse.data.data[0];
 
                 userInfo = {

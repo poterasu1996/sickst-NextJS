@@ -218,6 +218,53 @@
         }
     }
 
+    .quick-tips {
+        padding: 2rem 3rem;
+        background-color: #fff;
+        max-width: 44rem;
+        align-self: flex-start;
+        border-radius: .5rem;
+        box-shadow: rgba($color: #000000, $alpha: .15) 0 2px 5px;
+
+        .title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            line-height: 2.2rem;
+            margin-bottom: 1.6rem;
+        }
+
+        .item {
+            padding: 0 1.5rem;
+
+            .title {
+                font-size: 2rem;
+                line-height: 3rem;
+            }
+            .details {
+                font-size: 1.5rem;
+                line-height: 2rem;
+            }
+        }
+
+        .slick-next {
+            right: -1.7rem;
+        }
+        .slick-prev {
+            left: -1.7rem;
+        }
+
+        .slick-prev.slick-disabled:before, .slick-next.slick-disabled:before {
+            opacity: 0;
+        }
+
+        button {
+            &::before {
+                border-radius: 50%;
+                color: #cc3633;
+            }
+        }
+    }
+
     .dnd-list {
         min-width: unset;
         width: 100%;
@@ -238,52 +285,6 @@
         }
         @media (max-width: 600px) {
             padding: 0;
-        }
-
-        .quick-tips {
-            padding: 2rem 3rem;
-            background-color: #fff;
-            max-width: 44rem;
-            align-self: flex-start;
-            border-radius: .5rem;
-            box-shadow: rgba($color: #000000, $alpha: .15) 0 2px 5px;
-
-            .title {
-                font-size: 1.2rem;
-                line-height: 2.2rem;
-                margin-bottom: 1.6rem;
-            }
-
-            .item {
-                padding: 0 1.5rem;
-
-                .title {
-                    font-size: 2rem;
-                    line-height: 3rem;
-                }
-                .details {
-                    font-size: 1.5rem;
-                    line-height: 2rem;
-                }
-            }
-
-            .slick-next {
-                right: -1.7rem;
-            }
-            .slick-prev {
-                left: -1.7rem;
-            }
-
-            .slick-prev.slick-disabled:before, .slick-next.slick-disabled:before {
-                opacity: 0;
-            }
-
-            button {
-                &::before {
-                    border-radius: 50%;
-                    color: #cc3633;
-                }
-            }
         }
 
         .skeleton {

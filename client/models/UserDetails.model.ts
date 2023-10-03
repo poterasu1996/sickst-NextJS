@@ -14,6 +14,7 @@ export interface IUserDetailsModel {
     products_received?: number,
     reviews?: number,
     subscribed?: boolean,
+    subscription_name?: string | null | undefined,
     user_id: number
     zip_code?: number | null,
 }
@@ -37,6 +38,7 @@ export interface IGETUserDetails {
         publishedAt: string,
         reviews: number,
         subscribed: boolean,
+        subscription_name: string | null | undefined,
         user_id: number,
         zip_code: number | null
     },
