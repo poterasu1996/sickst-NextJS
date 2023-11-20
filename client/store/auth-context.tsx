@@ -1,47 +1,43 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import axios from 'axios';
+import { CHECK_AUTH } from '../shared/utils/constants';
 
-// @ts-ignore
-import Cookies from 'js-cookie';
-import { getToken } from '../shared/utils/auth.utils';
-import { BEARER } from '../shared/utils/constants';
+const CHECK_AUTH_URL = `${process.env.NEXT_PUBLIC_BASEURL}${process.env.NEXT_PUBLIC_API_V1}${CHECK_AUTH}`;
 
 interface IAuthContext {
-    auth: string | null;
-    header: Header | null,
-    setAuth: Dispatch<SetStateAction<string | null>>
+    isAuth: boolean,
+    setIsAuth: Dispatch<SetStateAction<boolean>>,
 }
 
-const AuthContext =  React.createContext<IAuthContext>({auth: null, header: null, setAuth: () => null});
+const AuthContext =  React.createContext<IAuthContext>({isAuth: false, setIsAuth: () => null});
 
 type Props = {
     children: JSX.Element
 }
 
-type Header = {
-    headers: {
-        authorization: string,
-    }
-}
-
 export const AuthProvider = ({ children }: Props): JSX.Element => {
-    const [auth, setAuth] = useState<string | null>(null);
-    const [header, setHeader] = useState<Header | null>(null);
+    const [isAuth, setIsAuth] = useState(false);
+
+    const isAuthenticated = async () => {
+        try {
+            const res = await axios.get(CHECK_AUTH_URL);
+            if(res.status === 200) {
+                setIsAuth(true);
+            } else {
+                setIsAuth(false)
+            }
+        } catch (error) {
+            setIsAuth(false);
+        }
+    }
 
     useEffect(() => {
-        // get jwt from cookie (right now, Strapi doesn't set a cookie with the token)
-        // const cookie = Cookies.get('jwt');
-        // setAuth(cookie);
-
-        const token = getToken();
-
-        token && setAuth(token);
-        token && setHeader({headers: {authorization: `${BEARER} ${token}`}});
+        isAuthenticated()
     }, [])
 
     const authManager: IAuthContext = {
-        auth: auth,
-        header,
-        setAuth: setAuth,
+        isAuth,
+        setIsAuth,
     }
     return (
         <AuthContext.Provider value={authManager}>

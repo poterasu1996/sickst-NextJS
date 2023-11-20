@@ -1,10 +1,9 @@
 import { NextResponse } from "next/dist/server/web/spec-extension/response"; 
 
-export default function middleware(req) {
-    const {cookies} = req;
+export default function middleware(req, res) {
+    const { cookies } = req;
     const cookieList = [...cookies];
     const jwt = cookieList.find(cookie => cookie[0] === 'jwt')
-
     const url = req.url;
 
     if((

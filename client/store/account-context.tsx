@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import axios from "../api/axios";
+// import axios from "../api/axios";
 import { toast } from "react-toastify";
 import AuthContext from "./auth-context";
 
@@ -17,6 +17,8 @@ import {
 } from "../models/ShippingInformation.model";
 import { IGETOrderHistory } from "../models/OrderHistory.model";
 import { IGETSubscriptionOrder } from "../models/SubscriptionOrder.model";
+import axios from "axios";
+import { USER_PROFILE_DETAILS, USER_ME } from "../shared/utils/constants";
 
 interface IAccountContext {
   accountState: string;
@@ -67,8 +69,9 @@ interface Props {
 }
 
 export const AccountProvider = ({ children }: Props): JSX.Element => {
-  const USER_ME = "/users/me";
-  const USER_DETAILS = "/user-profile-details";
+  const USERS_ME_API = `${process.env.NEXT_PUBLIC_CLIENT_API}${USER_ME}`;
+  const USER_DETAILS_API = `${process.env.NEXT_PUBLIC_CLIENT_API}${USER_PROFILE_DETAILS}`;
+
   const USERS = "/api/users";
   const SHIPPING_INFO = "/shipping-informations";
   const SUBSCRIPTION_ORDER = "/subscription-orders";
@@ -76,12 +79,14 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
   const CANCELLED_ORDERS = "/cancelled-orders";
   const CANCELLED_SUBSCRIPTIONS = "/cancelled-subscriptions";
   const ORDER_HISTORIES = "/order-histories";
-  const authManager = useContext(AuthContext);
+  const { isAuth } = useContext(AuthContext);
   const [accountState, setAccountState] = useState<string>("subscription");
   const [currentUser, setCurrentUser] = useState<IUserModel | null>(null);
   const [userDetails, setUserDetails] = useState<IGETUserDetails | null>(null);
-  const [header, setHeader] = useState<IHeader | null>(null);
   const [refresh, setRefresh] = useState<number>(0); // inform other components that context has been changed
+
+  // will be removed
+  const [header, setHeader] = useState<IHeader | null>(null);
   // const accState = [
   //     'subscription',
   //     'orderHistory',
@@ -93,35 +98,58 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
   //     'resetPassword'
   // ];
 
-  useEffect(() => {
-    if (authManager!.auth) {
-      const head = {
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${authManager?.auth}`,
-        },
-      };
-      setHeader(head);
-    }
-  }, [authManager!.auth]);
+  // useEffect(() => {
+  //   if (authManager!.auth) {
+  //     const head = {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         authorization: `Bearer ${authManager?.auth}`,
+  //       },
+  //     };
+  //     setHeader(head);
+  //   }
+  // }, [authManager!.auth]);
+
+  // useEffect(() => {
+  //   if (header) {
+  //     console.log("INSIDE", header)
+  //     axios
+  //       .get(USER_ME, header)
+  //       .then(async (resp) => {
+  //         setCurrentUser(resp.data);
+  //         await axios
+  //           .get(
+  //             `${USER_DETAILS}?filters[user_id][$eq]=${resp.data.id}`,
+  //             header
+  //           )
+  //           .then((resp) => setUserDetails(resp.data.data[0]))
+  //           .catch((error) => console.log(error));
+  //       })
+  //       .catch((error) => console.log("axios error", error));
+  //   }
+  // }, [header]);
+
+  async function getUserMe() {
+    const response = await axios.get(USERS_ME_API);
+    return response.data;
+  }
+
+  async function getUserDetails(id: number) {
+    const response = await axios.get(`${USER_DETAILS_API}/${id}`);
+    return response.data;
+  }
 
   useEffect(() => {
-    if (header) {
-      axios
-        .get(USER_ME, header)
-        .then(async (resp) => {
-          setCurrentUser(resp.data);
-          await axios
-            .get(
-              `${USER_DETAILS}?filters[user_id][$eq]=${resp.data.id}`,
-              header
-            )
-            .then((resp) => setUserDetails(resp.data.data[0]))
-            .catch((error) => console.log(error));
-        })
-        .catch((error) => console.log("axios error", error));
+    if(isAuth) {
+      (async () => {
+        const userMe: IUserModel = await getUserMe();
+        setCurrentUser(userMe);
+        const uID = userMe.id;
+        const userDetails = await getUserDetails(uID);
+        setUserDetails(userDetails.data[0]);
+      })();
     }
-  }, [header]);
+  }, [isAuth])
 
   const toastMsg = (msg: string, status: boolean) => {
     return (
@@ -432,7 +460,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     };
     try {
       await axios
-        .put(`${USER_DETAILS}/${id}`, newData, header)
+        .put(`${USER_PROFILE_DETAILS}/${id}`, newData, header)
         .then(() => setRefresh(refresh + 1));
     } catch (error) {
       console.log(error);
@@ -440,10 +468,11 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     }
   }
 
+  // do we need it anymore???
   async function fetchPersonalInfo() {
     if (header) {
       return await axios
-        .get(`${USER_DETAILS}?filters[user_id][$eq]=${currentUser?.id}`, header)
+        .get(`${USER_PROFILE_DETAILS}?filters[user_id][$eq]=${currentUser?.id}`, header)
         .then((result) => result.data);
     }
   }
@@ -457,7 +486,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
       },
     };
     try {
-      await axios.put(`${USER_DETAILS}/${piID}`, newData, header).then(() => {
+      await axios.put(`${USER_PROFILE_DETAILS}/${piID}`, newData, header).then(() => {
         setRefresh(refresh + 1);
         notify("Datele personale au fost actualizate cu success!", true);
       });

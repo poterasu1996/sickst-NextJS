@@ -79,10 +79,10 @@ const PersonalInfo = () => {
   });
   const [isDirty, setIsDirty] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  const [personalInfo, setPersonalInfo] = useState<IUserDetailsModel | null>(
-    null
+  const [personalInfo, setPersonalInfo] = useState<IUserDetailsModel | undefined>(
+    undefined
   );
-  const [personalInfoID, setPersonaInfoID] = useState(null);
+  const [personalInfoID, setPersonaInfoID] = useState<number | undefined>(undefined);
   const genderList = [
     { title: "Domnul", value: "male" },
     { title: "Doamna", value: "female" },
@@ -133,10 +133,10 @@ const PersonalInfo = () => {
   };
 
   useEffect(() => {
-    accountManager?.fetchPersonalInfo().then((response) => {
-      setPersonalInfo(response.data[0].attributes);
-      setPersonaInfoID(response.data[0].id);
-    });
+    if(accountManager) {
+      setPersonalInfo(accountManager.userDetails?.attributes)
+      setPersonaInfoID(accountManager.userDetails?.id);
+    }
   }, []);
 
   useEffect(() => {

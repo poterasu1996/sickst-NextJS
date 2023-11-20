@@ -71,6 +71,10 @@
     "is_cancelled": {
       "type": "boolean",
       "default": false
+    },
+    "strapi_subscription_id": {
+      "type": "string",
+      "required": true
     }
   }
 }

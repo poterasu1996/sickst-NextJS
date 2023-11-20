@@ -16,7 +16,6 @@ export default async function handler(req, res) {
             return
         }
 
-        console.log("customer: ", customer.id)
         res.status(200).json(customer)
     } else {
         res.status(405).end('Method not allowed')
