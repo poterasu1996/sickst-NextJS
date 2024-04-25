@@ -13,6 +13,7 @@ export interface IUserDetailsModel {
     phone_number?: string | null,
     products_received?: number,
     reviews?: number,
+    stripe_customer_id?: string,
     subscribed?: boolean,
     subscription_name?: string | null | undefined,
     user_id: number
@@ -37,6 +38,7 @@ export interface IGETUserDetails {
         products_received: number,
         publishedAt: string,
         reviews: number,
+        stripe_customer_id: string,
         subscribed: boolean,
         subscription_name: string | null | undefined,
         user_id: number,

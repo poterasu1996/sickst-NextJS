@@ -116,6 +116,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     let userInfo = null;
     let subscriptionHistory = null;
+    
     if(jwt) {
         const header = {
             headers: {
@@ -124,7 +125,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         }
 
         const userData: IUserModel = await axios.get(USER_ME, header)
-            .then((res) => { return res.data })
+            .then((res) => res.data )
             .catch(error => console.log('ERES'))
 
         if(userData?.id) {
@@ -137,7 +138,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                     createdAt: userDetails.attributes.createdAt,
                     full_name: userDetails.attributes.first_name+" "+userDetails.attributes.last_name,
                     new_user: userDetails.attributes.new_user,
-                    subscribed: userDetails.attributes.subscribed
+                    subscribed: userDetails.attributes.subscribed,
+                    subscription_name: userDetails.attributes.subscription_name,
                 }
 
                 if(userDetails.attributes.subscribed) {
@@ -148,11 +150,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                             .catch(error => console.log(error))
             
                         subscriptionHistory = subHistory?.data;
-                        
+                        console.log("subHist", subscriptionHistory)            
                     } catch (error) {
                         console.log(error);
                     }
                 }
+                
             } catch (error) {
                 console.log(error)
             }

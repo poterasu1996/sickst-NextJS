@@ -33,9 +33,10 @@ class ProductsService {
     return productsList;
   }
 
-  async getMaleProducts() {
+  async getMaleProducts(page=1) {
     try {
-      const result = await axios.get(`${PRODUCTS_URL}&filters[categories][name][$eq]=${CategoryEnums.MALE}`);
+      const result = await axios.get(
+        `${PRODUCTS_URL}&filters[categories][name][$eq]=${CategoryEnums.MALE}&pagination[page]=${page}&pagination[pageSize]=3`);
       return result.data;
     } catch (error: any) {
       return {error: error.response.data.error}      
@@ -68,9 +69,9 @@ class ProductsService {
     }
   }
 
-  async getFemaleProducts() {
+  async getFemaleProducts(page=1) {
     try {
-      const result = await axios.get(`${PRODUCTS_URL}&filters[categories][name][$eq]=${CategoryEnums.FEMALE}`);
+      const result = await axios.get(`${PRODUCTS_URL}&filters[categories][name][$eq]=${CategoryEnums.FEMALE}&pagination[page]=${page}&pagination[pageSize]=3`);
       return result.data;
     } catch (error: any) {
       return {error: error.response.data.error}      

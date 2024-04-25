@@ -11,6 +11,8 @@ import { ISubscriptionOrderModel, SubscriptionStatusEnum } from "../../models/Su
 import Cookies from 'cookies';
 import AuthContext from "../../store/auth-context";
 import userService from "../../shared/services/userService";
+import axios from "axios";
+import stripeService from "../../shared/services/stripeService";
 
 
 interface Props {
@@ -38,13 +40,17 @@ const SuccessPayment = ({ populateSH }: Props) => {
                 sh = JSON.parse(storage);
             }
             if(sh && authManager.header) {
-                sh.txn_status = TxnStatusEnum.SUCCESS;
-                sh.subscription_status = SubscriptionStatusEnum.ACTIVE;
-                sh.last_payment_date = new Date().toISOString();
-
-                paymentManager?.populateSubscriptionHistory(sh);
-                updateUserSubscriptionInfo(sh.subscription_name);
-                localStorage.removeItem('sh');
+                (async () => {
+                    const sesId = await stripeService.getSessionDetails(sh.session_id);
+                    sh.txn_status = TxnStatusEnum.SUCCESS;
+                    sh.subscription_status = SubscriptionStatusEnum.ACTIVE;
+                    sh.last_payment_date = new Date().toISOString();
+                    sh.strapi_subscription_id = sesId.subscription;
+    
+                    paymentManager?.populateSubscriptionHistory(sh);
+                    updateUserSubscriptionInfo(sh.subscription_name);
+                    localStorage.removeItem('sh');
+                })()
             }
         }
     }, [authManager.header])

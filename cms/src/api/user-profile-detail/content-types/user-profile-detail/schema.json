@@ -105,6 +105,11 @@
         "basic",
         "premium"
       ]
+    },
+    "stripe_customer_id": {
+      "type": "string",
+      "required": true,
+      "unique": true
     }
   }
 }

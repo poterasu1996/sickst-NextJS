@@ -5,14 +5,18 @@ import { useRouter } from "next/router";
 import { Check } from "react-feather";
 import maleIcon from "../../public/img/male-icon.png";
 import femaleIcon from "../../public/img/female-icon.jpg";
-import axios from "../../api/axios";
+// import axios from "../../api/axios";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 
 const REGISTER_URL = "/auth/local/register";
 const USER_DETAILS = "/user-profile-details";
+const CLIENT_URL = process.env.NEXT_PUBLIC_BASEURL;
+const STRIPE_CUSTOMER = "/api/v1/stripe/customer"
+
 const signUpSchema = z
   .object({
     email: z.string().email(),
@@ -59,11 +63,14 @@ export default function SignUpForm() {
 
   const onSubmit = async (formData: TSignUpSchema) => {
     try {
-      const response = await axios.post(REGISTER_URL, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_APIURL}${REGISTER_URL}`, {
         username: formData.email ,
         email: formData .email,
         password: formData.password,
       })
+
+      // create stripe customer acc
+      const stripeCustomer = await axios.post(`${CLIENT_URL}${STRIPE_CUSTOMER}`, {email: formData.email});
 
       // create user-details profile
       const header = {
@@ -73,14 +80,15 @@ export default function SignUpForm() {
       }
       const data = {
         data: {
-          user_id: response.data.user.id,
           client_role: 'client',
           gender: cbFemale ? 'female' : 'male',
-          newsletter: newsletter
+          newsletter: newsletter,
+          stripe_customer_id: stripeCustomer.data.id,
+          user_id: response.data.user.id
         }
       }
 
-      await axios.post(USER_DETAILS, data, header)
+      await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_APIURL}${USER_DETAILS}`, data, header)
         .catch(err => console.log(err))
 
       if (response.status === 200) {

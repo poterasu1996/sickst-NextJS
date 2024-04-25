@@ -1,11 +1,16 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Check, Slash } from "react-feather";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { AppUtils } from "../../shared/utils/app.utils";
 import image1 from '../../public/img/mystery.jpg';
 import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
 import { IGETSubscriptionOrder, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
+import stripeService from "../../shared/services/stripeService";
+import { toast } from "react-toastify";
+import userService from "../../shared/services/userService";
+import AuthContext from "../../store/auth-context";
+import { useRouter } from "next/router";
 
 type Props = {
     userInfo: ILocalUserInfo,
@@ -13,13 +18,19 @@ type Props = {
 }
 const SubscriptionCardDetails = ({ userInfo, userSubscription }: Props) => {
     const [showCancelPlan, setCancelPlan] = useState<boolean>(false);
+    const router = useRouter();
+    const currentPath = router.pathname;
     let activeSubscription: IGETSubscriptionOrder | undefined = undefined;
+    let subscriptionID: string | undefined = undefined;
+    let nextBillingDate = null;
+    const authManager = useContext(AuthContext);
+
     if(userSubscription) {
         activeSubscription = userSubscription
             .reverse().find((subs: IGETSubscriptionOrder) => subs.attributes.subscription_status === SubscriptionStatusEnum.ACTIVE);
+        subscriptionID = activeSubscription?.attributes.strapi_subscription_id;
     }
 
-    let nextBillingDate = null;
     if(activeSubscription?.attributes.last_payment_date) {
         const nextBillingMonth = AppUtils.getNextBillingDate(activeSubscription.attributes.last_payment_date);
         nextBillingDate = AppUtils.isoToFormat(nextBillingMonth);
@@ -31,9 +42,26 @@ const SubscriptionCardDetails = ({ userInfo, userSubscription }: Props) => {
         setCancelPlan(!showCancelPlan);
     }
 
-    const handleCancelSubscription = () => {
-        // aici trebuie facuta un POST catre cancelled_subscription, cu id-ul sesiunii
-        // si va trebui ca manual sa fac cancel
+    const handleCancelSubscription = async () => {
+        if(subscriptionID) {
+            try {
+                const header = authManager.header;
+                await stripeService.cancelSubscription(subscriptionID);
+
+                const uDetailsID = await userService.getUserDetailsID(header);
+                await userService.updateUserSubscription(header, uDetailsID);
+                window.location.replace(currentPath);
+                toast("Te-ai dezabonat cu succes", {
+                    autoClose: 2000,
+                });
+            } catch (error) {
+                console.log(error)
+                toast("Oops, a intervenit o eroare, te rugam sa incerci mai tarziu", {
+                    autoClose: 2000,
+                });
+            }
+        }
+        handleCloseModal();
     }
 
     return(<>
@@ -138,10 +166,6 @@ const SubscriptionCardDetails = ({ userInfo, userSubscription }: Props) => {
                         <div className="button-wrapper">
                             <button className="button-second" onClick={handleCloseModal}>Cancel</button>
                             <button className="button-primary" onClick={handleCancelSubscription}>Dezabonare</button>
-                            {/* de trecut linkul in .env */}
-                            {/* <Link href={'https://billing.stripe.com/p/login/test_eVa5kJ5yo4S82nC288'} >
-                                <a className="button-primary">Dezabonare</a>
-                            </Link> */}
                         </div>
                     </div>
                 </div>

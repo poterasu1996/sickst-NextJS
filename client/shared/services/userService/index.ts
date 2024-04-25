@@ -4,7 +4,6 @@ import { IGETUserDetails } from "../../../models/UserDetails.model";
 import { USER_DETAILS, USER_ME } from "../../utils/constants";
 
 class UserService {
-
   async getUserId(header: any) {
     // user id
     const userData: IUserModel = await axios
@@ -15,7 +14,7 @@ class UserService {
 
   async getUserDetailsID(header: any) {
     // user profile-details id
-    const uID = await this.getUserId(header)
+    const uID = await this.getUserId(header);
 
     const uDetails: IGETUserDetails = await axios
       .get(`${USER_DETAILS}?filters[user_id][$eq]=${uID}`, header)
@@ -26,17 +25,28 @@ class UserService {
   async updateUserSubscription(
     header: any,
     userDetailsID: number | string,
-    subscriptionName: string
+    subscriptionName?: string | null
   ) {
     const data = {
-      subscribed: true,
+      subscribed: subscriptionName ? true : false,
       subscription_name: subscriptionName,
     };
     await axios
-      .put(`${USER_DETAILS}/${userDetailsID}`, {data: {...data}}, header)
+      .put(`${USER_DETAILS}/${userDetailsID}`, { data: { ...data } }, header)
       .then((resp) => true)
-      .catch(error => false);
+      .catch((error) => false);
   }
+
+  // async cancelUserSubscription(header: any, userDetailsID: number | string) {
+  //   const data = {
+  //     subscribed: false,
+  //     subscription_name: null,
+  //   };
+  //   await axios
+  //     .put(`${USER_DETAILS}/${userDetailsID}`, { data: { ...data } }, header)
+  //     .then((resp) => true)
+  //     .catch((error) => false);
+  // }
 }
 
 export default new UserService();

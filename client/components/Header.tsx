@@ -11,27 +11,27 @@ import AccountMobileSideModal from "./global/AccountMobileSideModal";
 import AccountContext from "../store/account-context";
 import logo from "../public/logo.svg";
 
-// @ts-ignore
-import Cookies from 'js-cookie';
-import { removeToken } from "../shared/utils/auth.utils";
+import axios from "axios";
+
+const LOGOUT_URL = 'http://localhost:3000/api/v1/logout';
 
 const Header = () => {
   const [accountMobileModal, setAccountMobileModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const authManager = useContext(AuthContext);
+  // const authManager = useContext(AuthContext);
+  const { isAuth, setIsAuth} = useContext(AuthContext);
   const cartManager = useContext(CartContext);
   const accountManager = useContext(AccountContext);
   const router = useRouter();
 
   if (CartService.cart) CartService.getCartLength();
 
-  function logOut() {
-    setTimeout(() => {
-      Cookies.remove("jwt");
-      removeToken();
-      authManager?.setAuth(null);
-      router.push("/");
-    }, 700);
+  async function logOut() {
+    const response = await axios.post(LOGOUT_URL);
+
+    if(response.status === 200) {
+      setIsAuth(false);
+    }
   }
 
   function addBodyhiddenOverflow() {
@@ -77,7 +77,7 @@ const Header = () => {
         </ul>
 
         <div className="right-side">
-          {authManager?.auth ? (
+          {isAuth ? (
             <>
               <Dropdown className="header-dropdown">
                 <Dropdown.Toggle id="user-account-dd">
@@ -139,7 +139,7 @@ const Header = () => {
           )}
 
           <Button variant="menu" onClick={() => setShowModal(true)}>
-            {authManager?.auth ? (
+            {isAuth ? (
               <div className="shopping-cart">
                 <ShoppingCart />{" "}
                 <span className="badge">{CartService.cartLength}</span>
