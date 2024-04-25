@@ -71,9 +71,9 @@ interface Props {
 export const AccountProvider = ({ children }: Props): JSX.Element => {
   const USERS_ME_API = `${process.env.NEXT_PUBLIC_CLIENT_API}${USER_ME}`;
   const USER_DETAILS_API = `${process.env.NEXT_PUBLIC_CLIENT_API}${USER_PROFILE_DETAILS}`;
+  const SHIPPING_INFO_URL = "/shipping-informations";
 
   const USERS = "/api/users";
-  const SHIPPING_INFO = "/shipping-informations";
   const SUBSCRIPTION_ORDER = "/subscription-orders";
   const PRODUCT_REVIEW = "/product-reviews";
   const CANCELLED_ORDERS = "/cancelled-orders";
@@ -208,12 +208,13 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     }
   }
 
+  // must refactor
   async function fetchShippingList() {
     // get current user shipping list
     if (!header) return;
     try {
       const response = await axios.get(
-        `${SHIPPING_INFO}?filters[user_id][$eq]=${currentUser!.id}`,
+        `${SHIPPING_INFO_URL}?filters[user_id][$eq]=${currentUser!.id}`,
         header
       );
       return response.data.data[0];
@@ -231,7 +232,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     if (!header) return;
     try {
       await axios
-        .put(`${SHIPPING_INFO}/${siIndex}`, siNewData, header)
+        .put(`${SHIPPING_INFO_URL}/${siIndex}`, siNewData, header)
         .then(() => {
           notify("Adresa a fost modificata cu succes!", true);
           setRefresh(refresh + 1);
@@ -544,7 +545,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
           };
         }
         axios
-          .put(`${SHIPPING_INFO}/${listId}`, newList, header)
+          .put(`${SHIPPING_INFO_URL}/${listId}`, newList, header)
           .then(() => {
             notify("An address has been changed successfully!", true);
             setRefresh(refresh + 1);
@@ -566,7 +567,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
           },
         };
         return axios
-          .post(SHIPPING_INFO, newList, header)
+          .post(SHIPPING_INFO_URL, newList, header)
           .then((resp) => {
             console.log(resp);
             notify("An address has been changed successfully!", true);

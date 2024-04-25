@@ -11,46 +11,44 @@ import { CategoryEnums } from "../../shared/enums/category.enum";
 import { useQuery } from "@tanstack/react-query";
 
 const ProductSection = () => {
-  const [maleTab, setMaleTab] = useState<boolean>(true);
-  const [nrOfItems, setNrOfItems] = useState<number>(3);
-  const [productList, setProductList] = useState<IProduct[]>([]);
+  const [maleTab, setMaleTab] = useState(true);
+  const [fetchedProd, setFetchedProd] = useState<IProduct[]>([]);
+  const [paginationList, setPaginationList] = useState<IProduct[]>([]);
+
+  const [page, setPage] = useState(1);
+  const [showMore, setShowMore] = useState(false)
 
   const { data } = useQuery({
-    queryKey: ["products"],
-    queryFn: productService.getAllProducts,
+    queryKey: ["products", page, maleTab],
+    queryFn: () => maleTab ? productService.getMaleProducts(page) : productService.getFemaleProducts(page),
   });
 
   useEffect(() => {
-    data && setProductList([...data]);
+    if(data) {
+      setFetchedProd([...data.data])
+
+      if(data.meta.pagination.page === 1) setPaginationList([...data.data])
+      if(data.meta.pagination.page < data.meta.pagination.pageCount) {
+        setShowMore(true);
+      } else {
+        setShowMore(false)
+      }
+    }
   }, [data]);
 
-  const showMore = () => {
-    if (nrOfItems <= productList.length) {
-      setNrOfItems(nrOfItems + 3);
-    } else {
-      setNrOfItems(productList.length);
-    }
+  useEffect(() => {
+    setPage(1);
+  }, [maleTab])
+
+  const handleShowMore = () => {
+    setPage(preVal => preVal + 1)
   };
 
   const itemsToShow = useMemo(() => {
-    if (maleTab) {
-      return productList
-        .filter(
-          (product: any) =>
-            product.attributes.categories.data[0].attributes.name ===
-            CategoryEnums.MALE
-        )
-        .map((product, i) => <Product key={i} product={product} />);
-    } else {
-      return productList
-        .filter(
-          (product: any) =>
-            product.attributes.categories.data[0].attributes.name ===
-            CategoryEnums.FEMALE
-        )
-        .map((product, i) => <Product key={i} product={product} />);
-    }
-  }, [productList, maleTab]);
+    const showItems = data?.meta.pagination.page === 1 ? [...paginationList] : [...paginationList, ...fetchedProd]
+    return showItems
+      .map((product, i) => <Product key={i} product={product} />);
+  }, [fetchedProd]);
 
   return (
     <div className="products-section">
@@ -68,7 +66,7 @@ const ProductSection = () => {
             <div className="products">
               <div className="row">
                 {itemsToShow.length > 0 ? (
-                  itemsToShow.slice(0, nrOfItems)
+                  itemsToShow
                 ) : (
                   <div className="d-flex justify-content-center main-spinner">
                     <Spinner animation="grow" style={{ color: "#cc3633" }} />
@@ -81,7 +79,7 @@ const ProductSection = () => {
             <div className="products">
               <div className="row">
                 {itemsToShow.length > 0 ? (
-                  itemsToShow.slice(0, nrOfItems)
+                  itemsToShow
                 ) : (
                   <div className="d-flex justify-content-center main-spinner">
                     <Spinner animation="grow" style={{ color: "#cc3633" }} />
@@ -93,8 +91,8 @@ const ProductSection = () => {
         </TabView>
 
         <div className="more-prod">
-          {nrOfItems < itemsToShow.length && (
-            <Button className="button-second-empty" onClick={showMore}>
+          {showMore && (
+            <Button className="button-second-empty" onClick={handleShowMore}>
               Vezi mai multe produse
             </Button>
           )}
