@@ -7,7 +7,6 @@ import "primereact/resources/primereact.css";
 
 import IProduct from "../../types/Product.interface";
 import productService from "../../shared/services/productService";
-import { CategoryEnums } from "../../shared/enums/category.enum";
 import { useQuery } from "@tanstack/react-query";
 
 const ProductSection = () => {
