@@ -22,7 +22,7 @@ type Props = {
 
 const ProductCardReview = ({ product, reviewList, productRating }: Props) => {
     const [reviewModal, setReviewModal] = useState<boolean>(false);
-    const authManager = useContext(AuthContext);
+    const { isAuth } = useContext(AuthContext);
     const router = useRouter();
 
     function starsProcentage(total: number, sliceNr: number) {
@@ -30,7 +30,7 @@ const ProductCardReview = ({ product, reviewList, productRating }: Props) => {
     }
 
     function handleShowReviewModal() {
-        if(!authManager.auth) {
+        if(!isAuth) {
             router.push('/account/login')
         } else {
             setReviewModal(!reviewModal);

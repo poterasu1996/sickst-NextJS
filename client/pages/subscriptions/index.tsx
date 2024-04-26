@@ -44,7 +44,7 @@ const Subscriptions = ({
   user,
   subscriptionHistory,
 }: Props) => {
-  const authManager = useContext(AuthContext);
+  const { isAuth } = useContext(AuthContext);
 
   async function getSubscriptionPrice(subsType: SubscriptionEnums) {
     const subscriptionPrice: GETSubscription | undefined =

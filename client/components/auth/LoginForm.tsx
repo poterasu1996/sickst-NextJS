@@ -23,7 +23,7 @@ const logInSchema = z.object({
 type TLogInSchema = z.infer<typeof logInSchema>;
 
 export default function LogInForm() {
-  const { setIsAuth } = useContext(AuthContext);
+  const { setIsAuth, setToken } = useContext(AuthContext);
   const [error, setError] = useState("");
   const router = useRouter();
 
@@ -50,11 +50,13 @@ export default function LogInForm() {
 
       if (response.status === 200) {
         setIsAuth(true);
+        setToken(response.data.token);
         router.push("/");
 
         const expireAuth = 3000 * 60 * 60;
         setTimeout(() => {
           setIsAuth(false);
+          setToken(undefined);
           router.push("/account/login");
         }, expireAuth);
       }

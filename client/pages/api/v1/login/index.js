@@ -30,7 +30,7 @@ export default async function handler(req, res) {
                     path: '/' 
                 }));
 
-                res.status(200).json({statusCode: 200, message: "Authentication successful"})
+                res.status(200).json({statusCode: 200, message: "Authentication successful", token: data.jwt})
             } else {
                 res.status(data.statusCode).json({message: data.message[0].messages[0].message})
             }

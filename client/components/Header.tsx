@@ -18,15 +18,14 @@ const LOGOUT_URL = 'http://localhost:3000/api/v1/logout';
 const Header = () => {
   const [accountMobileModal, setAccountMobileModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  // const authManager = useContext(AuthContext);
-  const { isAuth, setIsAuth} = useContext(AuthContext);
+  const { isAuth, setIsAuth } = useContext(AuthContext);
   const cartManager = useContext(CartContext);
   const accountManager = useContext(AccountContext);
   const router = useRouter();
 
   if (CartService.cart) CartService.getCartLength();
 
-  async function logOut() {
+  async function handleLogOut() {
     const response = await axios.post(LOGOUT_URL);
 
     if(response.status === 200) {
@@ -123,7 +122,7 @@ const Header = () => {
                   >
                     Personal details
                   </Dropdown.Item>
-                  <Dropdown.Item as="button" onClick={() => logOut()}>
+                  <Dropdown.Item as="button" onClick={() => handleLogOut()}>
                     Log out
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -137,15 +136,12 @@ const Header = () => {
               <a>Log in</a>
             </Link>
           )}
-
+          
           <Button variant="menu" onClick={() => setShowModal(true)}>
             {isAuth ? (
               <div className="shopping-cart">
                 <ShoppingCart />{" "}
                 <span className="badge">{CartService.cartLength}</span>
-                {/* {CartService?.cart && (
-                  <span className="badge">{CartService.cartLength}</span>
-                )} */}
               </div>
             ) : (
               <Menu />

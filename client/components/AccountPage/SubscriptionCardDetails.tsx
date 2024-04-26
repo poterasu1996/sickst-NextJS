@@ -23,7 +23,7 @@ const SubscriptionCardDetails = ({ userInfo, userSubscription }: Props) => {
     let activeSubscription: IGETSubscriptionOrder | undefined = undefined;
     let subscriptionID: string | undefined = undefined;
     let nextBillingDate = null;
-    const authManager = useContext(AuthContext);
+    const { token } = useContext(AuthContext);
 
     if(userSubscription) {
         activeSubscription = userSubscription
@@ -45,7 +45,12 @@ const SubscriptionCardDetails = ({ userInfo, userSubscription }: Props) => {
     const handleCancelSubscription = async () => {
         if(subscriptionID) {
             try {
-                const header = authManager.header;
+                const header = {
+                    headers: {
+                        "Content-Type": "application/json",
+                        authorization: `Bearer ${token}`,
+                    }
+                } 
                 await stripeService.cancelSubscription(subscriptionID);
 
                 const uDetailsID = await userService.getUserDetailsID(header);
