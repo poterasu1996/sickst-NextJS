@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const USER_ME_URL = `${process.env.NEXT_PUBLIC_BASEURL}${process.env.NEXT_PUBLIC_API_V1}/users/me`;
+const USER_ME_URL = `${process.env.NEXT_PUBLIC_STRAPI_APIURL}/users/me`;
 
 export default async function handler(req: any, res: any) {
   const jwt = req.cookies.jwt;

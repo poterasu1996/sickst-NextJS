@@ -15,7 +15,7 @@ import {
 import { IGETOrderHistory } from "../models/OrderHistory.model";
 import { IGETSubscriptionOrder } from "../models/SubscriptionOrder.model";
 import axios, { AxiosError } from "axios";
-import { USER_PROFILE_DETAILS, USER_ME } from "../shared/utils/constants";
+import { USER_PROFILE_DETAILS, USER_ME, API_V } from "../shared/utils/constants";
 import { AppUtils } from "../shared/utils/app.utils";
 
 // @ts-ignore
@@ -70,8 +70,8 @@ interface Props {
 }
 
 export const AccountProvider = ({ children }: Props): JSX.Element => {
-  const USERS_ME_API = `${process.env.NEXT_PUBLIC_BASEURL}${process.env.NEXT_PUBLIC_API_V1}${USER_ME}`;
-  const USER_DETAILS_API = `${process.env.NEXT_PUBLIC_BASEURL}${process.env.NEXT_PUBLIC_API_V1}${USER_PROFILE_DETAILS}`;
+  const USERS_ME_API = `${process.env.NEXT_PUBLIC_BASEURL}${API_V}${USER_ME}`;
+  const USER_DETAILS_API = `${process.env.NEXT_PUBLIC_BASEURL}${API_V}${USER_PROFILE_DETAILS}`;
   const SHIPPING_INFO_URL = "/shipping-informations";
 
   const USERS = "/api/users";
