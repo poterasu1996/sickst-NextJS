@@ -1,7 +1,28 @@
 // @ts-ignore
 import { DateTime } from "luxon";
+import { toast } from "react-toastify";
+
+const toastMsg = (msg: string, status: boolean) => {
+    return (
+      <>
+        <div className="toast-item">
+          <div className="content">
+            <div className="title">{status ? "Success" : "ERROR"}</div>
+            <div className="message">{msg}</div>
+          </div>
+        </div>
+      </>
+    );
+};
 
 export class AppUtils {
+    static toastNotification(message: string, status: boolean) {
+        // status: true-success false-error
+        toast(toastMsg(message, status), {
+          autoClose: 2000,
+        });
+      }
+
     static isoToFormat(date: string) {
         const newDate = DateTime.fromISO(date);
         return newDate.toFormat('dd LLL yyyy');

@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-// import axios from "../api/axios";
-import { toast } from "react-toastify";
 import AuthContext from "./auth-context";
 import IHeader from "../types/RequestHeaderInterface";
 import { AccountStateEnums } from "../shared/enums/accountPageState.enum";
@@ -16,8 +14,9 @@ import {
 } from "../models/ShippingInformation.model";
 import { IGETOrderHistory } from "../models/OrderHistory.model";
 import { IGETSubscriptionOrder } from "../models/SubscriptionOrder.model";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { USER_PROFILE_DETAILS, USER_ME } from "../shared/utils/constants";
+import { AppUtils } from "../shared/utils/app.utils";
 
 // @ts-ignore
 import Cookies from 'js-cookie';
@@ -154,25 +153,6 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     }
   }, [isAuth])
 
-  const toastMsg = (msg: string, status: boolean) => {
-    return (
-      <>
-        <div className="toast-item">
-          <div className="content">
-            <div className="title">{status ? "Success" : "ERROR"}</div>
-            <div className="message">{msg}</div>
-          </div>
-        </div>
-      </>
-    );
-  };
-
-  function notify(message: string, status: boolean) {
-    toast(toastMsg(message, status), {
-      autoClose: 2000,
-    });
-  }
-
   async function activateSubscription(userId: number) {
     if (!header) return;
     await axios
@@ -206,8 +186,10 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
       );
       setRefresh(refresh + 1);
       return filteredList;
-    } catch (error) {
-      notify("OOPS! An error occured retrieving order history list!", false);
+    } catch (error: any) {
+      if(error.response.status !== 404) {
+        AppUtils.toastNotification("OOPS! An error occured retrieving order history list!", false);
+      }
     }
   }
 
@@ -221,9 +203,11 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
         header
       );
       return response.data.data[0];
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      notify("OOPS! An error occured retrieving shipping list!", false);
+      if(error.response.status !== 404) {
+        AppUtils.toastNotification("OOPS! An error occured retrieving shipping list!", false);
+      }
     }
   }
 
@@ -237,12 +221,12 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
       await axios
         .put(`${SHIPPING_INFO_URL}/${siIndex}`, siNewData, header)
         .then(() => {
-          notify("Adresa a fost modificata cu succes!", true);
+          AppUtils.toastNotification("Adresa a fost modificata cu succes!", true);
           setRefresh(refresh + 1);
         });
     } catch (error) {
       console.log(error);
-      notify("OOPS! An error occured while deleting the address!", false);
+      AppUtils.toastNotification("OOPS! An error occured while deleting the address!", false);
     }
   }
 
@@ -266,11 +250,11 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     try {
       await axios.post(CANCELLED_ORDERS, cancelledOrderData, header);
       await axios.put(`${ORDER_HISTORIES}/${orderId}`, cancelData, header);
-      notify("Comanda a fost anulata cu succes!", true);
+      AppUtils.toastNotification("Comanda a fost anulata cu succes!", true);
       setRefresh(refresh + 1);
     } catch (error) {
       console.log(error);
-      notify("OOPS! An error occured while canceling the order!", false);
+      AppUtils.toastNotification("OOPS! An error occured while canceling the order!", false);
     }
   }
 
@@ -304,12 +288,12 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
               cancelData,
               header
             );
-            notify("Te-ai dezabonat cu succes!", true);
+            AppUtils.toastNotification("Te-ai dezabonat cu succes!", true);
             setRefresh(refresh + 1);
           });
       } catch (error) {
         console.log(error);
-        notify(
+        AppUtils.toastNotification(
           "OOPS! An error occured while canceling the subscription!",
           false
         );
@@ -322,12 +306,12 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     return await axios
       .post(PRODUCT_REVIEW, prodReview, header)
       .then(() => {
-        notify("A review has been added successfully!", true);
+        AppUtils.toastNotification("A review has been added successfully!", true);
         setRefresh(refresh + 1);
       })
       .catch((error) => {
         console.log(error);
-        notify("OOPS! An error occured adding the review!", false);
+        AppUtils.toastNotification("OOPS! An error occured adding the review!", false);
       });
   }
 
@@ -389,7 +373,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
         .then(() => setRefresh(refresh + 1));
     } catch (error) {
       console.log(error);
-      notify("OOPS! An error occured while updating reviews!", false);
+      AppUtils.toastNotification("OOPS! An error occured while updating reviews!", false);
     }
   }
 
@@ -451,7 +435,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
         .then(() => setRefresh(refresh + 1));
     } catch (error) {
       console.log(error);
-      notify("OOPS! An error occured while updating reviews!", false);
+      AppUtils.toastNotification("OOPS! An error occured while updating reviews!", false);
     }
   }
 
@@ -468,7 +452,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
         .then(() => setRefresh(refresh + 1));
     } catch (error) {
       console.log(error);
-      notify("OOPS! An error occured while updating reviews!", false);
+      AppUtils.toastNotification("OOPS! An error occured while updating reviews!", false);
     }
   }
 
@@ -492,11 +476,11 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     try {
       await axios.put(`${USER_PROFILE_DETAILS}/${piID}`, newData, header).then(() => {
         setRefresh(refresh + 1);
-        notify("Datele personale au fost actualizate cu success!", true);
+        AppUtils.toastNotification("Datele personale au fost actualizate cu success!", true);
       });
     } catch (error) {
       console.log(error);
-      notify("OOPS! An error occured while updating personal info!", false);
+      AppUtils.toastNotification("OOPS! An error occured while updating personal info!", false);
     }
   }
 
@@ -550,12 +534,12 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
         axios
           .put(`${SHIPPING_INFO_URL}/${listId}`, newList, header)
           .then(() => {
-            notify("An address has been changed successfully!", true);
+            AppUtils.toastNotification("An address has been changed successfully!", true);
             setRefresh(refresh + 1);
           })
           .catch((error) => {
             console.log(error);
-            notify("OOPS! An error occured while updating the list!", false);
+            AppUtils.toastNotification("OOPS! An error occured while updating the list!", false);
           });
       } else {
         // if user has no data, POST
@@ -573,12 +557,12 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
           .post(SHIPPING_INFO_URL, newList, header)
           .then((resp) => {
             console.log(resp);
-            notify("An address has been changed successfully!", true);
+            AppUtils.toastNotification("An address has been changed successfully!", true);
             setRefresh(refresh + 1);
           })
           .catch((error) => {
             console.log(error);
-            notify("OOPS! An error occured adding the address!", false);
+            AppUtils.toastNotification("OOPS! An error occured adding the address!", false);
           });
       }
     });

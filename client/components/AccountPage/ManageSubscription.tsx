@@ -34,6 +34,7 @@ import { pickersLayoutClasses } from "@mui/x-date-pickers/PickersLayout";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers/PickersDay";
 import { DateCalendar } from "@mui/x-date-pickers";
 import DndCard from "./DndCard";
+import { AppUtils } from "../../shared/utils/app.utils";
 
 type Props = {
   userInfo: ILocalUserInfo;
@@ -64,7 +65,7 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
     slidesToScroll: 1,
   };
 
-  const { isAuth } = useContext(AuthContext);
+  const { isAuth, token } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
   const [updated, setUpdated] = useState<boolean>(false);
@@ -105,12 +106,9 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
         setDBSubsOrder([]);
       }
     } catch (error) {
+      AppUtils.toastNotification("OOPS! An error occured retrieving subscription orders!", false);
       console.log(error);
     }
-  }
-
-  function notify(message: string) {
-    toast(message, { autoClose: 2000 });
   }
 
   function handleOnDragEnd(result: any) {
@@ -188,11 +186,11 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
             .then(() => {
               setLoadingButton(true);
               setUpdated(false);
-              notify("Lista a fost actualizata cu success!");
+              AppUtils.toastNotification("Lista a fost actualizata cu success!", true);
             });
         } catch (error) {
           console.log("nu s epuede", error);
-          notify("ERROR! Actiunea nu a putut fi finalizata!");
+          AppUtils.toastNotification("ERROR! Actiunea nu a putut fi finalizata!", false);
         }
         // remove sub items from cart
         CartService.storageList && CartService.removeLSSubscriptioProducts();
@@ -269,14 +267,14 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
   }
 
   useEffect(() => {
-    if (isAuth) {
+    if (token) {
       setHeader({
         headers: {
-          Authorization: `Bearer ${isAuth}`,
+          Authorization: `Bearer ${token}`,
         },
       });
     }
-  }, [isAuth]);
+  }, [token]);
 
   useEffect(() => {
     cartSubsOrder.length > 0 && setUpdated(true);
