@@ -35,7 +35,7 @@ const ProductReviewsSection = ({ product, productRating }: Props) => {
     const [likedReviews, setLikedReviews] = useState<number[]>([]);
     const [dislikedReviews, setDislikedReviews] = useState<number[]>([]);
     const accountManager = useContext(AccountContext);
-    const authManager = useContext(AuthContext);
+    const { isAuth } = useContext(AuthContext);
     const router = useRouter();
     const scrollX = window.scrollX;
     const scrollY = window.scrollY;
@@ -66,10 +66,8 @@ const ProductReviewsSection = ({ product, productRating }: Props) => {
         window.scrollTo(scrollX, scrollY);
     });
 
-    // console.log("auth" , authManager.auth)
     useEffect(() => {
         let queryUrl = `/product-reviews?populate=*&sort[0]=createdAt#3A${dateValue}`
-        // let queryUrl = `/product-reviews?populate=*&filters[product_id][$eq]=${product.id}&sort[0]=createdAt#3A${dateValue}`
         if (selectedStarValue > 0) {
             queryUrl = queryUrl + `&filters[rating][$eq]=${selectedStarValue}`
         }
@@ -84,7 +82,6 @@ const ProductReviewsSection = ({ product, productRating }: Props) => {
     useEffect(() => {
         let _likedReviews: number[] = [];
         let _dislikedReviews: number[] = [];
-        console.log('USER ID',accountManager?.userDetails?.id)
         reviews?.data.map((rev: IGETProductReview) => {
             if(rev.attributes.users_liked && rev.attributes.users_liked.find(uID => uID === accountManager?.userDetails?.id)) {
                 _likedReviews.push(rev.id);
@@ -99,7 +96,7 @@ const ProductReviewsSection = ({ product, productRating }: Props) => {
     }, [reviews, accountManager?.refresh])
 
     function handleLikeReviews(review: IGETProductReview) {
-        if(!authManager.auth) {
+        if(!isAuth) {
             router.push('/account/login');
             return
         }
@@ -114,7 +111,7 @@ const ProductReviewsSection = ({ product, productRating }: Props) => {
     }
 
     function handleDislikeReviews(review: IGETProductReview) {
-        if(!authManager.auth) {
+        if(!isAuth) {
             router.push('/account/login');
             return
         }

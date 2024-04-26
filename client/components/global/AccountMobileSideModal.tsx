@@ -6,25 +6,28 @@ import Transition from "react-transition-group/Transition";
 import AccountContext from "../../store/account-context";
 import AuthContext from "../../store/auth-context";
 
-// @ts-ignore
-import Cookies from 'js-cookie';
+import axios from "axios";
 
 type Props = {
     show: boolean,
     onClick: () => void
 }
 
+const LOGOUT_URL = 'http://localhost:3000/api/v1/logout';
+
 const AccountMobileSideModal = ({show, onClick}: Props) => {
-    const authManager = useContext(AuthContext);
+    const { isAuth, setIsAuth } = useContext(AuthContext);
     const accountManager = useContext(AccountContext);
     const router = useRouter();
 
-    function logOut() {
-        setTimeout(() => {
-            Cookies.remove("jwt");
-            authManager!.setAuth(null);
+    async function handleLogOut() {
+        const response = await axios.post(LOGOUT_URL);
+
+        if(response.status === 200) {
+            setIsAuth(false);
             router.push('/');
-        }, 700);
+            onClick();
+        }
     }
 
     return (
@@ -45,7 +48,7 @@ const AccountMobileSideModal = ({show, onClick}: Props) => {
             >
                 {state => (
                     <div 
-                        className={`side-modal ${authManager!.auth && 'cart'}`}
+                        className={`side-modal ${isAuth && 'cart'}`}
                         id="mobile-nav"
                         style={{
                             transform: state === 'entered'
@@ -68,7 +71,7 @@ const AccountMobileSideModal = ({show, onClick}: Props) => {
                                     <a onClick={onClick}>Pentru ea</a>
                                 </Link>
 
-                                {authManager!.auth && <>
+                                {isAuth && <>
                                     <div className="mid-title mt-5">Your membership</div>
                                     <Link href='/account'>
                                         <a onClick={() => {
@@ -98,7 +101,7 @@ const AccountMobileSideModal = ({show, onClick}: Props) => {
                                 </>}
 
                             </div>
-                            {authManager!.auth && <Button className="button-second log-out" onClick={() => logOut()}>Log out</Button>}
+                            {isAuth && <Button className="button-second log-out" onClick={() => handleLogOut()}>Log out</Button>}
                         </div>
                     </div>
                 )}

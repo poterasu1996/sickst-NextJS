@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 // import axios from "../api/axios";
 import { toast } from "react-toastify";
 import AuthContext from "./auth-context";
-
 import IHeader from "../types/RequestHeaderInterface";
 import { AccountStateEnums } from "../shared/enums/accountPageState.enum";
 import { IUserModel } from "../models/User.model";
@@ -19,6 +18,9 @@ import { IGETOrderHistory } from "../models/OrderHistory.model";
 import { IGETSubscriptionOrder } from "../models/SubscriptionOrder.model";
 import axios from "axios";
 import { USER_PROFILE_DETAILS, USER_ME } from "../shared/utils/constants";
+
+// @ts-ignore
+import Cookies from 'js-cookie';
 
 interface IAccountContext {
   accountState: string;
@@ -80,10 +82,10 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
   const CANCELLED_SUBSCRIPTIONS = "/cancelled-subscriptions";
   const ORDER_HISTORIES = "/order-histories";
   const { isAuth } = useContext(AuthContext);
-  const [accountState, setAccountState] = useState<string>("subscription");
+  const [accountState, setAccountState] = useState("subscription");
   const [currentUser, setCurrentUser] = useState<IUserModel | null>(null);
   const [userDetails, setUserDetails] = useState<IGETUserDetails | null>(null);
-  const [refresh, setRefresh] = useState<number>(0); // inform other components that context has been changed
+  const [refresh, setRefresh] = useState(0); // inform other components that context has been changed
 
   // will be removed
   const [header, setHeader] = useState<IHeader | null>(null);
@@ -98,17 +100,18 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
   //     'resetPassword'
   // ];
 
-  // useEffect(() => {
-  //   if (authManager!.auth) {
-  //     const head = {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         authorization: `Bearer ${authManager?.auth}`,
-  //       },
-  //     };
-  //     setHeader(head);
-  //   }
-  // }, [authManager!.auth]);
+  useEffect(() => {
+    if (isAuth) {
+      const jwt = Cookies.get('jwt');
+      const head = {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${jwt}`,
+        },
+      };
+      setHeader(head);
+    }
+  }, [isAuth]);
 
   // useEffect(() => {
   //   if (header) {

@@ -5,7 +5,7 @@ import bannerImg from "../../public/img/fougere-fragrance-family-Clive-Christian
 import AuthContext from "../../store/auth-context";
 
 const Banner = () => {
-    const authManager = useContext(AuthContext);
+    const { isAuth } = useContext(AuthContext);
 
     return <div className="banner">
         <div className="container">
@@ -13,7 +13,7 @@ const Banner = () => {
                 <div className="col-12 col-md-6 left-side">
                     <span className="title">Beneficiaza de 10% discount in prima luna!</span>
                     <span className="subtitle mt-5">Acum ai ocazia de a construi colectia de parfumuri mult dorita mult mai usor decat ai crede. De ce sa te limitezi la un parfum, cand poti avea 6?</span>
-                    {authManager.auth
+                    {isAuth
                         ? <Button href="/subscriptions" className="button-primary big mt-5">Abonamente</Button>
                         : <Button href="/auth/register" className="button-primary big mt-5">Autentificare</Button>
                     }

@@ -7,9 +7,11 @@ const CHECK_AUTH_URL = `${process.env.NEXT_PUBLIC_BASEURL}${process.env.NEXT_PUB
 interface IAuthContext {
     isAuth: boolean,
     setIsAuth: Dispatch<SetStateAction<boolean>>,
+    setToken: Dispatch<SetStateAction<string | undefined>>,
+    token: string | undefined
 }
 
-const AuthContext =  React.createContext<IAuthContext>({isAuth: false, setIsAuth: () => null});
+const AuthContext =  React.createContext<IAuthContext>({isAuth: false, setIsAuth: () => null, setToken: () => null, token: undefined});
 
 type Props = {
     children: JSX.Element
@@ -17,12 +19,14 @@ type Props = {
 
 export const AuthProvider = ({ children }: Props): JSX.Element => {
     const [isAuth, setIsAuth] = useState(false);
+    const [token, setToken] = useState<string | undefined>(undefined);
 
     const isAuthenticated = async () => {
         try {
             const res = await axios.get(CHECK_AUTH_URL);
             if(res.status === 200) {
                 setIsAuth(true);
+                setToken(res.data.token);
             } else {
                 setIsAuth(false)
             }
@@ -38,6 +42,8 @@ export const AuthProvider = ({ children }: Props): JSX.Element => {
     const authManager: IAuthContext = {
         isAuth,
         setIsAuth,
+        setToken,
+        token
     }
     return (
         <AuthContext.Provider value={authManager}>

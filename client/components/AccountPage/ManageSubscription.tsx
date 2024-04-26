@@ -64,7 +64,7 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
     slidesToScroll: 1,
   };
 
-  const authManager = useContext(AuthContext);
+  const { isAuth } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingButton, setLoadingButton] = useState<boolean>(false);
   const [updated, setUpdated] = useState<boolean>(false);
@@ -269,14 +269,14 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
   }
 
   useEffect(() => {
-    if (authManager.auth) {
+    if (isAuth) {
       setHeader({
         headers: {
-          Authorization: `Bearer ${authManager.auth}`,
+          Authorization: `Bearer ${isAuth}`,
         },
       });
     }
-  }, [authManager.auth]);
+  }, [isAuth]);
 
   useEffect(() => {
     cartSubsOrder.length > 0 && setUpdated(true);

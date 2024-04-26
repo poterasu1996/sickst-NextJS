@@ -6,7 +6,7 @@ import AuthContext from "../../store/auth-context";
 import Cart from "./Cart";
 
 const SideModal = (props) => {
-    const { auth } = useContext(AuthContext);
+    const { isAuth } = useContext(AuthContext);
 
     return (
         <>
@@ -26,7 +26,7 @@ const SideModal = (props) => {
             >
                 {state => (
                     <div 
-                        className={`side-modal ${auth && 'cart'}`}
+                        className={`side-modal ${isAuth && 'cart'}`}
                         id="side-modal"
                         style={{
                             transform: state === 'entered'
@@ -35,7 +35,7 @@ const SideModal = (props) => {
                             transition: "all .5s ease"
                         }}
                     >   
-                        {auth 
+                        {isAuth 
                             ? <Cart onClick={props.onClick}/>
                             : <>
                                 <div className="side-modal-header">

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import PaymentContextTS from "../../store/payment-context";
 import CartService from "../../shared/services/cartService";
@@ -11,7 +11,6 @@ import { ISubscriptionOrderModel, SubscriptionStatusEnum } from "../../models/Su
 import Cookies from 'cookies';
 import AuthContext from "../../store/auth-context";
 import userService from "../../shared/services/userService";
-import axios from "axios";
 import stripeService from "../../shared/services/stripeService";
 
 
@@ -22,10 +21,15 @@ interface Props {
 const SuccessPayment = ({ populateSH }: Props) => { 
     const router = useRouter();
     const paymentManager = useContext(PaymentContextTS);
-    const authManager = useContext(AuthContext);
+    const { token } = useContext(AuthContext);
 
     async function updateUserSubscriptionInfo(subName: string) {
-        const header = authManager.header;
+        const header = {
+            headers: {
+                "Content-Type": "application/json",
+                authorization: `Bearer ${token}`,
+            }
+        } 
         const uDetailsID = await userService.getUserDetailsID(header);
         await userService.updateUserSubscription(header, uDetailsID, subName);
     }
@@ -39,7 +43,7 @@ const SuccessPayment = ({ populateSH }: Props) => {
             if(storage) {
                 sh = JSON.parse(storage);
             }
-            if(sh && authManager.header) {
+            if(sh && token) {
                 (async () => {
                     const sesId = await stripeService.getSessionDetails(sh.session_id);
                     sh.txn_status = TxnStatusEnum.SUCCESS;
@@ -53,7 +57,7 @@ const SuccessPayment = ({ populateSH }: Props) => {
                 })()
             }
         }
-    }, [authManager.header])
+    }, [token])
 
     useEffect(() => {
         // populate order-history table

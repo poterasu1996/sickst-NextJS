@@ -15,7 +15,7 @@ type Props = {
 }
 
 const ProductDetailsSection = ({ product, productRating }: Props) => {
-    const authManager = useContext(AuthContext);
+    const { isAuth } = useContext(AuthContext);
     const [subscription, setSubscription] = useState<boolean>(true);
     const router = useRouter();    
     
@@ -29,7 +29,7 @@ const ProductDetailsSection = ({ product, productRating }: Props) => {
     }
 
     function handleAddProduct() {
-        if (!authManager.auth) {
+        if (!isAuth) {
             router.push("account/login");
         }
     }

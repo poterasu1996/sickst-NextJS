@@ -23,7 +23,7 @@ interface Props {
 const Product = ({ product }: Props) => {
   const [show, setShow] = useState<boolean>(false); // for Read more modal
   const cartManager = useContext(CartContext);
-  const authManager = useContext(AuthContext);
+  const { isAuth } = useContext(AuthContext);
   const [addedToCart, setAddedToCart] = useState<boolean>(false); // show the checkmark after added to cart
   const [loading, setLoading] = useState<boolean>(false); // used for loading animation
   const [subscription, setSubscription] = useState<boolean>(true);
@@ -69,7 +69,7 @@ const Product = ({ product }: Props) => {
   function handleAddProduct() {
     let paymentType;
     // check if logged in
-    if (!authManager.auth) {
+    if (!isAuth) {
       router.push("/account/login");
     } else {
       if (subscription) {
@@ -90,7 +90,7 @@ const Product = ({ product }: Props) => {
   }
 
   const handleQueueProduct = () => {
-    if (!authManager.auth) {
+    if (!isAuth) {
       // if not logged in, route to login page
       router.push("/account/login");
       return;
