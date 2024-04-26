@@ -49,7 +49,8 @@ services:
     build:
       context: ../client
     restart: unless-stopped
-    # environment:
+    environment:
+        - NEXT_PUBLIC_API_V1=/api/v1
     #   - NEXT_PUBLIC_STRAPI_APIURL=https://sickst.ro/api
     #   - NEXT_PUBLIC_STRAPI_ROOTURL=https://sickst.ro
     #   - NEXT_PUBLIC_BASEURL=https://sickst.ro
