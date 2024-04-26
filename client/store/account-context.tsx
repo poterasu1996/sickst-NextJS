@@ -70,8 +70,8 @@ interface Props {
 }
 
 export const AccountProvider = ({ children }: Props): JSX.Element => {
-  const USERS_ME_API = `${process.env.NEXT_PUBLIC_CLIENT_API}${USER_ME}`;
-  const USER_DETAILS_API = `${process.env.NEXT_PUBLIC_CLIENT_API}${USER_PROFILE_DETAILS}`;
+  const USERS_ME_API = `${process.env.NEXT_PUBLIC_BASEURL}${process.env.NEXT_PUBLIC_API_V1}${USER_ME}`;
+  const USER_DETAILS_API = `${process.env.NEXT_PUBLIC_BASEURL}${process.env.NEXT_PUBLIC_API_V1}${USER_PROFILE_DETAILS}`;
   const SHIPPING_INFO_URL = "/shipping-informations";
 
   const USERS = "/api/users";
