@@ -3,13 +3,14 @@ import { Button, Col, Row } from "react-bootstrap";
 import CustomFormField from "../global/form/CustomFormField";
 import DateFormField from "../global/form/DateFormField";
 import countyService from "../../shared/services/countyService";
-import { Autocomplete, TextField } from "@mui/material";
 import { AppUtils } from "../../shared/utils/app.utils";
 import AccountContext from "../../store/account-context";
 import { GenderEnum, IUserDetailsModel } from "../../models/UserDetails.model";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import AutocompleteSelect from "../global/form/Autocomplete";
+import userService from "../../shared/services/userService";
 
 interface FormData {
   address: string;
@@ -129,7 +130,12 @@ const PersonalInfo = () => {
     };
 
     setIsFormSubmitted(true);
-    accountManager?.addPersonalInfo(data, personalInfoID!);
+    userService.updateUserDetails(id, data)
+      .then(() => {
+        AppUtils.toastNotification("Datele personale au fost actualizate cu success!", true)
+        accountManager?.setRefresh(accountManager.refresh + 1);
+      })
+      .catch(error => AppUtils.toastNotification("OOPS! An error occured while updating personal info!", false))
   };
 
   useEffect(() => {
@@ -153,7 +159,7 @@ const PersonalInfo = () => {
         full_name:
           personalInfo.first_name === defaultFirstName
             ? ""
-            : personalInfo.first_name + " " + personalInfo.last_name,
+            : personalInfo.last_name + " " + personalInfo.first_name,
         gender: [
           personalInfo.gender === GenderEnum.MALE
             ? { title: "Domnul", value: "male" }
@@ -237,29 +243,26 @@ const PersonalInfo = () => {
               />
             </Col>
             <Col lg={6}>
-              <Autocomplete
+              <AutocompleteSelect 
                 {...register("county")}
-                className={`custom-autocomplete ${
-                  errors.county?.message ? "invalid-field" : ""
-                }`}
                 disablePortal
                 id="county"
                 options={countyList}
                 value={formData.county || ""}
-                onChange={(event, value) => {
-                  setFormData({ ...formData, county: value! });
-                  value && setValue("county", value);
-                  handleDirty();
+                onChange={(_, value) => {
+                  if(value && !Array.isArray(value)) {
+                    setFormData({ ...formData, county: value! });
+                    value && setValue("county", value);
+                    handleDirty();
+                  }
                 }}
                 inputValue={formData.county || ""}
-                onInputChange={(event, value) => {
+                onInputChange={(_, value) => {
                   setFormData({ ...formData, county: value! });
                 }}
-                renderInput={(params) => (
-                  <TextField {...params} label="Judet*" />
-                )}
+                label="Judet*"
+                error={errors.county?.message}
               />
-              <div className="invalid-field">{errors.county?.message}</div>
             </Col>
           </Row>
           <Row>
@@ -277,20 +280,21 @@ const PersonalInfo = () => {
               />
             </Col>
             <Col lg={6}>
-              <Autocomplete
+              <AutocompleteSelect
                 className="custom-autocomplete"
                 disablePortal
+                disableClearable
                 id="gender"
                 options={genderList}
                 value={formData.gender[0]}
                 getOptionLabel={(option) => option.title}
-                onChange={(event, value) => {
-                  setFormData({ ...formData, gender: [{ ...value! }] });
-                  handleDirty();
+                onChange={(_, value) => {
+                  if(value && !Array.isArray(value)) {
+                    setFormData({ ...formData, gender: [{ ...value! }] });
+                    handleDirty();
+                  }
                 }}
-                renderInput={(params) => (
-                  <TextField {...params} label="Forma de adresare" />
-                )}
+                label="Forma de adresare"
               />
             </Col>
           </Row>

@@ -437,18 +437,17 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
                 <div className="benefits">
                   <div className="title">Your benefits:</div>
                   <ul>
-                    <li>
-                      <Check stroke={"#cc3633"} /> Over{" "}
-                      <span className="brand-color">600 fragrances</span> to
-                      choose from, straight from the source
+                    <li className="flex">
+                      <Check stroke={"#cc3633"} className="mr-5"/> Over{" "} 
+                      <span className="brand-color block mx-2">600 fragrances</span>to choose from, straight from the source
                     </li>
-                    <li>
-                      <Check stroke={"#cc3633"} /> Get personal recommendations
+                    <li className="flex">
+                      <Check stroke={"#cc3633"} className="mr-5"/> Get personal recommendations
                       based on scents you love
                     </li>
-                    <li>
-                      <Check stroke={"#cc3633"} />{" "}
-                      <span className="brand-color">
+                    <li className="flex">
+                      <Check stroke={"#cc3633"} className="mr-5"/>{" "}
+                      <span className="brand-color block mr-2">
                         Flexible membership plans
                       </span>{" "}
                       that cater to your lifestyle

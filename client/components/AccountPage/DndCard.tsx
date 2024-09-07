@@ -79,7 +79,7 @@ const DndCard = ({
                     {item.product.attributes.model}
                     <div className="date">{setMonth(index)}</div>
                   </div>
-                  <a className="link">
+                  <a className="link" style={{display: 'flex'}}>
                     Details <ArrowRight width={40} height={20} />
                   </a>
                   <div className="move">
@@ -155,7 +155,7 @@ const DndCard = ({
                       {item.model}
                       <div className="date">{setMonth(index)}</div>
                     </div>
-                    <a className="link">
+                    <a className="link" style={{display: 'flex'}}>
                       Details <ArrowRight width={40} height={20} />
                     </a>
                     <div className="move">

@@ -30,7 +30,7 @@ const SuccessPayment = ({ populateSH }: Props) => {
                 authorization: `Bearer ${token}`,
             }
         } 
-        const uDetailsID = await userService.getUserDetailsID(header);
+        const uDetailsID = await userService.getUserDetailsID();
         await userService.updateUserSubscription(header, uDetailsID, subName);
     }
 

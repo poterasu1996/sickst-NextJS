@@ -53,7 +53,7 @@ const SubscriptionCardDetails = ({ userInfo, userSubscription }: Props) => {
                 } 
                 await stripeService.cancelSubscription(subscriptionID);
 
-                const uDetailsID = await userService.getUserDetailsID(header);
+                const uDetailsID = await userService.getUserDetailsID();
                 await userService.updateUserSubscription(header, uDetailsID);
                 window.location.replace(currentPath);
                 toast("Te-ai dezabonat cu succes", {

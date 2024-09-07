@@ -34,7 +34,6 @@ const ShippingInformation = () => {
         }
     ]
 
-    // console.log('shippingInfo',shippingInfo)
     function handleDeleteAddress(adrsIndex: number | null) {
         if(adrsIndex !== null) {
             const newList: IShippingInfo[] | undefined = shippingInfo?.attributes.shipping_info_list!.filter((item, index) => index !== adrsIndex);

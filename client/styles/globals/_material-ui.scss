@@ -1,0 +1,64 @@
+// .MuiFormControl-root {
+//     .MuiFormLabel-root {
+//       font-size: 1.8rem;
+//       line-height: 0.9em;
+//       padding: 0 1rem;
+//       font-weight: 600;
+//       color: #959ba6;
+//     }
+
+//     .MuiInputBase-root {
+//       padding: .7rem;
+//       border-radius: .25rem;
+//       border: unset;
+      
+//       .MuiInputBase-input {
+//         font-size: 1.8rem;
+//         font-weight: 400;
+//         padding: 0.55rem .4rem 0 .6rem;
+//       }
+
+//       .MuiOutlinedInput-notchedOutline {
+//         border: 1px solid #ced4da;
+
+//         legend {
+//           font-size: 1.3rem;
+//           margin: .3rem;
+//         }
+//       }
+//     }
+// }
+
+.MuiInputBase-root.MuiOutlinedInput-root.Mui-focused {
+    .MuiOutlinedInput-notchedOutline {
+      border-color: #cc3633;
+      border-width: 2px;
+    }
+}
+.MuiFormLabel-root.MuiInputLabel-root.Mui-focused {
+    color: #cc3633;
+}
+
+.MuiSelect-select {
+    line-height: 2rem;
+    padding-left: 0;
+}
+
+.MuiAutocomplete-root {
+    .MuiOutlinedInput-root {
+        padding: .8rem;
+        border-radius: 2px;
+    }
+} 
+
+.MuiAutocomplete-popper {
+    .MuiAutocomplete-option {
+        font-size: 16px;
+    }
+}
+
+.MuiList-root {
+    .MuiMenuItem-root {
+        font-size: 2rem;
+    }
+}

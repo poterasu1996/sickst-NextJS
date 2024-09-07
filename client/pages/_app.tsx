@@ -8,8 +8,18 @@ import "../styles/index.scss";
 import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { createTheme, ThemeProvider } from "@mui/material";
 
 const queryClient = new QueryClient();
+
+const customTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#cc3633'
+    }
+  }
+})
+
 
 function MyApp({ Component, pageProps }: any) {
   return (
@@ -21,7 +31,9 @@ function MyApp({ Component, pageProps }: any) {
               <PaymentProvider>
                 <>
                   <Layout>
-                    <Component {...pageProps} />
+                    <ThemeProvider theme={customTheme}>
+                      <Component {...pageProps} />
+                    </ThemeProvider>
                   </Layout>
                   <ReactQueryDevtools initialIsOpen={false} />
                 </>

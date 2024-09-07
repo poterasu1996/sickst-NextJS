@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { Dispatch, useContext, useEffect, useState } from "react";
 import AuthContext from "./auth-context";
 import IHeader from "../types/RequestHeaderInterface";
 import { AccountStateEnums } from "../shared/enums/accountPageState.enum";
@@ -14,12 +14,13 @@ import {
 } from "../models/ShippingInformation.model";
 import { IGETOrderHistory } from "../models/OrderHistory.model";
 import { IGETSubscriptionOrder } from "../models/SubscriptionOrder.model";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { USER_PROFILE_DETAILS, USER_ME, API_V } from "../shared/utils/constants";
 import { AppUtils } from "../shared/utils/app.utils";
 
 // @ts-ignore
 import Cookies from 'js-cookie';
+import userService from "../shared/services/userService";
 
 interface IAccountContext {
   accountState: string;
@@ -44,10 +45,7 @@ interface IAccountContext {
     siIndex: number,
     newData: { data: IShippingInformationModel }
   ) => void;
-  fetchOrderHistory: () => Promise<any>;
-  fetchPersonalInfo: () => Promise<any>;
   fetchShippingList: () => Promise<any>;
-  fetchSubscriptionHistory: () => Promise<any>;
   likeReview: (
     userId: number,
     reviewId: number,
@@ -60,6 +58,7 @@ interface IAccountContext {
   refresh: number;
   refreshUserTotalReviews: (id: number, totalReviews: number) => void;
   setAccountPageState: (data: string) => void;
+  setRefresh: Dispatch<React.SetStateAction<number>>;
   userDetails: IGETUserDetails | null;
 }
 
@@ -112,47 +111,18 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     }
   }, [isAuth]);
 
-  // useEffect(() => {
-  //   if (header) {
-  //     console.log("INSIDE", header)
-  //     axios
-  //       .get(USER_ME, header)
-  //       .then(async (resp) => {
-  //         setCurrentUser(resp.data);
-  //         await axios
-  //           .get(
-  //             `${USER_DETAILS}?filters[user_id][$eq]=${resp.data.id}`,
-  //             header
-  //           )
-  //           .then((resp) => setUserDetails(resp.data.data[0]))
-  //           .catch((error) => console.log(error));
-  //       })
-  //       .catch((error) => console.log("axios error", error));
-  //   }
-  // }, [header]);
-
-  async function getUserMe() {
-    const response = await axios.get(USERS_ME_API);
-    return response.data;
-  }
-
-  async function getUserDetails(id: number) {
-    const response = await axios.get(`${USER_DETAILS_API}/${id}`);
-    return response.data;
-  }
-
   useEffect(() => {
-    if(isAuth) {
-      (async () => {
-        const userMe: IUserModel = await getUserMe();
-        setCurrentUser(userMe);
-        const uID = userMe.id;
-        const userDetails = await getUserDetails(uID);
-        setUserDetails(userDetails.data[0]);
-      })();
-    }
-  }, [isAuth])
+    // fetch user details on login and for each personal data change
+    (async () => {
+      const userMe: IUserModel = await userService.getUsersMe();
+      setCurrentUser(userMe);
+      const uID = userMe.id;
+      const userDetails = await userService.getUserDetails(uID);
+      setUserDetails(userDetails.data[0]);
+    })();
+  }, [isAuth, refresh])
 
+  // must be moved to service
   async function activateSubscription(userId: number) {
     if (!header) return;
     await axios
@@ -160,40 +130,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
       .catch((error) => console.log(error));
   }
 
-  async function fetchSubscriptionHistory() {
-    if (!header) return;
-    try {
-      const response = await axios.get(
-        `${SUBSCRIPTION_ORDER}?filters[user_id][$eq]=${currentUser!.id}`,
-        header
-      );
-      setRefresh(refresh + 1);
-      return response.data.data;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async function fetchOrderHistory() {
-    if (!header) return;
-    try {
-      const response = await axios.get(
-        `${ORDER_HISTORIES}?sort[0]=id:desc`,
-        header
-      );
-      const filteredList = response.data.data.filter(
-        (el: any) => el.attributes.user_id === currentUser!.id
-      );
-      setRefresh(refresh + 1);
-      return filteredList;
-    } catch (error: any) {
-      if(error.response.status !== 404) {
-        AppUtils.toastNotification("OOPS! An error occured retrieving order history list!", false);
-      }
-    }
-  }
-
-  // must refactor
+  // must be moved to service
   async function fetchShippingList() {
     // get current user shipping list
     if (!header) return;
@@ -211,6 +148,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     }
   }
 
+  // must be moved to service
   async function editShippingAddress(
     siIndex: number,
     siNewData: { data: IShippingInformationModel }
@@ -230,6 +168,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     }
   }
 
+  // must be moved to service
   async function cancelOrder(orderId: number, order: IGETOrderHistory | null) {
     if (!header || !order) return;
 
@@ -258,6 +197,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     }
   }
 
+  // must be moved to service
   async function cancelSubscription(
     subscriptionId: number,
     subscriptionOrder: IGETSubscriptionOrder | null
@@ -301,6 +241,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     }
   }
 
+  // must be moved to service
   async function postReview(prodReview: { data: IProductReviewModel }) {
     if (!header) return;
     return await axios
@@ -315,6 +256,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
       });
   }
 
+  // must be moved to service
   async function likeReview(
     userId: number,
     revId: number,
@@ -377,6 +319,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     }
   }
 
+  // must be moved to service
   async function dislikeReview(
     userId: number,
     revId: number,
@@ -439,6 +382,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     }
   }
 
+  // must be moved to service
   async function refreshUserTotalReviews(id: number, totalReviews: number) {
     if (!header) return;
     const newData = {
@@ -456,15 +400,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     }
   }
 
-  // do we need it anymore???
-  async function fetchPersonalInfo() {
-    if (header) {
-      return await axios
-        .get(`${USER_PROFILE_DETAILS}?filters[user_id][$eq]=${currentUser?.id}`, header)
-        .then((result) => result.data);
-    }
-  }
-
+  // to be removed (moved in user service)
   async function addPersonalInfo(data: IUserDetailsModel, piID: number) {
     if (!header) return;
 
@@ -484,6 +420,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     }
   }
 
+  // must be moved to service
   function addShippingInfo(newData: IShippingInfo) {
     if (!header) return;
     // check if there already exist a list for current user
@@ -601,10 +538,6 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     }
   }
 
-  // async function getCompanyDetails() {
-  //     if(header) {}
-  // }
-
   const accountManager: IAccountContext = {
     accountState: accountState,
     activateSubscription: activateSubscription,
@@ -615,15 +548,13 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     currentUser: currentUser,
     dislikeReview: dislikeReview,
     editShippingAddress: editShippingAddress,
-    fetchOrderHistory: fetchOrderHistory,
-    fetchPersonalInfo: fetchPersonalInfo,
     fetchShippingList: fetchShippingList,
-    fetchSubscriptionHistory: fetchSubscriptionHistory,
     likeReview: likeReview,
     postReview: postReview,
     refresh: refresh,
     refreshUserTotalReviews: refreshUserTotalReviews,
     setAccountPageState: setAccountPageState,
+    setRefresh: setRefresh,
     userDetails: userDetails,
   };
 

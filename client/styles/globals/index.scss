@@ -13,6 +13,7 @@
 @import "./subscription-modal";
 @import "./utils";
 @import "./primereact";
+@import "./material-ui";
 
 html {
   font-size: 62.5%;
@@ -369,7 +370,8 @@ body.modal-open {
 }
 
 .shipment-details,
-.user-details {
+.user-details,
+.contact-us {
   width: 100%;
 
   form {
@@ -442,52 +444,6 @@ body.modal-open {
 
     .custom-autocomplete {
       margin-top: 2.5rem;
-
-      .MuiFormControl-root {
-        .MuiFormLabel-root {
-          font-size: 1.8rem;
-          line-height: .9em;
-          font-weight: 600;
-          color: #959ba6;
-        }
-        
-        .MuiInputBase-root {
-          padding: .7rem;
-          border-radius: .25rem;
-          border: unset;
-          
-          .MuiInputBase-input {
-            font-size: 1.8rem;
-            font-weight: 400;
-            padding: 0.55rem .4rem 0 .6rem;
-          }
-
-          .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
-            border: 1px solid #ced4da;
-
-            .css-14lo706 {
-              font-size: 1.3rem;
-            }
-          }
-        }
-      }
-
-      .css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused {
-        .MuiOutlinedInput-notchedOutline {
-          border-color: #cc3633;
-          border-width: 2px;
-        }
-      }
-      .css-1sumxir-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
-        color: #cc3633;
-      }
-      
-      .css-l3ln04-MuiAutocomplete-root {
-        .MuiOutlinedInput-root {
-          padding: .8rem;
-          border-radius: 2px;
-        }
-      } 
     }
     .custom-autocomplete.invalid-field {
       padding-top: unset;
@@ -499,6 +455,10 @@ body.modal-open {
         border-color: #cc3633 !important;
         border-width: 2px !important;
       }
+    }
+    .form-field.textarea {
+      min-height: 6rem;
+      height: unset;
     }
     .form-field {
       margin-top: 2.5rem;
@@ -653,50 +613,51 @@ body.modal-open {
   }
 }
 
-.MuiSwitch-root {
-  padding: 0px;
-  height: 2.6rem;
-  width: 4.2rem;
-  margin: 0 .8rem;
-  .MuiSwitch-switchBase {
-    padding: 0px;
-    margin: 2px;
-    transition-duration: 300ms;
-    &.Mui-checked {
-      transform: translateX(16px);
-      color: #fff;
-      & + .MuiSwitch-track {
-        background-color: #cc3633;
-        opacity: 1;
-        border: 0;
-      }
-      &.Mui-disabled + .MuiSwitch-track {
-        opacity: 0.5;
-      }
-    }
-    &.Mui-focusVisible .MuiSwitch-thumb {
-      color: #33cf4d;
-      border: 6px solid #fff;
-    }
-    &.Mui-disabled .MuiSwitch-thumb {
-      color: #39393D;
-    }
-    // &.Mui-disabled + .MuiSwitch-track {
-    //   opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
-    // }
-  }
-  .MuiSwitch-thumb {
-    box-sizing: border-box;
-    width: 2.2rem;
-    height: 2.2rem;
-  }
-  .MuiSwitch-track {
-    border-radius: 1.3rem;
-    background-color: #A9A9AD;
-    // background-color: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D';
-    opacity: 1;
-  }
-}
+// .MuiSwitch-root {
+//   padding: 0px;
+//   height: 2.6rem;
+//   width: 4.2rem;
+//   margin: 0 .8rem;
+//   .MuiSwitch-switchBase {
+//     padding: 0px;
+//     margin: 2px;
+//     transition-duration: 300ms;
+//     &.Mui-checked {
+//       transform: translateX(16px);
+//       color: #fff;
+//       & + .MuiSwitch-track {
+//         background-color: #cc3633;
+//         opacity: 1;
+//         border: 0;
+//       }
+//       &.Mui-disabled + .MuiSwitch-track {
+//         opacity: 0.5;
+//       }
+//     }
+//     &.Mui-focusVisible .MuiSwitch-thumb {
+//       color: #33cf4d;
+//       border: 6px solid #fff;
+//     }
+//     &.Mui-disabled .MuiSwitch-thumb {
+//       color: #39393D;
+//     }
+//     // &.Mui-disabled + .MuiSwitch-track {
+//     //   opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
+//     // }
+//   }
+//   .MuiSwitch-thumb {
+//     box-sizing: border-box;
+//     width: 2.2rem;
+//     height: 2.2rem;
+//     color: #fff;
+//   }
+//   .MuiSwitch-track {
+//     border-radius: 1.3rem;
+//     background-color: #A9A9AD;
+//     // background-color: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D';
+//     opacity: 1;
+//   }
+// }
 
 .Toastify__toast-body {
   .toast-item {

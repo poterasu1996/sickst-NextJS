@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { TxnStatusEnum } from "../../shared/enums/txn.enum";
 import { IGETOrderHistory } from "../../models/OrderHistory.model";
 import { IGETSubscriptionOrder, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
+import orderService from "../../shared/services/orderService";
 
 const OrderHistory = () => {
     const accountManager = useContext(AccountContext);
@@ -16,26 +17,29 @@ const OrderHistory = () => {
     const [tableContent, setTableContent] = useState<(IGETOrderHistory | IGETSubscriptionOrder)[] | null>(null);
     const router = useRouter();
 
+    async function fetchOrderHistory(userId: number) {
+        return await orderService.getOrderHistory(userId);
+    }
+
+    async function fetchSubscriptionOrderHistory(userId: number) {
+        return await orderService.getSubscriptionHistory(userId);
+    }
     // we no longer have payment and subscription in same table
     // we have payment / collection AND subscription separate
     useEffect(() => {
         if(accountManager!.currentUser) {
-            accountManager!.fetchOrderHistory()
-                .then((resp: IGETOrderHistory[]) => {
-                    if(resp.length > 0) {
-                        setOrderHistory([...resp]);
-                    } else {
-                        setOrderHistory(null)
-                    }
-                })
-                .catch(error => console.log("order history error: ", error));
-            accountManager!.fetchSubscriptionHistory()
-                .then((resp: IGETSubscriptionOrder[]) => {
-                    if(resp.length > 0) {
-                        setSubscriptionHistory(resp.reverse())
-                    }
-                })
-                .catch(error => console.log(error))
+            const userId = accountManager!.currentUser.id;
+            fetchOrderHistory(userId).then((resp: IGETOrderHistory[]) => {
+                if(resp.length > 0) {
+                    setOrderHistory([...resp])
+                } 
+            });
+            
+            fetchSubscriptionOrderHistory(userId).then((resp: IGETSubscriptionOrder[]) => {
+                if(resp.length > 0) {
+                    setSubscriptionHistory(resp.reverse())
+                } 
+            })
         }
     }, [accountManager!.currentUser])
 

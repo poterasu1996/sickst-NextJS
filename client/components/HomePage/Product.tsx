@@ -1,7 +1,6 @@
 import Rating from "react-rating";
 import { Star, Check, ChevronRight } from "react-feather";
 import Image from "next/image";
-import { Button, Spinner } from "react-bootstrap";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import orderImg from "../../public/img/order-img.png";
 import CartContext from "../../store/cart-context";
@@ -15,6 +14,8 @@ import CartService from "../../shared/services/cartService/index";
 import React, { useState, useContext } from "react";
 import { useCheckMysterySub } from "../../shared/hooks/useCheckMysterySub";
 import { PaymentEnums } from "../../shared/enums/payment.enums";
+import { CircularProgress } from "@mui/material";
+import Button from "@mui/material/Button";
 
 interface Props {
   product: any;
@@ -170,7 +171,7 @@ const Product = ({ product }: Props) => {
             {
               CartService.hasProduct(product) ? (
                 loading ? (
-                  <Spinner animation="border" style={{ color: "#cc3663" }} />
+                  <CircularProgress sx={{width: '30px !important', height: '30px !important'}}/>
                 ) : (
                   <div className="card-button disabled">
                     <div className="check">
@@ -184,45 +185,6 @@ const Product = ({ product }: Props) => {
                   <div className="plus"></div>Add to cart
                 </div>
               )
-              // here we make the check in a function
-              // authManager.auth ? (
-              //   <div
-              //     className="card-button"
-              //     onClick={() => {
-              //       const paymentType = PaymentEnums.SUBSCRIPTION;
-              //       if (CartService.subscriptionList().length >= 6) {
-              //         const msg = (
-              //           <>
-              //             <div>
-              //               Your subscription list hast more than{" "}
-              //               <b className="brand-color">6 products</b>!
-              //             </div>
-              //           </>
-              //         );
-              //         toast(msg, {
-              //           autoClose: 2000,
-              //         });
-              //         return;
-              //       }
-              //       notify();
-              //       CartService.addProduct(product, 1, paymentType);
-              //       cartManager!.setRefresh(!cartManager!.refresh);
-              //       setAddedToCart(true);
-              //       setLoading(true);
-              //     }}
-              //   >
-              //     <div className="plus"></div>Add to cart
-              //   </div>
-              // ) : (
-              //   <div
-              //     className="card-button"
-              //     onClick={() => {
-              //       router.push("/account/login");
-              //     }}
-              //   >
-              //     <div className="plus"></div>Add to cart
-              //   </div>
-              // )
             }
           </div>
         </div>
@@ -288,6 +250,7 @@ const Product = ({ product }: Props) => {
                 <div className="order-type">
                   <div className="order">
                     <Button
+                      sx={{textTransform: 'none'}}
                       className={`order-btn ${subscription && "active"}`}
                       onClick={() => setSubscription(true)}
                     >
@@ -305,6 +268,7 @@ const Product = ({ product }: Props) => {
                   </div>
                   <div className="order">
                     <Button
+                      sx={{textTransform: 'none'}}
                       className={`order-btn ${!subscription && "active"}`}
                       onClick={() => setSubscription(false)}
                     >
