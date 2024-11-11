@@ -25,8 +25,8 @@ import userService from "../shared/services/userService";
 interface IAccountContext {
   accountState: string;
   activateSubscription: (id: number) => Promise<void>;
-  addPersonalInfo: (data: IUserDetailsModel, piID: number) => void;
-  addShippingInfo: (data: IShippingInfo) => void;
+  // addPersonalInfo: (data: IUserDetailsModel, piID: number) => void;
+  // addShippingInfo: (data: IShippingInfo) => void;
   cancelOrder: (orderId: number, order: IGETOrderHistory | null) => Promise<void>;
   cancelSubscription: (
     subId: number,
@@ -41,11 +41,11 @@ interface IAccountContext {
     totalDislikes: number,
     usersDislikedOldList: number[] | null
   ) => void;
-  editShippingAddress: (
-    siIndex: number,
-    newData: { data: IShippingInformationModel }
-  ) => void;
-  fetchShippingList: () => Promise<any>;
+  // editShippingAddress: (
+  //   siIndex: number,
+  //   newData: { data: IShippingInformationModel }
+  // ) => void;
+  // fetchShippingList: () => Promise<any>;
   likeReview: (
     userId: number,
     reviewId: number,
@@ -57,6 +57,7 @@ interface IAccountContext {
   postReview: (review: any) => void;
   refresh: number;
   refreshUserTotalReviews: (id: number, totalReviews: number) => void;
+  refreshContext: () => void;
   setAccountPageState: (data: string) => void;
   setRefresh: Dispatch<React.SetStateAction<number>>;
   userDetails: IGETUserDetails | null;
@@ -98,6 +99,19 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
   //     'resetPassword'
   // ];
 
+  const getUserMe = async () => {
+    const userMe: IUserModel = await userService.getUsersMe();
+    setCurrentUser(userMe);
+    getUserDetails(userMe.id);
+  }
+
+  const getUserDetails = async (uID: number) => {
+    if(uID) {
+      const userDetails = await userService.getUserDetails(uID);
+      setUserDetails(userDetails.data[0]);
+    }
+  }
+
   useEffect(() => {
     if (isAuth) {
       const jwt = Cookies.get('jwt');
@@ -108,19 +122,20 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
         },
       };
       setHeader(head);
+      getUserMe();
     }
   }, [isAuth]);
 
   useEffect(() => {
     // fetch user details on login and for each personal data change
-    (async () => {
-      const userMe: IUserModel = await userService.getUsersMe();
-      setCurrentUser(userMe);
-      const uID = userMe.id;
-      const userDetails = await userService.getUserDetails(uID);
-      setUserDetails(userDetails.data[0]);
-    })();
+    if(currentUser?.id) {
+      getUserDetails(currentUser.id);
+    }
   }, [isAuth, refresh])
+
+  const refreshContext = () => {
+    setRefresh(prevState => prevState + 1);
+  }
 
   // must be moved to service
   async function activateSubscription(userId: number) {
@@ -131,42 +146,42 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
   }
 
   // must be moved to service
-  async function fetchShippingList() {
-    // get current user shipping list
-    if (!header) return;
-    try {
-      const response = await axios.get(
-        `${SHIPPING_INFO_URL}?filters[user_id][$eq]=${currentUser!.id}`,
-        header
-      );
-      return response.data.data[0];
-    } catch (error: any) {
-      console.log(error);
-      if(error.response.status !== 404) {
-        AppUtils.toastNotification("OOPS! An error occured retrieving shipping list!", false);
-      }
-    }
-  }
+  // async function fetchShippingList() {
+  //   // get current user shipping list
+  //   if (!header) return;
+  //   try {
+  //     const response = await axios.get(
+  //       `${SHIPPING_INFO_URL}?filters[user_id][$eq]=${currentUser!.id}`,
+  //       header
+  //     );
+  //     return response.data.data[0];
+  //   } catch (error: any) {
+  //     console.log(error);
+  //     if(error.response.status !== 404) {
+  //       AppUtils.toastNotification("OOPS! An error occured retrieving shipping list!", false);
+  //     }
+  //   }
+  // }
 
   // must be moved to service
-  async function editShippingAddress(
-    siIndex: number,
-    siNewData: { data: IShippingInformationModel }
-  ) {
-    // used for set primary / edit / delete address
-    if (!header) return;
-    try {
-      await axios
-        .put(`${SHIPPING_INFO_URL}/${siIndex}`, siNewData, header)
-        .then(() => {
-          AppUtils.toastNotification("Adresa a fost modificata cu succes!", true);
-          setRefresh(refresh + 1);
-        });
-    } catch (error) {
-      console.log(error);
-      AppUtils.toastNotification("OOPS! An error occured while deleting the address!", false);
-    }
-  }
+  // async function editShippingAddress(
+  //   siIndex: number,
+  //   siNewData: { data: IShippingInformationModel }
+  // ) {
+  //   // used for set primary / edit / delete address
+  //   if (!header) return;
+  //   try {
+  //     await axios
+  //       .put(`${SHIPPING_INFO_URL}/${siIndex}`, siNewData, header)
+  //       .then(() => {
+  //         AppUtils.toastNotification("Adresa a fost modificata cu succes!", true);
+  //         setRefresh(refresh + 1);
+  //       });
+  //   } catch (error) {
+  //     console.log(error);
+  //     AppUtils.toastNotification("OOPS! An error occured while deleting the address!", false);
+  //   }
+  // }
 
   // must be moved to service
   async function cancelOrder(orderId: number, order: IGETOrderHistory | null) {
@@ -401,109 +416,109 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
   }
 
   // to be removed (moved in user service)
-  async function addPersonalInfo(data: IUserDetailsModel, piID: number) {
-    if (!header) return;
+  // async function addPersonalInfo(data: IUserDetailsModel, piID: number) {
+  //   if (!header) return;
 
-    const newData = {
-      data: {
-        ...data,
-      },
-    };
-    try {
-      await axios.put(`${USER_PROFILE_DETAILS}/${piID}`, newData, header).then(() => {
-        setRefresh(refresh + 1);
-        AppUtils.toastNotification("Datele personale au fost actualizate cu success!", true);
-      });
-    } catch (error) {
-      console.log(error);
-      AppUtils.toastNotification("OOPS! An error occured while updating personal info!", false);
-    }
-  }
+  //   const newData = {
+  //     data: {
+  //       ...data,
+  //     },
+  //   };
+  //   try {
+  //     await axios.put(`${USER_PROFILE_DETAILS}/${piID}`, newData, header).then(() => {
+  //       setRefresh(refresh + 1);
+  //       AppUtils.toastNotification("Datele personale au fost actualizate cu success!", true);
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //     AppUtils.toastNotification("OOPS! An error occured while updating personal info!", false);
+  //   }
+  // }
 
   // must be moved to service
-  function addShippingInfo(newData: IShippingInfo) {
-    if (!header) return;
-    // check if there already exist a list for current user
+  // function addShippingInfo(newData: IShippingInfo) {
+  //   if (!header) return;
+  //   // check if there already exist a list for current user
 
-    let existingList: any = []; // used for existing list
-    let listId; // get the list id
-    let newList = {};
-    fetchShippingList().then((resp) => {
-      // if user has data, PUT
-      if (resp) {
-        listId = resp.id; // get listId for PUT req
-        existingList = [...resp.attributes.shipping_info_list];
+  //   let existingList: any = []; // used for existing list
+  //   let listId; // get the list id
+  //   let newList = {};
+  //   fetchShippingList().then((resp) => {
+  //     // if user has data, PUT
+  //     if (resp) {
+  //       listId = resp.id; // get listId for PUT req
+  //       existingList = [...resp.attributes.shipping_info_list];
 
-        // if the user adds a primary address
-        if (newData.primary) {
-          const hasPrimary = (el: any) => el.primary;
-          const primaryAddressIndex = existingList.findIndex(hasPrimary);
-          if (primaryAddressIndex > -1) {
-            // if a primary address exists, change it to false
-            existingList[primaryAddressIndex].primary = false;
-            const newAddress = {
-              ...newData,
-            };
-            existingList.unshift(newAddress);
-            newList = {
-              data: {
-                shipping_info_list: [...existingList],
-                user_id: currentUser!.id,
-              },
-            };
-          }
-          existingList.push(newData);
-          newList = {
-            data: {
-              shipping_info_list: [...existingList],
-              user_id: currentUser!.id,
-            },
-          };
-        } else {
-          existingList.push(newData);
-          newList = {
-            data: {
-              shipping_info_list: [...existingList],
-              user_id: currentUser!.id,
-            },
-          };
-        }
-        axios
-          .put(`${SHIPPING_INFO_URL}/${listId}`, newList, header)
-          .then(() => {
-            AppUtils.toastNotification("An address has been changed successfully!", true);
-            setRefresh(refresh + 1);
-          })
-          .catch((error) => {
-            console.log(error);
-            AppUtils.toastNotification("OOPS! An error occured while updating the list!", false);
-          });
-      } else {
-        // if user has no data, POST
-        newList = {
-          data: {
-            shipping_info_list: [
-              {
-                ...newData,
-              },
-            ],
-            user_id: currentUser!.id,
-          },
-        };
-        return axios
-          .post(SHIPPING_INFO_URL, newList, header)
-          .then((resp) => {
-            console.log(resp);
-            AppUtils.toastNotification("An address has been changed successfully!", true);
-            setRefresh(refresh + 1);
-          })
-          .catch((error) => {
-            console.log(error);
-            AppUtils.toastNotification("OOPS! An error occured adding the address!", false);
-          });
-      }
-    });
-  }
+  //       // if the user adds a primary address
+  //       if (newData.primary) {
+  //         const hasPrimary = (el: any) => el.primary;
+  //         const primaryAddressIndex = existingList.findIndex(hasPrimary);
+  //         if (primaryAddressIndex > -1) {
+  //           // if a primary address exists, change it to false
+  //           existingList[primaryAddressIndex].primary = false;
+  //           const newAddress = {
+  //             ...newData,
+  //           };
+  //           existingList.unshift(newAddress);
+  //           newList = {
+  //             data: {
+  //               shipping_info_list: [...existingList],
+  //               user_id: currentUser!.id,
+  //             },
+  //           };
+  //         }
+  //         existingList.push(newData);
+  //         newList = {
+  //           data: {
+  //             shipping_info_list: [...existingList],
+  //             user_id: currentUser!.id,
+  //           },
+  //         };
+  //       } else {
+  //         existingList.push(newData);
+  //         newList = {
+  //           data: {
+  //             shipping_info_list: [...existingList],
+  //             user_id: currentUser!.id,
+  //           },
+  //         };
+  //       }
+  //       axios
+  //         .put(`${SHIPPING_INFO_URL}/${listId}`, newList, header)
+  //         .then(() => {
+  //           AppUtils.toastNotification("An address has been changed successfully!", true);
+  //           setRefresh(refresh + 1);
+  //         })
+  //         .catch((error) => {
+  //           console.log(error);
+  //           AppUtils.toastNotification("OOPS! An error occured while updating the list!", false);
+  //         });
+  //     } else {
+  //       // if user has no data, POST
+  //       newList = {
+  //         data: {
+  //           shipping_info_list: [
+  //             {
+  //               ...newData,
+  //             },
+  //           ],
+  //           user_id: currentUser!.id,
+  //         },
+  //       };
+  //       return axios
+  //         .post(SHIPPING_INFO_URL, newList, header)
+  //         .then((resp) => {
+  //           console.log(resp);
+  //           AppUtils.toastNotification("An address has been changed successfully!", true);
+  //           setRefresh(refresh + 1);
+  //         })
+  //         .catch((error) => {
+  //           console.log(error);
+  //           AppUtils.toastNotification("OOPS! An error occured adding the address!", false);
+  //         });
+  //     }
+  //   });
+  // }
 
   function setAccountPageState(state: string) {
     // set the general account state
@@ -541,17 +556,18 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
   const accountManager: IAccountContext = {
     accountState: accountState,
     activateSubscription: activateSubscription,
-    addPersonalInfo: addPersonalInfo,
-    addShippingInfo: addShippingInfo,
+    // addPersonalInfo: addPersonalInfo,
+    // addShippingInfo: addShippingInfo,
     cancelOrder: cancelOrder,
     cancelSubscription: cancelSubscription,
     currentUser: currentUser,
     dislikeReview: dislikeReview,
-    editShippingAddress: editShippingAddress,
-    fetchShippingList: fetchShippingList,
+    // editShippingAddress: editShippingAddress,
+    // fetchShippingList: fetchShippingList,
     likeReview: likeReview,
     postReview: postReview,
     refresh: refresh,
+    refreshContext: refreshContext,
     refreshUserTotalReviews: refreshUserTotalReviews,
     setAccountPageState: setAccountPageState,
     setRefresh: setRefresh,

@@ -8,6 +8,7 @@ export const CHECK_AUTH = '/check_auth';
 export const CONTACTS = '/contacts';
 export const ORDER_HISTORIES = "/order-histories";
 export const PRODUCTS_URL = "/products?populate=*";
+export const SHIPPING_INFORMATIONS = "/shipping-informations";
 export const SUBSCRIPTION_ORDERS = "/subscription-orders";
 export const USER_LOGIN = '/login';
 export const USER_ME = '/users/me';

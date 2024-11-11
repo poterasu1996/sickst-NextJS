@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AutocompleteSelect from "../global/form/Autocomplete";
+import shippingService from "../../shared/services/shippingService";
 
 const shippingInfoSchema = z.object({
   address: z
@@ -96,7 +97,9 @@ export default function ShipmentForm({ onSubmit }: Props) {
         phone: formInputData.phone,
         primary: formInputData.primary,
     }
-    accountManager!.addShippingInfo(data);
+    const userId = accountManager!.currentUser?.id;
+    shippingService.addShippingInfo(data, userId ?? 0).then(() => accountManager!.refreshContext());  // de modificat, dupa context refacto
+    // accountManager!.addShippingInfo(data);
     onSubmit();
     reset();
   };
