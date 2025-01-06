@@ -16,7 +16,7 @@ const ShippingInformation = () => {
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const accountManager = useContext(AccountContext);
     const optionsMenu = useRef<Menu>(null);
-    // const [, setShippingListR] = useRecoilState(shippingListR);
+    const [, setShippingListR] = useRecoilState(shippingListR);
     const items: MenuItem[] = [
         {
             label: 'Options',
@@ -76,7 +76,7 @@ const ShippingInformation = () => {
             const userId = accountManager?.currentUser.id;
             shippingService.getShippingList(userId ?? 0).then((resp: IGETShippingInformation) => {
                 setShippingInfo(resp);
-                // setShippingListR(resp.attributes.shipping_info_list)
+                setShippingListR(resp.attributes.shipping_info_list)
             });
 
             // accountManager!.fetchShippingList()

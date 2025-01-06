@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sessions",
+  "info": {
+    "singularName": "session",
+    "pluralName": "sessions",
+    "displayName": "session"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "sessionId": {
+      "type": "string",
+      "unique": true
+    },
+    "userId": {
+      "type": "string",
+      "unique": true
+    },
+    "expiresAt": {
+      "type": "datetime"
+    },
+    "data": {
+      "type": "json"
+    }
+  }
+}

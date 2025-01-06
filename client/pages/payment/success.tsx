@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { Button } from "react-bootstrap";
-import PaymentContextTS from "../../store/payment-context";
 import CartService from "../../shared/services/cartService";
 import { TxnStatusEnum } from "../../shared/enums/txn.enum";
 import { IOrderHistoryModel } from "../../models/OrderHistory.model";
@@ -9,9 +8,12 @@ import { ISubscriptionOrderModel, SubscriptionStatusEnum } from "../../models/Su
 
 // @ts-ignore
 import Cookies from 'cookies';
-import AuthContext from "../../store/auth-context";
 import userService from "../../shared/services/userService";
 import stripeService from "../../shared/services/stripeService";
+import useGetJWT from "../../shared/hooks/auth/useGetJWT";
+import orderService from "../../shared/services/orderService";
+import { AppUtils } from "../../shared/utils/app.utils";
+import subscriptionService from "../../shared/services/subscriptionService";
 
 
 interface Props {
@@ -20,23 +22,16 @@ interface Props {
 
 const SuccessPayment = ({ populateSH }: Props) => { 
     const router = useRouter();
-    const paymentManager = useContext(PaymentContextTS);
-    const { token } = useContext(AuthContext);
+    const { token } = useGetJWT(); 
 
     async function updateUserSubscriptionInfo(subName: string) {
-        const header = {
-            headers: {
-                "Content-Type": "application/json",
-                authorization: `Bearer ${token}`,
-            }
-        } 
         const uDetailsID = await userService.getUserDetailsID();
-        await userService.updateUserSubscription(header, uDetailsID, subName);
+        await userService.updateUserSubscription(uDetailsID, subName);
     }
 
     useEffect(() => {
         // populate subscription table
-        if (populateSH) {
+        if (populateSH && token) {
             // based on this flag, we populate subsHistory table
             const storage = localStorage.getItem('sh'); 
             let sh: ISubscriptionOrderModel | null = null;
@@ -49,9 +44,10 @@ const SuccessPayment = ({ populateSH }: Props) => {
                     sh.txn_status = TxnStatusEnum.SUCCESS;
                     sh.subscription_status = SubscriptionStatusEnum.ACTIVE;
                     sh.last_payment_date = new Date().toISOString();
+                    sh.expire_date = AppUtils.getNextBillingDate(new Date().toISOString());
                     sh.strapi_subscription_id = sesId.subscription;
-    
-                    paymentManager?.populateSubscriptionHistory(sh);
+                    subscriptionService.populateSubscriptionHistory(sh)
+                        .then(() => AppUtils.toastNotification('Te-ai abonat cu succes!', true))
                     updateUserSubscriptionInfo(sh.subscription_name);
                     localStorage.removeItem('sh');
                 })()
@@ -61,7 +57,7 @@ const SuccessPayment = ({ populateSH }: Props) => {
 
     useEffect(() => {
         // populate order-history table
-        if(!populateSH) {
+        if(!populateSH && token) {
             let oh: IOrderHistoryModel | null = null;
     
             const storage = localStorage.getItem('oh');
@@ -70,11 +66,12 @@ const SuccessPayment = ({ populateSH }: Props) => {
             }
             if(oh) {
                 oh.txn_status = TxnStatusEnum.SUCCESS;
-                paymentManager?.populateOrderHistory(oh);
+                orderService.populateOrderHistory(oh)
+                    .then(() => AppUtils.toastNotification('Comanda a fost plasata cu succes!', true))
                 localStorage.removeItem('oh')
             }
         }
-    }, [])
+    }, [token])
 
     useEffect(() => {
         CartService.clearCart();

@@ -85,7 +85,6 @@ const OrderHistory = () => {
         }
     }
 
-    {console.log('tableContent',tableContent)}
     return (
         <>
             <div className="order-history">

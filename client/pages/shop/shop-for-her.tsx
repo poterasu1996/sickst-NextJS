@@ -30,6 +30,7 @@ const ShopWoman = () => {
 
     }, [])
 
+    console.log('womanProd', womanProducts)
     return <div className="subs-body">
         <SubscriptionBanner />
         <CollectionSection />

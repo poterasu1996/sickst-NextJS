@@ -24,10 +24,9 @@ import userService from "../shared/services/userService";
 
 interface IAccountContext {
   accountState: string;
-  activateSubscription: (id: number) => Promise<void>;
+  // activateSubscription: (id: number) => Promise<void>;
   // addPersonalInfo: (data: IUserDetailsModel, piID: number) => void;
   // addShippingInfo: (data: IShippingInfo) => void;
-  cancelOrder: (orderId: number, order: IGETOrderHistory | null) => Promise<void>;
   cancelSubscription: (
     subId: number,
     subOrder: IGETSubscriptionOrder | null
@@ -87,7 +86,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
   const [refresh, setRefresh] = useState(0); // inform other components that context has been changed
 
   // will be removed
-  const [header, setHeader] = useState<IHeader | null>(null);
+  const [header, setHeader] = useState<IHeader | null>(null); // de scos
   // const accState = [
   //     'subscription',
   //     'orderHistory',
@@ -113,22 +112,22 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
   }
 
   useEffect(() => {
-    if (isAuth) {
-      const jwt = Cookies.get('jwt');
-      const head = {
+    const jwt = localStorage.getItem('jwt');
+    if (isAuth && jwt) {
+      const headers = {
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${jwt}`,
         },
       };
-      setHeader(head);
+      setHeader(headers);
       getUserMe();
     }
   }, [isAuth]);
 
   useEffect(() => {
     // fetch user details on login and for each personal data change
-    if(currentUser?.id) {
+    if(isAuth && currentUser?.id) {
       getUserDetails(currentUser.id);
     }
   }, [isAuth, refresh])
@@ -138,12 +137,12 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
   }
 
   // must be moved to service
-  async function activateSubscription(userId: number) {
-    if (!header) return;
-    await axios
-      .put(`${USERS}/${userId}`, { subscribed: true }, header)
-      .catch((error) => console.log(error));
-  }
+  // async function activateSubscription(userId: number) {
+  //   if (!header) return;
+  //   await axios
+  //     .put(`${USERS}/${userId}`, { subscribed: true }, header)
+  //     .catch((error) => console.log(error));
+  // }
 
   // must be moved to service
   // async function fetchShippingList() {
@@ -182,35 +181,6 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
   //     AppUtils.toastNotification("OOPS! An error occured while deleting the address!", false);
   //   }
   // }
-
-  // must be moved to service
-  async function cancelOrder(orderId: number, order: IGETOrderHistory | null) {
-    if (!header || !order) return;
-
-    const { createdAt, publishedAt, updatedAt, ...data } = order["attributes"];
-    const cancelData = {
-      data: {
-        ...data,
-        is_cancelled: true,
-      },
-    };
-    const cancelledOrderData = {
-      data: {
-        user_id: order.attributes.user_id,
-        order_history: [order.id],
-      },
-    };
-
-    try {
-      await axios.post(CANCELLED_ORDERS, cancelledOrderData, header);
-      await axios.put(`${ORDER_HISTORIES}/${orderId}`, cancelData, header);
-      AppUtils.toastNotification("Comanda a fost anulata cu succes!", true);
-      setRefresh(refresh + 1);
-    } catch (error) {
-      console.log(error);
-      AppUtils.toastNotification("OOPS! An error occured while canceling the order!", false);
-    }
-  }
 
   // must be moved to service
   async function cancelSubscription(
@@ -415,110 +385,6 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     }
   }
 
-  // to be removed (moved in user service)
-  // async function addPersonalInfo(data: IUserDetailsModel, piID: number) {
-  //   if (!header) return;
-
-  //   const newData = {
-  //     data: {
-  //       ...data,
-  //     },
-  //   };
-  //   try {
-  //     await axios.put(`${USER_PROFILE_DETAILS}/${piID}`, newData, header).then(() => {
-  //       setRefresh(refresh + 1);
-  //       AppUtils.toastNotification("Datele personale au fost actualizate cu success!", true);
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //     AppUtils.toastNotification("OOPS! An error occured while updating personal info!", false);
-  //   }
-  // }
-
-  // must be moved to service
-  // function addShippingInfo(newData: IShippingInfo) {
-  //   if (!header) return;
-  //   // check if there already exist a list for current user
-
-  //   let existingList: any = []; // used for existing list
-  //   let listId; // get the list id
-  //   let newList = {};
-  //   fetchShippingList().then((resp) => {
-  //     // if user has data, PUT
-  //     if (resp) {
-  //       listId = resp.id; // get listId for PUT req
-  //       existingList = [...resp.attributes.shipping_info_list];
-
-  //       // if the user adds a primary address
-  //       if (newData.primary) {
-  //         const hasPrimary = (el: any) => el.primary;
-  //         const primaryAddressIndex = existingList.findIndex(hasPrimary);
-  //         if (primaryAddressIndex > -1) {
-  //           // if a primary address exists, change it to false
-  //           existingList[primaryAddressIndex].primary = false;
-  //           const newAddress = {
-  //             ...newData,
-  //           };
-  //           existingList.unshift(newAddress);
-  //           newList = {
-  //             data: {
-  //               shipping_info_list: [...existingList],
-  //               user_id: currentUser!.id,
-  //             },
-  //           };
-  //         }
-  //         existingList.push(newData);
-  //         newList = {
-  //           data: {
-  //             shipping_info_list: [...existingList],
-  //             user_id: currentUser!.id,
-  //           },
-  //         };
-  //       } else {
-  //         existingList.push(newData);
-  //         newList = {
-  //           data: {
-  //             shipping_info_list: [...existingList],
-  //             user_id: currentUser!.id,
-  //           },
-  //         };
-  //       }
-  //       axios
-  //         .put(`${SHIPPING_INFO_URL}/${listId}`, newList, header)
-  //         .then(() => {
-  //           AppUtils.toastNotification("An address has been changed successfully!", true);
-  //           setRefresh(refresh + 1);
-  //         })
-  //         .catch((error) => {
-  //           console.log(error);
-  //           AppUtils.toastNotification("OOPS! An error occured while updating the list!", false);
-  //         });
-  //     } else {
-  //       // if user has no data, POST
-  //       newList = {
-  //         data: {
-  //           shipping_info_list: [
-  //             {
-  //               ...newData,
-  //             },
-  //           ],
-  //           user_id: currentUser!.id,
-  //         },
-  //       };
-  //       return axios
-  //         .post(SHIPPING_INFO_URL, newList, header)
-  //         .then((resp) => {
-  //           console.log(resp);
-  //           AppUtils.toastNotification("An address has been changed successfully!", true);
-  //           setRefresh(refresh + 1);
-  //         })
-  //         .catch((error) => {
-  //           console.log(error);
-  //           AppUtils.toastNotification("OOPS! An error occured adding the address!", false);
-  //         });
-  //     }
-  //   });
-  // }
 
   function setAccountPageState(state: string) {
     // set the general account state
@@ -555,10 +421,9 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
 
   const accountManager: IAccountContext = {
     accountState: accountState,
-    activateSubscription: activateSubscription,
+    // activateSubscription: activateSubscription,
     // addPersonalInfo: addPersonalInfo,
     // addShippingInfo: addShippingInfo,
-    cancelOrder: cancelOrder,
     cancelSubscription: cancelSubscription,
     currentUser: currentUser,
     dislikeReview: dislikeReview,

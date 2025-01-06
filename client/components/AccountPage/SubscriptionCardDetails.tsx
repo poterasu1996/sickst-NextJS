@@ -1,16 +1,13 @@
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Check, Slash } from "react-feather";
-import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { Modal, ModalBody } from "reactstrap";
 import { AppUtils } from "../../shared/utils/app.utils";
 import image1 from '../../public/img/mystery.jpg';
 import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
 import { IGETSubscriptionOrder, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
-import stripeService from "../../shared/services/stripeService";
-import { toast } from "react-toastify";
-import userService from "../../shared/services/userService";
-import AuthContext from "../../store/auth-context";
 import { useRouter } from "next/router";
+import subscriptionService from "../../shared/services/subscriptionService";
 
 type Props = {
     userInfo: ILocalUserInfo,
@@ -23,7 +20,6 @@ const SubscriptionCardDetails = ({ userInfo, userSubscription }: Props) => {
     let activeSubscription: IGETSubscriptionOrder | undefined = undefined;
     let subscriptionID: string | undefined = undefined;
     let nextBillingDate = null;
-    const { token } = useContext(AuthContext);
 
     if(userSubscription) {
         activeSubscription = userSubscription
@@ -45,25 +41,12 @@ const SubscriptionCardDetails = ({ userInfo, userSubscription }: Props) => {
     const handleCancelSubscription = async () => {
         if(subscriptionID) {
             try {
-                const header = {
-                    headers: {
-                        "Content-Type": "application/json",
-                        authorization: `Bearer ${token}`,
-                    }
-                } 
-                await stripeService.cancelSubscription(subscriptionID);
-
-                const uDetailsID = await userService.getUserDetailsID();
-                await userService.updateUserSubscription(header, uDetailsID);
-                window.location.replace(currentPath);
-                toast("Te-ai dezabonat cu succes", {
-                    autoClose: 2000,
-                });
+                subscriptionService.cancelSubscription(subscriptionID)
+                    .then(() => window.location.replace(currentPath))
+                AppUtils.toastNotification('Te-ai dezabonat cu succes', true)
             } catch (error) {
                 console.log(error)
-                toast("Oops, a intervenit o eroare, te rugam sa incerci mai tarziu", {
-                    autoClose: 2000,
-                });
+                AppUtils.toastNotification('Oops, a intervenit o eroare, te rugam sa incerci mai tarziu!', false);
             }
         }
         handleCloseModal();
@@ -80,9 +63,17 @@ const SubscriptionCardDetails = ({ userInfo, userSubscription }: Props) => {
                                     {AppUtils.capitalize(activeSubscription.attributes.subscription_name)}
                                     <div className="tag">{activeSubscription.attributes.subscription_price} Lei / luna</div>
                                 </div>
-                                <div className="banner-buttons">
-                                    <button className="button-second" onClick={() => setCancelPlan(!showCancelPlan)}>Dezabonare</button>
-                                </div>
+                                {<div className="banner-buttons">
+                                    <button 
+                                        disabled={activeSubscription.attributes.is_cancelled} 
+                                        className="button-second" 
+                                        onClick={() => setCancelPlan(!showCancelPlan)}>
+                                            {!activeSubscription.attributes.is_cancelled
+                                                ? 'Dezabonare'
+                                                : 'Cancelled'
+                                            }
+                                        </button>
+                                </div>}
                             </div>  
                             <div className="status-wrapper">
                                 Status
@@ -94,9 +85,14 @@ const SubscriptionCardDetails = ({ userInfo, userSubscription }: Props) => {
                             <div className="text">
                                 Member since <b>{AppUtils.isoToFormat(activeSubscription.attributes.createdAt)}</b>
                             </div>
-                            {(userInfo.subscribed) && <div className="text">
-                                Next Billing period on <b>{nextBillingDate}</b>
-                            </div>}
+                            {!activeSubscription.attributes.is_cancelled  
+                                ? <div className="text">
+                                    Next Billing period on <b>{nextBillingDate}</b>
+                                </div>
+                                : <div className="text">
+                                    Valid until <b>{nextBillingDate}</b>
+                                </div>
+                            }
                         </div>
                     </>
                 : <>

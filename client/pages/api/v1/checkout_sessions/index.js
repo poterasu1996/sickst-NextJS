@@ -3,7 +3,9 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
+    const jwt = req.cookies.jwt;
 
+    !jwt && res.status(401).json({ statusCode: 401, message: 'Unauthorizated' });
     if (req.method === 'POST') {
         try {
             const session = await stripe.checkout.sessions.create({
@@ -34,10 +36,12 @@ export default async function handler(req, res) {
                 mode: req?.body?.mode,
                 payment_method_types: ['card'],
                 line_items: req?.body?.items ?? [],
-                success_url: `${req.headers.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+                success_url: `${req.headers.origin}/payment/success?sessionId={CHECKOUT_SESSION_ID}`,
+                // success_url: `${req.headers.origin}/payment/success`,
                 cancel_url: `${req.headers.origin}/payment/cancel`,
             })
 
+            console.log('session ', session)
             res.status(200).json(session);
         } catch (error) {
             res.status(500).json({statusCode: 500, message: error.message });

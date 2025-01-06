@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import axios from 'axios';
 import { CHECK_AUTH } from '../shared/utils/constants';
+import useTokenValidation from '../shared/hooks/auth/useTokenValidation';
 
 const CHECK_AUTH_URL = `${process.env.NEXT_PUBLIC_BASEURL}${process.env.NEXT_PUBLIC_API_V1}${CHECK_AUTH}`;
 
@@ -19,24 +20,24 @@ type Props = {
 
 export const AuthProvider = ({ children }: Props): JSX.Element => {
     const [isAuth, setIsAuth] = useState(false);
-    const [token, setToken] = useState<string | undefined>(undefined);
 
-    const isAuthenticated = async () => {
-        try {
-            const res = await axios.get(CHECK_AUTH_URL);
-            if(res.status === 200) {
-                setIsAuth(true);
-                setToken(res.data.token);
-            } else {
-                setIsAuth(false)
-            }
-        } catch (error) {
-            setIsAuth(false);
-        }
-    }
+    // might remove in future
+    const [token, setToken] = useState<string | undefined>(undefined); 
+
+    const { validateToken } = useTokenValidation(); 
 
     useEffect(() => {
-        isAuthenticated()
+        // isAuthenticated()
+        if(!localStorage.getItem('jwt')) setIsAuth(false);
+        validateToken()
+            .then((resp: boolean) => { 
+                if(resp) { 
+                    setIsAuth(true);
+                } else {
+                    setIsAuth(false);
+                }
+            })
+            .catch(() => setIsAuth(false));
     }, [])
 
     const authManager: IAuthContext = {

@@ -1,14 +1,15 @@
 import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { Button } from "react-bootstrap";
-import PaymentContextTS from "../../store/payment-context";
 import { IOrderHistoryModel } from "../../models/OrderHistory.model";
 import { TxnStatusEnum } from "../../shared/enums/txn.enum";
 import { ISubscriptionOrderModel, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
-import cartService from "../../shared/services/cartService";
 
 // @ts-ignore
 import Cookies from 'cookies';
+import orderService from "../../shared/services/orderService";
+import subscriptionService from "../../shared/services/subscriptionService";
+import { AppUtils } from "../../shared/utils/app.utils";
 
 interface Props {
     populateSH: boolean,
@@ -16,7 +17,6 @@ interface Props {
 
 const CancelPayment = ({ populateSH }: Props) => {
     const router = useRouter();
-    const paymentManager = useContext(PaymentContextTS);
 
     useEffect(() => {
         // populate subscription table
@@ -30,7 +30,8 @@ const CancelPayment = ({ populateSH }: Props) => {
                 sh.txn_status = TxnStatusEnum.FAILED;
                 sh.subscription_status = SubscriptionStatusEnum.CANCELLED;
                 sh.last_payment_date = null;
-                paymentManager?.populateSubscriptionHistory(sh);
+                subscriptionService.populateSubscriptionHistory(sh)
+                    .then(() => AppUtils.toastNotification('Plata nu a fost efectuata!', false));
                 localStorage.removeItem('sh');
             }
         }
@@ -46,7 +47,8 @@ const CancelPayment = ({ populateSH }: Props) => {
             }
             if(oh) {
                 oh.txn_status = TxnStatusEnum.FAILED;
-                paymentManager?.populateOrderHistory(oh);
+                orderService.populateOrderHistory(oh)
+                    .then(() => AppUtils.toastNotification('Comanda nu a fost efectuata!', false));
                 localStorage.removeItem('oh');
             }
         }

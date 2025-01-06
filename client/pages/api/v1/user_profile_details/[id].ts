@@ -22,18 +22,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ statusCode: 400, message: 'Missing user ID' });
     }
     
-    const header = {
-        headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${jwt}`
-        },
+    const headers = {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${jwt}`
     };
 
     try {
         // handle GET request
         if (req.method === 'GET') {
             const urlFilter = `?filters[user_id][$eq]=${id}`;
-            const strapiRes = await axios.get(`${USER_PROFILE_DETAILS}${urlFilter}`, header);
+            const strapiRes = await axios.get(`${USER_PROFILE_DETAILS}${urlFilter}`, { headers });
 
             return res.status(200).json(strapiRes.data);
         // handle PUT request
@@ -48,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     ...rawData,
                 },
             };
-            const strapiResp = await axios.put(`${USER_PROFILE_DETAILS}/${id}`, parsedData, header);
+            const strapiResp = await axios.put(`${USER_PROFILE_DETAILS}/${id}`, parsedData, { headers });
             return res.status(200).json(strapiResp.data);
         
         // handle unsupported methods

@@ -54,13 +54,6 @@ const Product = ({ product }: Props) => {
     </>
   );
 
-  function simplePrice(price: number) {
-    const mlPrice = price / 100; // price per ml of product
-
-    const productPrice = containerPrice + 8 * mlPrice; // price of full product for OTB
-    return productPrice;
-  }
-
   const notify = () => {
     toast(toastMsg, {
       autoClose: 2000,
@@ -279,7 +272,7 @@ const Product = ({ product }: Props) => {
                           <div className="type">
                             One time{" "}
                             <b>
-                              RON {simplePrice(product.attributes.retail_value)}
+                              RON {product.attributes.otb_price}
                             </b>
                           </div>
                         </div>

@@ -34,7 +34,6 @@ export default async function handler(req: any, res: any) {
             // putem avea mai > de 1 adresa 
             const clientData = req.body?.data.shipping_info_list;
 
-            console.log('CLIENT DATA', clientData)
             let payload = null; 
             if (existingData && existingData.data?.length > 0) {
                 // Data exists, perform PUT
