@@ -130,7 +130,7 @@ const PersonalInfo = () => {
     };
 
     setIsFormSubmitted(true);
-    userService.updateUserDetails(id, data)
+    userService.updateUserDetails(data)
       .then(() => {
         AppUtils.toastNotification("Datele personale au fost actualizate cu success!", true)
         accountManager?.setRefresh(accountManager.refresh + 1);

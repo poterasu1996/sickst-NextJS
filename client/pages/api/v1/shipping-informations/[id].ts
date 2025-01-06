@@ -14,7 +14,7 @@ export default async function handler(req: any, res: any) {
         "Content-Type": "application/json",
         authorization: `Bearer ${jwt}`
     }
-    const urlFilter = `?filter[user_id][$eq]=${userId}`;
+    const urlFilter = `?filters[user_id][$eq]=${userId}`;
 
     if(req.method === 'GET') {
         try {
