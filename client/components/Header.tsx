@@ -9,9 +9,11 @@ import CartService from "../shared/services/cartService";
 import { useRouter } from "next/router";
 import AccountMobileSideModal from "./global/AccountMobileSideModal";
 import AccountContext from "../store/account-context";
-import logo from "../public/logo.svg";
+// import logo from "../public/logo.svg";
+import logo from "../public/logo-white.svg";
 
 import axios from "axios";
+import useGetJWT from "../shared/hooks/auth/useGetJWT";
 
 const LOGOUT_URL = 'http://localhost:3000/api/v1/logout';
 
@@ -29,7 +31,9 @@ const Header = () => {
     const response = await axios.post(LOGOUT_URL);
 
     if(response.status === 200) {
+      localStorage.getItem('jwt') && localStorage.removeItem('jwt');
       setIsAuth(false);
+      router.push("/");
     }
   }
 

@@ -9,15 +9,13 @@ const Login = () => {
       <div className="main-body">
         <div className="container register-page">
           <div className="row">
-            <div className="col-lg-5 title">
+            <div className="title">
               <span>Log in to your account</span>
             </div>
-            <div className="col-lg-5">
-              <div className="form">
-                <LogInForm />
-              </div>
+            <div className="form">
+              <LogInForm />
             </div>
-            <div className="col-lg-5 login">
+            <div className="login">
               <div className="login-link w-100 justify-content-between">
                 <a href="#">Forgot your password?</a>
                 <Link href="register">Don't have an account?</Link>

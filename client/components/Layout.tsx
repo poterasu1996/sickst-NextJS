@@ -15,11 +15,20 @@ const Layout: React.FC<Props> = ({ children }) => {
     const router = useRouter();
 
     return (
-        <>
-            {(router.pathname === '/auth/login' || router.pathname === '/auth/register') ? <SimpleHeader /> : <Header />}
+        <>  
+            {
+                (router.pathname === '/') 
+                    ? <></>
+                    : (router.pathname === '/auth/login' || router.pathname === '/auth/register') 
+                        ? <SimpleHeader /> 
+                        : <Header />}
             {children}
             <ToastContainer limit={3}/>
-            {(router.pathname !== '/auth/login' && router.pathname !== '/auth/register') ? <Footer /> : <SimpleFooter />}
+            {   (router.pathname === '/')
+                ? <></>
+                : (router.pathname !== '/auth/login' && router.pathname !== '/auth/register') 
+                    ? <Footer /> 
+                    : <SimpleFooter />}
         </>
     );
 }

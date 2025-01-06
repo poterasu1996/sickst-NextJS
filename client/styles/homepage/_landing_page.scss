@@ -1,0 +1,620 @@
+.lp-header {
+  background-color: transparent;
+  border-bottom: unset;
+  height: 6rem;
+  padding: 0 2rem;
+
+  .nav-menu {
+    width: 100%;
+    max-width: 120rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: relative;
+
+    .account-mobile-btn {
+      display: none;
+      position: absolute;
+      top: 0.5rem;
+      left: 1rem;
+      background-color: transparent;
+      border: none;
+      padding: 1rem;
+    }
+
+    .nav-link {
+      text-transform: uppercase;
+
+      a:hover {
+        color: #eee;
+      }
+    }
+
+    .nav-link.logo {
+      background-color: #fff;
+      height: 100%;
+      width: 27rem;
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      clip-path: path(
+        "M 23 20 C 22 10 10 0 0 0 L 270 0 C 260 0 248 11 247 20 L 246 30 C 246 41 236 50 226 50 L 44 50 C 34 50 24 40 24 30 Z"
+      );
+
+      img {
+        height: 70%;
+        width: 100%;
+        object-fit: contain;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+}
+.carousel {
+  width: 100vw;
+  min-width: 40rem;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  margin-top: -6rem;
+
+  &--list {
+    &--item {
+      position: absolute;
+      inset: 0 0 0 0;
+
+      &:nth-child(1) {
+        z-index: 1;
+
+        .author,
+        .title,
+        .topic,
+        .des,
+        .lp-buttons {
+          transform: translateY(5rem);
+          filter: blur(2rem);
+          opacity: 0;
+          animation: showContent 0.5s 1s linear forwards;
+        }
+
+        .title {
+          animation-delay: 0.5s;
+        }
+
+        .topic {
+          animation-delay: 0.7s;
+        }
+
+        .des {
+          animation-delay: 0.9s;
+        }
+
+        .lp-buttons {
+          animation-delay: 1.2s;
+        }
+      }
+
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+
+      .content {
+        position: absolute;
+        top: 20%;
+        max-width: 80%;
+        left: 40%;
+        transform: translateX(-50%);
+        padding-right: 40%;
+        box-sizing: border-box;
+        color: #fff;
+        text-shadow: 0 5px 10px #0004;
+
+        .author {
+          font-weight: bold;
+          letter-spacing: 1rem;
+        }
+
+        .title,
+        .topic {
+          font-weight: bold;
+        }
+
+        .title {
+          font-size: 3.5rem;
+          line-height: 1rem;
+        }
+
+        .topic {
+          font-size: 6rem;
+          text-transform: uppercase;
+          line-height: 5rem;
+          margin: 2rem 0;
+        }
+
+        .des {
+          font-size: 1.4rem;
+        }
+      }
+    }
+  }
+
+  .thumbnail {
+    // 1 card design
+    position: absolute;
+    top: 25%;
+    right: 5rem;
+    width: max-content;
+    z-index: 1;
+    display: flex;
+    gap: 2rem;
+    transform: translateX(55rem);
+    cursor: pointer;
+
+    .item {
+      // 1 card design
+      height: 40rem;
+      width: 30rem;
+      flex-shrink: 0;
+      position: relative;
+
+      .wave-clip {
+        clip-path: path(
+          "M 0 0 L 300 0 L 300 270 C 300 290 290 300 270 300 L 240 300 C 220 300 210 310 210 330 L 210 370 C 210 390 200 400 180 400 L 0 400 Z"
+        );
+      }
+
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 4rem;
+      }
+
+      .perfume-icon {
+        position: absolute;
+        background-color: #fff;
+        bottom: 1.7rem;
+        right: 1rem;
+        width: 7rem;
+        height: 7rem;
+        border-radius: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          height: 60%;
+          width: 60%;
+          object-fit: contain;
+        }
+      }
+
+      .content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        bottom: 40%;
+        left: -20%;
+        right: 1rem;
+        color: #fff;
+        background-color: transparent;
+        backdrop-filter: blur(1rem);
+        background-image: linear-gradient(
+          120deg,
+          rgba(255, 255, 255, 0.3),
+          rgba(0, 0, 0, 0.2)
+        );
+        height: 12rem;
+        width: 12rem;
+        border-radius: 50%;
+
+        #circle {
+          fill: transparent;
+        }
+
+        .circle-text {
+          font-size: 1.2rem;
+          fill: white;
+          letter-spacing: 0.6rem;
+          transform-origin: 50% 50%;
+          animation: rotate 15s linear infinite;
+          animation-delay: 2s;
+        }
+
+        .logo {
+          position: absolute;
+          background-color: #fff;
+          color: #000;
+          border-radius: 50%;
+          height: 5rem;
+          width: 5rem;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          img {
+            width: 90%;
+            height: 100%;
+            object-fit: contain;
+          }
+        }
+      }
+    }
+  }
+
+  .lp-buttons {
+    button {
+      padding: 1rem 1.5rem;
+      border-radius: 4rem;
+      color: #fff;
+      margin-top: 5rem;
+      font-size: 1.4rem;
+      font-weight: bold;
+      letter-spacing: 0.1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: transparent;
+      backdrop-filter: blur(1rem);
+      background-image: linear-gradient(
+        120deg,
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2)
+      );
+
+      .cart {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 3rem;
+        width: 4rem;
+        border-radius: 4rem;
+        background-color: #fff;
+        margin-right: 1rem;
+      }
+    }
+  }
+
+  .arrows {
+    position: absolute;
+    top: 80%;
+    left: 10%;
+    width: 80rem;
+    max-width: 30%;
+    display: flex;
+    gap: 1rem;
+    z-index: 2;
+    transform: translateY(5rem);
+    filter: blur(2rem);
+    opacity: 0;
+    animation: showContent 0.5s 1s linear forwards;
+
+    button {
+      width: 100%;
+      height: 4rem;
+      border-radius: 50%;
+      border: none;
+      color: #fff;
+      font-weight: bold;
+      font-size: large;
+      transition: 0.5s;
+      text-align: start;
+      font-size: 2rem;
+      letter-spacing: 0.2rem;
+
+      .arrow-wrapper {
+        display: flex;
+        align-items: center;
+
+        .arrow-body {
+          width: 100%;
+          height: 2px;
+          background-color: #eee;
+          background-color: #555;
+        }
+      }
+    }
+  }
+}
+
+.showThumbnail {
+  animation: transformThumbnail 1s ease 1 forwards;
+}
+
+.carousel .carousel--list .carousel--list--item:nth-child(1) {
+  z-index: 1;
+}
+
+// effect next click
+.carousel.next .arrows {
+  display: none;
+}
+.carousel.next .carousel--list .carousel--list--item:nth-child(1) {
+  img {
+    height: 40rem;
+    width: 30rem;
+    position: absolute;
+    top: 25%;
+    right: 5rem;
+    border-radius: 4rem;
+    animation: showImage 0.5s linear 1 forwards;
+  }
+  .title,
+  .topic,
+  .des,
+  .lp-buttons {
+    display: none;
+  }
+}
+
+.carousel.next .carousel--list .carousel--list--item:nth-last-child(1) .title,
+.carousel.next .carousel--list .carousel--list--item:nth-last-child(1) .topic,
+.carousel.next .carousel--list .carousel--list--item:nth-last-child(1) .des,
+.carousel.next
+  .carousel--list
+  .carousel--list--item:nth-last-child(1)
+  .lp-buttons {
+  animation: contentOut 0.5s linear forwards;
+}
+
+// efect prev click
+.carousel.prev .arrows {
+  display: none;
+}
+
+.carousel.prev .carousel--list .carousel--list--item:nth-child(1) {
+  .title,
+  .topic,
+  .des,
+  .lp-buttons {
+    display: none;
+  }
+}
+.carousel.prev .carousel--list .carousel--list--item:nth-child(2) {
+  .title,
+  .topic,
+  .des,
+  .lp-buttons {
+    animation: contentOut 0.5s linear forwards;
+  }
+}
+.carousel.prev .carousel--list .carousel--list--item:nth-child(2) {
+  z-index: 2;
+
+  img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    animation: outImage 0.5s linear 1 forwards;
+  }
+}
+
+.carousel.next .arrows button,
+.carousel.prev .arrows button {
+  pointer-events: none;
+}
+
+// animation for last thumbnail from list
+@keyframes showTumbnail {
+  to {
+    width: 15rem;
+  }
+}
+@keyframes showContent {
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+@keyframes showImage {
+  to {
+    width: 100%;
+    height: 100%;
+    right: 0;
+    top: 0;
+    border-radius: 0;
+  }
+}
+@keyframes transformThumbnail {
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes outImage {
+  to {
+    height: 40rem;
+    width: 30rem;
+    border-radius: 4rem;
+    top: 25%;
+    right: 5rem;
+  }
+}
+
+@keyframes contentOut {
+  to {
+    transform: translateY(-15rem);
+    filter: blur(2rem);
+    opacity: 0;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotateZ(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+// tablet responsive
+@media screen and (max-width: 1024px) {
+  .lp-header {
+    .nav-menu {
+      .account-mobile-btn {
+        display: block;
+      }
+      .nav-link {
+        display: none;
+      }
+
+      .nav-link.logo {
+        width: 20rem;
+        clip-path: path(
+          "M 23 20 C 22 10 10 0 0 0 L 200 0 C 190 0 177 11 176 20 L 175 30 C 174 41 166 50 156 50 L 44 50 C 34 50 25 40 24 30 Z"
+        );
+      }
+    }
+  }
+  .carousel.next .carousel--list .carousel--list--item:nth-child(1) {
+    img {
+      height: 25rem;
+      width: 15rem;
+      top: 50%;
+    }
+  }
+
+  .carousel {
+    min-width: 40rem;
+    min-height: 80rem;
+
+    &--list {
+      &--item {
+        padding-right: 0;
+
+        .content {
+          padding-right: unset;
+          width: 100%;
+          padding-right: 40%;
+          left: 50%;
+
+          @media (max-height: 670px) {
+            top: 15%;
+          }
+
+          .title {
+            font-size: 3rem;
+          }
+
+          .topic {
+            font-size: 5rem;
+          }
+        }
+      }
+    }
+
+    .thumbnail {
+      .item {
+        height: 40rem;
+        width: 30rem;
+      }
+    }
+
+    .arrows {
+      top: 70%;
+
+      @media (max-height: 670px) {
+        top: 65%;
+      }
+
+      button {
+        font-size: 1.4rem;
+      }
+    }
+  }
+
+  @keyframes outImage {
+    to {
+      height: 25rem;
+      width: 15rem;
+      border-radius: 3rem;
+      top: 60%;
+      right: 3rem;
+    }
+  }
+
+  // mobile responsive for 375 x 667px
+  @media (max-height: 667px) {
+    .carousel.next .carousel--list .carousel--list--item:nth-child(1) {
+      img {
+        top: 50%;
+      }
+    }
+
+    @keyframes outImage {
+      to {
+        height: 25rem;
+        width: 15rem;
+        border-radius: 3rem;
+        right: 3rem;
+        top: 50%;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .carousel {
+    .thumbnail {
+      top: 60%;
+      right: 3rem;
+
+      @media (max-height: 670px) {
+        top: 50%;
+      }
+
+      .item {
+        height: 25rem;
+        width: 15rem;
+
+        .content {
+          display: none;
+        }
+
+        .perfume-icon {
+          width: 5rem;
+          height: 5rem;
+        }
+
+        img {
+          border-radius: 3rem;
+        }
+      }
+    }
+  }
+}
+
+// mobile responsive
+@media screen and (max-width: 678px) {
+  .carousel {
+    &--list {
+      &--item {
+        padding-right: 0;
+
+        .content {
+          padding-right: unset;
+          width: 100%;
+          left: 50%;
+
+          @media (max-height: 670px) {
+            top: 15%;
+          }
+
+          .title {
+            font-size: 3rem;
+          }
+
+          .topic {
+            font-size: 5rem;
+          }
+        }
+      }
+    }
+  }
+}

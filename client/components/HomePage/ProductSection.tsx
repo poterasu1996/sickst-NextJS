@@ -1,5 +1,4 @@
 import Product from "./Product";
-import { Button, Spinner } from "react-bootstrap";
 import { useEffect, useMemo, useState } from "react";
 import { TabView, TabPanel } from "primereact/tabview";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
@@ -8,6 +7,8 @@ import "primereact/resources/primereact.css";
 import IProduct from "../../types/Product.interface";
 import productService from "../../shared/services/productService";
 import { useQuery } from "@tanstack/react-query";
+import SecondaryButton from "../global/SecondaryButton";
+import { CircularProgress } from "@mui/material";
 
 const ProductSection = () => {
   const [maleTab, setMaleTab] = useState(true);
@@ -68,7 +69,7 @@ const ProductSection = () => {
                   itemsToShow
                 ) : (
                   <div className="d-flex justify-content-center main-spinner">
-                    <Spinner animation="grow" style={{ color: "#cc3633" }} />
+                    <CircularProgress />
                   </div>
                 )}
               </div>
@@ -81,7 +82,7 @@ const ProductSection = () => {
                   itemsToShow
                 ) : (
                   <div className="d-flex justify-content-center main-spinner">
-                    <Spinner animation="grow" style={{ color: "#cc3633" }} />
+                    <CircularProgress />
                   </div>
                 )}
               </div>
@@ -90,11 +91,11 @@ const ProductSection = () => {
         </TabView>
 
         <div className="more-prod">
-          {showMore && (
-            <Button className="button-second-empty" onClick={handleShowMore}>
+          {showMore &&
+            <SecondaryButton onClick={handleShowMore}>
               Vezi mai multe produse
-            </Button>
-          )}
+            </SecondaryButton>
+          }
         </div>
       </div>
     </div>

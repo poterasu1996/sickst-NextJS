@@ -1,6 +1,7 @@
 // @ts-ignore
 import { DateTime } from "luxon";
 import { toast } from "react-toastify";
+import { EncodedFile } from "../../models/ContactUs.model";
 
 const toastMsg = (msg: string, status: boolean) => {
     return (
@@ -84,6 +85,42 @@ export class AppUtils {
 
     static firstInitial(name: string) {
         return name.charAt(0).toUpperCase()+".";
+    }
+
+    static encodeFileToBase64 = (file: File): Promise<EncodedFile> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+            if (reader.result) {
+                resolve({
+                name: file.name,
+                type: file.type,
+                data: reader.result.toString().split(',')[1] as string, // Get the base64 part
+                });
+            } else {
+                reject(new Error('FileReader result is undefined'));
+            }
+            };
+            reader.onerror = error => reject(error);
+        });
+    }
+
+    static encodeFileToBase64Alt = async (file: File): Promise<EncodedFile> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsArrayBuffer(file);
+            reader.onload = () => {
+              const arrayBuffer = reader.result as ArrayBuffer;
+              const base64String = Buffer.from(arrayBuffer).toString('base64');
+              resolve({
+                name: file.name,
+                type: file.type,
+                data: base64String,
+              });
+            };
+            reader.onerror = (error) => reject(error);
+        });
     }
 
     static getNextBillingDate(isoDate: string) {

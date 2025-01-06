@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { Button } from "react-bootstrap";
 import AuthContext from "../../store/auth-context";
+import SecondaryButtonEmpty from "../global/SecondaryButtonEmpty";
 
 const BannerBottom = () => {
     const { isAuth } = useContext(AuthContext);
@@ -12,8 +12,8 @@ const BannerBottom = () => {
                     <span className="title">Acceseaza peste 500 de produse in fiecare luna!</span>
                 </div>
                 <div>
-                    {!isAuth && <Button href="/auth/register" className="button-primary big mt-5">Autentificare</Button>}
-                    {isAuth && <Button href="/subscriptions" className="button-primary big mt-5">Subscribe</Button>}
+                    {!isAuth && <div className="max-w-80"><SecondaryButtonEmpty href="/auth/register" className="mt-5">Autentificare</SecondaryButtonEmpty></div>}
+                    {isAuth && <div className="max-w-80"><SecondaryButtonEmpty href="/subscriptions" className="mt-5">Subscribe</SecondaryButtonEmpty></div>}
                 </div>
             </div>
         </div>

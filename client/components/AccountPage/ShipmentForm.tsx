@@ -7,11 +7,12 @@ import CustomFormField from "../global/form/CustomFormField";
 import AccountContext from "../../store/account-context";
 import { IShippingInfo } from "../../models/ShippingInformation.model";
 import countyService from "../../shared/services/countyService";
-import { Autocomplete, TextField } from "@mui/material";
 import Switch from "@mui/material/Switch";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import AutocompleteSelect from "../global/form/Autocomplete";
+import shippingService from "../../shared/services/shippingService";
 
 const shippingInfoSchema = z.object({
   address: z
@@ -96,7 +97,9 @@ export default function ShipmentForm({ onSubmit }: Props) {
         phone: formInputData.phone,
         primary: formInputData.primary,
     }
-    accountManager!.addShippingInfo(data);
+    const userId = accountManager!.currentUser?.id;
+    shippingService.addShippingInfo(data, userId ?? 0).then(() => accountManager!.refreshContext());  // de modificat, dupa context refacto
+    // accountManager!.addShippingInfo(data);
     onSubmit();
     reset();
   };
@@ -111,7 +114,7 @@ export default function ShipmentForm({ onSubmit }: Props) {
           {...register("address", {
             required: "Campul este obligatoriu"
           })}
-          label="Adresa"
+          label="Adresa*"
           type="text"
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setValue("address", e.target.value)
@@ -122,7 +125,7 @@ export default function ShipmentForm({ onSubmit }: Props) {
           <Col lg={6}>
             <CustomFormField
               {...register("full_name")}
-              label="Nume si Prenume"
+              label="Nume si Prenume*"
               type="text"
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setValue("full_name", e.target.value)
@@ -133,7 +136,7 @@ export default function ShipmentForm({ onSubmit }: Props) {
           <Col lg={6}>
             <CustomFormField
               {...register("phone")}
-              label="Telefon"
+              label="Telefon*"
               type="text"
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setValue("phone", e.target.value)
@@ -146,7 +149,7 @@ export default function ShipmentForm({ onSubmit }: Props) {
           <Col lg={6}>
             <CustomFormField
               {...register("city")}
-              label="Oras"
+              label="Oras*"
               type="text"
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setValue("city", e.target.value)
@@ -155,27 +158,61 @@ export default function ShipmentForm({ onSubmit }: Props) {
             />
           </Col>
           <Col lg={6}>
-            <Autocomplete
+            <AutocompleteSelect 
               {...register("county")}
-              className={`custom-autocomplete ${
-                errors.county?.message ? "invalid-field" : ""
-              }`}
               disablePortal
               id="county"
               options={countyList}
               defaultValue={undefined}
-              onChange={(event, value) => {
-                value && setValue("county", value);
+              onChange={(_: any, value: any) => {
+                  value && setValue("county", value);
               }}
-              renderInput={(params) => <TextField {...params} label="Judet" />}
+              label={"Judet*"}
+              error={errors.county?.message}
             />
-            <div className="invalid-field">{errors.county?.message}</div>
           </Col>
         </Row>
         <div className="custom-switch-input">
           <label>Make this address primary</label>
           <Switch
             {...register("primary")}
+            sx={{
+              padding: 0,
+              height: "2.6rem",
+              width: "4.2rem",
+              margin: "0 0.8rem",
+              '.MuiSwitch-switchBase': {
+                padding: 0,
+                margin: '2px',
+                transitionDuration: '300ms',
+                '&.Mui-checked': {
+                  transform: 'translateX(16px)',
+                  color: '#fff',
+                  '& + .MuiSwitch-track': {
+                    backgroundColor: '#cc3633',
+                    opacity: 1,
+                    border: 0
+                  },
+                  '&.MuiSwitch-track': {
+                    opacity: 0.5
+                  }
+                }
+              },
+              '.MuiSwitch-thumb': {
+                boxSizing: 'border-box',
+                width: '2.2rem',
+                height: '2.2rem',
+                color: '#fff'
+              },
+              '.MuiTouchRipple-root': {
+                'display': 'none'
+              },
+              '.MuiSwitch-track': {
+                borderRadius: '1.3rem',
+                backgroundColor: '#A9A9AD',
+                opacity: 1
+              }
+            }}
             onChange={(e, value) => {
               setValue("primary", value);
             }}

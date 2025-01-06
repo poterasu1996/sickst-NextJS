@@ -1,10 +1,9 @@
 import { ChangeEvent } from "react";
-import { Button } from "react-bootstrap";
 import {
   useState,
   useContext,
 } from "react";
-import CustomFormField from "../global/form/CustomFormField";
+// import CustomFormField from "../global/form/CustomFormField";
 import AuthContext from "../../store/auth-context";
 import { useRouter } from "next/router";
 // import axios from '../../api/axios';
@@ -14,9 +13,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import axios from "axios";
 import { USER_LOGIN } from "../../shared/utils/constants";
+import InputField from "../global/form/InputField";
+import PrimaryButton from "../global/PrimaryButton";
 
 const logInSchema = z.object({
-  email: z.string().email(),
+  email: z.string({ required_error: 'Field is required' }).email({ message: 'Invalid email address'}),
   password: z.string().min(8, "Parola trebuie sa contina minim 8 caractere"),
 });
 
@@ -32,7 +33,6 @@ export default function LogInForm() {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-    getValues,
     setValue,
   } = useForm<TLogInSchema>({
     resolver: zodResolver(logInSchema),
@@ -50,13 +50,15 @@ export default function LogInForm() {
 
       if (response.status === 200) {
         setIsAuth(true);
-        setToken(response.data.token);
+        setToken(response.data.token);  // might delete in future
+        localStorage.setItem('jwt', response.data.token)
         router.push("/");
 
         const expireAuth = 3000 * 60 * 60;
         setTimeout(() => {
           setIsAuth(false);
           setToken(undefined);
+          localStorage.getItem('jwt') && localStorage.removeItem('jwt');
           router.push("/account/login");
         }, expireAuth);
       }
@@ -75,33 +77,34 @@ export default function LogInForm() {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <CustomFormField
-          {...register("email", { value: getValues("email") || "" })}
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-16">
+        <InputField 
+          {...register('email')}
           label="Email address"
           type="email"
+          error={errors.email?.message}
+          helperText={errors.email?.message}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setValue("email", e.target.value)
           }
-          error={errors?.email?.message}
         />
-        <CustomFormField
-          {...register("password", { value: getValues("password") || "" })}
+        <InputField 
+          {...register('password')}
           label="Password"
           type="password"
+          className={errors.email?.message ? 'mt-0' : 'mt-8'}
+          error={errors.password?.message}
+          helperText={errors.password?.message}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setValue("password", e.target.value)
           }
-          error={errors?.password?.message}
         />
         {error && <div className="form-errors">ERROR: {error}</div>}
-        <Button
+        <PrimaryButton
+          className="mt-24"
           disabled={isSubmitting}
-          className="button-second mt-5"
           type="submit"
-        >
-          Log In
-        </Button>
+        >Log In</PrimaryButton>
       </form>
     </>
   );

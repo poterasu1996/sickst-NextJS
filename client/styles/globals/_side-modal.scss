@@ -205,9 +205,14 @@
             }
 
             a {
+                display: block;
                 color: #1a1a1a ;
                 height: 4rem;
                 transform-origin: 0 center;
+                line-height: 6rem;
+                padding: 0 1rem;
+                font-weight: bold;
+
                 &:hover {
                     transform: scale3d(1.01,1.01,1.01);
                     font-weight: 700;

@@ -1,6 +1,4 @@
-import { Form, Button } from "react-bootstrap";
 import { ChangeEvent, useState } from "react";
-import CustomFormField from "../global/form/CustomFormField";
 import { useRouter } from "next/router";
 import { Check } from "react-feather";
 import maleIcon from "../../public/img/male-icon.png";
@@ -11,6 +9,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import InputField from "../global/form/InputField";
+import PrimaryButton from "../global/PrimaryButton";
 
 const REGISTER_URL = "/auth/local/register";
 const USER_DETAILS = "/user-profile-details";
@@ -19,7 +19,7 @@ const STRIPE_CUSTOMER = "/api/v1/stripe/customer"
 
 const signUpSchema = z
   .object({
-    email: z.string().email(),
+    email: z.string({ required_error: 'Field is required' }).email({ message: 'Invalid email address'}),
     password: z.string().min(8, "Parola trebuie sa contina minim 8 caractere"),
     confirmPassword: z.string(),
   })
@@ -107,78 +107,90 @@ export default function SignUpForm() {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="gender-icons">
-          <Form.Check>
-            <Form.Check.Label
-              onChange={() => {
-                handleGender("female");
-              }}
-            >
+          <div className="form-check">
+            <label className="form-check-label" onChange={() => handleGender("female")}>
               <Image src={femaleIcon} width={100} height={100} />
+              <input 
+                className="cb hidden" 
+                type="checkbox" 
+                defaultChecked={true}
+              ></input>
               {cbFemale && (
-                <div className="checked">
-                  <Check
-                    strokeWidth={"3px"}
-                    height={22}
-                    width={22}
-                    stroke={"#cc3633"}
-                  />
-                </div>
-              )}
-              <Form.Check.Input type="radio" checked={cbFemale} />
-            </Form.Check.Label>
+                  <div className="checked">
+                    <Check
+                      strokeWidth={"3px"}
+                      height={22}
+                      width={22}
+                      stroke={"#cc3633"}
+                    />
+                  </div>
+                )}
+            </label>
             <p>Feminin</p>
-          </Form.Check>
-          <Form.Check>
-            <Form.Check.Label
-              onChange={() => {
-                handleGender("male");
-              }}
-            >
+          </div>
+          <div className="form-check">
+            <label className="form-check-label" onChange={() => handleGender("male")}>
               <Image src={maleIcon} width={100} height={100} />
+              <input 
+                className="cb hidden" 
+                type="checkbox" 
+                defaultChecked={true}
+              ></input>
               {cbMale && (
-                <div className="checked">
-                  <Check
-                    strokeWidth={"3px"}
-                    height={22}
-                    width={22}
-                    stroke={"#cc3633"}
-                  />
-                </div>
-              )}
-              <Form.Check.Input type="radio" checked={cbMale} />
-            </Form.Check.Label>
+                  <div className="checked">
+                    <Check
+                      strokeWidth={"3px"}
+                      height={22}
+                      width={22}
+                      stroke={"#cc3633"}
+                    />
+                  </div>
+                )}
+            </label>
             <p>Masculin</p>
-          </Form.Check>
+          </div>
         </div>
         {error && <div className="form-errors">ERROR: {error}</div>}
 
-        <CustomFormField
-          {...register("email")}
+        <InputField 
+          {...register('email')}
           label="Email address"
           type="email"
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setValue("email", e.target.value)}
           error={errors.email?.message}
+          helperText={errors.email?.message}
+          className="mt-8"
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setValue("email", e.target.value)
+          }
         />
-        <CustomFormField
-          {...register("password")}
+        <InputField 
+          {...register('password')}
           label="Password"
           type="password"
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setValue("password", e.target.value)}
           error={errors.password?.message}
+          helperText={errors.password?.message}
+          className={errors.password?.message ? 'mt-0' : 'mt-8'}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setValue("password", e.target.value)
+          }
         />
-        <CustomFormField
-          {...register("confirmPassword")}
+        <InputField 
+          {...register('confirmPassword')}
           label="Password confirmation"
           type="password"
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setValue("confirmPassword", e.target.value)}
           error={errors.confirmPassword?.message}
+          helperText={errors.confirmPassword?.message}
+          className={errors.confirmPassword?.message ? 'mt-8' : 'mt-8'}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setValue("confirmPassword", e.target.value)
+          }
         />
 
         <div className="form-field newsletter">
-          <label className="check-box" onChange={() => handleNewsletter()}>
-            <input className="cb" type="checkbox" checked={newsletter}></input>
+          <label className="check-box" onChange={handleNewsletter}>
+            <input className="cb" type="checkbox" defaultChecked={true}></input>
             <span className="custom-cb"></span>
             <span className="text">Sign me up for details from Sickst</span>
           </label>
@@ -192,13 +204,13 @@ export default function SignUpForm() {
             </span>
           </div>
         </div>
-        <Button
+        <PrimaryButton
           disabled={isSubmitting}
-          className="button-second mt-5"
+          className="mt-5"
           type="submit"
         >
           Sign up
-        </Button>
+        </PrimaryButton>
       </form>
     </>
   );

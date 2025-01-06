@@ -1,6 +1,7 @@
 import logo from "../../../public/logo.svg";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import axios from "../../../api/axios";
+// import axios from "../../../api/axios";
+import axios from "axios";
 import { IGETOrderHistory } from "../../../models/OrderHistory.model";
 import { AppUtils } from "../../../shared/utils/app.utils";
 import { IOHProduct } from "../../../models/OrderHistory.model";
@@ -10,6 +11,7 @@ import AccountContext from "../../../store/account-context";
 import { useRouter } from "next/router";
 import { ICompanyDetail, ICompanyDetailModel } from "../../../models/CompanyDetail.model";
 import { Modal, ModalBody } from "reactstrap";
+import orderService from "../../../shared/services/orderService";
 
 interface Props {
     order: IGETOrderHistory | null,
@@ -34,7 +36,7 @@ const OrderId = ({ order, companyDet }: Props) => {
     const accountManager = useContext(AccountContext);
     const [showCancelOrder, setShowCancelOrder] = useState<boolean>(false);
     const columns: ColumnMeta[] = [
-        {field: 'id',header: 'Nr. Crt'},
+        {field: 'id', header: 'Nr. Crt'},
         {field: 'product', header: 'Denumire produs/abonament'},
         {field: 'quantity', header: 'Cant.'},
         {field: 'price', header: 'Pret unit.'},
@@ -56,8 +58,8 @@ const OrderId = ({ order, companyDet }: Props) => {
 
     function handleCancelOrder() {
         if (!order) return;
-        accountManager!.cancelOrder(order.id, order).then(() => router.replace(router.asPath)); 
-        router.replace(router.asPath);
+        orderService.cancelOrder(order.id, order)
+            .then(() => router.replace(router.asPath));
         setShowCancelOrder(false);
     }
     
@@ -190,8 +192,8 @@ const OrderId = ({ order, companyDet }: Props) => {
 
 export default OrderId;
 
-const COMPANY_DETAILS = '/company-details';
-const ORDER_HISTORIES = '/order-histories';
+const COMPANY_DETAILS = `${process.env.NEXT_PUBLIC_STRAPI_APIURL}/company-details`;
+const ORDER_HISTORIES = `${process.env.NEXT_PUBLIC_STRAPI_APIURL}/order-histories`;
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
     const { params } = context;
@@ -212,7 +214,7 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
             order = orderResponse.data.data;
 
             const compDetResponse = await axios.get(COMPANY_DETAILS, header);
-            companyDet = compDetResponse.data.data[0]
+            companyDet = compDetResponse.data.data[0] ?? null
         } catch (error) {
             console.log(error)
         }

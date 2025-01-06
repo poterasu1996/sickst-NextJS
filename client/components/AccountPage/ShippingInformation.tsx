@@ -8,6 +8,7 @@ import { Menu } from "primereact/menu";
 import { MenuItem } from "primereact/menuitem";
 import { useRecoilState } from "recoil";
 import { shippingListR } from "../../shared/recoil-states";
+import shippingService from "../../shared/services/shippingService";
 
 const ShippingInformation = () => {
     const [show, setShow] = useState<boolean>(false);
@@ -34,17 +35,16 @@ const ShippingInformation = () => {
         }
     ]
 
-    // console.log('shippingInfo',shippingInfo)
     function handleDeleteAddress(adrsIndex: number | null) {
         if(adrsIndex !== null) {
-            const newList: IShippingInfo[] | undefined = shippingInfo?.attributes.shipping_info_list!.filter((item, index) => index !== adrsIndex);
+            const newList: IShippingInfo[] | undefined = shippingInfo?.attributes.shipping_info_list?.filter((item, index) => index !== adrsIndex);
             const newData = {
                 data: {
                     user_id: shippingInfo!.attributes.user_id,
                     shipping_info_list: newList ? newList : [],
                 }
             }
-            accountManager?.editShippingAddress(shippingInfo!.id, newData)
+            shippingService.editShippingAddress(shippingInfo!.id, newData).then(() => accountManager!.refreshContext());
         }
     }
 
@@ -59,26 +59,32 @@ const ShippingInformation = () => {
             })
             if(_list) {
                 _list[adrsIndex].primary = true;
-                const newData = {
+                const payload = {
                     data: {
                         user_id: shippingInfo!.attributes.user_id,
                         shipping_info_list: _list
                     }
                 }
 
-                accountManager?.editShippingAddress(shippingInfo!.id, newData);
+                shippingService.editShippingAddress(shippingInfo!.id, payload).then(() => accountManager!.refreshContext());
             }
         }
     }
 
     useEffect(() => {
         if(accountManager!.currentUser) {
-            accountManager!.fetchShippingList()
-                .then((resp: IGETShippingInformation) => {
-                    setShippingInfo(resp);
-                    setShippingListR(resp.attributes.shipping_info_list);
-                })
-                .catch(error => console.log('Shipping list error: ', error))
+            const userId = accountManager?.currentUser.id;
+            shippingService.getShippingList(userId ?? 0).then((resp: IGETShippingInformation) => {
+                setShippingInfo(resp);
+                setShippingListR(resp.attributes.shipping_info_list)
+            });
+
+            // accountManager!.fetchShippingList()
+                // .then((resp: IGETShippingInformation) => {
+            //         setShippingInfo(resp);
+            //         setShippingListR(resp.attributes.shipping_info_list);
+            //     })
+            //     .catch(error => console.log('Shipping list error: ', error))
         }
     }, [accountManager!.currentUser, accountManager!.refresh])
 

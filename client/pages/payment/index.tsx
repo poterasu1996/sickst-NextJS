@@ -20,8 +20,7 @@ import getStripe from "../../lib/get-stripe";
 // @ts-ignore
 import CookiesServer from 'cookies';
 
-const USER_ME = 'http://localhost:1337/api/users/me';
-const USER_DETAILS = 'http://localhost:1337/api/user-profile-details';
+
 
 type Props = {
   user: {
@@ -46,9 +45,9 @@ const PaymentPage = ({ user }: Props) => {
 
   // disable the pay button if there is no product / no primary address set
   const disablePayButton = (cartItems.length === 0 || activeShippingDetails === undefined);
-  console.log('RECOILDSL', shippingListRecoil)
-  console.log('activeSL', activeShippingDetails)
-  console.log('cartItems', cartItems)
+  // console.log('RECOILDSL', shippingListRecoil)
+  // console.log('activeSL', activeShippingDetails)
+  // console.log('cartItems', cartItems)
 
   const orderMinus = (item: any) => {
     if(item.quantity > 1) {
@@ -250,6 +249,9 @@ const PaymentPage = ({ user }: Props) => {
 
 export default PaymentPage;
 
+const USER_ME = `${process.env.NEXT_PUBLIC_STRAPI_APIURL}/users/me`;
+const USER_DETAILS = `${process.env.NEXT_PUBLIC_STRAPI_APIURL}/user-profile-details`;
+
 export async function getServerSideProps({req, res}: any) {
   const cookies = new CookiesServer(req, res);
   const jwt = cookies.get('jwt');
@@ -259,7 +261,7 @@ export async function getServerSideProps({req, res}: any) {
   if(jwt) {
     const header = {
       headers: {
-        'Authorization': 'Bearer ' + jwt
+        'Authorization': `Bearer ${jwt}`
       }
     }
 

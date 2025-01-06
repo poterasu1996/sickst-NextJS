@@ -1,7 +1,7 @@
 // @ts-ignore
 import { DateTime } from "luxon";
 import { useContext, useEffect, useState } from "react";
-import axios from "../../api/axios";
+// import axios from "../../api/axios";
 import BillingInformation from "../../components/AccountPage/BillingInformation";
 import ManageSubscription from "../../components/AccountPage/ManageSubscription";
 import OrderHistory from "../../components/AccountPage/OrderHistory";
@@ -16,6 +16,7 @@ import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
 import { IUserModel } from "../../models/User.model";
 import { IGETUserDetails } from "../../models/UserDetails.model";
 import PersonalInfo from "../../components/AccountPage/PersonalInfo";
+import axios from "axios";
 
 // const accState = [
 //     'subscription', 
@@ -106,9 +107,9 @@ const Account = ({ userInfo, subscriptionHistory }: Props) => {
 
 export default Account;
 
-const USER_ME = '/users/me';
-const SUBSCRIPTION_HISTORY = '/subscription-orders';
-const USER_DETAILS = '/user-profile-details';
+const USER_ME = `${process.env.NEXT_PUBLIC_STRAPI_APIURL}/users/me`;
+const SUBSCRIPTION_HISTORY = `${process.env.NEXT_PUBLIC_STRAPI_APIURL}/subscription-orders`;
+const USER_DETAILS = `${process.env.NEXT_PUBLIC_STRAPI_APIURL}/user-profile-details`;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const cookies = context.req.cookies; 
@@ -143,6 +144,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 }
 
                 if(userDetails.attributes.subscribed) {
+                    // luam orderul daca userul e subscribed, urmand a crea un serviciu care 
+                    // autodezaboneaza in functie de is_cancelled si expire_date
                     try {
                         // ramane de vazut daca luam orderul active/pending sau nu
                         const subHistory = await axios.get(`${SUBSCRIPTION_HISTORY}?filters[user_id][$eq]=${userDetails.attributes.user_id}`, header)
@@ -150,7 +153,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                             .catch(error => console.log(error))
             
                         subscriptionHistory = subHistory?.data;
-                        console.log("subHist", subscriptionHistory)            
                     } catch (error) {
                         console.log(error);
                     }
