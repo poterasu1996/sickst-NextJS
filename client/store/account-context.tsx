@@ -27,10 +27,10 @@ interface IAccountContext {
   // activateSubscription: (id: number) => Promise<void>;
   // addPersonalInfo: (data: IUserDetailsModel, piID: number) => void;
   // addShippingInfo: (data: IShippingInfo) => void;
-  cancelSubscription: (
-    subId: number,
-    subOrder: IGETSubscriptionOrder | null
-  ) => void;
+  // cancelSubscription: (
+  //   subId: number,
+  //   subOrder: IGETSubscriptionOrder | null
+  // ) => void;
   currentUser: IUserModel | null;
   dislikeReview: (
     userId: number,
@@ -183,48 +183,48 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
   // }
 
   // must be moved to service
-  async function cancelSubscription(
-    subscriptionId: number,
-    subscriptionOrder: IGETSubscriptionOrder | null
-  ) {
-    // de odificat la fel ca cea de sus
-    if (header && subscriptionOrder) {
-      const { createdAt, publishedAt, updatedAt, ...data } =
-        subscriptionOrder["attributes"];
-      const cancelData = {
-        data: {
-          ...data,
-          is_cancelled: true,
-        },
-      };
-      const cancelledSubscription = {
-        data: {
-          user_id: subscriptionOrder.attributes.user_id,
-          subscription_order: [subscriptionOrder.id],
-        },
-      };
+  // async function cancelSubscription(
+  //   subscriptionId: number,
+  //   subscriptionOrder: IGETSubscriptionOrder | null
+  // ) {
+  //   // de odificat la fel ca cea de sus
+  //   if (header && subscriptionOrder) {
+  //     const { createdAt, publishedAt, updatedAt, ...data } =
+  //       subscriptionOrder["attributes"];
+  //     const cancelData = {
+  //       data: {
+  //         ...data,
+  //         is_cancelled: true,
+  //       },
+  //     };
+  //     const cancelledSubscription = {
+  //       data: {
+  //         user_id: subscriptionOrder.attributes.user_id,
+  //         subscription_order: [subscriptionOrder.id],
+  //       },
+  //     };
 
-      try {
-        await axios
-          .post(CANCELLED_SUBSCRIPTIONS, cancelledSubscription, header)
-          .then(() => {
-            axios.put(
-              `${SUBSCRIPTION_ORDER}/${subscriptionId}`,
-              cancelData,
-              header
-            );
-            AppUtils.toastNotification("Te-ai dezabonat cu succes!", true);
-            setRefresh(refresh + 1);
-          });
-      } catch (error) {
-        console.log(error);
-        AppUtils.toastNotification(
-          "OOPS! An error occured while canceling the subscription!",
-          false
-        );
-      }
-    }
-  }
+  //     try {
+  //       await axios
+  //         .post(CANCELLED_SUBSCRIPTIONS, cancelledSubscription, header)
+  //         .then(() => {
+  //           axios.put(
+  //             `${SUBSCRIPTION_ORDER}/${subscriptionId}`,
+  //             cancelData,
+  //             header
+  //           );
+  //           AppUtils.toastNotification("Te-ai dezabonat cu succes!", true);
+  //           setRefresh(refresh + 1);
+  //         });
+  //     } catch (error) {
+  //       console.log(error);
+  //       AppUtils.toastNotification(
+  //         "OOPS! An error occured while canceling the subscription!",
+  //         false
+  //       );
+  //     }
+  //   }
+  // }
 
   // must be moved to service
   async function postReview(prodReview: { data: IProductReviewModel }) {
@@ -424,7 +424,7 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     // activateSubscription: activateSubscription,
     // addPersonalInfo: addPersonalInfo,
     // addShippingInfo: addShippingInfo,
-    cancelSubscription: cancelSubscription,
+    // cancelSubscription: cancelSubscription,
     currentUser: currentUser,
     dislikeReview: dislikeReview,
     // editShippingAddress: editShippingAddress,

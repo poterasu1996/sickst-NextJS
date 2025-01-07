@@ -8,6 +8,7 @@ import { TxnStatusEnum } from "../../shared/enums/txn.enum";
 import { IGETOrderHistory } from "../../models/OrderHistory.model";
 import { IGETSubscriptionOrder, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
 import orderService from "../../shared/services/orderService";
+import subscriptionService from "../../shared/services/subscriptionService";
 
 const OrderHistory = () => {
     const accountManager = useContext(AccountContext);
@@ -22,7 +23,7 @@ const OrderHistory = () => {
     }
 
     async function fetchSubscriptionOrderHistory(userId: number) {
-        return await orderService.getSubscriptionHistory(userId);
+        return await subscriptionService.getSubscriptionHistory(userId);
     }
     // we no longer have payment and subscription in same table
     // we have payment / collection AND subscription separate

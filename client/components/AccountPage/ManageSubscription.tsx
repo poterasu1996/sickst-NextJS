@@ -81,7 +81,6 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
     };
   }>();
 
-  console.log('subsHistory', subscriptionHistory)
   let activeSubscription: IGETSubscriptionOrder | undefined = undefined;
   if (subscriptionHistory) {
     activeSubscription = subscriptionHistory
