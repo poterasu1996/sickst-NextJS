@@ -2,7 +2,8 @@ import ProductDetailsSection from "../../components/ProductPage/ProductDetailsSe
 import { useRouter } from "next/router";
 import { useEffect, useState, useContext } from "react";
 
-import axios from "../../api/axios";
+import strapiAxios from "../../api/axios";
+import axios from "axios"; 
 import { Spinner } from "react-bootstrap";
 import ProductReviewsSection from "../../components/ProductPage/ProductReviewsSection";
 import IProduct from "../../types/Product.interface";
@@ -11,6 +12,7 @@ import { ReviewCount } from "../../types/product/ProductReviews.interface";
 import RequestMeta from "../../types/Axios.interface";
 import AccountContext from "../../store/account-context";
 import { IGETProductReview } from "../../models/ProductReview.model";
+import { PRODUCT_REVIEWS } from "../../shared/utils/constants";
 const PRODUCTS_URL = "/products";
 
 interface Props {
@@ -49,7 +51,7 @@ const ProductDetails = ({ productRating }: Props) => {
             const prodId = extractProductId(asPath);
             // fetch product details
             const fetchProduct = async () => {
-                await axios.get(`${PRODUCTS_URL}/${prodId}?populate=*`)
+                await strapiAxios.get(`${PRODUCTS_URL}/${prodId}?populate=*`)
                 .then(resp => {
                     setProduct(resp.data.data);
                 })
@@ -92,14 +94,29 @@ const ProductDetails = ({ productRating }: Props) => {
 
 export default ProductDetails; 
 
+const PRODUCT_REVIEWS_URL = `${process.env.NEXT_PUBLIC_STRAPI_APIURL}${PRODUCT_REVIEWS}`
+
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
     const { params } = context;
     const id = params?.productId;
 
-    let productRating: ReviewCount | null = null
+    const cookies = context.req.cookies; 
+    const jwt = cookies.jwt;
+
+    const header = {
+        headers: {
+          'Authorization': `Bearer ${jwt}`
+        }
+    }
+    let productRating: ReviewCount | null = null;
     try {
-        const revList: AxiosProductReviewResponse = await axios.get(`/product-reviews?filters[product_id][$eq]=${id}&sort[0]=updatedAt%3Adesc`)
-            .then(resp => resp.data)
+        const revList: AxiosProductReviewResponse = await axios.get(`${PRODUCT_REVIEWS_URL}?filters[product_id][$eq]=${id}&sort[0]=updatedAt%3Adesc`, header)
+            .then(resp => {
+                return resp.data
+            })
+            .catch((error) => {
+                console.log(error)
+            })
         
         const totalRev = revList.data.length;
 
