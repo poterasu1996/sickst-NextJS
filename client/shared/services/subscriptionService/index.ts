@@ -6,10 +6,18 @@ import { ISubscriptionOrderModel } from "../../../models/SubscriptionOrder.model
 import stripeService from "../stripeService";
 import userService from "../userService";
 
-const NEXT_ORDER_HISTORY_API = `${process.env.NEXT_PUBLIC_BASEURL}${API_V}${ORDER_HISTORIES}`;
 const NEXT_SUBSCRIPTION_ORDERS_API = `${process.env.NEXT_PUBLIC_BASEURL}${API_V}${SUBSCRIPTION_ORDERS}`;
 
 class SubscriptionService {
+    async getSubscriptionHistory(userId: number) {
+        try {
+            const response = await axios.get(`${NEXT_SUBSCRIPTION_ORDERS_API}?userId=${userId}`)
+            return response.data;
+        } catch (error) {
+            AppUtils.toastNotification("OOPS! An error occured retrieving subscription order history list!", false);
+        }
+    }
+
     async populateSubscriptionHistory(subsData: ISubscriptionOrderModel) {
         const parsedData = {
             data: {
@@ -17,7 +25,8 @@ class SubscriptionService {
             }
         }
         try {
-            await strapiAxios.post(SUBSCRIPTION_ORDERS, parsedData);
+            await strapiAxios.post(SUBSCRIPTION_ORDERS, parsedData)
+                .then(() => AppUtils.toastNotification('Te-ai abonat cu succes!', true));
         } catch (error) {
             console.log(error)
             AppUtils.toastNotification('Oops, a intervenit o eroare la efectuarea platii!', false);
@@ -51,9 +60,9 @@ class SubscriptionService {
             const orderID = await this.getActiveSubscriptionID(subscriptionID);
             await this.updateSubscriptionOrder(orderID);
     
-            // update account status
-            const uDetailsID = await userService.getUserDetailsID();
-            await userService.updateUserSubscription(uDetailsID);
+            // update account status - must be done in a separate service
+            // const uDetailsID = await userService.getUserDetailsID();
+            // await userService.updateUserSubscription(uDetailsID);
         } catch (error) {
            console.log(error) 
            AppUtils.toastNotification('Oops, a intervenit o eroare la anularea subscriptiei!', false)

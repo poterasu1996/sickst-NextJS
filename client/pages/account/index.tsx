@@ -86,9 +86,9 @@ const Account = ({ userInfo, subscriptionHistory }: Props) => {
                             <img src={userAvatar.src}></img>
                         </div>
                         <div className="user-details">
-                            <div className="name">Sickst User</div>
+                            <div className="name">{userInfo?.full_name ? userInfo.full_name : "Sickst User"}</div>
                             <div className="joined-date">Joined: <b className="brand-color">{userInfo && getDate(userInfo.createdAt)}</b></div>
-                            <div className="subscription-status">Subscription: <b className="brand-color">Active</b></div>
+                            <div className="subscription-status">Subscription: <b className="brand-color">{(userInfo && userInfo.subscribed) ? 'activa' : 'neabonat'}</b></div>
                         </div>
                     </div>
                     {accState === 'subscription' && <ManageSubscription userInfo={userInfo} subscriptionHistory={subscriptionHistory}/>}

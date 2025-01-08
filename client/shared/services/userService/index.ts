@@ -34,14 +34,16 @@ class UserService {
     return response.data;
   }
 
-  async updateUserDetails(userId:number, data: IUserDetailsModel) {
+  async updateUserDetails(data: IUserDetailsModel) {
     // const response = await axios.put(`${NEXT_USER_PROFILE_DETAILS_API}/${userId}`, data)
+
+    const getUserDetailsID = await this.getUserDetailsID();
     const parsedData = {
       data: {
         ...data
       }
     }
-    const response = await strapiAxios.put(`${USER_PROFILE_DETAILS}/${userId}`, parsedData)
+    const response = await strapiAxios.put(`${USER_PROFILE_DETAILS}/${getUserDetailsID}`, parsedData)
     return response.data;
   }
 

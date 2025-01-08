@@ -2,7 +2,6 @@ import Link from "next/link";
 import logo from '../../client/public/logo-black.svg';
 import { useState } from "react";
 import AccountMobileSideModal from "./global/AccountMobileSideModal";
-import SideModal from "./global/SideModal";
 import { Button } from "react-bootstrap";
 import { Menu } from "react-feather";
 
