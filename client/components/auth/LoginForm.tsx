@@ -3,18 +3,20 @@ import {
   useState,
   useContext,
 } from "react";
-// import CustomFormField from "../global/form/CustomFormField";
-import AuthContext from "../../store/auth-context";
 import { useRouter } from "next/router";
-// import axios from '../../api/axios';
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import axios from "axios";
-import { USER_LOGIN } from "../../shared/utils/constants";
+// Components
 import InputField from "../global/form/InputField";
 import PrimaryButton from "../global/PrimaryButton";
+
+// Storage & Services
+import AuthContext from "../../store/auth-context";
+import { USER_LOGIN } from "../../shared/utils/constants";
+
 
 const logInSchema = z.object({
   email: z.string({ required_error: 'Field is required' }).email({ message: 'Invalid email address'}),
@@ -50,14 +52,15 @@ export default function LogInForm() {
 
       if (response.status === 200) {
         setIsAuth(true);
-        setToken(response.data.token);  // might delete in future
+        // setToken(response.data.token);  // might delete in future
         localStorage.setItem('jwt', response.data.token)
         router.push("/");
 
         const expireAuth = 3000 * 60 * 60;
+        // const expireAuth = 3000;
         setTimeout(() => {
           setIsAuth(false);
-          setToken(undefined);
+          // setToken(undefined);
           localStorage.getItem('jwt') && localStorage.removeItem('jwt');
           router.push("/account/login");
         }, expireAuth);

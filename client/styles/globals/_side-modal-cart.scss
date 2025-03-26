@@ -1,13 +1,8 @@
 #side-modal.cart {
-    position: fixed;
-    top: 0;
-    right: 0;
     height: 100%;
     width: 40rem;
     background-color: #f9f9f9;
-    z-index: 100;
     padding: 2rem;
-    text-transform: none;
     display: flex;
     flex-direction: column;
     @media (max-width:576px) {
@@ -178,6 +173,7 @@
                                 }
                             }
                             .item-count {
+                                font-size: 1.6rem;
                                 text-align: center;
                                 width: 4rem;
                             }
@@ -223,6 +219,7 @@
                         }
                         .quantity-price {
                             margin-left: auto;
+                            font-size: 1.6rem;
                         }
                     }
                 }

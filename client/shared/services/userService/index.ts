@@ -1,19 +1,22 @@
-import axios from "axios";
 import strapiAxios from "../../../api/axios";
 import { IUserModel } from "../../../models/User.model";
 import { IGETUserDetails, IUserDetailsModel } from "../../../models/UserDetails.model";
 import { USER_PROFILE_DETAILS, USER_ME, API_V } from "../../utils/constants";
+import { AppUtils } from "../../utils/app.utils";
 
 const NEXT_USERS_ME_API = `${process.env.NEXT_PUBLIC_BASEURL}${API_V}${USER_ME}`;
 const NEXT_USER_PROFILE_DETAILS_API = `${process.env.NEXT_PUBLIC_BASEURL}${API_V}${USER_PROFILE_DETAILS}`;
 
 class UserService {
   // de scos header, este adaugat in axios config
-  async getUsersMe() {
-    // const response: IUserModel = await axios.get(NEXT_USERS_ME_API).then(res => res.data);
-    // console.log('header', header)
-    const response: IUserModel = await strapiAxios.get(USER_ME).then(res => res.data);
-    return response;
+  async getUsersMe(): Promise<IUserModel> {
+    try {
+      const response = await strapiAxios.get<IUserModel>(USER_ME);
+      return response.data;
+    } catch (error) {
+      console.log("Error fetching user data: ", error);
+      throw new Error("Failed to fetch user data");
+    }
   }
 
   async getUserDetailsID() {
@@ -22,7 +25,6 @@ class UserService {
     const uID = response.id;
 
     const queryFilter = `?filters[user_id][$eq]=${uID}`;
-    // const uDetails: IGETUserDetails = await axios.get(`${NEXT_USER_PROFILE_DETAILS_API}/${uID}`).then(res => res.data.data[0]);
     const uDetails: IGETUserDetails = await strapiAxios.get(`${USER_PROFILE_DETAILS}${queryFilter}`).then(res => res.data.data[0]);
     return uDetails.id;
   }
@@ -30,13 +32,10 @@ class UserService {
   async getUserDetails(userId: number) {
     const queryFilter = `?filters[user_id][$eq]=${userId}`;
     const response = await strapiAxios.get(`${USER_PROFILE_DETAILS}${queryFilter}`);
-    // const response = await axios.get(`${NEXT_USER_PROFILE_DETAILS_API}/${userId}`);
     return response.data;
   }
 
   async updateUserDetails(data: IUserDetailsModel) {
-    // const response = await axios.put(`${NEXT_USER_PROFILE_DETAILS_API}/${userId}`, data)
-
     const getUserDetailsID = await this.getUserDetailsID();
     const parsedData = {
       data: {
@@ -48,7 +47,6 @@ class UserService {
   }
 
   async updateUserSubscription(
-    // header: any,
     userDetailsID: number | string,
     subscriptionName?: string | null
   ) {
@@ -59,12 +57,23 @@ class UserService {
     };
     try {
       await strapiAxios
-        // .put(`${USER_PROFILE_DETAILS}/${userDetailsID}`, { data: { ...data } }, header)
         .put(`${USER_PROFILE_DETAILS}/${userDetailsID}`, { data: { ...data } })
-        // .then((resp) => true)
-        // .catch((error) => false);
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  async refreshUserTotalReviews(id: number, totalReviews: number) {
+    const newData = {
+      data: {
+        reviews: totalReviews + 1,
+      },
+    };
+    try {
+      await strapiAxios.put(`${USER_PROFILE_DETAILS}/${id}`, newData)
+    } catch (error) {
+      console.log(error);
+      AppUtils.toastNotification("OOPS! An error occured while updating reviews!", false);      
     }
   }
 

@@ -1,20 +1,25 @@
 import Link from "next/link";
 import { useContext, useState, useEffect } from "react";
-import { Button, Spinner } from "react-bootstrap";
 
+// Components
 import CartItem from "./CartItem";
-import CartContext from "../../store/cart-context";
-import AccountContext from "../../store/account-context";
-import CartService from "../../shared/services/cartService/index";
-import { PaymentEnums } from "../../shared/enums/payment.enums";
-import("../../types/CartProduct.interface");
+import CloseIcon from "@mui/icons-material/Close";
+import { CircularProgress, IconButton } from "@mui/material";
 
-const Cart = (props) => {
+// Storage & services
+import AccountContext from "../../../store/account-context";
+import CartService from "../../../shared/services/cartService/index";
+import { PaymentEnums } from "../../../shared/enums/payment.enums";
+import("../../../types/CartProduct.interface");
+
+type Props = {
+  onClick: () => void
+}
+
+const Cart = ({ onClick }: Props) => {
   const [loading, setLoading] = useState(true);
-  const cartManager = useContext(CartContext);
-  const accountManager = useContext(AccountContext);
-  const [cart, setCart] = useState(null)
   const [cartTotal, setCartTotal] = useState(0);
+  const accountManager = useContext(AccountContext);
 
   setTimeout(() => {
     setLoading(false);
@@ -28,7 +33,7 @@ const Cart = (props) => {
     <>
       <div className="side-modal-header">
         <span className="text">Cart</span>
-        <Button variant="close" onClick={props.onClick} />
+        <IconButton onClick={onClick} size="medium"><CloseIcon /></IconButton>
       </div>
       <div className="side-modal-body">
         {/* ITEM */}
@@ -56,15 +61,17 @@ const Cart = (props) => {
                             handleLoading={setLoading}
                           />
                         ))}
+                      
                       <Link href="/account">
                         <a 
                           className="button-second" 
                           onClick={() => {
-                            props.onClick();
-                            accountManager.setAccountPageState('subscription');
+                            onClick();
+                            accountManager!.setAccountPageState('subscription');
                           }}
                         >My subscriptions</a>
                       </Link>
+
                     </div>
                   </>
                 )}
@@ -91,25 +98,23 @@ const Cart = (props) => {
                 <div className="cart-subtotal">
                 <span>Subtotal</span>
                 <span className="cart-price">
-                    {loading ? (
-                    <Spinner animation="border" style={{ color: "#cc3663" }} />
-                    ) : (
-                    <>Ron {cartTotal}</>
-                    )}
+                    {loading 
+                      ? <CircularProgress size={'1.8rem'} color="primary" thickness={7} />
+                      : <>Ron {cartTotal}</>
+                    }
                 </span>
                 </div>
                 <div className="cart-total">
                 <span>Total</span>
                 <span className="cart-price">
-                    {loading ? (
-                    <Spinner animation="border" style={{ color: "#cc3663" }} />
-                    ) : (
-                    <>Ron {cartTotal}</>
-                    )}
+                    {loading 
+                      ? <CircularProgress size={'1.8rem'} color="primary" thickness={7} /> 
+                      : <>Ron {cartTotal}</>
+                    }
                 </span>
                 </div>
                 <Link href="/payment">
-                  <a className="button-second" onClick={props.onClick}>Checkout</a>
+                  <a className="button-second" onClick={onClick}>Checkout</a>
                 </Link>
             </div>}
             

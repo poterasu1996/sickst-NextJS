@@ -1,9 +1,12 @@
 import { useContext, useEffect, useState, useRef } from "react";
-import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import AccountContext from "../../store/account-context";
 import ShipmentForm from "./ShipmentForm";
 import { IShippingInfo, IGETShippingInformation } from "../../models/ShippingInformation.model";
 import { Bookmark, MoreVertical } from "react-feather";
+
+// import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+// import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { Menu } from "primereact/menu";
 import { MenuItem } from "primereact/menuitem";
 import { useRecoilState } from "recoil";
@@ -71,6 +74,10 @@ const ShippingInformation = () => {
         }
     }
 
+    function handleClose() {
+        setShow(false);
+    }
+
     useEffect(() => {
         if(accountManager!.currentUser) {
             const userId = accountManager?.currentUser.id;
@@ -122,25 +129,27 @@ const ShippingInformation = () => {
                 </div>
             </div>
 
-            <Modal 
-                className="shipping-info-modal" 
-                show={show.toString()} 
-                centered
-                size="lg"
-                isOpen={show}
-                toggle={() => setShow(preVal => !preVal)}
+            <Modal
+                open={show}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+                className="shipping-info-modal"
             >
-                <ModalHeader toggle={() => setShow(preVal => !preVal)}>
-                    Add a new address
-                </ModalHeader>
-                <ModalBody>
-                    <div className="shipment-details">
-                        <ShipmentForm onSubmit={() => setShow(preVal => !preVal)}/>
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <span className="modal-title">Add a new address</span>
+                        <button className="btn-close" onClick={handleClose}></button>
                     </div>
-                </ModalBody>
-                <ModalFooter>
-                    <button className="cancel-btn" onClick={() => setShow(preVal => !preVal)}>Cancel</button>
-                </ModalFooter>
+                    <div className="modal-body">
+                        <div className="shipment-details">
+                            <ShipmentForm onSubmit={handleClose}/>
+                        </div>
+                    </div>
+                    <div className="modal-footer">
+                        <button className="cancel-btn" onClick={handleClose}>Cancel</button>
+                    </div>
+                </div>
             </Modal>
         </>
     )

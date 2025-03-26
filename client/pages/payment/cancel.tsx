@@ -1,15 +1,20 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { Button } from "react-bootstrap";
+
+// Components
+
+// Storage & services
+import orderService from "../../shared/services/orderService";
+import subscriptionService from "../../shared/services/subscriptionService";
+
+// Utils
+import { ISubscriptionOrderModel, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
 import { IOrderHistoryModel } from "../../models/OrderHistory.model";
 import { TxnStatusEnum } from "../../shared/enums/txn.enum";
-import { ISubscriptionOrderModel, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
+import { AppUtils } from "../../shared/utils/app.utils";
 
 // @ts-ignore
 import Cookies from 'cookies';
-import orderService from "../../shared/services/orderService";
-import subscriptionService from "../../shared/services/subscriptionService";
-import { AppUtils } from "../../shared/utils/app.utils";
 
 interface Props {
     populateSH: boolean,
@@ -68,9 +73,9 @@ const CancelPayment = ({ populateSH }: Props) => {
                 <div className="title">Oops! A intervenit o problema.</div>
                 <div className="text">Plata nu a fost efectuata! <br></br>In curand vei fi trimis catre pagina principala.</div>
                 <div className="btn-wrapper">
-                    <Button className="button-second" onClick={() => router.push('/')}>
+                    <button className="button-second" onClick={() => router.push('/')}>
                         Pagina principala
-                    </Button>
+                    </button>
                 </div>
             </div>
         </>

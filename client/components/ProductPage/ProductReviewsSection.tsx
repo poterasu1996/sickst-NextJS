@@ -8,7 +8,6 @@ import { Dropdown } from 'primereact/dropdown';
 import ProductCardReview from "./ProductCardReview";
 import { ReviewCount } from "../../types/product/ProductReviews.interface";
 import RequestMeta from "../../types/Axios.interface";
-import axios from "../../api/axios";
 import { AppUtils } from "../../shared/utils/app.utils";
 import noReview from "../../public/img/svg/no-reviews.svg";
 import IProduct from "../../types/Product.interface";
@@ -16,6 +15,8 @@ import AccountContext from "../../store/account-context";
 import { IGETProductReview } from "../../models/ProductReview.model";
 import AuthContext from "../../store/auth-context";
 import { useRouter } from "next/router";
+import strapiAxios from "../../api/axios";
+import reviewService from "../../shared/services/reviewService";
 
 type Props = {
     product: IProduct,
@@ -37,6 +38,7 @@ const ProductReviewsSection = ({ product, productRating }: Props) => {
     const accountManager = useContext(AccountContext);
     const { isAuth } = useContext(AuthContext);
     const router = useRouter();
+    const { query } = useRouter();
     const scrollX = window.scrollX;
     const scrollY = window.scrollY;
 
@@ -67,15 +69,12 @@ const ProductReviewsSection = ({ product, productRating }: Props) => {
     });
 
     useEffect(() => {
-        let queryUrl = `/product-reviews?populate=*&sort[0]=createdAt#3A${dateValue}`
+        let queryUrl = `/product-reviews?populate=*&filters[product_id][$eq]=${query.productId}&sort[0]=createdAt:${dateValue}`;
         if (selectedStarValue > 0) {
             queryUrl = queryUrl + `&filters[rating][$eq]=${selectedStarValue}`
         }
-        if (dateValue) {
-            queryUrl = queryUrl + `&sort[0]=createdAt%3A${dateValue}`
-        } 
 
-        axios.get(queryUrl)
+        strapiAxios.get(queryUrl)
             .then((resp: any) => setReviews(resp.data))
     }, [selectedStarValue, dateValue, accountManager?.refresh]);
 
@@ -100,14 +99,14 @@ const ProductReviewsSection = ({ product, productRating }: Props) => {
             router.push('/account/login');
             return
         }
-        accountManager!.likeReview(
+        reviewService.likeReview(
             accountManager!.userDetails!.id, 
             review.id, 
             review.attributes.likes, 
             review.attributes.users_liked,
             review.attributes.dislikes,
             review.attributes.users_disliked
-        );
+        ).then(() => accountManager?.refreshContext())
     }
 
     function handleDislikeReviews(review: IGETProductReview) {
@@ -115,14 +114,14 @@ const ProductReviewsSection = ({ product, productRating }: Props) => {
             router.push('/account/login');
             return
         }
-        accountManager!.dislikeReview(
+        reviewService.dislikeReview(
             accountManager!.userDetails!.id, 
             review.id, 
             review.attributes.likes, 
             review.attributes.users_liked,
             review.attributes.dislikes,
             review.attributes.users_disliked
-        );
+        ).then(() => accountManager?.refreshContext());
     }
 
     function handleActiveLikes(revId: number) {
@@ -193,10 +192,10 @@ const ProductReviewsSection = ({ product, productRating }: Props) => {
                                         <div><span>Products received</span>{review.attributes.user_profile_detail.data.attributes.products_received}</div>
                                     </div>
 
-                                    <div className="c2">
+                                    {/* <div className="c2">
                                         <div className="d-flex"><span>Up votes</span>0</div>
                                         <div><span>Down votes</span>0</div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                             <div className="review--details">

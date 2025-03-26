@@ -1,18 +1,23 @@
-import { Button, Col, Row } from "react-bootstrap";
 import React, {
   ChangeEvent,
   useContext,
 } from "react";
-import CustomFormField from "../global/form/CustomFormField";
-import AccountContext from "../../store/account-context";
-import { IShippingInfo } from "../../models/ShippingInformation.model";
-import countyService from "../../shared/services/countyService";
-import Switch from "@mui/material/Switch";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+//  Components
 import AutocompleteSelect from "../global/form/Autocomplete";
+import Switch from "@mui/material/Switch";
+
+// Storage and services
+import AccountContext from "../../store/account-context";
+import countyService from "../../shared/services/countyService";
 import shippingService from "../../shared/services/shippingService";
+
+// Utilities
+import { IShippingInfo } from "../../models/ShippingInformation.model";
+import InputField from "../global/form/InputField";
 
 const shippingInfoSchema = z.object({
   address: z
@@ -110,68 +115,66 @@ export default function ShipmentForm({ onSubmit }: Props) {
         onSubmit={handleSubmit(onFormSubmit)}
         className="shipment-details-form"
       >
-        <CustomFormField
-          {...register("address", {
-            required: "Campul este obligatoriu"
-          })}
-          label="Adresa*"
-          type="text"
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setValue("address", e.target.value)
-          }
-          error={errors.address?.message}
-        />
-        <Row>
-          <Col lg={6}>
-            <CustomFormField
-              {...register("full_name")}
-              label="Nume si Prenume*"
-              type="text"
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setValue("full_name", e.target.value)
-              }
-              error={errors.full_name?.message}
-            />
-          </Col>
-          <Col lg={6}>
-            <CustomFormField
-              {...register("phone")}
-              label="Telefon*"
-              type="text"
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setValue("phone", e.target.value)
-              }
-              error={errors.phone?.message}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={6}>
-            <CustomFormField
-              {...register("city")}
-              label="Oras*"
-              type="text"
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setValue("city", e.target.value)
-              }
-              error={errors.city?.message}
-            />
-          </Col>
-          <Col lg={6}>
-            <AutocompleteSelect 
-              {...register("county")}
-              disablePortal
-              id="county"
-              options={countyList}
-              defaultValue={undefined}
-              onChange={(_: any, value: any) => {
-                  value && setValue("county", value);
-              }}
-              label={"Judet*"}
-              error={errors.county?.message}
-            />
-          </Col>
-        </Row>
+        <div className="grid grid-cols-1">
+          <InputField
+            {...register("address", {
+              required: "Campul este obligatoriu"
+            })}
+            className="mt-12"
+            label="Adresa*"
+            type="text"
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setValue("address", e.target.value)
+            }
+            error={errors.address?.message}
+          />
+        </div>
+        <div className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-4">
+          <InputField
+            {...register("full_name")}
+            className="mt-12"
+            label="Nume si Prenume*"
+            type="text"
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setValue("full_name", e.target.value)
+            }
+            error={errors.full_name?.message}
+          />
+          <InputField
+            {...register("phone")}
+            className="mt-12"
+            label="Telefon*"
+            type="text"
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setValue("phone", e.target.value)
+            }
+            error={errors.phone?.message}
+          />
+        </div>
+        <div className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-4">
+          <InputField
+            {...register("city")}
+            className="mt-12"
+            label="Oras*"
+            type="text"
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setValue("city", e.target.value)
+            }
+            error={errors.city?.message}
+          />
+          <AutocompleteSelect 
+            {...register("county")}
+            disablePortal
+            id="county"
+            options={countyList}
+            defaultValue={undefined}
+            onChange={(_: any, value: any) => {
+                value && setValue("county", value);
+            }}
+            label={"Judet*"}
+            error={errors.county?.message}
+          />
+        </div>
         <div className="custom-switch-input">
           <label>Make this address primary</label>
           <Switch
@@ -219,14 +222,14 @@ export default function ShipmentForm({ onSubmit }: Props) {
             defaultChecked={false}
           />
         </div>
-        <Button
+        <button
           className="button-second mt-5"
           type="submit"
         //   onClick={() => isValid && onSubmit}
           disabled={isSubmitting}
         >
           Add new address
-        </Button>
+        </button>
       </form>
     </>
   );

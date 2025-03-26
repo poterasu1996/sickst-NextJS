@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
+
+// Components
 import CollectionSection from "../../components/ShopPage/CollectionSection";
 import NewProductSection from "../../components/ShopPage/NewProductSection";
 import ProductFilterSection from "../../components/ShopPage/ProductFilterSection";
 import SubscriptionBanner from "../../components/ShopPage/SubscriptionBanner";
 import TopRatedProducts from "../../components/ShopPage/TopRatedProducts";
+import { CircularProgress } from "@mui/material";
+
+// Storage & services
 import productService from "../../shared/services/productService";
-import { Spinner } from "react-bootstrap";
+
+// Utils & constants
 import ProductResponse from "../../types/shop/ProductResponse.interface";
 
 const ShopMen = () => {
@@ -31,10 +37,10 @@ const ShopMen = () => {
 
     return <div className="subs-body">
         <SubscriptionBanner />
-        <CollectionSection />
+        {/* <CollectionSection /> */}
         {loading 
             && <div className="loader">
-                <Spinner animation="border" style={{color: "#cc3633"}}/>
+                <CircularProgress size={'2rem'} color="primary" thickness={7} />
             </div>}
         {newProducts?.data && <NewProductSection newProducts={newProducts.data}/>}
         {topRatedProducts?.data && <TopRatedProducts topProducts={topRatedProducts.data} />}

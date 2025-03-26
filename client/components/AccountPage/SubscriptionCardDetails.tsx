@@ -52,7 +52,6 @@ const SubscriptionCardDetails = ({ userInfo, userSubscription }: Props) => {
         handleCloseModal();
     }
 
-    console.log('activesubs', activeSubscription)
     return(<>
         <div className="subscriber-banner">
             {activeSubscription ?

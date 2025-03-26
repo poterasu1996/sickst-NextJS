@@ -1,9 +1,10 @@
 import React, { ChangeEvent, useContext, useState } from "react";
-import CustomFormField from "../../components/global/form/CustomFormField";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Button } from "react-bootstrap";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/router";
+
+// Components
 import {
   FormControl,
   InputLabel,
@@ -12,11 +13,15 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import InputFileUpload from "../../components/global/FileUploadButton";
+
+// Storage & services
 import AuthContext from "../../store/auth-context";
-import { useRouter } from "next/router";
 import contactService from "../../shared/services/contactService";
 import { IContactUsModel } from "../../models/ContactUs.model";
+
+// Utils
 import { AppUtils } from "../../shared/utils/app.utils";
+import InputField from "../../components/global/form/InputField";
 
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 5; // 5MB
 const ACCEPTED_FILE_TYPES = ["image/png", "image/jpeg", "image/jpg"];
@@ -163,8 +168,9 @@ export default function ContactUs() {
               </MenuItem>
             </Select>
           </FormControl>
-          <CustomFormField
+          <InputField
             {...register("email", { value: getValues("email") || "" })}
+            className="mt-12"
             label="Your email address*"
             type="email"
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -172,8 +178,9 @@ export default function ContactUs() {
             }
             error={errors?.email?.message}
           />
-          <CustomFormField
+          <InputField
             {...register("subject", { value: getValues("subject") || "" })}
+            className="mt-12"
             label="Subject*"
             type="text"
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -181,20 +188,20 @@ export default function ContactUs() {
             }
             error={errors?.subject?.message}
           />
-          <CustomFormField
+          {/* <InputField
             {...register("description", {
               value: getValues("description") || "",
             })}
+            className={"textarea"}
             label="Description*"
             type="text"
             as="textarea"
-            className={"textarea"}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setValue("description", e.target.value)
             }
             error={errors?.description?.message}
             style={{ height: "100px" }}
-          />
+          /> */}
           <InputFileUpload
             {...register("attachments", {
               value: getValues("attachments") || undefined,
@@ -207,9 +214,9 @@ export default function ContactUs() {
             error={errors?.attachments?.message}
           />
           <div className="btw-wrapper mt-10">
-            <Button className="button-second mt-4 ms-0" type="submit">
+            <button className="button-second mt-4 ms-0" type="submit">
               Submit
-            </Button>
+            </button>
           </div>
         </form>
       </div>

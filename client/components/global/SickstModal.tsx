@@ -1,4 +1,3 @@
-import { ModalBody, ModalFooter } from "react-bootstrap";
 import { Modal, ModalHeader } from "reactstrap"
 
 interface Props {
@@ -19,12 +18,10 @@ const SickstModal = ({ show, children, setShow, headerTitle, footer }: Props) =>
             toggle={setShow}
         >
             <ModalHeader toggle={setShow}>{headerTitle && headerTitle}</ModalHeader>
-            <ModalBody>
-                {children}
-            </ModalBody>
-            {footer && <ModalFooter>
-                <button className="cancel-btn" onClick={setShow}>Cancel</button>
-            </ModalFooter>}
+            {children}
+            <button className="cancel-btn" onClick={setShow}>Cancel</button>
+            {/* {footer && <ModalFooter>
+            </ModalFooter>} */}
         </Modal>
     </>
 }

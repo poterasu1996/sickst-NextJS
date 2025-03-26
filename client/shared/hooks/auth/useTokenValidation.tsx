@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { CHECK_AUTH } from "../../utils/constants";
 import axios from "axios";
 

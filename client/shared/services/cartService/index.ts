@@ -3,32 +3,45 @@ import IProduct from "../../../types/Product.interface";
 import { PaymentEnums } from "../../enums/payment.enums";
 
 class CartService {
-    cart: ICartProduct[] | null = null;
-    storageList: ICartProduct[] | null = null;
+    cart: ICartProduct[] = [];
+    storageList: ICartProduct[] = [];
     cartLength: number = 0;
 
     constructor() {
         if (typeof window !== 'undefined') {
             const _storageValue = localStorage.getItem("cart");
-            let _storageCart = null;
+            let _storageCart: ICartProduct[] = [];
+
             if(typeof _storageValue === "string") {
-                _storageCart = JSON.parse(_storageValue);
-            }
-            if (_storageCart) {
-                this.storageList = [..._storageCart];
-                const _subscriptionItem = _storageCart.filter((item: ICartProduct) => {
-                    return item.payment === PaymentEnums.SUBSCRIPTION;
-                });
-                const _otbList = _storageCart.filter((item: ICartProduct) => {
-                    return item.payment === PaymentEnums.FULL_PAYMENT;
-                });
-                if (_subscriptionItem) {
-                    this.cart = [..._subscriptionItem, ..._otbList];
-                    // set subs list?
-                } else {
-                    this.cart = [..._otbList];
+                try {
+                    _storageCart = JSON.parse(_storageValue) || [];
+                } catch (error) {
+                    console.log('Failed to parse cart from storage', error);
+                    _storageCart = []
                 }
             }
+
+            this.storageList = [..._storageCart];
+
+            const _subscriptionItem = _storageCart.filter(item => item.payment === PaymentEnums.SUBSCRIPTION);
+            const _otbList = _storageCart.filter(item => item.payment === PaymentEnums.FULL_PAYMENT);
+
+            this.cart = [..._subscriptionItem, ..._otbList];
+            // if (_storageCart) {
+            //     this.storageList = [..._storageCart];
+            //     const _subscriptionItem = _storageCart.filter((item: ICartProduct) => {
+            //         return item.payment === PaymentEnums.SUBSCRIPTION;
+            //     });
+            //     const _otbList = _storageCart.filter((item: ICartProduct) => {
+            //         return item.payment === PaymentEnums.FULL_PAYMENT;
+            //     });
+            //     if (_subscriptionItem) {
+            //         this.cart = [..._subscriptionItem, ..._otbList];
+            //         // set subs list?
+            //     } else {
+            //         this.cart = [..._otbList];
+            //     }
+            // }
         }
     }
 
@@ -220,14 +233,11 @@ class CartService {
     }
 
     clearCart() {
-        this.cart = null;
-        this.storageList = null;
+        this.cart = [];
+        this.storageList = [];
         this.cartLength = 0;
         localStorage.removeItem('cart');
     }
-
-    // resetCartLength() {
-    // }
 }
 
 export default new CartService();

@@ -1,19 +1,27 @@
-import { useState, useContext } from "react";
-import { Button, Spinner } from "react-bootstrap";
-import { X } from "react-feather";
-import CartService from "../../shared/services/cartService";
-import { PaymentEnums } from "../../shared/enums/payment.enums";
-import CartContext from "../../store/cart-context";
+import { useState, useContext, Dispatch, SetStateAction } from "react";
 
-const CartItem = ({ item, handleLoading }) => {
+// Components
+import { X } from "react-feather";
+import { CircularProgress, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+
+// Store & services
+import CartService from "../../../shared/services/cartService";
+import { PaymentEnums } from "../../../shared/enums/payment.enums";
+import ICartProduct from "../../../types/CartProduct.interface";
+
+type Props = {
+    item: ICartProduct,
+    handleLoading: Dispatch<SetStateAction<boolean>>
+}
+
+const CartItem = ({ item, handleLoading }: Props) => {
     const [loading, setLoading] = useState(false);      // for loading spinner effect
-    const cartManager = useContext(CartContext);
     const orderMinus = () => {
         if(item.quantity > 1) {
             setLoading(true);
             handleLoading(true);
             CartService.quantityProduct(item, 'remove');
-            cartManager.setRefresh(!cartManager.refresh);
         }
     }
 
@@ -21,12 +29,6 @@ const CartItem = ({ item, handleLoading }) => {
         setLoading(true);
         handleLoading(true);
         CartService.quantityProduct(item, 'add');
-        cartManager.setRefresh(!cartManager.refresh);
-    }
-
-    // get the product details from cart context
-    const getProdFromCart = () => {
-        return CartService.cart.find((elem) => elem.cartProductId === item.cartProductId);
     }
 
     setTimeout(() => {
@@ -55,32 +57,41 @@ const CartItem = ({ item, handleLoading }) => {
                 <div className="item-quantity">
                     {item.payment === PaymentEnums.FULL_PAYMENT && <div className="quantity-buttons">
                         <div className="item-remove" onClick={orderMinus}></div>
-                        <div className="item-count">{getProdFromCart().quantity}</div>
+                        <div className="item-count">{item.quantity}</div>
                         <div className="item-add" onClick={orderPlus}></div>
                     </div>}
                     {item.payment === PaymentEnums.FULL_PAYMENT
                         ? <div className="quantity-price">
                             {loading 
-                                ? <Spinner animation="border" style={{color: "#cc3663"}}/>
-                                : <>Ron {item.product.attributes.otb_price * getProdFromCart().quantity}</>
+                                ? <CircularProgress size={'2rem'} color="primary" thickness={7} />
+                                : <>Ron {item.product.attributes.otb_price * item.quantity}</>
                             }
                           </div>
                         : <div className="quantity-price">
                             {loading 
-                                ? <Spinner animation="border" style={{color: "#cc3663"}}/>
+                                ? <CircularProgress size={'2rem'} color="primary" thickness={7} />
                                 : <b>{item.product.attributes.subscription_type}</b>
                             }
                         </div>
                     }
                 </div>
             </div>
-            <Button onClick={() => {
-                handleLoading(true);
-                CartService.removeProduct(item);
-                cartManager.setRefresh(!cartManager.refresh);
-            }}>
-                <X stroke="#cc3663" width={20} height={20} />
-            </Button>
+            <IconButton 
+                sx={{
+                    color: '#cc3663',
+                    width: '24px',
+                    height: '24px',
+                    [`& svg`]: {
+                        width: '20px',
+                        height: '20px'
+                    }
+                }}
+                onClick={() => {
+                    handleLoading(true);
+                    CartService.removeProduct(item);
+                }} 
+                size="medium"
+            ><CloseIcon /></IconButton>
         </div>
     );
 }

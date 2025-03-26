@@ -247,9 +247,11 @@
   }
 
   .lp-buttons {
-    button {
+    // button {
+    a {
       padding: 1rem 1.5rem;
       border-radius: 4rem;
+      max-width: 20rem;
       color: #fff;
       margin-top: 5rem;
       font-size: 1.4rem;
@@ -315,6 +317,14 @@
           height: 2px;
           background-color: #eee;
           background-color: #555;
+        }
+
+        svg + .arrow-body {
+          margin-left: -.3rem;
+        }
+
+        .arrow-body + svg {
+          margin-left: -.3rem;
         }
       }
     }

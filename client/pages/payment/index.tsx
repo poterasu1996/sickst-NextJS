@@ -1,20 +1,27 @@
 import { useContext, useEffect, useState } from "react";
-import { Button, Spinner } from "react-bootstrap";
-import { X } from "react-feather";
-// import CouponeForm from "../../components/global/form/CouponeForm";
-import CartContext from "../../store/cart-context";
-import ShippingInformation from "../../components/AccountPage/ShippingInformation";
-import CartService from "../../shared/services/cartService/index";
 import axios from "axios";
+
+// Components
+import { X } from "react-feather";
+import ShippingInformation from "../../components/AccountPage/ShippingInformation";
+import { CircularProgress } from "@mui/material";
+
+// Storage & services
+import CartContext from "../../store/cart-context";
+import CartService from "../../shared/services/cartService/index";
+import { useRecoilValue } from "recoil";
+import { shippingListR } from "../../shared/recoil-states";
+
+// Utils
 import { PaymentEnums } from "../../shared/enums/payment.enums";
+import { TxnStatusEnum } from "../../shared/enums/txn.enum";
 import ICartProduct from "../../types/CartProduct.interface";
 import { IUserModel } from "../../models/User.model";
 import { IOrderHistoryModel, OrderTypeEnum } from "../../models/OrderHistory.model";
-import { TxnStatusEnum } from "../../shared/enums/txn.enum";
-import { useRecoilValue } from "recoil";
-import { shippingListR } from "../../shared/recoil-states";
 import { IShippingInfo } from "../../models/ShippingInformation.model";
 import { IGETUserDetails } from "../../models/UserDetails.model";
+
+// Stripe
 import getStripe from "../../lib/get-stripe";
 
 // @ts-ignore
@@ -31,7 +38,7 @@ type Props = {
 }
 
 const PaymentPage = ({ user }: Props) => {
-  const cartManager = useContext(CartContext);
+  // const cartManager = useContext(CartContext);
   const [couponValue, setCouponeValue] = useState<any>();
   const [loading, setLoading] = useState(true);
   const [lineItems, setLineItems] = useState<any>([]);
@@ -54,14 +61,14 @@ const PaymentPage = ({ user }: Props) => {
       // modify product quantity in card + template
       setLoading(true);
       CartService.quantityProduct(item, 'remove');
-      cartManager.setRefresh(preVal => !preVal);
+      // cartManager.setRefresh(preVal => !preVal);
     }
   }
 
   const orderPlus = (item: any) => {
     setLoading(true);
     CartService.quantityProduct(item, 'add');
-    cartManager.setRefresh(preVal => !preVal);
+    // cartManager.setRefresh(preVal => !preVal);
   }
 
   useEffect(() => {
@@ -79,7 +86,10 @@ const PaymentPage = ({ user }: Props) => {
       items && setLineItems([...items]);
     } 
 
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+    // setLoading(false);
   }, [loading, CartService.cart]);
 
 
@@ -133,9 +143,9 @@ const PaymentPage = ({ user }: Props) => {
     await stripe.redirectToCheckout({ sessionId: id });
   }
 
-  setTimeout(() => {
-    setLoading(false);
-  }, 500);
+  // setTimeout(() => {
+  //   setLoading(false);
+  // }, 500);
 
   return (
     <>
@@ -183,15 +193,15 @@ const PaymentPage = ({ user }: Props) => {
                       </div>
                     </div>
                   </div>
-                  <Button
+                  <button
                     onClick={() => {
                       setLoading(true);
                       CartService.removeProduct(item);
-                      cartManager.setRefresh(preVal => !preVal);
+                      // cartManager.setRefresh(preVal => !preVal);
                     }}
                   >
                     <X stroke="#cc3663" width={20} height={20} />
-                  </Button>
+                  </button>
                 </div>
               ))
             )} 
@@ -207,7 +217,8 @@ const PaymentPage = ({ user }: Props) => {
                 Discount
                 <div className="price">
                   {loading ? (
-                    <Spinner animation="border" style={{ color: "#cc3663" }} />
+                    // <Spinner animation="border" style={{ color: "#cc3663" }} />
+                    <CircularProgress size={'2rem'} color="primary" thickness={7} />
                   ) : couponValue && couponValue.active ? (
                     <b className="brand-color">- {couponValue.discount}%</b>
                   ) : (
@@ -218,7 +229,8 @@ const PaymentPage = ({ user }: Props) => {
               <div className="total">
                 Total:{" "}
                 {loading ? (
-                  <Spinner animation="border" style={{ color: "#cc3663" }} />
+                  // <Spinner animation="border" style={{ color: "#cc3663" }} />
+                  <CircularProgress size={'2rem'} color="primary" thickness={7} />
                 ) : couponValue && couponValue.discount ? (
                   <b className="brand-color ms-4">
                     RON {CartService.cartTotal(couponValue.discount)}
@@ -228,15 +240,7 @@ const PaymentPage = ({ user }: Props) => {
                 )}
               </div>
 
-              {/* <div className="coupone-code">
-                <CouponeForm
-                  couponeValue={(value: any) => setCouponeValue(value)}
-                  loading={(value: any) => setLoading(value)}
-                />
-              </div> */}
-
-
-              <Button className="button-second mt-5" onClick={redirectToCheckout} disabled={disablePayButton}>Pay</Button>
+              <button className="button-second mt-5" onClick={redirectToCheckout} disabled={disablePayButton}>Pay</button>
             </div>
 
           </div>

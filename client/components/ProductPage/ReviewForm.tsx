@@ -1,13 +1,14 @@
-import { useContext, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import Rating from "react-rating";
 import { Star } from "react-feather";
 import IProduct from '../../types/Product.interface';
-import { InputType } from "../../shared/enums/input.enum";
 import AccountContext from "../../store/account-context";
 import { IProductReviewModel } from "../../models/ProductReview.model";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import CustomFormField from "../global/form/CustomFormField";
+import reviewService from "../../shared/services/reviewService";
+import userService from "../../shared/services/userService";
+import InputField from "../global/form/InputField";
 
 const reviewSchema = z
     .object({
@@ -29,6 +30,7 @@ export default function ReviewForm({ product, setShow }: Props) {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
+        setValue,
         reset,
     } = useForm<TReviewSchema>();
 
@@ -46,8 +48,8 @@ export default function ReviewForm({ product, setShow }: Props) {
                     user_profile_detail: [accountManager!.userDetails!.id],
                 }
             }
-            accountManager?.refreshUserTotalReviews(accountManager.userDetails!.id, accountManager.userDetails!.attributes.reviews);
-            accountManager?.postReview(data);
+            userService.refreshUserTotalReviews(accountManager!.userDetails!.id, accountManager!.userDetails!.attributes.reviews);
+            reviewService.postProductReview(data).then(() => accountManager!.refreshContext());
             reset();
             setShow();
         }
@@ -77,18 +79,32 @@ export default function ReviewForm({ product, setShow }: Props) {
                     </div>
                 </div>
 
-                <CustomFormField 
-                    {...register("title")}
-                    label="Titlu review (optional)"
-                    type="text"
-                    error={errors.title?.message}
-                />
-                <CustomFormField 
-                    {...register("review")}
-                    label="Review (optional)"
-                    type="text"
-                    error={errors.review?.message}
-                />
+                <div className="flex flex-column">
+                    <div className="mb-8">
+                        <InputField 
+                            {...register("title")}
+                            label="Titlu review (optional)"
+                            type="text"
+                            className="w-full"
+                            error={errors.title?.message}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                setValue("title", e.target.value)
+                            }
+                        />
+                    </div>
+                    <div className="mb-8">
+                        <InputField 
+                            {...register("review")}
+                            label="Review (optional)"
+                            type="text"
+                            className="w-full"
+                            error={errors.review?.message}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                setValue("review", e.target.value)
+                            }
+                        />
+                    </div>
+                </div>
                 <button 
                     className='button-second mt-5' 
                     disabled={isSubmitting} 

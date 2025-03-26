@@ -1,40 +1,44 @@
 import { useContext, useEffect, useState } from "react";
+import strapiAxios from "../../api/axios";
+import Link from "next/link";
+// @ts-ignore
+import { DateTime } from "luxon";
+import { Dayjs } from "dayjs";
+
+// Components
 import { Check, Plus } from "react-feather";
 import emptyBottle from "../../public/img/empty-bottle.png";
 import UnsubscribedUser from "./UnsubscribedUser";
-import CartService from "../../shared/services/cartService";
-import ICartProduct from "../../types/CartProduct.interface";
-import {
-  IGETSubscriptionOrder,
-  SubscriptionNameEnum,
-  SubscriptionStatusEnum,
-} from "../../models/SubscriptionOrder.model";
-import axios from "../../api/axios";
-import { Spinner } from "react-bootstrap";
-import { Skeleton } from "@mui/material";
+import { CircularProgress, Skeleton } from "@mui/material";
 import { toast } from "react-toastify";
-import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
-import Link from "next/link";
 import SubscriptionCardDetails from "./SubscriptionCardDetails";
-
-// @ts-ignore
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-// @ts-ignore
-import Slider from "react-slick";
-// @ts-ignore
-import { DateTime } from "luxon";
-// @ts-ignore
-import AuthContext from "../../store/auth-context";
-import { IGETProduct } from "../../models/Product.model";
-
-import { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { pickersLayoutClasses } from "@mui/x-date-pickers/PickersLayout";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers/PickersDay";
 import { DateCalendar } from "@mui/x-date-pickers";
 import DndCard from "./DndCard";
+
+// Storage & services
+import CartService from "../../shared/services/cartService";
+import AuthContext from "../../store/auth-context";
+import subscriptionService from "../../shared/services/subscriptionService";
+
+// Utils & constants
+import ICartProduct from "../../types/CartProduct.interface";
+import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
+import {
+  IGETSubscriptionOrder,
+  SubscriptionNameEnum,
+  SubscriptionStatusEnum,
+} from "../../models/SubscriptionOrder.model";
+import { IGETProduct } from "../../models/Product.model";
 import { AppUtils } from "../../shared/utils/app.utils";
+
+// @ts-ignore
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+// @ts-ignore
+import Slider from "react-slick";
 
 type Props = {
   userInfo: ILocalUserInfo;
@@ -66,10 +70,12 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
   };
 
   const { isAuth, token } = useContext(AuthContext);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [loadingButton, setLoadingButton] = useState<boolean>(false);
-  const [updated, setUpdated] = useState<boolean>(false);
-  const [header, setHeader] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadingButton, setLoadingButton] = useState(true);
+  const [updated, setUpdated] = useState(false);
+
+  // const [header, setHeader] = useState<any>(null);
+
   const [winReady, setWinReady] = useState(false);
   const [dbSubsOrder, setDBSubsOrder] = useState<SubscriptionOrderItem[]>([]);
   const [cartSubsOrder, setCartSubsOrder] = useState<ICartProduct[]>([]);
@@ -93,15 +99,10 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
 
   async function fetchDBSubsOrders() {
     try {
-      const { data }: { data: IDTOSubscriptionhistory } = await axios.get(
-        `/subscription-orders?filters[user_id][$eq]=${userInfo.id}&filters[subscription_status][$eq]=active`,
-        header
-      );
-      if (
-        data.data.length > 0 &&
-        data.data[0].attributes?.subscription_list !== null
-      ) {
-        setDBSubsOrder([...data.data[0].attributes.subscription_list]);
+      const subOrder: IGETSubscriptionOrder[] = await subscriptionService.getSubscriptionHistory(userInfo.id);
+
+      if(subOrder.length > 0 && subOrder[0].attributes.subscription_list !== null) {
+        setDBSubsOrder([...subOrder[0].attributes.subscription_list]);
       } else {
         setDBSubsOrder([]);
       }
@@ -173,23 +174,21 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
   async function handleUpdateList() {
     // update order list
     try {
-      const { data }: { data: IDTOSubscriptionhistory } = await axios.get(
-        `/subscription-orders?filters[user_id][$eq]=${userInfo.id}`,
-        header
+      const { data }: { data: IDTOSubscriptionhistory } = await strapiAxios.get(
+        `/subscription-orders?filters[user_id][$eq]=${userInfo.id}`
       );
 
       if (data.data.length > 0) {
         const orderId = data.data[0].id;
         try {
-          axios
-            .put(`/subscription-orders/${orderId}`, updatedSubList, header)
+          // axios.put(`/subscription-orders/${orderId}`, updatedSubList, header)
+          strapiAxios.put(`/subscription-orders/${orderId}`, updatedSubList)
             .then(() => {
               setLoadingButton(true);
               setUpdated(false);
               AppUtils.toastNotification("Lista a fost actualizata cu success!", true);
             });
         } catch (error) {
-          console.log("nu s epuede", error);
           AppUtils.toastNotification("ERROR! Actiunea nu a putut fi finalizata!", false);
         }
         // remove sub items from cart
@@ -204,9 +203,10 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
     // this will retrieve a mystery product for the user, but for the moment, we mimic it
     try {
       let prodList: IGETProduct[] = [];
-      const data = await axios.get("/products?populate=*").then((resp) => {
+      // const data = await axios.get("/products?populate=*").then((resp) => {
+      const data = await strapiAxios.get("/products?populate=*").then((resp) => {
         return resp.data.data.map((prod: IGETProduct) => {
-          if (prod.attributes.subscription_type === SubscriptionNameEnum.BASIC)
+          if (prod.attributes.subscription_type === SubscriptionNameEnum.MYSTERY)
             return prod;
         });
       });
@@ -266,23 +266,23 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
     );
   }
 
-  useEffect(() => {
-    if (token) {
-      setHeader({
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    }
-  }, [token]);
+  // useEffect(() => {
+  //   if (token) {
+  //     setHeader({
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //   }
+  // }, [token]);
 
   useEffect(() => {
     cartSubsOrder.length > 0 && setUpdated(true);
   }, [cartSubsOrder]);
 
   useEffect(() => {
-    header && fetchDBSubsOrders();
-  }, [header]);
+    isAuth && fetchDBSubsOrders();
+  }, [isAuth]);
 
   useEffect(() => {
     setWinReady(true);
@@ -295,7 +295,6 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
         setFullSubOrder([...dbSubsOrder, ...cartSubsOrder]);
       } else if (checkIfMystery()) {
         const mysteryProduct = await getMysteryProduct();
-        console.log("mProd", mysteryProduct);
         setFullSubOrder([...mysteryProduct]);
       } else {
         setFullSubOrder([...cartSubsOrder]);
@@ -420,11 +419,15 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
               <div className="btn-wrapper">
                 <button
                   className="button-second"
-                  disabled={!updated}
+                  disabled={true}
                   onClick={() => handleUpdateList()}
                 >
                   {loadingButton ? (
-                    <Spinner animation="border" style={{ color: "#fff" }} />
+                    <CircularProgress 
+                      sx={{ color: '#ffffff' }}
+                      size={'2rem'}  
+                      thickness={7} 
+                    />
                   ) : (
                     "Update"
                   )}

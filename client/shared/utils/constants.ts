@@ -4,6 +4,19 @@ export const AUTH_TOKEN = "jwt";
 // ALL NEXT ENDPOINTS
 export const API_V = '/api/v1';
 
+export const PAYMENT_TYPE = {
+    oneTimeBuy: 'otb',
+    subscription: 'subscription'
+}
+
+export const SUBSCRIPTION_TYPE = {
+    MYSTERY : 'mystery',
+    BASIC: 'basic',
+    PREMIUM: 'premium'
+}
+
+// export type PAYMENT_TYPE = "subscription" | "otb"; 
+
 // 1:1 strapi table endpoints
 export const CANCELLED_ORDERS = '/cancelled-orders';
 export const CHECK_AUTH = '/check_auth';

@@ -1,16 +1,17 @@
 import { ChangeEvent, useState } from "react";
 import { useRouter } from "next/router";
-import { Check } from "react-feather";
-import maleIcon from "../../public/img/male-icon.png";
-import femaleIcon from "../../public/img/female-icon.jpg";
-// import axios from "../../api/axios";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+
+// Components
 import InputField from "../global/form/InputField";
 import PrimaryButton from "../global/PrimaryButton";
+import { Check } from "react-feather";
+import maleIcon from "../../public/img/male-icon.png";
+import femaleIcon from "../../public/img/female-icon.jpg";
 
 const REGISTER_URL = "/auth/local/register";
 const USER_DETAILS = "/user-profile-details";

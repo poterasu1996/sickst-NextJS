@@ -2,6 +2,7 @@
 import { DateTime } from "luxon";
 import { toast } from "react-toastify";
 import { EncodedFile } from "../../models/ContactUs.model";
+import { ReactNode } from "react";
 
 const toastMsg = (msg: string, status: boolean) => {
     return (
@@ -17,12 +18,13 @@ const toastMsg = (msg: string, status: boolean) => {
 };
 
 export class AppUtils {
-    static toastNotification(message: string, status: boolean) {
+    static toastNotification(message: string, status: boolean, toastTemplate?: ReactNode) {
         // status: true-success false-error
-        toast(toastMsg(message, status), {
+        const content = toastTemplate ?? toastMsg(message, status);
+        toast(content, {
           autoClose: 2000,
         });
-      }
+    }
 
     static isoToFormat(date: string) {
         const newDate = DateTime.fromISO(date);

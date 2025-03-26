@@ -1,18 +1,24 @@
-import ProductDetailsSection from "../../components/ProductPage/ProductDetailsSection";
-import { useRouter } from "next/router";
 import { useEffect, useState, useContext } from "react";
-
+import { GetServerSideProps, GetServerSidePropsContext, GetStaticPropsContext } from "next";
+import { useRouter } from "next/router";
 import strapiAxios from "../../api/axios";
 import axios from "axios"; 
-import { Spinner } from "react-bootstrap";
+
+// Components
+import ProductDetailsSection from "../../components/ProductPage/ProductDetailsSection";
 import ProductReviewsSection from "../../components/ProductPage/ProductReviewsSection";
+import { CircularProgress } from "@mui/material";
+
+// Storage & services
+import AccountContext from "../../store/account-context";
+
+// Utils & constants
 import IProduct from "../../types/Product.interface";
-import { GetServerSideProps, GetServerSidePropsContext, GetStaticPropsContext } from "next";
 import { ReviewCount } from "../../types/product/ProductReviews.interface";
 import RequestMeta from "../../types/Axios.interface";
-import AccountContext from "../../store/account-context";
 import { IGETProductReview } from "../../models/ProductReview.model";
 import { PRODUCT_REVIEWS } from "../../shared/utils/constants";
+
 const PRODUCTS_URL = "/products";
 
 interface Props {
@@ -79,7 +85,7 @@ const ProductDetails = ({ productRating }: Props) => {
             </div>}
 
             {loading && <div className="loader">
-                <Spinner animation="grow" style={{color: "#cc3633"}}/>
+                <CircularProgress size={'2rem'} color="primary" thickness={7} />
                 <span>Fetching product data</span>
             </div>}
 

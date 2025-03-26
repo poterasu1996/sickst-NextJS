@@ -78,6 +78,7 @@
     "subscription_type": {
       "type": "enumeration",
       "enum": [
+        "mystery",
         "basic",
         "premium"
       ],

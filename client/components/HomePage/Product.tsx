@@ -5,36 +5,33 @@ import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import orderImg from "../../public/img/order-img.png";
 import CartContext from "../../store/cart-context";
 import AuthContext from "../../store/auth-context";
-import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import Link from "next/link";
-// import { Rating } from "@mui/material";
-// import { styled } from "@mui/material/styles";
 import CartService from "../../shared/services/cartService/index";
 import React, { useState, useContext } from "react";
 import { useCheckMysterySub } from "../../shared/hooks/useCheckMysterySub";
 import { PaymentEnums } from "../../shared/enums/payment.enums";
 import { CircularProgress } from "@mui/material";
 import Button from "@mui/material/Button";
+import { AppUtils } from "../../shared/utils/app.utils";
 
 interface Props {
   product: any;
 }
 
 const Product = ({ product }: Props) => {
-  const [show, setShow] = useState<boolean>(false); // for Read more modal
-  const cartManager = useContext(CartContext);
+  const [show, setShow] = useState(false); // for Read more modal
+  // const cartManager = useContext(CartContext);
   const { isAuth } = useContext(AuthContext);
-  const [addedToCart, setAddedToCart] = useState<boolean>(false); // show the checkmark after added to cart
-  const [loading, setLoading] = useState<boolean>(false); // used for loading animation
-  const [subscription, setSubscription] = useState<boolean>(true);
+  const [loading, setLoading] = useState(false); // used for loading animation
+  const [subscription, setSubscription] = useState(true);
   const router = useRouter();
   const { isMystery } = useCheckMysterySub();
 
   // in future, we must have 2 parameters: product and container (container will be the container price from DB, atm is static price)
   const containerPrice = 50; // price of container
 
-  const toastMsg = (
+  const customToastTemplate = (
     <>
       <div className="toast-item">
         <div className="item-image">
@@ -54,11 +51,19 @@ const Product = ({ product }: Props) => {
     </>
   );
 
-  const notify = () => {
-    toast(toastMsg, {
-      autoClose: 2000,
-    });
-  };
+  const customToast6Products = (
+    <>
+      <div className="toast-item">
+        <div className="content">
+          <div className="title">Error</div>
+          <div className="message">
+            Your subscription list hast more than{" "}
+            <b className="brand-color">6 products</b>!
+          </div>
+        </div>
+      </div>
+    </>
+  );
 
   function handleAddProduct() {
     let paymentType;
@@ -68,18 +73,20 @@ const Product = ({ product }: Props) => {
     } else {
       if (subscription) {
         paymentType = "subscription";
+        if(isMystery) {
+          AppUtils.toastNotification("You need to change subscription plan", false);
+          return;
+        }
         if (CartService.subscriptionList().length >= 6) {
-          toast("Your subscription list hast more than 6 products!", {
-            autoClose: 2000,
-          });
+          AppUtils.toastNotification("", false, customToast6Products);
           return;
         }
       } else {
         paymentType = "otb";
       }
       CartService.addProduct(product, 1, paymentType);
-      cartManager!.setRefresh(!cartManager!.refresh);
-      notify();
+      // cartManager.refreshContext();
+      AppUtils.toastNotification("", true, customToastTemplate);
     }
   }
 
@@ -91,31 +98,17 @@ const Product = ({ product }: Props) => {
     }
     if (isMystery) {
       // check if user is subscribed with mystery plan
-      toast("You need to change subscription plan", {
-        autoClose: 2000,
-      });
+      AppUtils.toastNotification("You need to change subscription plan", false);
     } else {
       const paymentType = PaymentEnums.SUBSCRIPTION;
       if (CartService.subscriptionList().length >= 6) {
-        const msg = (
-          <>
-            <div>
-              Your subscription list hast more than{" "}
-              <b className="brand-color">6 products</b>!
-            </div>
-          </>
-        );
-        toast(msg, {
-          autoClose: 2000,
-        });
+        AppUtils.toastNotification("", false, customToast6Products);
         return;
       }
-      notify();
+      AppUtils.toastNotification("", true, customToastTemplate);
       CartService.addProduct(product, 1, paymentType);
-      cartManager!.setRefresh(!cartManager!.refresh);
-      setAddedToCart(true);
+      // cartManager.refreshContext();
       setLoading(true);
-    
     }
   };
 
@@ -161,24 +154,24 @@ const Product = ({ product }: Props) => {
             </div>
           </div>
           <div className="product-card-button">
-            {
-              CartService.hasProduct(product) ? (
-                loading ? (
-                  <CircularProgress sx={{width: '30px !important', height: '30px !important'}}/>
-                ) : (
-                  <div className="card-button disabled">
-                    <div className="check">
-                      <Check stroke={"#fff"} height={22} width={22} />
-                    </div>
-                    <span>Added</span>
-                  </div>
-                )
+            {CartService.hasProduct(product) ? (
+              loading ? (
+                <CircularProgress
+                  sx={{ width: "30px !important", height: "30px !important" }}
+                />
               ) : (
-                <div className="card-button" onClick={handleQueueProduct}>
-                  <div className="plus"></div>Add to cart
+                <div className="card-button disabled">
+                  <div className="check">
+                    <Check stroke={"#fff"} height={22} width={22} />
+                  </div>
+                  <span>Added</span>
                 </div>
               )
-            }
+            ) : (
+              <div className="card-button" onClick={handleQueueProduct}>
+                <div className="plus"></div>Add to cart
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -243,7 +236,7 @@ const Product = ({ product }: Props) => {
                 <div className="order-type">
                   <div className="order">
                     <Button
-                      sx={{textTransform: 'none'}}
+                      sx={{ textTransform: "none" }}
                       className={`order-btn ${subscription && "active"}`}
                       onClick={() => setSubscription(true)}
                     >
@@ -261,7 +254,7 @@ const Product = ({ product }: Props) => {
                   </div>
                   <div className="order">
                     <Button
-                      sx={{textTransform: 'none'}}
+                      sx={{ textTransform: "none" }}
                       className={`order-btn ${!subscription && "active"}`}
                       onClick={() => setSubscription(false)}
                     >
@@ -270,10 +263,7 @@ const Product = ({ product }: Props) => {
                         <div className="order-info">
                           <div className="volume">8 ml</div>
                           <div className="type">
-                            One time{" "}
-                            <b>
-                              RON {product.attributes.otb_price}
-                            </b>
+                            One time <b>RON {product.attributes.otb_price}</b>
                           </div>
                         </div>
                       </div>

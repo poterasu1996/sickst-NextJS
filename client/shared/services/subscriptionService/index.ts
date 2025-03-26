@@ -18,6 +18,21 @@ class SubscriptionService {
         }
     }
 
+    async getActiveSubscriptions(userId: number) {
+        try {
+            const queryFilter = `?filters[user_id][$eq]=${userId}&filters[subscription_status][$eq]=active`
+            const response = await strapiAxios.get(`${SUBSCRIPTION_ORDERS}${queryFilter}`);
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async updateSubscriptionList() {
+        // update subscription product list (prod list an user can create while subscription is active)
+            
+    }
+
     async populateSubscriptionHistory(subsData: ISubscriptionOrderModel) {
         const parsedData = {
             data: {
@@ -39,7 +54,7 @@ class SubscriptionService {
         return resp.data?.data[0].id;
     }
 
-    async updateSubscriptionOrder(orderID: number) {
+    async cancelSubscriptionOrder(orderID: number) {
         // cancel the subscription from order table
         const data = {
             data: {
@@ -58,7 +73,7 @@ class SubscriptionService {
     
             // cancel subscription from order table
             const orderID = await this.getActiveSubscriptionID(subscriptionID);
-            await this.updateSubscriptionOrder(orderID);
+            await this.cancelSubscriptionOrder(orderID);
     
             // update account status - must be done in a separate service
             // const uDetailsID = await userService.getUserDetailsID();

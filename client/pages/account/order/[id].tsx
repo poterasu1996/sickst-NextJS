@@ -1,17 +1,21 @@
-import logo from "../../../public/logo.svg";
+import { useContext, useState } from "react";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
-// import axios from "../../../api/axios";
+import { useRouter } from "next/router";
 import axios from "axios";
+
+// Components
+import logo from "../../../public/logo.svg";
+import { Modal, ModalBody } from "reactstrap";
+
+// Storage & services
+import AccountContext from "../../../store/account-context";
+import orderService from "../../../shared/services/orderService";
+
+// Utils
+import { ICompanyDetail, ICompanyDetailModel } from "../../../models/CompanyDetail.model";
+import { IOHProduct } from "../../../models/OrderHistory.model";
 import { IGETOrderHistory } from "../../../models/OrderHistory.model";
 import { AppUtils } from "../../../shared/utils/app.utils";
-import { IOHProduct } from "../../../models/OrderHistory.model";
-import { Table } from 'react-bootstrap';
-import { useContext, useState } from "react";
-import AccountContext from "../../../store/account-context";
-import { useRouter } from "next/router";
-import { ICompanyDetail, ICompanyDetailModel } from "../../../models/CompanyDetail.model";
-import { Modal, ModalBody } from "reactstrap";
-import orderService from "../../../shared/services/orderService";
 
 interface Props {
     order: IGETOrderHistory | null,
@@ -99,7 +103,7 @@ const OrderId = ({ order, companyDet }: Props) => {
                                             <p className="mb-1">Alexandru cel Bun nr. 2</p>
                                         </div>
                                     </div>
-                                    <Table>
+                                    {/* <Table>
                                         <thead>
                                             <tr>
                                                 {columns.map((col, i) => (
@@ -118,7 +122,7 @@ const OrderId = ({ order, companyDet }: Props) => {
                                                 </tr>
                                             ))}
                                         </tbody>
-                                    </Table>
+                                    </Table> */}
                                     <div className="order-card--text">
                                         <div className="mx-3 my-3">
                                             <p className="my-4"><b>Invoice to:</b></p>

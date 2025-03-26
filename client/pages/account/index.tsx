@@ -1,7 +1,8 @@
-// @ts-ignore
-import { DateTime } from "luxon";
 import { useContext, useEffect, useState } from "react";
-// import axios from "../../api/axios";
+import axios from "axios";
+
+// components / Layout
+import AccountLayout from "../../layouts/AccountLayout";
 import BillingInformation from "../../components/AccountPage/BillingInformation";
 import ManageSubscription from "../../components/AccountPage/ManageSubscription";
 import OrderHistory from "../../components/AccountPage/OrderHistory";
@@ -9,30 +10,32 @@ import ShippingInformation from "../../components/AccountPage/ShippingInformatio
 import UserReviews from "../../components/AccountPage/UserReviews";
 import RatedProducts from "../../components/AccountPage/RatedProducts";
 import ResetPassword from "../../components/AccountPage/ResetPassword";
+import PersonalInfo from "../../components/AccountPage/PersonalInfo";
+
+// assets
 import userAvatar from '../../public/img/svg/male_avatar.svg';
+
+// global storage
 import AccountContext from "../../store/account-context";
+
+// utilities
 import { GetServerSideProps } from "next";
-import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
 import { IUserModel } from "../../models/User.model";
 import { IGETUserDetails } from "../../models/UserDetails.model";
-import PersonalInfo from "../../components/AccountPage/PersonalInfo";
-import axios from "axios";
+import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
+import { AppUtils } from "../../shared/utils/app.utils";
+import { AccountStateEnums } from "../../shared/enums/accountPageState.enum";
 
-// const accState = [
-//     'subscription', 
-//     'orderHistory', 
-//     'billingInfo', 
-//     'shippingInfo', 
-//     'reviews', 
-//     'ratedProducts', 
-//     'personalInfo', 
-//     'resetPassword'
-// ];
-
-function getDate(dateString: string) {
-    const date = DateTime.fromISO(dateString);
-    return date.toFormat('dd LLL yyyy');
-}
+const tabs = [
+    { key: 'subscription', label: 'Manage subscription'},
+    { key: 'orderHistory', label: 'Order history'},
+    // { key: 'billingInfo', label: 'Billing information'},
+    { key: 'shippingInfo', label: 'Shipping information'},
+    // { key: 'reviews', label: 'My reviews'},
+    // { key: 'ratedProducts', label: 'Rated products'},
+    { key: 'personalInfo', label: 'Personal info'},
+    // { key: 'resetPassword', label: 'Reset password'},
+];
 
 type Props = {
     userInfo: ILocalUserInfo,
@@ -48,36 +51,54 @@ const Account = ({ userInfo, subscriptionHistory }: Props) => {
     }, [accountManager!.accountState]);
 
     useEffect(() => {
-        if(accState === 'orderHistory') {
+        if(accState === AccountStateEnums.ORDER_HISTORY) {
             document?.getElementById('content')?.classList.add('overflowscroll');
         } else {
             document?.getElementById('content')?.classList.remove('overflowscroll');
         }
     },[accState])
 
-    function activeMenuLink(navLink: string) {
+    function handleActiveMenuLink(navLink: string) {
         accountManager!.setAccountPageState(navLink);
     }
 
+    function renderTabContent(activeTab: string) {
+        switch (activeTab) {
+            case AccountStateEnums.SUBSCRIPTION:
+                return <ManageSubscription userInfo={userInfo} subscriptionHistory={subscriptionHistory}/>
+            case AccountStateEnums.ORDER_HISTORY:
+                return <OrderHistory />
+            case AccountStateEnums.BILLING_INFO:
+                return <BillingInformation />
+            case AccountStateEnums.SHIPPING_INFO:
+                return <ShippingInformation />
+            case AccountStateEnums.REVIEWS:
+                return <UserReviews />
+            case AccountStateEnums.RATED_PRODUCTS:
+                return <RatedProducts />
+            case AccountStateEnums.PERSONAL_INFO:
+                return <PersonalInfo />
+            case AccountStateEnums.RESET_PASSWORD:
+                return <ResetPassword />
+            default:
+                return <ManageSubscription userInfo={userInfo} subscriptionHistory={subscriptionHistory}/>
+        }
+    }
+
     return(<>
-        <div className="main-content account-page">
+        {/* <div className="main-content account-page">
+        </div> */}
+        <AccountLayout>
             <div className="container account-main-body">
                 <div className="nav-section">
                     <div className="user-info">
                         <div className="user-avatar"></div>
                         <div className="user-name">{userInfo?.full_name ? userInfo.full_name : "Sickst User"}</div>
-                        <div className="joined-date">Joined: <b className="brand-color">{userInfo && getDate(userInfo.createdAt)}</b></div>
+                        <div className="joined-date">Joined: <b className="brand-color">{userInfo && AppUtils.isoToFormat(userInfo.createdAt)}</b></div>
                         <div className="joined-date">Subscription: <b className="brand-color">{(userInfo && userInfo.subscribed) ? 'activa' : 'neabonat'}</b></div>
                     </div>
                     <ul className="nav-menu">
-                        <li className={"nav-link " + (accState === 'subscription' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('subscription')}>Manage subscription</div></li>
-                        <li className={"nav-link " + (accState === 'orderHistory' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('orderHistory')}>Order history</div></li>
-                        {/* <li className={"nav-link " + (accState === 'billingInfo' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('billingInfo')}>Billing information</div></li> */}
-                        <li className={"nav-link " + (accState === 'shippingInfo' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('shippingInfo')}>Shipping information</div></li>
-                        {/* <li className={"nav-link " + (accState === 'reviews' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('reviews')}>My reviews</div></li> */}
-                        {/* <li className={"nav-link " + (accState === 'ratedProducts' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('ratedProducts')}>Rated products</div></li> */}
-                        <li className={"nav-link " + (accState === 'personalInfo' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('personalInfo')}>Personal info</div></li>
-                        {/* <li className={"nav-link " + (accState === 'resetPassword' ? 'active' : '')}><div className="nav-link-btn" onClick={() => activeMenuLink('resetPassword')}>Reset password</div></li> */}
+                        {tabs.map((tab) => <li className={"nav-link " + (accState === tab.key ? 'active' : '')}><div className="nav-link-btn" onClick={() => handleActiveMenuLink(tab.key)}>{tab.label}</div></li>)}
                     </ul>
                 </div>
                 <div className="content custom-sb custom-sb-x" id="content">
@@ -87,21 +108,14 @@ const Account = ({ userInfo, subscriptionHistory }: Props) => {
                         </div>
                         <div className="user-details">
                             <div className="name">{userInfo?.full_name ? userInfo.full_name : "Sickst User"}</div>
-                            <div className="joined-date">Joined: <b className="brand-color">{userInfo && getDate(userInfo.createdAt)}</b></div>
+                            <div className="joined-date">Joined: <b className="brand-color">{userInfo && AppUtils.isoToFormat(userInfo.createdAt)}</b></div>
                             <div className="subscription-status">Subscription: <b className="brand-color">{(userInfo && userInfo.subscribed) ? 'activa' : 'neabonat'}</b></div>
                         </div>
                     </div>
-                    {accState === 'subscription' && <ManageSubscription userInfo={userInfo} subscriptionHistory={subscriptionHistory}/>}
-                    {accState === 'orderHistory' && <OrderHistory />}
-                    {/* {accState === 'billingInfo' && <BillingInformation />} */}
-                    {accState === 'shippingInfo' && <ShippingInformation />}
-                    {/* {accState === 'reviews' && <UserReviews />} */}
-                    {/* {accState === 'ratedProducts' && <RatedProducts />} */}
-                    {accState === 'personalInfo' && <PersonalInfo />}
-                    {/* {accState === 'resetPassword' && <ResetPassword />} */}
+                    {renderTabContent(accState)}
                 </div>
             </div>
-        </div>
+        </AccountLayout>
     </>)
 }
 
