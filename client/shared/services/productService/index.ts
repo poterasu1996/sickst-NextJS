@@ -71,9 +71,16 @@ class ProductsService {
     }
   }
 
-  async getFemaleProducts(page=1) {
+  async getFemaleProducts(page=1, search?: string) {
     try {
-      const result = await axios.get(`${PRODUCTS_URL}&filters[categories][name][$eq]=${CategoryEnums.FEMALE}&pagination[page]=${page}&pagination[pageSize]=3`);
+      let url = `${PRODUCTS_URL}`;
+      let categoryAndPagination = `&filters[categories][name][$eq]=${CategoryEnums.FEMALE}&pagination[page]=${page}&pagination[pageSize]=3`;
+      if(search) {
+        url += `&filters[product_name][$containsi]=${search}`;
+      }
+      url += categoryAndPagination;
+
+      const result = await axios.get(url);
       return result.data;
     } catch (error: any) {
       return {error: error.response.data.error}      

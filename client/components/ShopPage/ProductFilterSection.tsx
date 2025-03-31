@@ -8,11 +8,14 @@ import "primereact/resources/primereact.min.css";                  //core css
 import "primeicons/primeicons.css";                                //icons
 import axios from '../../api/axios';
 import FiltersModal from '../global/FiltersModal';
-import ProductResponse from '../../types/shop/ProductResponse.interface';
+import SecondaryButton from '../global/SecondaryButton';
+import IProduct from '../../types/Product.interface';
 const BRANDS_URL = "/brands";
 
 type Props = {
-    products: ProductResponse
+    products: IProduct[],
+    showMore: boolean,
+    handleShowMore: () => void
 }
 
 type Product = {
@@ -27,7 +30,7 @@ type ModalOptions = {
     brandFilter: any[] | null,
 }
 
-export default function ProductFilterSection({ products }: Props) {
+export default function ProductFilterSection({ products, showMore = false, handleShowMore }: Props) {
     const [basic, setBasic] = useState<boolean>(false);
     const [premium, setPremium] = useState<boolean>(false);
     const [filteredProducts, setFilteredProducts] = useState<Product[] | null>(null);
@@ -45,7 +48,7 @@ export default function ProductFilterSection({ products }: Props) {
 
     useEffect(() => {
         if(products) {
-            setFilteredProducts([...products.data]);
+            setFilteredProducts([...products]);
         }
     }, [products])
 
@@ -103,7 +106,7 @@ export default function ProductFilterSection({ products }: Props) {
     }
 
     function applyFilteres() {
-        let filteredProducts = [...products.data];
+        let filteredProducts = [...products];
         if(basic) {
             const basicProducts = filteredProducts.filter(product => {
                 return product.attributes.subscription_type.toLowerCase() === 'basic'
@@ -111,7 +114,7 @@ export default function ProductFilterSection({ products }: Props) {
             filteredProducts = [...basicProducts];
         }
         if(premium) {
-            const premiumProducts = products.data.filter((item: Product) => {
+            const premiumProducts = products.filter((item: Product) => {
                 return item.attributes.subscription_type.toLowerCase() === 'premium'
             }); 
             filteredProducts = [...premiumProducts]
@@ -204,6 +207,9 @@ export default function ProductFilterSection({ products }: Props) {
                         ? filteredProducts.map(product => (<Product key={product.id} product={product}/>))
                         : <div className='no-product'>Produsul selectat nu exista!</div>
                     }
+                    {showMore && <div className="more-prod">
+                        <SecondaryButton onClick={handleShowMore}>Vezi mai multe produse</SecondaryButton>
+                    </div>}
                 </div>
             </div>
         </div>

@@ -83,7 +83,7 @@ export default function SearchInputWithDropdown({
           }}
           onKeyDown={(e) => {
             if(e.key === 'Enter' && input.trim()) {
-                handleSearchSelect(input.trim())
+              handleSearchSelect(input.trim())
             }
           }}
           InputProps={{
@@ -99,6 +99,7 @@ export default function SearchInputWithDropdown({
                       setInput("");
                       onInputChange("");
                       setOpen(false);
+                      handleSearchSelect('');
                     }}
                     size="small"
                     edge="end"

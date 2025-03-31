@@ -88,8 +88,8 @@ const Header = () => {
         query: { search: encodedQuery },
       },
       undefined,
-      { shallow: false }
-    ).then(() => router.reload());
+      { shallow: false, scroll: false }
+    )
   }
 
   const handleProductRedirect = (product: ProductOption) => {
