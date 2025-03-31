@@ -4,14 +4,12 @@ import ShipmentForm from "./ShipmentForm";
 import { IShippingInfo, IGETShippingInformation } from "../../models/ShippingInformation.model";
 import { Bookmark, MoreVertical } from "react-feather";
 
-// import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-// import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { Menu } from "primereact/menu";
 import { MenuItem } from "primereact/menuitem";
 import { useRecoilState } from "recoil";
 import { shippingListR } from "../../shared/recoil-states";
 import shippingService from "../../shared/services/shippingService";
+import SickstModal from "../global/SickstModal";
 
 const ShippingInformation = () => {
     const [show, setShow] = useState<boolean>(false);
@@ -129,28 +127,16 @@ const ShippingInformation = () => {
                 </div>
             </div>
 
-            <Modal
+            <SickstModal
+                className="shipping-info-modal"
+                headerTitle="Add a new address"
                 open={show}
                 onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-                className="shipping-info-modal"
             >
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <span className="modal-title">Add a new address</span>
-                        <button className="btn-close" onClick={handleClose}></button>
-                    </div>
-                    <div className="modal-body">
-                        <div className="shipment-details">
-                            <ShipmentForm onSubmit={handleClose}/>
-                        </div>
-                    </div>
-                    <div className="modal-footer">
-                        <button className="cancel-btn" onClick={handleClose}>Cancel</button>
-                    </div>
+                <div className="shipment-details">
+                    <ShipmentForm onSubmit={handleClose}/>
                 </div>
-            </Modal>
+            </SickstModal>
         </>
     )
 }

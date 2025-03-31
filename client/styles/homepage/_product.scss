@@ -175,30 +175,14 @@
         }
     }
 }
-.product-card-modal, 
-.custom-modal {
-    @media (min-width:576px) and (max-width:1200px) {
-        max-width: unset;
-    } 
-    .modal-header {
-        border-bottom: unset;
-        padding: 2rem;
-
-        .btn-close {
-            font-size: 1.5rem;
-            width: 2.5rem;
-            height: 2.5rem;
-            margin-right: 1rem;
+.product-card-modal {
+    // @media (min-width:576px) and (max-width:1200px) {
+    //     max-width: unset;
+    // } 
+    .modal-content {
+        .modal-body {
+            padding: 0;
         }
-    }
-    .modal-body {
-        padding: 0 3rem 4rem 2rem;
-        @media (max-width:500px) {
-            padding: 0 2rem;
-        }
-    }
-    .modal-footer {
-        padding: 2rem;
     }
     .modal-container {
         .img-wrapper {

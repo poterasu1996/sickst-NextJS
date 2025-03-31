@@ -116,7 +116,8 @@
                 display: flex;
                 margin: 2.4rem 0;
                 color: #141414;
-                @media (max-width: 730px) {
+                // @media (max-width: 730px) {
+                @media (max-width: 600px) {
                     flex-direction: column;
                 }
 
@@ -138,7 +139,8 @@
 
                 .banner-buttons {
                     margin-left: auto;
-                    @media (max-width: 730px) {
+                    // @media (max-width: 730px) {
+                    @media (max-width: 600px) {
                         margin-left: unset;
                         margin-right: auto;
                         margin-top: 1.4rem;

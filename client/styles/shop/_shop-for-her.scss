@@ -23,7 +23,7 @@
     margin: 3rem auto;
     @media (max-width: 950px) {
         margin: 0 auto;
-        margin-bottom: 1rem;
+        margin-top: 3rem;
     }
     &--header {
         display: flex;
@@ -46,27 +46,20 @@
 
     &--content {
         display: flex;
-        flex-wrap: wrap;
         justify-content: space-between;
         margin-top: 1rem;
+        overflow-x: auto;
+        padding-bottom: 2rem;
 
         .new-product {
             cursor: pointer;
-            width: 15%;
+            min-width: 22rem;
+            width: 22rem;
+            margin-right: 2rem;
+            width: 22rem;
             background-color: #fff;
             box-shadow: 0 .2rem 1rem rgba($color: #3E1223, $alpha: 0.08);
             padding: 2rem;
-            @media (max-width: 950px) {
-                width: 30%;
-                margin-bottom: 3rem;
-            }
-            @media (max-width: 550px) {
-                width: 45%;
-            }
-
-            // &:not(:last-child) {
-            //     margin-right: 2rem;
-            // }
 
             &--img-wrapper {
                 height: 15rem;
@@ -94,11 +87,12 @@
 }
 
 .top-rated-products {
+    margin: 3rem auto;
     padding-top: 3rem;
     padding-bottom: 1rem;
-    @media (max-width: 1200px) {
-        padding: 3rem;    
-        padding-bottom: 1rem;
+    @media (max-width: 576px) {
+        padding-bottom: 0;
+        padding-top: 0;
     }
     &--header {
         font-size: 3rem;
@@ -185,6 +179,7 @@
                     padding: 0;
                     height: 3rem;
                     border-radius: unset;
+                    text-align: center;
 
                     &:hover,
                     &:active,

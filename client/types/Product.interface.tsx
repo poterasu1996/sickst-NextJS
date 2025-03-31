@@ -8,6 +8,7 @@ export default interface IProduct {
         model: string,
         otb_price: number,
         publishedAt: string,
+        product_name: string,
         quantity: number,
         rating: number,
         retail_value: number,

@@ -1,5 +1,5 @@
-import { createTheme, Drawer, ThemeProvider } from "@mui/material";
 import { useContext } from "react";
+import { createTheme, Drawer, ThemeProvider } from "@mui/material";
 import AuthContext from "../../store/auth-context";
 
 type Props = {

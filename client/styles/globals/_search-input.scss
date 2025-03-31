@@ -1,0 +1,26 @@
+.searchInput {
+    width: 30rem;
+
+    &--dropdown {
+        margin-top: 0;
+    }
+
+    .MuiInputBase-root {
+        // background-color: #cecece;
+        background-color: #fff;
+        border-radius: 10rem;
+        font-size: 1.4rem;
+
+        .MuiInputBase-input {
+            padding: px 14px;
+        }
+    }
+
+    .MuiPaper-root {
+        .MuiList-root {
+            .MuiTypography-root {
+                font-size: 1.2rem;
+            }
+        }
+    }
+}

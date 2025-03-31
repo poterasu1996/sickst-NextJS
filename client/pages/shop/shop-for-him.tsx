@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import CollectionSection from "../../components/ShopPage/CollectionSection";
 import NewProductSection from "../../components/ShopPage/NewProductSection";
 import ProductFilterSection from "../../components/ShopPage/ProductFilterSection";
-import SubscriptionBanner from "../../components/ShopPage/SubscriptionBanner";
+import SliderBanner from "../../components/ShopPage/SliderBanner";
 import TopRatedProducts from "../../components/ShopPage/TopRatedProducts";
 import { CircularProgress } from "@mui/material";
 
@@ -35,17 +35,19 @@ const ShopMen = () => {
         })
     }, [])
 
-    return <div className="subs-body">
-        <SubscriptionBanner />
-        {/* <CollectionSection /> */}
-        {loading 
-            && <div className="loader">
-                <CircularProgress size={'2rem'} color="primary" thickness={7} />
-            </div>}
-        {newProducts?.data && <NewProductSection newProducts={newProducts.data}/>}
-        {topRatedProducts?.data && <TopRatedProducts topProducts={topRatedProducts.data} />}
-        {manProducts && <ProductFilterSection products={manProducts}/>}
-    </div>
+    return (<>
+        <SliderBanner />
+        <div className="layout">
+            {/* <CollectionSection /> */}
+            {loading 
+                && <div className="loader">
+                    <CircularProgress size={'2rem'} color="primary" thickness={7} />
+                </div>}
+            {newProducts?.data && <NewProductSection newProducts={newProducts.data}/>}
+            {topRatedProducts?.data && <TopRatedProducts topProducts={topRatedProducts.data} />}
+            {manProducts && <ProductFilterSection products={manProducts}/>}
+        </div>
+    </>)
 }
 
 export default ShopMen;

@@ -1,19 +1,29 @@
-import Rating from "react-rating";
-import { Star, Check, ChevronRight } from "react-feather";
-import Image from "next/image";
-import { Modal, ModalBody, ModalHeader } from "reactstrap";
-import orderImg from "../../public/img/order-img.png";
-import CartContext from "../../store/cart-context";
-import AuthContext from "../../store/auth-context";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import CartService from "../../shared/services/cartService/index";
 import React, { useState, useContext } from "react";
-import { useCheckMysterySub } from "../../shared/hooks/useCheckMysterySub";
-import { PaymentEnums } from "../../shared/enums/payment.enums";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+
+// Components
+import { Star, Check, ChevronRight } from "react-feather";
+import Rating from "react-rating";
 import { CircularProgress } from "@mui/material";
 import Button from "@mui/material/Button";
+import SickstModal from "../global/SickstModal";
+
+// Storage & services
+import CartContext from "../../store/cart-context";
+import AuthContext from "../../store/auth-context";
+import CartService from "../../shared/services/cartService/index";
+
+// Hooks
+import { useCheckMysterySub } from "../../shared/hooks/useCheckMysterySub";
+
+// Utils
 import { AppUtils } from "../../shared/utils/app.utils";
+
+// Constants & Assets
+import orderImg from "../../public/img/order-img.png";
+import { PaymentEnums } from "../../shared/enums/payment.enums";
 
 interface Props {
   product: any;
@@ -65,7 +75,7 @@ const Product = ({ product }: Props) => {
     </>
   );
 
-  function handleAddProduct() {
+  const handleAddProduct = () => {
     let paymentType;
     // check if logged in
     if (!isAuth) {
@@ -73,8 +83,11 @@ const Product = ({ product }: Props) => {
     } else {
       if (subscription) {
         paymentType = "subscription";
-        if(isMystery) {
-          AppUtils.toastNotification("You need to change subscription plan", false);
+        if (isMystery) {
+          AppUtils.toastNotification(
+            "You need to change subscription plan",
+            false
+          );
           return;
         }
         if (CartService.subscriptionList().length >= 6) {
@@ -177,116 +190,113 @@ const Product = ({ product }: Props) => {
       </div>
 
       {/* product modal */}
-      <Modal
+      <SickstModal
         className="product-card-modal"
-        centered={true}
-        size="xl"
-        isOpen={show}
-        toggle={() => setShow(!show)}
+        open={show}
+        size="large"
+        onClose={() => setShow(!show)}
+        footer={false}
       >
-        <ModalHeader toggle={() => setShow(!show)}></ModalHeader>
-        <ModalBody>
-          <div className="row modal-container">
-            <div className="col-12 col-md-4 col-lg-6">
-              <div className="img-wrapper">
-                <img
-                  src={
-                    `${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` +
-                    product.attributes.image.data[0].attributes.url
-                  }
-                ></img>
-              </div>
+        <div className="row modal-container">
+          <div className="col-12 col-md-4 col-lg-6">
+            <div className="img-wrapper">
+              <img
+                src={
+                  `${process.env.NEXT_PUBLIC_STRAPI_ROOTURL}` +
+                  product.attributes.image.data[0].attributes.url
+                }
+              ></img>
             </div>
-            <div className="col col-md-8 col-lg-6">
-              <div className="product-details">
-                <div className="title">
-                  {product.attributes.brand}
-                  <Link href={`/product/${product.id}`}>
-                    <a>
-                      Detalii produs{" "}
-                      <ChevronRight height={"2rem"} width={"2rem"} />
-                    </a>
-                  </Link>
+          </div>
+          <div className="col col-md-8 col-lg-6">
+            <div className="product-details">
+              <div className="title">
+                {product.attributes.brand}
+                <Link href={`/product/${product.id}`}>
+                  <a>
+                    Detalii produs{" "}
+                    <ChevronRight height={"2rem"} width={"2rem"} />
+                  </a>
+                </Link>
+              </div>
+              <div className="model">{product.attributes.model}</div>
+              <div className="price-wrapper d-flex justify-content-between">
+                <div className="type">{product.attributes.type}</div>
+                <div className="retail">
+                  <b className="brand-color">
+                    RON {product.attributes.retail_value}
+                  </b>{" "}
+                  Retail value
                 </div>
-                <div className="model">{product.attributes.model}</div>
-                <div className="price-wrapper d-flex justify-content-between">
-                  <div className="type">{product.attributes.type}</div>
-                  <div className="retail">
-                    <b className="brand-color">
-                      RON {product.attributes.retail_value}
-                    </b>{" "}
-                    Retail value
-                  </div>
-                </div>
-                <div className="rating">
-                  {/* @ts-ignore */}
-                  <Rating
-                    fractions={2}
-                    initialRating={product.attributes.rating}
-                    readonly={true}
-                    emptySymbol={
-                      <Star size={15} fill="#babfc7" stroke="#babfc7" />
-                    }
-                    fullSymbol={
-                      <Star size={15} fill="#cc3633" stroke="#cc3633" />
-                    }
-                  />
-                  <div className="rating-nr">35 ratings</div>
-                </div>
-                <div className="order-type">
-                  <div className="order">
-                    <Button
-                      sx={{ textTransform: "none" }}
-                      className={`order-btn ${subscription && "active"}`}
-                      onClick={() => setSubscription(true)}
-                    >
-                      <div className="order-btn-content">
-                        <Image src={orderImg} />
-                        <div className="order-info">
-                          <div className="volume">8 ml</div>
-                          <div className="type">
-                            Requires{" "}
-                            <b>{product.attributes.subscription_type} plan</b>
-                          </div>
-                        </div>
-                      </div>
-                    </Button>
-                  </div>
-                  <div className="order">
-                    <Button
-                      sx={{ textTransform: "none" }}
-                      className={`order-btn ${!subscription && "active"}`}
-                      onClick={() => setSubscription(false)}
-                    >
-                      <div className="order-btn-content">
-                        <Image src={orderImg} />
-                        <div className="order-info">
-                          <div className="volume">8 ml</div>
-                          <div className="type">
-                            One time <b>RON {product.attributes.otb_price}</b>
-                          </div>
-                        </div>
-                      </div>
-                    </Button>
-                  </div>
-                </div>
-                <div className="submit-btn">
-                  <div
-                    className="button-second"
-                    onClick={() => handleAddProduct()}
+              </div>
+              <div className="rating">
+                {/* @ts-ignore */}
+                <Rating
+                  fractions={2}
+                  initialRating={product.attributes.rating}
+                  readonly={true}
+                  emptySymbol={
+                    <Star size={15} fill="#babfc7" stroke="#babfc7" />
+                  }
+                  fullSymbol={
+                    <Star size={15} fill="#cc3633" stroke="#cc3633" />
+                  }
+                />
+                <div className="rating-nr">35 ratings</div>
+              </div>
+              <div className="order-type">
+                <div className="order">
+                  <Button
+                    sx={{ textTransform: "none" }}
+                    className={`order-btn ${subscription && "active"}`}
+                    onClick={() => setSubscription(true)}
                   >
-                    Add to queue
-                  </div>
+                    <div className="order-btn-content">
+                      <Image src={orderImg} />
+                      <div className="order-info">
+                        <div className="volume">8 ml</div>
+                        <div className="type">
+                          Requires{" "}
+                          <b>{product.attributes.subscription_type} plan</b>
+                        </div>
+                      </div>
+                    </div>
+                  </Button>
                 </div>
-                <div className="fragrance-info">
-                  <div className="title">About the fragrance</div>
-                  <div className="info">{product.attributes.description}</div>
+                <div className="order">
+                  <Button
+                    sx={{ textTransform: "none" }}
+                    className={`order-btn ${!subscription && "active"}`}
+                    onClick={() => setSubscription(false)}
+                  >
+                    <div className="order-btn-content">
+                      <Image src={orderImg} />
+                      <div className="order-info">
+                        <div className="volume">8 ml</div>
+                        <div className="type">
+                          One time <b>RON {product.attributes.otb_price}</b>
+                        </div>
+                      </div>
+                    </div>
+                  </Button>
                 </div>
+              </div>
+              <div className="submit-btn">
+                <button
+                  className="button-second"
+                  onClick={handleAddProduct}
+                >
+                  Add to queue
+                </button>
+              </div>
+              <div className="fragrance-info">
+                <div className="title">About the fragrance</div>
+                <div className="info">{product.attributes.description}</div>
               </div>
             </div>
           </div>
-        </ModalBody>
-      </Modal>
+        </div>
+      </SickstModal>
     </>
   );
 };

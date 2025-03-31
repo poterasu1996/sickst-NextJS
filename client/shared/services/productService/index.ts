@@ -46,7 +46,9 @@ class ProductsService {
   async getNewMaleProducts() {
     // return top 6 NEW products
     try {
-      const result = await axios.get(`${PRODUCTS_URL}&filters[tags][name][$eq]=${TagEnums.NEW}&filters[categories][name][$eq]=${CategoryEnums.MALE}`);
+      // const result = await axios.get(`${PRODUCTS_URL}&filters[tags][name][$eq]=${TagEnums.NEW}&filters[categories][name][$eq]=${CategoryEnums.MALE}`);
+      // dummy data, until we populate DB with more products
+      const result = await axios.get(`${PRODUCTS_URL}&filters[categories][name][$eq]=${CategoryEnums.MALE}&sort[0]=rating%3Adesc`);
       return {
         ...result.data,
         data: result.data.data.slice(0,6)
@@ -81,7 +83,9 @@ class ProductsService {
   async getNewFemaleProducts() {
     // return top 6 NEW products
     try {
-      const result = await axios.get(`${PRODUCTS_URL}&filters[tags][name][$eq]=${TagEnums.NEW}&filters[categories][name][$eq]=${CategoryEnums.FEMALE}`);
+      // const result = await axios.get(`${PRODUCTS_URL}&filters[tags][name][$eq]=${TagEnums.NEW}&filters[categories][name][$eq]=${CategoryEnums.FEMALE}`);
+      // for testing purpose, until we populate DB with new products
+      const result = await axios.get(`${PRODUCTS_URL}&filters[categories][name][$eq]=${CategoryEnums.FEMALE}&sort[0]=rating%3Adesc`);
       return {
         ...result.data,
         data: result.data.data.slice(0,6)
@@ -91,7 +95,7 @@ class ProductsService {
     }
   }
 
-  async getTopRatedFemaleProducst() {
+  async getTopRatedFemaleProducts() {
     // get 6 top rated products
     try {
       const result = await axios.get(`${PRODUCTS_URL}&filters[categories][name][$eq]=${CategoryEnums.FEMALE}&sort[0]=rating%3Adesc`);

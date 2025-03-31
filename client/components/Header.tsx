@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -11,7 +11,6 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import PrimaryButton from "./global/PrimaryButton";
 import Cart from "./global/cart";
 import SideModal from "./global/SideModal";
 import AccountMobileSideModal from "./global/AccountMobileSideModal";
@@ -26,13 +25,24 @@ import CartService from "../shared/services/cartService";
 import AccountContext from "../store/account-context";
 
 import useGetJWT from "../shared/hooks/auth/useGetJWT";
+import SearchInputWithDropdown from "./global/SearchInputWithDropdown";
+import { useDebounce } from "../shared/hooks/useDebounce";
+import { useSearch } from "../shared/hooks/useSearch";
 
 const LOGOUT_URL = 'http://localhost:3000/api/v1/logout';
+
+export type ProductOption = {
+  id: string;
+  name: string;
+  image: string;
+};
 
 const Header = () => {
   const [accountMobileModal, setAccountMobileModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [searchInput, setSearchInput] = useState('');
+  const debouncedSearch = useDebounce(searchInput);
   const openSubMenu = Boolean(anchorEl);
 
   const { isAuth, setIsAuth } = useContext(AuthContext);
@@ -70,6 +80,52 @@ const Header = () => {
     setShowModal(false);
   }
 
+  const handleQueryFilter = (query: string) => {
+    const encodedQuery = encodeURIComponent(query.trim())
+    router.push(
+      {
+        pathname: router.pathname,
+        query: { search: encodedQuery },
+      },
+      undefined,
+      { shallow: false }
+    ).then(() => router.reload());
+  }
+
+  const handleProductRedirect = (product: ProductOption) => {
+    router.push(`/product/${product.id}`)
+  }
+
+  const searchSuggestionsDUMMY = [
+    "Nike sneakers",
+    "Nike hoodie",
+    "Adidas tracksuit",
+    "Running shoes",
+    "Black boots"
+  ];
+  const productSuggestionsDUMMY = [
+    { id: "1", name: "Nike Air Max 90", image: "/nike1.jpg" },
+    { id: "2", name: "Nike Blazer Mid", image: "/nike2.jpg" },
+    { id: "3", name: "Adidas Ultraboost", image: "/adidas1.jpg" },
+    { id: "4", name: "Nike Dri-FIT Tee", image: "/nike3.jpg" },
+    { id: "5", name: "Converse Chuck Taylor", image: "/converse.jpg" }
+  ];
+
+  const { searchSuggestions, productSuggestions } = useSearch(debouncedSearch);
+  // console.log('SEARCH INPUT ', searchInput)
+  // console.log('searchSuggestions ', searchSuggestions)
+  // console.log('productSuggestions ', productSuggestions)
+
+  // useEffect(() => {
+  //   if(router.query.search) {
+  //     const searchParam = Array.isArray(router.query.search)
+  //       ? router.query.search[0]
+  //       : router.query.search;
+
+  //     setSearchInput(searchParam);
+  //   }
+  // }, [router.query.search])
+
   return (
     <header className="print">
       <div className="container header sticky-header">
@@ -101,13 +157,22 @@ const Header = () => {
             <Link href="/shop/arrabian">Arrabian</Link>
           </li>
         </ul>
-
+        <SearchInputWithDropdown
+          searchSuggestions={searchSuggestions.length > 0 ? searchSuggestions : searchSuggestionsDUMMY}
+          productSuggestions={productSuggestions.length > 0 ? productSuggestions : productSuggestionsDUMMY}
+          // if clicked on text, add query param as filter in url
+          onSearchSelect={handleQueryFilter}
+          // if clicked on product, redirect to product 
+          onProductSelect={handleProductRedirect}
+          onInputChange={(val) => {
+            setSearchInput(val);
+          }}
+        />
         <div className="right-side">
           {isAuth ? (
             <>
               <Button 
                 id="user-account-dd"
-                // id="btn-account"
                 aria-controls={openSubMenu ? 'grouped-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={openSubMenu ? 'true' : undefined}
@@ -211,7 +276,9 @@ const Header = () => {
                   <Link href="/account/login">
                       <a className="button-second d-block d-sm-none" onClick={handleCloseSideModal}>Log in</a>
                   </Link>
-                  <PrimaryButton href="/account/register" className="mt-24">Autentificare</PrimaryButton>
+                  <Link href="/account/register">
+                      <a className="button-second mt-24" onClick={handleCloseSideModal}>Autentificare</a>
+                  </Link>
               </div>
               </>
             }
