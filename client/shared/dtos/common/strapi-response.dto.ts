@@ -6,7 +6,7 @@ export interface PaginationMeta {
   }
   
 export interface StrapiResponse<T> {
-    data: [T];
+    data: T[];
     meta: {
       pagination: PaginationMeta;
     };

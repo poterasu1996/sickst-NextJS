@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import ProductResponse from "../../../../types/shop/ProductResponse.interface";
 import productService from "../../../../shared/services/productService";
 import { DEFAULT_SELECTED_FILTERS } from "../../../../shared/types";
+import HttpService from "../../../../shared/services/HttpService";
 
 type UseWomanProductsResult = {
   allProducts?: ProductResponse;
@@ -47,8 +48,12 @@ const useWomanProducts = ({
       try {
         if (search || page > 1) {
           const main = await productService.getFemaleProducts({page, search, filters});
-          setAllProducts(main);
-          setRespPage(main.meta.pagination.page);
+          if(HttpService.isErrorResponse(main)) {
+            console.log('Failed to load products.')
+          } else {
+            setAllProducts(main);
+            setRespPage(main.meta.pagination.page);
+          }
         } else {
           const [main, newest, topRated] = await Promise.all([
             productService.getFemaleProducts({page, search, filters}),
@@ -60,16 +65,29 @@ const useWomanProducts = ({
               : productService.getTopRatedFemaleProducts(),
           ]);
 
-          setAllProducts(main);
-          setRespPage(main.meta.pagination.page);
+          if(HttpService.isErrorResponse(main)) {
+            console.log('Failed to load products.')
+          } else {
+            setAllProducts(main);
+            setRespPage(main.meta.pagination.page);
+          }
 
           // only update refs the first time
-          if (!newProductsRef.current) newProductsRef.current = newest;
-          if (!topRatedProductsRef.current)
-            topRatedProductsRef.current = topRated;
+          if (HttpService.isErrorResponse(newest)) {
+            console.error("Failed to load new products.");
+            setError("Failed to load new products.");
+          } else if (!newProductsRef.current) {
+            newProductsRef.current = newest;
+            setNewProducts(newest);
+          }
 
-          setNewProducts(newProductsRef.current);
-          setTopRatedProducts(topRatedProductsRef.current);
+          if (HttpService.isErrorResponse(topRated)) {
+            console.error("Failed to load top-rated products.");
+            setError("Failed to load top-rated products.");
+          } else if (!topRatedProductsRef.current) {
+            topRatedProductsRef.current = topRated;
+            setTopRatedProducts(topRated);
+          }
         }
       } catch (err) {
         console.error("Error fetching woman shop data:", err);
