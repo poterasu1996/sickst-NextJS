@@ -12,14 +12,16 @@ import TopRatedProductsSkeleton from "../../features/shop/components/TopRatedPro
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import IProduct from "../../types/Product.interface";
+import { DEFAULT_SELECTED_FILTERS } from "../../shared/types";
 
 const ShopWoman = () => {
     const [products, setProducts] = useState<IProduct[]>([]);
     const [showMore, setShowMore] = useState(true);
+    const [filters, setFilters] = useState(DEFAULT_SELECTED_FILTERS)
 
     const router = useRouter();
     const search = typeof router.query.search === "string" ? router.query.search : "";
-
+    
     const { 
         allProducts,
         newProducts,
@@ -28,12 +30,15 @@ const ShopWoman = () => {
         respPage, 
         setPage,
         error
-    } = useWomanProducts({ search });
+    } = useWomanProducts({ search, filters });
 
     const handleLoadMoreProducts = () => {
         setPage(respPage + 1);
     }
 
+    const handleFilters = (selectedFilters: any) => {
+        setFilters({...selectedFilters})
+    } 
 
     useEffect(() => {
         if(allProducts?.data) {
@@ -72,7 +77,7 @@ const ShopWoman = () => {
                 )}
 
                 {/* de rezolvat daca fetchul esueaza */}
-                {allProducts && <ProductFilterSection products={products} showMore={showMore} handleShowMore={handleLoadMoreProducts} />}
+                {allProducts && <ProductFilterSection products={products} showMore={showMore} handleShowMore={handleLoadMoreProducts} handleFilters={handleFilters}/>}
                
             </div>
         </>

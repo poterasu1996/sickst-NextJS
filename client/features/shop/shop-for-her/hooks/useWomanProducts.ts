@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import ProductResponse from "../../../../types/shop/ProductResponse.interface";
 import productService from "../../../../shared/services/productService";
+import { DEFAULT_SELECTED_FILTERS } from "../../../../shared/types";
 
 type UseWomanProductsResult = {
   allProducts?: ProductResponse;
@@ -15,9 +16,13 @@ type UseWomanProductsResult = {
 
 type Props = {
   search?: string;
+  filters?: any
 };
 
-const useWomanProducts = ({ search = "" }: Props): UseWomanProductsResult => {
+const useWomanProducts = ({ 
+  search = "",
+  filters = DEFAULT_SELECTED_FILTERS 
+}: Props): UseWomanProductsResult => {
   const [allProducts, setAllProducts] = useState<ProductResponse>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,12 +46,12 @@ const useWomanProducts = ({ search = "" }: Props): UseWomanProductsResult => {
 
       try {
         if (search || page > 1) {
-          const main = await productService.getFemaleProducts(page, search);
+          const main = await productService.getFemaleProducts({page, search, filters});
           setAllProducts(main);
           setRespPage(main.meta.pagination.page);
         } else {
           const [main, newest, topRated] = await Promise.all([
-            productService.getFemaleProducts(page, search),
+            productService.getFemaleProducts({page, search, filters}),
             newProductsRef.current
               ? Promise.resolve(newProductsRef.current)
               : productService.getNewFemaleProducts(),
@@ -75,7 +80,7 @@ const useWomanProducts = ({ search = "" }: Props): UseWomanProductsResult => {
     };
 
     fetchData();
-  }, [page, search]);
+  }, [page, search, filters]);
 
   return {
     allProducts,

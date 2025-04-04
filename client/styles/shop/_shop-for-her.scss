@@ -290,6 +290,11 @@
 
         .products {
             flex: 1;
+
+            &-count {
+                font-size: 1.8rem;
+                padding-left: 1rem;
+            }
         }
     }
 }

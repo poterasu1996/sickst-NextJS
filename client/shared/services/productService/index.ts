@@ -2,6 +2,7 @@ import axios from "../../../api/axios";
 import IProduct from "../../../types/Product.interface";
 import { CategoryEnums } from "../../enums/category.enum";
 import { TagEnums } from "../../enums/tag.enum";
+import { DEFAULT_SELECTED_FILTERS } from "../../types";
 import { PRODUCTS_URL } from "../../utils/constants";
 
 const nullCategoryData = {
@@ -13,6 +14,7 @@ const nullCategoryData = {
       }
     ]
 }
+
 class ProductsService {
 
   async getAllProducts() {
@@ -71,16 +73,50 @@ class ProductsService {
     }
   }
 
-  async getFemaleProducts(page=1, search?: string) {
+  async getFemaleProducts({page = 1, search = undefined, filters = DEFAULT_SELECTED_FILTERS }: {
+    page?: number;
+    search?: string;
+    filters?: typeof DEFAULT_SELECTED_FILTERS;
+  }) {
     try {
-      let url = `${PRODUCTS_URL}`;
-      let categoryAndPagination = `&filters[categories][name][$eq]=${CategoryEnums.FEMALE}&pagination[page]=${page}&pagination[pageSize]=3`;
-      if(search) {
-        url += `&filters[product_name][$containsi]=${search}`;
-      }
-      url += categoryAndPagination;
+      let baseUrl = `${PRODUCTS_URL}`;
+      const sexCategory = `filters[categories][name][$eq]=${CategoryEnums.FEMALE}`;
+      const pagination = `pagination[page]=${page}&pagination[pageSize]=3`;
 
-      const result = await axios.get(url);
+      const queryParts: string[] = [];
+
+      // Add category and pagination
+      queryParts.push(sexCategory);
+      queryParts.push(pagination);
+
+      // Add search
+      if(search) {
+        queryParts.push(`&filters[product_name][$containsi]=${search}`);
+      }
+
+      // Add filters from filters object
+      Object.entries(filters).forEach(([key, value]) => {
+        if (
+          value === '' ||
+          value == null ||
+          (Array.isArray(value) && value.filter(v => v.trim() !== '').length === 0)
+        ) {
+          return;
+        }
+      
+        if (Array.isArray(value)) {
+          value
+            .filter(val => val.trim() !== '') // ✅ filter out empty strings
+            .forEach(val =>
+              queryParts.push(`filters[${key}][$in]=${encodeURIComponent(val)}`)
+            );
+        } else {
+          queryParts.push(`filters[${key}][$eq]=${encodeURIComponent(value)}`);
+        }
+      });
+
+      const finalUrl = `${baseUrl}&${queryParts.join("&")}`;
+      const result = await axios.get(finalUrl);
       return result.data;
     } catch (error: any) {
       return {error: error.response.data.error}      
