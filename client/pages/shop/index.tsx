@@ -1,28 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 import { useRouter } from "next/router";
 
 // Components
-import CollectionSection from "../../features/shop/components/CollectionSection";
-import NewProductSection from "../../features/shop/components/NewProductSection";
-import ProductFilterSection from "../../features/shop/components/ProductFilterSection";
-import TopRatedProducts from "../../features/shop/components/TopRatedProducts";
-import SliderBanner from "../../features/shop/components/SliderBanner";
+import ShopBanner from "../../features/shop/components/ShopBanner";
 import NewProductSkeleton from "../../features/shop/components/NewProductSkeleton";
+import NewProductSection from "../../features/shop/components/NewProductSection";
 import TopRatedProductsSkeleton from "../../features/shop/components/TopRatedProductsSkeleton";
+import TopRatedProducts from "../../features/shop/components/TopRatedProducts";
+import ProductFilterSection from "../../features/shop/components/ProductFilterSection";
 
-// Utils & constants
-import useWomanProducts from "../../features/shop/shop-for-her/hooks/useWomanProducts";
+// Hooks
+import useProducts from "../../features/shop/hooks/useProducts";
+
+// Utils & Constants
 import IProduct from "../../types/Product.interface";
 import { DEFAULT_SELECTED_FILTERS } from "../../shared/types";
 
-const ShopWoman = () => {
+const Shop = () => {
     const [products, setProducts] = useState<IProduct[]>([]);
     const [showMore, setShowMore] = useState(true);
     const [filters, setFilters] = useState(DEFAULT_SELECTED_FILTERS);
-
+    
     const router = useRouter();
     const search = typeof router.query.search === "string" ? router.query.search : "";
-    
+
     const { 
         allProducts,
         newProducts,
@@ -31,7 +32,7 @@ const ShopWoman = () => {
         respPage, 
         setPage,
         error
-    } = useWomanProducts({ search, filters });
+    } = useProducts({ search, filters });
 
     useEffect(() => {
         if(allProducts?.data) {
@@ -63,9 +64,8 @@ const ShopWoman = () => {
     } 
 
     return (<>
-        <SliderBanner />
+        <ShopBanner />
         <div className="layout">
-            {/* <CollectionSection /> */}
             {!search && (<>
                     {loading &&  <NewProductSkeleton />}
                     {newProducts?.data && <NewProductSection newProducts={newProducts.data} />}
@@ -75,9 +75,8 @@ const ShopWoman = () => {
             </>)}
 
             {allProducts && <ProductFilterSection products={products} showMore={showMore} handleShowMore={handleLoadMoreProducts} handleFilters={handleFilters} />}
-            
         </div>
-    </>) 
+    </>)
 }
 
-export default ShopWoman;
+export default Shop;

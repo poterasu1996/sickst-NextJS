@@ -1,6 +1,12 @@
+.MuiPaper-root {
+    @media (max-width:576px) {
+        width: 100%;
+    } 
+}
 #side-modal {
     height: 100%;
     width: 40rem;
+    padding: 2rem;
     @media (max-width:576px) {
         width: 100%;
     }
@@ -78,10 +84,8 @@
             }
 
             a {
-                // color: #cc3633;
                 color: #1a1a1a ;
                 height: 4rem;
-                // transform: scale(1);
                 transform-origin: 0 center;
                 &:hover {
                     transform: scale3d(1.05,1.05,1.05);
@@ -94,7 +98,7 @@
             line-height: 5.4rem;
             margin: 6rem 0;
             color: #fff;
-            @media (max-width:500px) {
+            @media (max-width:576px) {
                 margin: 2rem 0;
             }
             &:hover {

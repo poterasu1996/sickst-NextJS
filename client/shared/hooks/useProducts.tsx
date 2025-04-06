@@ -13,6 +13,7 @@ const nullCategoryData = {
   ],
 };
 
+// to be removed
 export const useProducts = () => {
   const [productList, setProductList] = useState<IProduct[]>([]);
 

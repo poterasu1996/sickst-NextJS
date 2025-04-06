@@ -54,7 +54,7 @@ export default function LogInForm() {
         setIsAuth(true);
         // setToken(response.data.token);  // might delete in future
         localStorage.setItem('jwt', response.data.token)
-        router.push("/");
+        router.push("/shop");
 
         const expireAuth = 3000 * 60 * 60;
         // const expireAuth = 3000;

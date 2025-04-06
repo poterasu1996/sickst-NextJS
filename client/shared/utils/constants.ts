@@ -15,6 +15,11 @@ export const SUBSCRIPTION_TYPE = {
     PREMIUM: 'premium'
 }
 
+export const CATEGORY = {
+    MALE: "MALE",
+    FEMALE: "FEMALE"
+}
+
 // export type PAYMENT_TYPE = "subscription" | "otb"; 
 
 // 1:1 strapi table endpoints

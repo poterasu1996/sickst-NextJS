@@ -14,7 +14,7 @@ header {
   z-index: 999;
   width: 100%;
   min-width: 40rem;
-  @media (max-width:500px) {
+  @media (max-width:576px) {
     height: 6rem;
   }
   .header {
@@ -30,8 +30,17 @@ header {
       .logo-link {
         height: 100%;
         padding: 1.6rem;
+
+        @media (max-width: 900px) {
+          padding-left: 0;
+        }
         img {
           height: 100%;
+          min-width: 12.6rem;
+          object-fit: contain;
+          @media (max-width: 900px) {
+            min-width: 9.2rem;
+          }
         }
       }
     }
@@ -40,6 +49,7 @@ header {
       background-color: #1a1a1a;
       border: none;
       padding: 0 2rem;
+      padding-left: 0;
       
       &:focus {
         box-shadow: none;
@@ -49,6 +59,11 @@ header {
       }
       @media (max-width: 400px) {
         padding: 0 1rem;
+      }
+    }
+    .searchInput {
+      @media (max-width: 576px) {
+        width: 100%;
       }
     }
     .nav-menu {
@@ -96,12 +111,35 @@ header {
       height: 100%;
       align-items: center;
       text-transform: uppercase;
-      @media (max-width:500px) {
+      transition: ease .5s;
+
+      @media (max-width: 576px) {
         // padding-right: 1rem;
+        padding-left: 2rem;
       }
 
+      a:first-of-type {
+        white-space: nowrap;
+        padding: 0 1rem;
+        transition: ease .5s;
+        @media (max-width: 576px) {
+          padding-left: 0;
+        }
+
+        &:hover {
+          transition: ease .5s;
+          color: #cc3633;
+        }
+      }
+     
       .mobile-user-account {
         display: none;
+        transition: ease .5s;
+
+        &:hover {
+          color: #cc3633;
+        }
+
         @media (max-width: 576px) {
           display: flex;
           align-items: center;
@@ -115,6 +153,8 @@ header {
         height: 100%;
         background-color: #1a1a1a;
         border: none;
+        transition: ease .5s;
+
         @media (max-width: 576px) {
           display: none;
         }
@@ -123,22 +163,30 @@ header {
           position: relative;
           .badge {
             font-size: 1rem;
+            line-height: 1;
             font-weight: 600;
             background-color: #cc3633;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
             border-radius: 50%;
             position: absolute;
             padding: 0.3rem 0.65rem;
             top: 0;
             right: 0;
+            transition: ease .5s;
             transform-origin: 100% 0;
             transform: translate(50%, -30%);
           }
         }
         svg {
+          transition: ease .5s;
           stroke: #cecece;
         }
         &:hover {
           svg {
+            transition: ease .5s;
             stroke: #cc3633;
           }
         }
@@ -210,9 +258,11 @@ header {
   @media (max-width: 576px) {
     display: none;
   }
+  transition: ease .5s;
   &:hover {
     background: transparent;
     svg {
+      transition: ease .5s;
       stroke: #cc3633;
     }
   }

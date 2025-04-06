@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import Product from '../HomePage/Product'
+import Product from '../../../components/HomePage/Product'
 import { Checkbox, CheckboxChangeParams } from 'primereact/checkbox';
 
 // to be removed
 import "primereact/resources/themes/lara-light-indigo/theme.css";  //theme
 import "primereact/resources/primereact.min.css";                  //core css
 import "primeicons/primeicons.css";                                //icons
-import FiltersModal from '../global/FiltersModal';
-import SecondaryButton from '../global/SecondaryButton';
-import IProduct from '../../types/Product.interface';
+import FiltersModal from '../../../components/global/FiltersModal';
+import SecondaryButton from '../../../components/global/SecondaryButton';
+import IProduct from '../../../types/Product.interface';
 import { useRouter } from 'next/router';
-import subscriptionService from '../../shared/services/subscriptionService';
-import brandService from '../../shared/services/brandService';
-import { DEFAULT_SELECTED_FILTERS } from '../../shared/types';
-import HttpService from '../../shared/services/HttpService';
+import subscriptionService from '../../../shared/services/subscriptionService';
+import brandService from '../../../shared/services/brandService';
+import { DEFAULT_SELECTED_FILTERS } from '../../../shared/types';
+import HttpService from '../../../shared/services/HttpService';
 
 type Props = {
     products: IProduct[],

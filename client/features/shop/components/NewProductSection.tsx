@@ -1,7 +1,7 @@
 import { Star } from "react-feather";
 import Rating from "react-rating";
 import Link from "next/link";
-import IProduct from "../../types/Product.interface";
+import IProduct from "../../../types/Product.interface";
 
 type Props = {
     newProducts: IProduct[]

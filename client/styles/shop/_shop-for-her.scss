@@ -295,6 +295,15 @@
                 font-size: 1.8rem;
                 padding-left: 1rem;
             }
+
+            .more-prod {
+                justify-items: center;
+                width: 100%;
+                
+                button {
+                    max-width: 40rem;
+                }
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 import Link from "next/link";
 // @ts-ignore
 import Slider from "react-slick";
-import bimg1 from "../../public/img/subs-banner1.jpg";
+import bimg1 from "../../../public/img/subs-banner1.jpg";
 
 const SliderBanner = () => {
   const slickSettings = {

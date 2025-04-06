@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Star } from "react-feather";
 import Rating from "react-rating";
-import IProduct from '../../types/Product.interface';
+import IProduct from '../../../types/Product.interface';
 import Link from 'next/link';
 
 type Props = {

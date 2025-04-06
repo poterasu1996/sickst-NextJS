@@ -112,19 +112,6 @@ const Header = () => {
   ];
 
   const { searchSuggestions, productSuggestions } = useSearch(debouncedSearch);
-  // console.log('SEARCH INPUT ', searchInput)
-  // console.log('searchSuggestions ', searchSuggestions)
-  // console.log('productSuggestions ', productSuggestions)
-
-  // useEffect(() => {
-  //   if(router.query.search) {
-  //     const searchParam = Array.isArray(router.query.search)
-  //       ? router.query.search[0]
-  //       : router.query.search;
-
-  //     setSearchInput(searchParam);
-  //   }
-  // }, [router.query.search])
 
   return (
     <header className="print">
@@ -139,7 +126,7 @@ const Header = () => {
             <MenuIcon />
         </button>
         <div className="logo">
-          <Link href="/">
+          <Link href="/shop">
             <a className="logo-link">
               <img src={logo.src}/>
             </a>
