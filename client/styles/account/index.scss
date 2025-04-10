@@ -1,4 +1,3 @@
-@import './register_page'; 
 @import './order_history';
 @import './shipping_information';
 @import './manage_subscription';
@@ -15,6 +14,10 @@
 //     @media (max-width: 400px) {
 //         padding-top: 2rem;
 //     }
+// }
+
+// .account-page {
+//     flex: 1;
 // }
 
 .shipping-info-modal {

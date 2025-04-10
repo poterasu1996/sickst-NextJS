@@ -115,7 +115,7 @@ const Header = () => {
 
   return (
     <header className="print">
-      <div className="container header sticky-header">
+      <div className="header sticky-header">
         <button
             className="account-mobile-btn"
             onClick={() => {

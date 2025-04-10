@@ -1,11 +1,11 @@
-.register-page {
+.auth-page {
     margin: 4rem auto;
+
     @media (max-width: 992px) {
         max-width: 500px;
     }
-    @media (max-width: 450px) {
-        padding: 0;
-        width: 100%;
+    @media (max-width: 576px) {
+        margin: 2rem auto;
     }
 
     .row {
@@ -16,7 +16,6 @@
         margin: 0;
         div {
             display: flex;
-            justify-content: center;
             max-width: 43rem;
         }
     }

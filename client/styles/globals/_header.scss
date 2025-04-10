@@ -14,14 +14,18 @@ header {
   z-index: 999;
   width: 100%;
   min-width: 40rem;
+  padding: 0 3rem;
   @media (max-width:576px) {
     height: 6rem;
+    padding: 0;
   }
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    @media (max-width:630px) {
+    width: 100%;
+    max-width: 153rem;
+    @media (max-width: 576px) {
       padding: 0 2rem;
     }
     .logo {

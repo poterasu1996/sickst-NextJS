@@ -109,7 +109,7 @@ export default function SignUpForm() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <div className="gender-icons">
+        <div className="gender-icons justify-center">
           <div className="form-check">
             <label className="form-check-label" onChange={() => handleGender("female")}>
               <Image src={femaleIcon} width={100} height={100} />

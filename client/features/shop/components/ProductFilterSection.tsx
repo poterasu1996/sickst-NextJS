@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import Product from '../../../components/HomePage/Product'
-import { Checkbox, CheckboxChangeParams } from 'primereact/checkbox';
-
-// to be removed
-import "primereact/resources/themes/lara-light-indigo/theme.css";  //theme
-import "primereact/resources/primereact.min.css";                  //core css
-import "primeicons/primeicons.css";                                //icons
-import FiltersModal from '../../../components/global/FiltersModal';
-import SecondaryButton from '../../../components/global/SecondaryButton';
-import IProduct from '../../../types/Product.interface';
 import { useRouter } from 'next/router';
+
+// Components
+import SideModal from '../../../components/global/SideModal';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { Checkbox, IconButton } from '@mui/material';
+import CloseIcon from "@mui/icons-material/Close";
+
+import Product from '../../../components/HomePage/Product'
+import SecondaryButton from '../../../components/global/SecondaryButton';
+
+// Services
 import subscriptionService from '../../../shared/services/subscriptionService';
 import brandService from '../../../shared/services/brandService';
-import { DEFAULT_SELECTED_FILTERS } from '../../../shared/types';
 import HttpService from '../../../shared/services/HttpService';
+
+// Utils & Constants
+import IProduct from '../../../types/Product.interface';
+import { DEFAULT_SELECTED_FILTERS } from '../../../shared/types';
 
 type Props = {
     products: IProduct[],
@@ -27,49 +32,22 @@ type Product = {
     attributes: any
 }
 
-type ModalOptions = {
-    basic: boolean,
-    premium: boolean,
-    brands: any[] | null,
-    brandFilter: any[] | null,
-}
-
 type CheckboxFilterProps = {
     listValues: string[], 
     filterTitle: string, 
     selected: string | string[],
     handleAction: (value: string) => void,
     unique?: boolean,
-
 }
 
 export default function ProductFilterSection({ products, showMore = false, handleShowMore, handleFilters }: Props) {
     const router = useRouter();
     
-    // const [basic, setBasic] = useState<boolean>(false); // to be removed
-    // const [premium, setPremium] = useState<boolean>(false); // to be removed
-    // const [brands, setBrands] = useState<any[] | null>(null);  // to be removed
-    // const [brandFilter, setBrandFilter] = useState<string[]>([]);  // to be removed
-    // const [filteredProducts, setFilteredProducts] = useState<Product[] | null>(null);  // to be removed
-    
-    
-    // maybe to be removed
-    // const [modalFilterType, setModalFilterType] = useState<string>("");
-    // const [modalOptions, setModalOptions] = useState<ModalOptions>({
-    //     basic: false,
-    //     premium: false,
-    //     brands: null,
-    //     brandFilter: null,
-    // });
-    
-
-    const [show, setShow] = useState<boolean>(false);
-    const [modalTitle, setModalTitle] = useState<string>("");
+    const [showFiltersMobile, setShowFiltersMobile] = useState(false);
     const [querySearch, setQuerySearch] = useState('');
     const [allBrands, setAllBrands] = useState<string[] | undefined>();
     const [allSubscriptionType, setAllSubscriptionType] = useState<string[] | undefined>();
-
-    const [selectedFilters, setSelectedFilters] = useState(DEFAULT_SELECTED_FILTERS);   // might be used as a global filter object
+    const [selectedFilters, setSelectedFilters] = useState(DEFAULT_SELECTED_FILTERS); 
 
     useEffect(() => {
         handleFilters(selectedFilters);
@@ -83,32 +61,6 @@ export default function ProductFilterSection({ products, showMore = false, handl
             setQuerySearch(decodeURIComponent(searchParam.replace(/\+/g, " ")));
         }
     }, [router.query.search])
-
-    // useEffect(() => {
-    //     // to be removed
-    //     if(products) {
-    //         applyFilteres();    // show products based on filters
-    //         // we need to set additional props for filter modal (what filters to show)
-    //         const defaultProps = defaultModalProps();
-    //         switch (modalFilterType) {
-    //             case 'SF':      // subscription filter
-    //                 setModalOptions({ 
-    //                     ...defaultProps,
-    //                     basic: basic,
-    //                     premium: premium
-    //                 });
-    //                 break;
-    //             case 'BF':      // brand filter
-    //                 setModalOptions({
-    //                     ...defaultProps,
-    //                     brands: brands
-    //                 })
-    //                 break;
-    //             default:
-    //                 defaultModalProps();
-    //         }
-    //     }
-    // }, [basic, premium, brandFilter, modalFilterType])
 
     useEffect(() => {
         const fetchFilters = async () => {
@@ -159,7 +111,7 @@ export default function ProductFilterSection({ products, showMore = false, handl
               default:
                 return prev;
             }
-          });
+        });
     }
 
     const renderCheckboxes = ({
@@ -181,134 +133,91 @@ export default function ProductFilterSection({ products, showMore = false, handl
         
                 return (
                     <div className="filter-name" key={type}>
-                    <Checkbox
-                        inputId={type}
-                        checked={isChecked}
-                        onChange={() => handleAction(type)}
-                    />
-                    <label htmlFor={type}>
-                        {type.charAt(0).toUpperCase() + type.slice(1)}
-                    </label>
+                        <FormGroup key={type}>
+                            <FormControlLabel 
+                                control={<Checkbox checked={isChecked} onChange={() => handleAction(type)}/>} 
+                                label={`${type.charAt(0).toUpperCase()}${type.slice(1)}`} 
+                            /> 
+                        </FormGroup>
                     </div>);
                 })}
           </>
         )
     }
 
-    function defaultModalProps() {
-        // default state of filters / reset filters
-        return {
-            basic: false,
-            premium: false,
-            brands: null,
-            brandFilter: null,
-        };
+    const handleToggleFiltersModal = () => {
+        setShowFiltersMobile(preVal => !preVal);
     }
 
-    // filter brands
-    // function onBrandChange(e: CheckboxChangeParams) {
-    //     // to be removed
-    //     let selectedBrands: string[] = [...brandFilter];
-
-    //     if(e.checked) {
-    //         selectedBrands.push(e.value);
-    //     } else {
-    //         selectedBrands.splice(selectedBrands.indexOf(e.value), 1);
-    //     }
-    //     setBrandFilter(selectedBrands);
-    // }
-
-    // function applyFilteres() {
-    //     //  to be removed
-    //     let filteredProducts = [...products];
-    //     if(basic) {
-    //         const basicProducts = filteredProducts.filter(product => {
-    //             return product.attributes.subscription_type.toLowerCase() === 'basic'
-    //         });
-    //         filteredProducts = [...basicProducts];
-    //     }
-    //     if(premium) {
-    //         const premiumProducts = products.filter((item: Product) => {
-    //             return item.attributes.subscription_type.toLowerCase() === 'premium'
-    //         }); 
-    //         filteredProducts = [...premiumProducts]
-    //     }
-    //     if(brandFilter.length > 0) {
-    //         let filteredBrandProducts: Product[] = [];
-    //         brandFilter.map(brand => {
-    //             filteredProducts.filter(product => {
-    //                 product.attributes.brand.toLowerCase() === brand.toLowerCase() && filteredBrandProducts.push(product);
-    //             })
-    //         })
-    //         setFilteredProducts([...filteredBrandProducts]);
-    //         return
-    //     }
-    //     setFilteredProducts([...filteredProducts]);
-    // }
-    
     return (
         <>
         <div className='container product-filter-section'>
             <div className='product-filter-section--header'>Catalog</div>
             <div className='product-filter-section--content'>
-                <div className='filters'>
+                <div className='filters--desktop'>
                     {/* desktop-v */}
-                    <div className='filters--desktop'>
+                    <div className='filters'>
                         <div className='subscription-filter'>
                             {allSubscriptionType && renderCheckboxes({
                                 listValues: allSubscriptionType, 
                                 filterTitle: 'Abonament', 
-                                // selected: filteredSubscription, 
                                 selected: selectedFilters.subscription_type, 
-                                // handleAction: handleSubscriptionCheckboxChange, 
                                 handleAction: (value) => handleCheckboxChange("subscription", value), 
                                 unique: true
                             })}
                         </div>
-                        <div className='brand-filter'>
+                        <div className='subscription-filter'>
                             {allBrands && renderCheckboxes({
                                 listValues: allBrands, 
                                 filterTitle: 'Brands', 
-                                // selected: filteredBrand, 
                                 selected: selectedFilters.brand, 
-                                // handleAction: handleBrandsSelection
                                 handleAction: (value) => handleCheckboxChange("brand", value), 
                             })}
                         </div>
                     </div>
-                    {/* mobile-v */}
-                    {/* <div className='filters--mobile'>
-                        <div className='filter-name' onClick={() => {
-                            setModalTitle('Abonament');
-                            setModalFilterType("SF");
-                            setShow(preVal => !preVal);
-                        }}>Abonament</div>
-                        <div className='filter-name' onClick={() => {
-                            setModalTitle('Brand');
-                            setModalFilterType("BF");
-                            setShow(preVal => !preVal)
-                        }}>Brand</div>
-                    </div> */}
-                    {/* mobile-modal */}
-                    {/* <FiltersModal 
-                        show={show} 
-                        title={modalTitle} 
-                        handleClose={(val: boolean) => setShow(val)}
-                        showFilters={modalFilterType}
-                        brands={modalOptions.brands}
-                        brandFilter={brandFilter}
-                        basic={modalOptions.basic}
-                        premium={modalOptions.premium}
-                        handleBrandChange={(val: any) => onBrandChange(val)}
-                        handleBasic={(val: boolean) => setBasic(val)}
-                        handlePremium={(val: boolean) => setPremium(val)}
-                    /> */}
 
                 </div>
+                {/* mobile-v */}
+                <div className='filters--mobile'>
+                    <div className='filter-name' onClick={ handleToggleFiltersModal }>Abonament</div>
+                    <div className='filter-name' onClick={ handleToggleFiltersModal }>Brand</div>
+                </div>
+                {/* mobile-modal */}
+                <SideModal
+                    open={showFiltersMobile}
+                    onClose={handleToggleFiltersModal}
+                >
+                    <>
+                        <div className="side-modal-header">
+                            <span className="text">Filters</span>
+                            <IconButton onClick={handleToggleFiltersModal} size="medium"><CloseIcon /></IconButton>
+                        </div>
+                        <div className="side-modal-body">
+                            <div className="filters">
+                                <div className="subscription-filter">
+                                    {allSubscriptionType && renderCheckboxes({
+                                        listValues: allSubscriptionType, 
+                                        filterTitle: 'Abonament', 
+                                        selected: selectedFilters.subscription_type, 
+                                        handleAction: (value) => handleCheckboxChange("subscription", value), 
+                                        unique: true
+                                    })}
+                                </div>
+                                <div className="subscription-filter">
+                                    {allBrands && renderCheckboxes({
+                                        listValues: allBrands, 
+                                        filterTitle: 'Brands', 
+                                        selected: selectedFilters.brand, 
+                                        handleAction: (value) => handleCheckboxChange("brand", value), 
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                </SideModal>
                 <div className='products row'>
                     {querySearch && <div className="products-count">10 rezultate pentru <b>{`"${querySearch}"`}</b></div>}
                     
-                    {/* {console.log('products', products)} */}
                     {products?.length
                         ? products.map(product => (<Product key={product.id} product={product}/>))
                         : <div className='no-product'>Produsul selectat nu exista!</div>

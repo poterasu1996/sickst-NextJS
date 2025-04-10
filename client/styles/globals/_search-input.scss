@@ -6,7 +6,6 @@
     }
 
     .MuiInputBase-root {
-        // background-color: #cecece;
         background-color: #fff;
         border-radius: 10rem;
         font-size: 1.4rem;
@@ -17,6 +16,8 @@
     }
 
     .MuiPaper-root {
+        max-height: unset;
+
         .MuiList-root {
             .MuiTypography-root {
                 font-size: 1.2rem;
