@@ -18,7 +18,7 @@ import HttpService from '../../../shared/services/HttpService';
 
 // Utils & Constants
 import IProduct from '../../../types/Product.interface';
-import { DEFAULT_SELECTED_FILTERS } from '../../../shared/types';
+import { DEFAULT_MOBILE_SELECTED_FILTERS, DEFAULT_SELECTED_FILTERS } from '../../../shared/types';
 
 type Props = {
     products: IProduct[],
@@ -48,6 +48,7 @@ export default function ProductFilterSection({ products, showMore = false, handl
     const [allBrands, setAllBrands] = useState<string[] | undefined>();
     const [allSubscriptionType, setAllSubscriptionType] = useState<string[] | undefined>();
     const [selectedFilters, setSelectedFilters] = useState(DEFAULT_SELECTED_FILTERS); 
+    const [mobileSelectedFilters, setMobileSelectedFilters] = useState(DEFAULT_MOBILE_SELECTED_FILTERS);
 
     useEffect(() => {
         handleFilters(selectedFilters);
@@ -84,7 +85,17 @@ export default function ProductFilterSection({ products, showMore = false, handl
           };
         
         fetchFilters();
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        // to help user see what filter category is selected on mobile
+        setMobileSelectedFilters({
+          subscription: selectedFilters.subscription_type.trim() !== '',
+          brand:
+            Array.isArray(selectedFilters.brand) &&
+            selectedFilters.brand.some((brand) => brand.trim() !== ''),
+        });
+      }, [selectedFilters]);
 
     const handleCheckboxChange = (filterType: "subscription" | "brand", value: string) => {
         setSelectedFilters(prev => {
@@ -149,14 +160,29 @@ export default function ProductFilterSection({ products, showMore = false, handl
         setShowFiltersMobile(preVal => !preVal);
     }
 
+    const handleDeleteFilters = () => {
+        setSelectedFilters(DEFAULT_SELECTED_FILTERS);
+        setMobileSelectedFilters(DEFAULT_MOBILE_SELECTED_FILTERS);
+    }
+
+    const checkIfSelectedFilters = (filters: Record<string, boolean>): boolean => {
+        return Object.values(filters).some(Boolean);
+    } 
+
     return (
         <>
-        <div className='container product-filter-section'>
-            <div className='product-filter-section--header'>Catalog</div>
-            <div className='product-filter-section--content'>
+        {/* <div className='container product-filter-section'> */}
+        <div className='product-filter-section'>
+            <div className='product-filter-section--header container'>Catalog</div>
+            <div className='product-filter-section--content container'>
                 <div className='filters--desktop'>
                     {/* desktop-v */}
                     <div className='filters'>
+                        {<button 
+                            className="delete-filters"
+                            disabled={!checkIfSelectedFilters(mobileSelectedFilters)} 
+                            onClick={handleDeleteFilters}
+                        >Delete filters</button>}
                         <div className='subscription-filter'>
                             {allSubscriptionType && renderCheckboxes({
                                 listValues: allSubscriptionType, 
@@ -178,9 +204,12 @@ export default function ProductFilterSection({ products, showMore = false, handl
 
                 </div>
                 {/* mobile-v */}
-                <div className='filters--mobile'>
-                    <div className='filter-name' onClick={ handleToggleFiltersModal }>Abonament</div>
-                    <div className='filter-name' onClick={ handleToggleFiltersModal }>Brand</div>
+                <div className='filters--mobile '>
+                    <div className="filters--mobile--wrapper ">
+                        {Object.entries(mobileSelectedFilters).map(([filter, value]) => (
+                            <div key={filter} className={`filter-name ${value ? 'active' : ''}`} onClick={ handleToggleFiltersModal }>{`${filter.charAt(0).toUpperCase()}${filter.slice(1)}`}</div>
+                        ))}
+                    </div>
                 </div>
                 {/* mobile-modal */}
                 <SideModal
@@ -189,6 +218,11 @@ export default function ProductFilterSection({ products, showMore = false, handl
                 >
                     <>
                         <div className="side-modal-header">
+                            <button 
+                                className='delete-filters' 
+                                disabled={!checkIfSelectedFilters(mobileSelectedFilters)} 
+                                onClick={handleDeleteFilters}
+                            >Sterge filtre</button>
                             <span className="text">Filters</span>
                             <IconButton onClick={handleToggleFiltersModal} size="medium"><CloseIcon /></IconButton>
                         </div>
@@ -215,13 +249,15 @@ export default function ProductFilterSection({ products, showMore = false, handl
                         </div>
                     </>
                 </SideModal>
-                <div className='products row'>
+                <div className='products'>
                     {querySearch && <div className="products-count">10 rezultate pentru <b>{`"${querySearch}"`}</b></div>}
                     
-                    {products?.length
-                        ? products.map(product => (<Product key={product.id} product={product}/>))
-                        : <div className='no-product'>Produsul selectat nu exista!</div>
-                    }
+                    <div className="row">
+                        {products?.length
+                            ? products.map(product => (<Product key={product.id} product={product}/>))
+                            : <div className='no-product'>Produsul selectat nu exista!</div>
+                        }
+                    </div>
                     {showMore && <div className="more-prod">
                         <SecondaryButton onClick={handleShowMore}>Vezi mai multe produse</SecondaryButton>
                     </div>}

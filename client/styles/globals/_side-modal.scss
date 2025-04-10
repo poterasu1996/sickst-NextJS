@@ -18,6 +18,17 @@
         justify-content: space-between;
         padding: 1rem;
 
+        .delete-filters {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #cc3633;
+            text-decoration: underline;
+
+            &:disabled {
+                color: #babfc7;
+            }
+        }
+
         .text{
             font-size: 1.8rem;
             line-height: 2.8rem;
@@ -41,12 +52,8 @@
         position: relative;
         flex: 1 1 auto;
         padding: 1rem;
-        // overflow: auto;
         overflow-x: hidden;
         overflow-y: auto;
-        @media (max-width:500px) {
-            // margin: auto;
-        }
 
         .mid-menu {
             display: flex;
@@ -200,7 +207,6 @@
                 color: #1a1a1a ;
                 height: 4rem;
                 transform-origin: 0 center;
-                // line-height: 6rem;
                 line-height: 4rem;
                 padding: 0 1rem;
                 font-weight: bold;

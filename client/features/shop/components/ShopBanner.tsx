@@ -27,7 +27,7 @@ const ShopBanner = () => {
     return (<>
         <div className="shop-banner">
             <div className="shop-banner--description">
-                <p className="rotating-text">
+                <div className="rotating-text">
                     <RotatingText 
                         texts={brands}
                         mainClassName="px-2 sm:px-2 md:px-3 bg-cyan-300 text-black overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
@@ -40,7 +40,7 @@ const ShopBanner = () => {
                         transition={{ type: "spring", damping: 30, stiffness: 400 }}
                         rotationInterval={2000}
                     />
-                </p>
+                </div>
                 <div className="text flex justify-center gap-4">
                     Why stop at 1, when
                 </div>
