@@ -2,7 +2,7 @@
 import { Draggable } from "react-beautiful-dnd";
 // @ts-ignore
 import { DateTime } from "luxon";
-import ICartProduct from "../../types/CartProduct.interface";
+import ICartProduct from "../../shared/types/cart/cart-product.interface";
 import { ArrowRight, Code, Plus, X } from "react-feather";
 import emptyBottle from "../../public/img/empty-bottle.png";
 

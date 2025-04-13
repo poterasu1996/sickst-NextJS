@@ -9,6 +9,7 @@ type Props = {
   children: JSX.Element
 }
 
+// to be removed, not used anymore
 export const CartProvider = ({ children }: Props): JSX.Element => {
   const [refresh, setRefresh] = useState(0);                         // reset cart each time add/delete action is made
   

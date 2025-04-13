@@ -1,4 +1,3 @@
-import strapiAxios from "../../../api/axios";
 import { BrandDTO } from "../../dtos/brand.dto";
 import { DataResponse, StrapiResponse } from "../../dtos/common/strapi-response.dto";
 import { BRANDS } from "../../utils/constants";

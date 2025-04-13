@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -21,13 +21,14 @@ import logo from "../public/logo-white.svg";
 
 // Storage & services
 import AuthContext from "../store/auth-context";
-import CartService from "../shared/services/cartService";
 import AccountContext from "../store/account-context";
 
 import useGetJWT from "../shared/hooks/auth/useGetJWT";
 import SearchInputWithDropdown from "./global/SearchInputWithDropdown";
 import { useDebounce } from "../shared/hooks/useDebounce";
 import { useSearch } from "../shared/hooks/useSearch";
+import { useCart } from "../features/cart/hooks/useCart";
+import { AccountTabView } from "../shared/types/account";
 
 const LOGOUT_URL = 'http://localhost:3000/api/v1/logout';
 
@@ -49,6 +50,9 @@ const Header = () => {
   const accountManager = useContext(AccountContext);
   const router = useRouter();
 
+  const { cartLength } = useCart();
+
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -56,10 +60,10 @@ const Header = () => {
     setAnchorEl(null);
   };
 
-  if (CartService.cart) CartService.getCartLength();
-
   async function handleLogOut() {
     const response = await axios.post(LOGOUT_URL);
+
+    handleClose();
 
     if(response.status === 200) {
       localStorage.getItem('jwt') && localStorage.removeItem('jwt');
@@ -96,6 +100,13 @@ const Header = () => {
     router.push(`/product/${product.id}`)
   }
 
+  const handleAccountRedirect = (tabView: AccountTabView) => {
+    accountManager!.setAccountPageState(tabView);
+    handleClose();
+    router.push("/account");
+  }
+
+  // dummy data
   const searchSuggestionsDUMMY = [
     "Nike sneakers",
     "Nike hoodie",
@@ -183,23 +194,19 @@ const Header = () => {
                 }}
               >
                 <ListSubheader>Your membership</ListSubheader>
-                <MenuItem onClick={() => {
-                  accountManager!.setAccountPageState("subscription");
-                  router.push("/account");
-                }}>Manage your membership</MenuItem>
-                <MenuItem onClick={() => {
-                  accountManager?.setAccountPageState("orderHistory");
-                  router.push("/account");
-                }}>Order tracking & history</MenuItem>
-                <MenuItem onClick={() => {
-                  accountManager!.setAccountPageState("shippingInfo");
-                  router.push("/account");
-                }}>Shipping information</MenuItem>
+                <MenuItem 
+                  onClick={() => handleAccountRedirect("subscription")}
+                >Manage your membership</MenuItem>
+                <MenuItem 
+                  onClick={() => handleAccountRedirect("orderHistory")}
+                >Order tracking & history</MenuItem>
+                <MenuItem 
+                  onClick={() => handleAccountRedirect("shippingInfo")}
+                >Shipping information</MenuItem>
                 <ListSubheader>Your account</ListSubheader>
-                <MenuItem onClick={() => {
-                  accountManager!.setAccountPageState("personalInfo");
-                  router.push("/account");
-                }}>Personal details</MenuItem>
+                <MenuItem 
+                  onClick={() => handleAccountRedirect("personalInfo")}
+                >Personal details</MenuItem>
                 <MenuItem onClick={handleLogOut}>Log out</MenuItem>
               </Menu>
 
@@ -220,7 +227,7 @@ const Header = () => {
             {isAuth ? (
               <div className="shopping-cart">
                 <ShoppingCart />{" "}
-                <span className="badge">{CartService.cartLength}</span>
+                <span className="badge">{cartLength}</span>
               </div>
             ) : (
               <MenuIcon />

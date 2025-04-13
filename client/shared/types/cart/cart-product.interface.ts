@@ -1,7 +1,7 @@
-import IProduct from "./Product.interface"
+import IProduct from "../../../types/product";
 
 export default interface ICartProduct {
-    cartProductId: number,
+    cartProductId: string,
     payment: string,
     product: IProduct,
     quantity: number

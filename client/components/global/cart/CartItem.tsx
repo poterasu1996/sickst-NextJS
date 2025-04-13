@@ -1,14 +1,16 @@
-import { useState, useContext, Dispatch, SetStateAction } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
 
 // Components
-import { X } from "react-feather";
 import { CircularProgress, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 // Store & services
 import CartService from "../../../shared/services/cartService";
+import ICartProduct from "../../../shared/types/cart/cart-product.interface";
 import { PaymentEnums } from "../../../shared/enums/payment.enums";
-import ICartProduct from "../../../types/CartProduct.interface";
+
+// Hooks
+import { updateCart } from "../../../features/cart/hooks/useCart";
 
 type Props = {
     item: ICartProduct,
@@ -17,11 +19,13 @@ type Props = {
 
 const CartItem = ({ item, handleLoading }: Props) => {
     const [loading, setLoading] = useState(false);      // for loading spinner effect
+
     const orderMinus = () => {
         if(item.quantity > 1) {
             setLoading(true);
             handleLoading(true);
             CartService.quantityProduct(item, 'remove');
+            updateCart();
         }
     }
 
@@ -29,6 +33,13 @@ const CartItem = ({ item, handleLoading }: Props) => {
         setLoading(true);
         handleLoading(true);
         CartService.quantityProduct(item, 'add');
+        updateCart();
+    }
+
+    const handleDeleteCartProduct = () => {
+        handleLoading(true);
+        CartService.removeProduct(item);
+        updateCart();
     }
 
     setTimeout(() => {
@@ -86,10 +97,7 @@ const CartItem = ({ item, handleLoading }: Props) => {
                         height: '20px'
                     }
                 }}
-                onClick={() => {
-                    handleLoading(true);
-                    CartService.removeProduct(item);
-                }} 
+                onClick={handleDeleteCartProduct} 
                 size="medium"
             ><CloseIcon /></IconButton>
         </div>

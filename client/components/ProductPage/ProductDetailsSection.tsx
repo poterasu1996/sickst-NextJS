@@ -4,7 +4,6 @@ import Rating from "react-rating";
 import orderImg from '../../public/img/order-img.png'
 import AuthContext from "../../store/auth-context";
 import { useRouter } from "next/router";
-import IProduct from "../../types/Product.interface";
 import axios from "../../api/axios";
 import { ReviewCount } from "../../types/product/ProductReviews.interface";
 import cartService from "../../shared/services/cartService";
@@ -12,6 +11,7 @@ import { AppUtils } from "../../shared/utils/app.utils";
 import { PAYMENT_TYPE } from "../../shared/utils/constants";
 import CartContext from "../../store/cart-context";
 import { useCheckMysterySub } from "../../shared/hooks/useCheckMysterySub";
+import IProduct from "../../types/product";
 
 type Props = {
     product: IProduct,

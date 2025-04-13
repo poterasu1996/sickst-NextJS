@@ -4,12 +4,13 @@ import { TabView, TabPanel } from "primereact/tabview";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.css";
 
-import IProduct from "../../types/Product.interface";
 import productService from "../../shared/services/productService";
 import { useQuery } from "@tanstack/react-query";
 import SecondaryButton from "../global/SecondaryButton";
 import { CircularProgress } from "@mui/material";
+import IProduct from "../../types/product";
 
+// not used atm
 const ProductSection = () => {
   const [maleTab, setMaleTab] = useState(true);
   const [fetchedProd, setFetchedProd] = useState<IProduct[]>([]);

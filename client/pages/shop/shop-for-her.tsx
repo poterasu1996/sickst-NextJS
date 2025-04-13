@@ -12,8 +12,8 @@ import TopRatedProductsSkeleton from "../../features/shop/components/TopRatedPro
 
 // Utils & constants
 import useWomanProducts from "../../features/shop/shop-for-her/hooks/useWomanProducts";
-import IProduct from "../../types/Product.interface";
-import { DEFAULT_SELECTED_FILTERS } from "../../shared/types";
+import { DEFAULT_SELECTED_FILTERS } from "../../types/shop/shop.constants";
+import IProduct from "../../types/product";
 
 const ShopWoman = () => {
     const [products, setProducts] = useState<IProduct[]>([]);

@@ -11,12 +11,12 @@ import Button from "@mui/material/Button";
 import SickstModal from "../global/SickstModal";
 
 // Storage & services
-import CartContext from "../../store/cart-context";
 import AuthContext from "../../store/auth-context";
 import CartService from "../../shared/services/cartService/index";
 
 // Hooks
 import { useCheckMysterySub } from "../../shared/hooks/useCheckMysterySub";
+import { updateCart, useCart } from "../../features/cart/hooks/useCart";
 
 // Utils
 import { AppUtils } from "../../shared/utils/app.utils";
@@ -31,15 +31,13 @@ interface Props {
 
 const Product = ({ product }: Props) => {
   const [show, setShow] = useState(false); // for Read more modal
-  // const cartManager = useContext(CartContext);
-  const { isAuth } = useContext(AuthContext);
   const [loading, setLoading] = useState(false); // used for loading animation
   const [subscription, setSubscription] = useState(true);
-  const router = useRouter();
+  const { isAuth } = useContext(AuthContext);
   const { isMystery } = useCheckMysterySub();
+  const router = useRouter();
 
-  // in future, we must have 2 parameters: product and container (container will be the container price from DB, atm is static price)
-  const containerPrice = 50; // price of container
+  useCart();  // connect to cartService changes
 
   const customToastTemplate = (
     <>
@@ -98,7 +96,7 @@ const Product = ({ product }: Props) => {
         paymentType = "otb";
       }
       CartService.addProduct(product, 1, paymentType);
-      // cartManager.refreshContext();
+      updateCart();
       AppUtils.toastNotification("", true, customToastTemplate);
     }
   }
@@ -120,7 +118,7 @@ const Product = ({ product }: Props) => {
       }
       AppUtils.toastNotification("", true, customToastTemplate);
       CartService.addProduct(product, 1, paymentType);
-      // cartManager.refreshContext();
+      updateCart();
       setLoading(true);
     }
   };

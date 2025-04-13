@@ -10,13 +10,13 @@ import { ReviewCount } from "../../types/product/ProductReviews.interface";
 import RequestMeta from "../../types/Axios.interface";
 import { AppUtils } from "../../shared/utils/app.utils";
 import noReview from "../../public/img/svg/no-reviews.svg";
-import IProduct from "../../types/Product.interface";
 import AccountContext from "../../store/account-context";
 import { IGETProductReview } from "../../models/ProductReview.model";
 import AuthContext from "../../store/auth-context";
 import { useRouter } from "next/router";
 import strapiAxios from "../../api/axios";
 import reviewService from "../../shared/services/reviewService";
+import IProduct from "../../types/product";
 
 type Props = {
     product: IProduct,

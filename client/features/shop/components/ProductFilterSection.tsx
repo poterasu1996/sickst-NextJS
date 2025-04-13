@@ -17,8 +17,8 @@ import brandService from '../../../shared/services/brandService';
 import HttpService from '../../../shared/services/HttpService';
 
 // Utils & Constants
-import IProduct from '../../../types/Product.interface';
-import { DEFAULT_MOBILE_SELECTED_FILTERS, DEFAULT_SELECTED_FILTERS } from '../../../shared/types';
+import { DEFAULT_MOBILE_SELECTED_FILTERS, DEFAULT_SELECTED_FILTERS } from '../../../types/shop/shop.constants';
+import IProduct from '../../../types/product';
 
 type Props = {
     products: IProduct[],

@@ -25,7 +25,7 @@ import AuthContext from "../../store/auth-context";
 import subscriptionService from "../../shared/services/subscriptionService";
 
 // Utils & constants
-import ICartProduct from "../../types/CartProduct.interface";
+import ICartProduct from "../../shared/types/cart/cart-product.interface";
 import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
 import {
   IGETSubscriptionOrder,

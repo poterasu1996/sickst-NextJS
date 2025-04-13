@@ -24,7 +24,7 @@ import { IUserModel } from "../../models/User.model";
 import { IGETUserDetails } from "../../models/UserDetails.model";
 import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
 import { AppUtils } from "../../shared/utils/app.utils";
-import { AccountStateEnums } from "../../shared/enums/accountPageState.enum";
+import { AccountTabViews } from "../../shared/types/account";
 
 const tabs = [
     { key: 'subscription', label: 'Manage subscription'},
@@ -51,7 +51,7 @@ const Account = ({ userInfo, subscriptionHistory }: Props) => {
     }, [accountManager!.accountState]);
 
     useEffect(() => {
-        if(accState === AccountStateEnums.ORDER_HISTORY) {
+        if(accState === AccountTabViews.ORDER_HISTORY) {
             document?.getElementById('content')?.classList.add('overflowscroll');
         } else {
             document?.getElementById('content')?.classList.remove('overflowscroll');
@@ -64,21 +64,21 @@ const Account = ({ userInfo, subscriptionHistory }: Props) => {
 
     function renderTabContent(activeTab: string) {
         switch (activeTab) {
-            case AccountStateEnums.SUBSCRIPTION:
+            case AccountTabViews.SUBSCRIPTION:
                 return <ManageSubscription userInfo={userInfo} subscriptionHistory={subscriptionHistory}/>
-            case AccountStateEnums.ORDER_HISTORY:
+            case AccountTabViews.ORDER_HISTORY:
                 return <OrderHistory />
-            case AccountStateEnums.BILLING_INFO:
+            case AccountTabViews.BILLING_INFO:
                 return <BillingInformation />
-            case AccountStateEnums.SHIPPING_INFO:
+            case AccountTabViews.SHIPPING_INFO:
                 return <ShippingInformation />
-            case AccountStateEnums.REVIEWS:
+            case AccountTabViews.REVIEWS:
                 return <UserReviews />
-            case AccountStateEnums.RATED_PRODUCTS:
+            case AccountTabViews.RATED_PRODUCTS:
                 return <RatedProducts />
-            case AccountStateEnums.PERSONAL_INFO:
+            case AccountTabViews.PERSONAL_INFO:
                 return <PersonalInfo />
-            case AccountStateEnums.RESET_PASSWORD:
+            case AccountTabViews.RESET_PASSWORD:
                 return <ResetPassword />
             default:
                 return <ManageSubscription userInfo={userInfo} subscriptionHistory={subscriptionHistory}/>

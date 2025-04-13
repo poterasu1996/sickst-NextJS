@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import AuthContext from "./auth-context";
-import { AccountStateEnums } from "../shared/enums/accountPageState.enum";
 import { IUserModel } from "../models/User.model";
 import {
   IGETUserDetails,
 } from "../models/UserDetails.model";
+import { AccountTabViews } from "../shared/types/account";
 
 
 // @ts-ignore
@@ -31,17 +31,6 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
   const [currentUser, setCurrentUser] = useState<IUserModel | null>(null);
   const [userDetails, setUserDetails] = useState<IGETUserDetails | null>(null);
   const [refresh, setRefresh] = useState(0); // inform other components that context has been changed
-
-  // const accState = [
-  //     'subscription',
-  //     'orderHistory',
-  //     'billingInfo',
-  //     'shippingInfo',
-  //     'reviews',
-  //     'ratedProducts',
-  //     'personalInfo',
-  //     'resetPassword'
-  // ];
 
   const getUserMe = async () => {
     const userMe: IUserModel = await userService.getUsersMe();
@@ -78,32 +67,32 @@ export const AccountProvider = ({ children }: Props): JSX.Element => {
     // set the general account state
     // based on this state, info will be showed in the account page
     switch (state) {
-      case AccountStateEnums.SUBSCRIPTION:
-        setAccountState(AccountStateEnums.SUBSCRIPTION);
+      case AccountTabViews.SUBSCRIPTION:
+        setAccountState(AccountTabViews.SUBSCRIPTION);
         break;
-      case AccountStateEnums.ORDER_HISTORY:
-        setAccountState(AccountStateEnums.ORDER_HISTORY);
+      case AccountTabViews.ORDER_HISTORY:
+        setAccountState(AccountTabViews.ORDER_HISTORY);
         break;
-      case AccountStateEnums.BILLING_INFO:
-        setAccountState(AccountStateEnums.BILLING_INFO);
+      case AccountTabViews.BILLING_INFO:
+        setAccountState(AccountTabViews.BILLING_INFO);
         break;
-      case AccountStateEnums.SHIPPING_INFO:
-        setAccountState(AccountStateEnums.SHIPPING_INFO);
+      case AccountTabViews.SHIPPING_INFO:
+        setAccountState(AccountTabViews.SHIPPING_INFO);
         break;
-      case AccountStateEnums.REVIEWS:
-        setAccountState(AccountStateEnums.REVIEWS);
+      case AccountTabViews.REVIEWS:
+        setAccountState(AccountTabViews.REVIEWS);
         break;
-      case AccountStateEnums.RATED_PRODUCTS:
-        setAccountState(AccountStateEnums.RATED_PRODUCTS);
+      case AccountTabViews.RATED_PRODUCTS:
+        setAccountState(AccountTabViews.RATED_PRODUCTS);
         break;
-      case AccountStateEnums.PERSONAL_INFO:
-        setAccountState(AccountStateEnums.PERSONAL_INFO);
+      case AccountTabViews.PERSONAL_INFO:
+        setAccountState(AccountTabViews.PERSONAL_INFO);
         break;
-      case AccountStateEnums.RESET_PASSWORD:
-        setAccountState(AccountStateEnums.RESET_PASSWORD);
+      case AccountTabViews.RESET_PASSWORD:
+        setAccountState(AccountTabViews.RESET_PASSWORD);
         break;
       default:
-        setAccountState(AccountStateEnums.SUBSCRIPTION);
+        setAccountState(AccountTabViews.SUBSCRIPTION);
     }
   }
 

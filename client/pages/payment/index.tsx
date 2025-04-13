@@ -15,7 +15,7 @@ import { shippingListR } from "../../shared/recoil-states";
 // Utils
 import { PaymentEnums } from "../../shared/enums/payment.enums";
 import { TxnStatusEnum } from "../../shared/enums/txn.enum";
-import ICartProduct from "../../types/CartProduct.interface";
+import ICartProduct from "../../shared/types/cart/cart-product.interface";
 import { IUserModel } from "../../models/User.model";
 import { IOrderHistoryModel, OrderTypeEnum } from "../../models/OrderHistory.model";
 import { IShippingInfo } from "../../models/ShippingInformation.model";

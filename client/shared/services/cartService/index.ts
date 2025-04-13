@@ -1,6 +1,6 @@
-import ICartProduct from "../../../types/CartProduct.interface";
-import IProduct from "../../../types/Product.interface";
+import IProduct from "../../../types/product";
 import { PaymentEnums } from "../../enums/payment.enums";
+import ICartProduct from "../../types/cart/cart-product.interface";
 
 class CartService {
     cart: ICartProduct[] = [];
@@ -27,32 +27,18 @@ class CartService {
             const _otbList = _storageCart.filter(item => item.payment === PaymentEnums.FULL_PAYMENT);
 
             this.cart = [..._subscriptionItem, ..._otbList];
-            // if (_storageCart) {
-            //     this.storageList = [..._storageCart];
-            //     const _subscriptionItem = _storageCart.filter((item: ICartProduct) => {
-            //         return item.payment === PaymentEnums.SUBSCRIPTION;
-            //     });
-            //     const _otbList = _storageCart.filter((item: ICartProduct) => {
-            //         return item.payment === PaymentEnums.FULL_PAYMENT;
-            //     });
-            //     if (_subscriptionItem) {
-            //         this.cart = [..._subscriptionItem, ..._otbList];
-            //         // set subs list?
-            //     } else {
-            //         this.cart = [..._otbList];
-            //     }
-            // }
         }
     }
 
     addProduct(product: IProduct, quantity: number, payment: string) {
+        const cartProductId = `${product.id}-${payment}`;
         if(localStorage.getItem("cart") !== null) {
             const storageValue = localStorage.getItem("cart");
             let storageProducts = null;
             if(typeof storageValue === 'string') {
                 storageProducts = JSON.parse(storageValue);
             }
-            const cartProductId = storageProducts.length;
+            // const cartProductId = storageProducts.length;
             let found = false;
 
             // check if the product already exist, to increase qt
@@ -91,9 +77,9 @@ class CartService {
                 localStorage.setItem("cart", JSON.stringify(newCartList));
             }
         } else {
-            localStorage.setItem('cart', JSON.stringify([{ cartProductId: 0, product, quantity, payment }]));
-            this.cart = [{ cartProductId: 0, product, quantity, payment }];
-            this.storageList = [{ cartProductId: 0, product, quantity, payment }];
+            localStorage.setItem('cart', JSON.stringify([{ cartProductId, product, quantity, payment }]));
+            this.cart = [{ cartProductId, product, quantity, payment }];
+            this.storageList = [{ cartProductId, product, quantity, payment }];
         }
     }
 
@@ -148,7 +134,7 @@ class CartService {
             if (_newList.length > 0) {
                 this.cart = [..._newList];
                 this.storageList = [..._newList];
-                localStorage.setItem('cart', JSON.stringify(_newList));            
+                localStorage.setItem('cart', JSON.stringify(_newList));       
             } else {
                 this.cart = _newList;
                 this.storageList = _newList;
@@ -159,10 +145,9 @@ class CartService {
 
     removeLSSubscriptioProducts() {
         const _newList = this.storageList?.filter(prod => { return prod.payment !== PaymentEnums.SUBSCRIPTION });
-        console.log(_newList)
         if(_newList) {
             this.storageList = [..._newList];
-            localStorage.setItem('cart', JSON.stringify(_newList))
+            localStorage.setItem('cart', JSON.stringify(_newList));
         }
     }
 

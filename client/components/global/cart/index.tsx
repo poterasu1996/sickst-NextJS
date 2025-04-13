@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 
 // Components
 import CartItem from "./CartItem";
@@ -10,7 +10,9 @@ import { CircularProgress, IconButton } from "@mui/material";
 import AccountContext from "../../../store/account-context";
 import CartService from "../../../shared/services/cartService/index";
 import { PaymentEnums } from "../../../shared/enums/payment.enums";
-import("../../../types/CartProduct.interface");
+
+// Hooks
+import { useCart } from "../../../features/cart/hooks/useCart";
 
 type Props = {
   onClick: () => void
@@ -18,16 +20,13 @@ type Props = {
 
 const Cart = ({ onClick }: Props) => {
   const [loading, setLoading] = useState(true);
-  const [cartTotal, setCartTotal] = useState(0);
   const accountManager = useContext(AccountContext);
+
+  useCart();
 
   setTimeout(() => {
     setLoading(false);
   }, 500);
-
-  useEffect(() => {
-    setCartTotal(CartService.cartTotal());
-  }, [CartService.cart])
 
   return (
     <>
@@ -100,7 +99,7 @@ const Cart = ({ onClick }: Props) => {
                 <span className="cart-price">
                     {loading 
                       ? <CircularProgress size={'1.8rem'} color="primary" thickness={7} />
-                      : <>Ron {cartTotal}</>
+                      : <>Ron {CartService.cartTotal()}</>
                     }
                 </span>
                 </div>
@@ -109,7 +108,7 @@ const Cart = ({ onClick }: Props) => {
                 <span className="cart-price">
                     {loading 
                       ? <CircularProgress size={'1.8rem'} color="primary" thickness={7} /> 
-                      : <>Ron {cartTotal}</>
+                      : <>Ron {CartService.cartTotal()}</>
                     }
                 </span>
                 </div>

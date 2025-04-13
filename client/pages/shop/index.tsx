@@ -13,8 +13,8 @@ import ProductFilterSection from "../../features/shop/components/ProductFilterSe
 import useProducts from "../../features/shop/hooks/useProducts";
 
 // Utils & Constants
-import IProduct from "../../types/Product.interface";
-import { DEFAULT_SELECTED_FILTERS } from "../../shared/types";
+import { DEFAULT_SELECTED_FILTERS } from "../../types/shop/shop.constants";
+import IProduct from "../../types/product";
 
 const Shop = () => {
     const [products, setProducts] = useState<IProduct[]>([]);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import IProduct from "../../types/Product.interface";
 import searchService from "../services/searchService";
+import IProduct from "../../types/product";
 
 type ProductSuggestion = {
     id: string,

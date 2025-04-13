@@ -13,11 +13,11 @@ import { CircularProgress } from "@mui/material";
 import AccountContext from "../../store/account-context";
 
 // Utils & constants
-import IProduct from "../../types/Product.interface";
 import { ReviewCount } from "../../types/product/ProductReviews.interface";
 import RequestMeta from "../../types/Axios.interface";
 import { IGETProductReview } from "../../models/ProductReview.model";
 import { PRODUCT_REVIEWS } from "../../shared/utils/constants";
+import IProduct from "../../types/product";
 
 const PRODUCTS_URL = "/products";
 
