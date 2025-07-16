@@ -1,5 +1,5 @@
-import strapiAxios from "../../../api/axios";
-import { IProductReviewModel } from "../../../models/ProductReview.model";
+import strapiAxios from "../../api/axios";
+import { IProductReviewModel } from "../../models/ProductReview.model";
 import { AppUtils } from "../../utils/app.utils";
 import { PRODUCT_REVIEWS } from "../../utils/constants";
 

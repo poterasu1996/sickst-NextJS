@@ -1,7 +1,7 @@
 // @ts-ignore
 import { DateTime } from "luxon";
 import { toast } from "react-toastify";
-import { EncodedFile } from "../../models/ContactUs.model";
+import { EncodedFile } from "../models/ContactUs.model";
 import { ReactNode } from "react";
 
 const toastMsg = (msg: string, status: boolean) => {

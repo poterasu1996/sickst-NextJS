@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import CartService from "../../../shared/services/cartService";
+import CartService from "../../../services/cartService";
 
 type Listener = () => void;
 

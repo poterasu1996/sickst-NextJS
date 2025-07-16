@@ -5,8 +5,8 @@ import { CircularProgress, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 // Store & services
-import CartService from "../../../shared/services/cartService";
-import ICartProduct from "../../../shared/types/cart/cart-product.interface";
+import CartService from "../../../services/cartService";
+import ICartProduct from "../../../types/cart/cart-product.interface";
 import { PaymentEnums } from "../../../shared/enums/payment.enums";
 
 // Hooks

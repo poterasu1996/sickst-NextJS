@@ -1,7 +1,7 @@
-import strapiAxios from "../../../api/axios";
+import strapiAxios from "../../api/axios";
 import { CANCELLED_ORDERS, ORDER_HISTORIES } from "../../utils/constants";
 import { AppUtils } from "../../utils/app.utils";
-import { IGETOrderHistory, IOrderHistoryModel } from "../../../models/OrderHistory.model";
+import { IGETOrderHistory, IOrderHistoryModel } from "../../models/OrderHistory.model";
 
 
 class OrderService {

@@ -15,7 +15,7 @@ import PrimaryButton from "../global/PrimaryButton";
 
 // Storage & Services
 import AuthContext from "../../store/auth-context";
-import { USER_LOGIN } from "../../shared/utils/constants";
+import { USER_LOGIN } from "../../utils/constants";
 
 
 const logInSchema = z.object({

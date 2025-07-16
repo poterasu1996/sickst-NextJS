@@ -8,14 +8,14 @@ import { CircularProgress } from "@mui/material";
 
 // Storage & services
 import CartContext from "../../store/cart-context";
-import CartService from "../../shared/services/cartService/index";
+import CartService from "../../services/cartService/index";
 import { useRecoilValue } from "recoil";
 import { shippingListR } from "../../shared/recoil-states";
 
 // Utils
 import { PaymentEnums } from "../../shared/enums/payment.enums";
 import { TxnStatusEnum } from "../../shared/enums/txn.enum";
-import ICartProduct from "../../shared/types/cart/cart-product.interface";
+import ICartProduct from "../../types/cart/cart-product.interface";
 import { IUserModel } from "../../models/User.model";
 import { IOrderHistoryModel, OrderTypeEnum } from "../../models/OrderHistory.model";
 import { IShippingInfo } from "../../models/ShippingInformation.model";

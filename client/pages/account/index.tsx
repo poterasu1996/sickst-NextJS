@@ -23,8 +23,8 @@ import { GetServerSideProps } from "next";
 import { IUserModel } from "../../models/User.model";
 import { IGETUserDetails } from "../../models/UserDetails.model";
 import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
-import { AppUtils } from "../../shared/utils/app.utils";
-import { AccountTabViews } from "../../shared/types/account";
+import { AppUtils } from "../../utils/app.utils";
+import { AccountTabViews } from "../../types/account";
 
 const tabs = [
     { key: 'subscription', label: 'Manage subscription'},
@@ -86,10 +86,8 @@ const Account = ({ userInfo, subscriptionHistory }: Props) => {
     }
 
     return(<>
-        {/* <div className="main-content account-page">
-        </div> */}
         <AccountLayout>
-            <div className="container account-main-body">
+            <div className="account-main-body">
                 <div className="nav-section">
                     <div className="user-info">
                         <div className="user-avatar"></div>

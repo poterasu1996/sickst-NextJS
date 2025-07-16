@@ -8,14 +8,14 @@ import { Dropdown } from 'primereact/dropdown';
 import ProductCardReview from "./ProductCardReview";
 import { ReviewCount } from "../../types/product/ProductReviews.interface";
 import RequestMeta from "../../types/Axios.interface";
-import { AppUtils } from "../../shared/utils/app.utils";
+import { AppUtils } from "../../utils/app.utils";
 import noReview from "../../public/img/svg/no-reviews.svg";
 import AccountContext from "../../store/account-context";
 import { IGETProductReview } from "../../models/ProductReview.model";
 import AuthContext from "../../store/auth-context";
 import { useRouter } from "next/router";
 import strapiAxios from "../../api/axios";
-import reviewService from "../../shared/services/reviewService";
+import reviewService from "../../services/reviewService";
 import IProduct from "../../types/product";
 
 type Props = {

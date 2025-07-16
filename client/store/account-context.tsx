@@ -4,11 +4,11 @@ import { IUserModel } from "../models/User.model";
 import {
   IGETUserDetails,
 } from "../models/UserDetails.model";
-import { AccountTabViews } from "../shared/types/account";
+import { AccountTabViews } from "../types/account";
 
 
 // @ts-ignore
-import userService from "../shared/services/userService";
+import userService from "../services/userService";
 
 interface IAccountContext {
   accountState: string;

@@ -1,14 +1,14 @@
 import { TabPanel, TabView } from "primereact/tabview";
 import { useContext, useEffect, useState } from "react";
-import { AppUtils } from "../../shared/utils/app.utils";
+import { AppUtils } from "../../utils/app.utils";
 import AccountContext from "../../store/account-context";
 import Chip from "../global/Chip";
 import { useRouter } from "next/router";
 import { TxnStatusEnum } from "../../shared/enums/txn.enum";
 import { IGETOrderHistory } from "../../models/OrderHistory.model";
 import { IGETSubscriptionOrder, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
-import orderService from "../../shared/services/orderService";
-import subscriptionService from "../../shared/services/subscriptionService";
+import subscriptionService from "../../services/subscriptionService";
+import orderService from "../../services/orderService";
 
 const OrderHistory = () => {
     const accountManager = useContext(AccountContext);

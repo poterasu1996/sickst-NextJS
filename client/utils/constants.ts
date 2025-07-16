@@ -20,7 +20,6 @@ export const CATEGORY = {
     FEMALE: "FEMALE"
 }
 
-// export type PAYMENT_TYPE = "subscription" | "otb"; 
 
 // 1:1 strapi table endpoints
 export const BRANDS = '/brands';

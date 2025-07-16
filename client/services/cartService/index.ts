@@ -1,5 +1,5 @@
-import IProduct from "../../../types/product";
-import { PaymentEnums } from "../../enums/payment.enums";
+import IProduct from "../../types/product";
+import { PaymentEnums } from "../../shared/enums/payment.enums";
 import ICartProduct from "../../types/cart/cart-product.interface";
 
 class CartService {

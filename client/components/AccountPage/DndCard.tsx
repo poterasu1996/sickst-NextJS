@@ -2,9 +2,10 @@
 import { Draggable } from "react-beautiful-dnd";
 // @ts-ignore
 import { DateTime } from "luxon";
-import ICartProduct from "../../shared/types/cart/cart-product.interface";
+import ICartProduct from "../../types/cart/cart-product.interface";
 import { ArrowRight, Code, Plus, X } from "react-feather";
 import emptyBottle from "../../public/img/empty-bottle.png";
+import { Menu as MenuIcon } from "react-feather";
 
 type Props = {
   index: number;
@@ -61,6 +62,10 @@ const DndCard = ({
                 {...provided.dragHandleProps}
                 ref={provided.innerRef}
               >
+                <div className="queue-month">
+                  <span>{setMonth(index)}</span>
+                  <MenuIcon />
+                </div>
                 <div className="image-wrapper">
                   <img
                     src={
@@ -69,6 +74,13 @@ const DndCard = ({
                     }
                   ></img>
                 </div>
+                <div className="product-details">
+                  {item.product.attributes.brand.split(" ").map((word, index) => (
+                    <div className="brand-word" key={index}>{word}</div>
+                  ))}
+                </div>
+                <div className="details">Details</div>
+              {/* 
                 <div className="details">
                   <div className="title">
                     <span className="brand">
@@ -85,7 +97,8 @@ const DndCard = ({
                   <div className="move">
                     <Code />
                   </div>
-                </div>
+                </div> */}
+                
                 <button
                   className="remove-card"
                   onClick={() => deleteCard(index)}

@@ -5,8 +5,8 @@ import AccountContext from "../../store/account-context";
 import { IProductReviewModel } from "../../models/ProductReview.model";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import reviewService from "../../shared/services/reviewService";
-import userService from "../../shared/services/userService";
+import reviewService from "../../services/reviewService";
+import userService from "../../services/userService";
 import InputField from "../global/form/InputField";
 import IProduct from "../../types/product";
 

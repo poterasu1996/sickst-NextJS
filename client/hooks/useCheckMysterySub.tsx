@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import AccountContext from "../../store/account-context";
-import { SubscriptionNameEnum } from "../../models/SubscriptionOrder.model";
+import AccountContext from "../store/account-context";
+import { SubscriptionNameEnum } from "../models/SubscriptionOrder.model";
 
 export const useCheckMysterySub = () => {
   const [isMystery, setIsMystery] = useState(false);

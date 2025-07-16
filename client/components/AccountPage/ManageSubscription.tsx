@@ -20,12 +20,12 @@ import { DateCalendar } from "@mui/x-date-pickers";
 import DndCard from "./DndCard";
 
 // Storage & services
-import CartService from "../../shared/services/cartService";
+import CartService from "../../services/cartService";
 import AuthContext from "../../store/auth-context";
-import subscriptionService from "../../shared/services/subscriptionService";
+import subscriptionService from "../../services/subscriptionService";
 
 // Utils & constants
-import ICartProduct from "../../shared/types/cart/cart-product.interface";
+import ICartProduct from "../../types/cart/cart-product.interface";
 import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
 import {
   IGETSubscriptionOrder,
@@ -33,7 +33,7 @@ import {
   SubscriptionStatusEnum,
 } from "../../models/SubscriptionOrder.model";
 import { IGETProduct } from "../../models/Product.model";
-import { AppUtils } from "../../shared/utils/app.utils";
+import { AppUtils } from "../../utils/app.utils";
 
 // @ts-ignore
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
@@ -69,7 +69,7 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
     slidesToScroll: 1,
   };
 
-  const { isAuth, token } = useContext(AuthContext);
+  const { isAuth } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [loadingButton, setLoadingButton] = useState(true);
   const [updated, setUpdated] = useState(false);
@@ -554,6 +554,32 @@ const ManageSubscription = ({ userInfo, subscriptionHistory }: Props) => {
             </>
           )}
         </div>
+        {activeSubscription && checkIfBasicOrPremium() && (
+            <>
+              <div className="text-update">
+                Nu uita sa apesi buton <b className="brand-color">Update</b>{" "}
+                pentru a-ti actualiza lista de parfumuri, de fiecare data cand
+                adaugi sau reordonezi lista!
+              </div>
+              <div className="btn-wrapper">
+                <button
+                  className="button-second"
+                  disabled={true}
+                  onClick={() => handleUpdateList()}
+                >
+                  {loadingButton ? (
+                    <CircularProgress 
+                      sx={{ color: '#ffffff' }}
+                      size={'2rem'}  
+                      thickness={7} 
+                    />
+                  ) : (
+                    "Update"
+                  )}
+                </button>
+              </div>
+            </>
+          )}
       </div>
     </>
   );

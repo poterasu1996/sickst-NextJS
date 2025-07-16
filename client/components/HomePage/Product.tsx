@@ -12,14 +12,14 @@ import SickstModal from "../global/SickstModal";
 
 // Storage & services
 import AuthContext from "../../store/auth-context";
-import CartService from "../../shared/services/cartService/index";
+import CartService from "../../services/cartService/index";
 
 // Hooks
-import { useCheckMysterySub } from "../../shared/hooks/useCheckMysterySub";
+import { useCheckMysterySub } from "../../hooks/useCheckMysterySub";
 import { updateCart, useCart } from "../../features/cart/hooks/useCart";
 
 // Utils
-import { AppUtils } from "../../shared/utils/app.utils";
+import { AppUtils } from "../../utils/app.utils";
 
 // Constants & Assets
 import orderImg from "../../public/img/order-img.png";

@@ -5,13 +5,13 @@ import { useEffect } from "react";
 
 // Storage & services
 import orderService from "../../shared/services/orderService";
-import subscriptionService from "../../shared/services/subscriptionService";
+import subscriptionService from "../../services/subscriptionService";
 
 // Utils
 import { ISubscriptionOrderModel, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
 import { IOrderHistoryModel } from "../../models/OrderHistory.model";
 import { TxnStatusEnum } from "../../shared/enums/txn.enum";
-import { AppUtils } from "../../shared/utils/app.utils";
+import { AppUtils } from "../../utils/app.utils";
 
 // @ts-ignore
 import Cookies from 'cookies';

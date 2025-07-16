@@ -1,4 +1,4 @@
-import strapiAxios from "../../api/axios";
+import strapiAxios from "../api/axios";
 
 class HttpService {
     async safeGet<T>(url: string): Promise<T | { error: string }> {

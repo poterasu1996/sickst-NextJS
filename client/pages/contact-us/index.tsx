@@ -16,11 +16,11 @@ import InputFileUpload from "../../components/global/FileUploadButton";
 
 // Storage & services
 import AuthContext from "../../store/auth-context";
-import contactService from "../../shared/services/contactService";
+import contactService from "../../services/contactService";
 import { IContactUsModel } from "../../models/ContactUs.model";
 
 // Utils
-import { AppUtils } from "../../shared/utils/app.utils";
+import { AppUtils } from "../../utils/app.utils";
 import InputField from "../../components/global/form/InputField";
 
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 5; // 5MB

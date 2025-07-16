@@ -8,7 +8,7 @@ import { CircularProgress, IconButton } from "@mui/material";
 
 // Storage & services
 import AccountContext from "../../../store/account-context";
-import CartService from "../../../shared/services/cartService/index";
+import CartService from "../../../services/cartService/index";
 import { PaymentEnums } from "../../../shared/enums/payment.enums";
 
 // Hooks

@@ -1,4 +1,4 @@
-import strapiAxios from "../../../api/axios";
+import strapiAxios from "../../api/axios";
 import { PRODUCTS_URL } from "../../utils/constants";
 
 class SearchService {

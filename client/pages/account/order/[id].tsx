@@ -15,7 +15,7 @@ import orderService from "../../../shared/services/orderService";
 import { ICompanyDetail, ICompanyDetailModel } from "../../../models/CompanyDetail.model";
 import { IOHProduct } from "../../../models/OrderHistory.model";
 import { IGETOrderHistory } from "../../../models/OrderHistory.model";
-import { AppUtils } from "../../../shared/utils/app.utils";
+import { AppUtils } from "../../../utils/app.utils";
 
 interface Props {
     order: IGETOrderHistory | null,

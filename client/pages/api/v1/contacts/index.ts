@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CONTACTS } from "../../../../shared/utils/constants";
+import { CONTACTS } from "../../../../utils/constants";
 import { EncodedFile } from "../../../../models/ContactUs.model";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";

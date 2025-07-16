@@ -1,6 +1,6 @@
-import strapiAxios from "../../../api/axios";
-import { IUserModel } from "../../../models/User.model";
-import { IGETUserDetails, IUserDetailsModel } from "../../../models/UserDetails.model";
+import strapiAxios from "../../api/axios";
+import { IUserModel } from "../../models/User.model";
+import { IGETUserDetails, IUserDetailsModel } from "../../models/UserDetails.model";
 import { USER_PROFILE_DETAILS, USER_ME, API_V } from "../../utils/constants";
 import { AppUtils } from "../../utils/app.utils";
 

@@ -1,9 +1,9 @@
-import strapiAxios from "../../../api/axios";
-import IProduct from "../../../types/product";
-import { DEFAULT_SELECTED_FILTERS } from "../../../types/shop/shop.constants";
-import { DataResponse, StrapiResponse } from "../../dtos/common/strapi-response.dto";
-import { ProductDTO } from "../../dtos/product.dto";
-import { TagEnums } from "../../enums/tag.enum";
+import strapiAxios from "../../api/axios";
+import IProduct from "../../types/product";
+import { DEFAULT_SELECTED_FILTERS } from "../../types/shop/shop.constants";
+import { DataResponse, StrapiResponse } from "../../types/dtos/strapi-response.dto";
+import { ProductDTO } from "../../types/dtos/product.dto";
+import { TagEnums } from "../../shared/enums/tag.enum";
 import { CATEGORY, PRODUCTS_URL } from "../../utils/constants";
 import HttpService from "../HttpService";
 

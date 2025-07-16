@@ -4,7 +4,7 @@ import { TabView, TabPanel } from "primereact/tabview";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.css";
 
-import productService from "../../shared/services/productService";
+import productService from "../../services/productService";
 import { useQuery } from "@tanstack/react-query";
 import SecondaryButton from "../global/SecondaryButton";
 import { CircularProgress } from "@mui/material";

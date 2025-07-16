@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import useTokenValidation from '../shared/hooks/auth/useTokenValidation';
+import useTokenValidation from '../hooks/auth/useTokenValidation';
 
 
 interface IAuthContext {

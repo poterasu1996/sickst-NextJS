@@ -12,8 +12,8 @@ import Switch from "@mui/material/Switch";
 
 // Storage and services
 import AccountContext from "../../store/account-context";
-import countyService from "../../shared/services/countyService";
-import shippingService from "../../shared/services/shippingService";
+import countyService from "../../services/countyService";
+import shippingService from "../../services/shippingService";
 
 // Utilities
 import { IShippingInfo } from "../../models/ShippingInformation.model";

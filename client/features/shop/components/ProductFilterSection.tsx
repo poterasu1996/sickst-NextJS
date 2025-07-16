@@ -12,9 +12,9 @@ import Product from '../../../components/HomePage/Product'
 import SecondaryButton from '../../../components/global/SecondaryButton';
 
 // Services
-import subscriptionService from '../../../shared/services/subscriptionService';
-import brandService from '../../../shared/services/brandService';
-import HttpService from '../../../shared/services/HttpService';
+import subscriptionService from '../../../services/subscriptionService';
+import brandService from '../../../services/brandService';
+import HttpService from '../../../services/HttpService';
 
 // Utils & Constants
 import { DEFAULT_MOBILE_SELECTED_FILTERS, DEFAULT_SELECTED_FILTERS } from '../../../types/shop/shop.constants';

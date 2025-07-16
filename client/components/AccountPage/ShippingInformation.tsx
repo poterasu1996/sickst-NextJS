@@ -8,7 +8,7 @@ import { Menu } from "primereact/menu";
 import { MenuItem } from "primereact/menuitem";
 import { useRecoilState } from "recoil";
 import { shippingListR } from "../../shared/recoil-states";
-import shippingService from "../../shared/services/shippingService";
+import shippingService from "../../services/shippingService";
 import SickstModal from "../global/SickstModal";
 
 const ShippingInformation = () => {

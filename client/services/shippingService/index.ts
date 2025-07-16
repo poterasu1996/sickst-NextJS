@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_V, SHIPPING_INFORMATIONS } from "../../utils/constants";
 import { AppUtils } from "../../utils/app.utils";
-import { IShippingInfo, IShippingInformationModel } from "../../../models/ShippingInformation.model";
+import { IShippingInfo, IShippingInformationModel } from "../../models/ShippingInformation.model";
 
 const NEXT_SHIPPING_INFORMATIONS_API = `${process.env.NEXT_PUBLIC_BASEURL}${API_V}${SHIPPING_INFORMATIONS}`;
 

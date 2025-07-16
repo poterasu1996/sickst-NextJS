@@ -23,12 +23,12 @@ import logo from "../public/logo-white.svg";
 import AuthContext from "../store/auth-context";
 import AccountContext from "../store/account-context";
 
-import useGetJWT from "../shared/hooks/auth/useGetJWT";
+import useGetJWT from "../hooks/auth/useGetJWT";
 import SearchInputWithDropdown from "./global/SearchInputWithDropdown";
-import { useDebounce } from "../shared/hooks/useDebounce";
-import { useSearch } from "../shared/hooks/useSearch";
+import { useDebounce } from "../hooks/useDebounce";
+import { useSearch } from "../hooks/useSearch";
 import { useCart } from "../features/cart/hooks/useCart";
-import { AccountTabView } from "../shared/types/account";
+import { AccountTabView } from "../types/account";
 
 const LOGOUT_URL = 'http://localhost:3000/api/v1/logout';
 

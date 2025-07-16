@@ -9,11 +9,11 @@ import AutocompleteSelect from "../global/form/Autocomplete";
 
 // Storage & services
 import AccountContext from "../../store/account-context";
-import countyService from "../../shared/services/countyService";
-import userService from "../../shared/services/userService";
+import countyService from "../../services/countyService";
+import userService from "../../services/userService";
 
 // Utils
-import { AppUtils } from "../../shared/utils/app.utils";
+import { AppUtils } from "../../utils/app.utils";
 import { GenderEnum, IUserDetailsModel } from "../../models/UserDetails.model";
 import InputField from "../global/form/InputField";
 

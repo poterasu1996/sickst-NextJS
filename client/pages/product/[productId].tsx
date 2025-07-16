@@ -16,7 +16,7 @@ import AccountContext from "../../store/account-context";
 import { ReviewCount } from "../../types/product/ProductReviews.interface";
 import RequestMeta from "../../types/Axios.interface";
 import { IGETProductReview } from "../../models/ProductReview.model";
-import { PRODUCT_REVIEWS } from "../../shared/utils/constants";
+import { PRODUCT_REVIEWS } from "../../utils/constants";
 import IProduct from "../../types/product";
 
 const PRODUCTS_URL = "/products";

@@ -1,12 +1,12 @@
 import axios from "axios";
 import { API_V, ORDER_HISTORIES, SUBSCRIPTION_ORDERS, SUBSCRIPTIONS, USER_PROFILE_DETAILS } from "../../utils/constants";
 import { AppUtils } from "../../utils/app.utils";
-import strapiAxios from "../../../api/axios";
-import { ISubscriptionOrderModel } from "../../../models/SubscriptionOrder.model";
+import strapiAxios from "../../api/axios";
+import { ISubscriptionOrderModel } from "../../models/SubscriptionOrder.model";
 import stripeService from "../stripeService";
 import userService from "../userService";
-import { DataResponse, StrapiResponse } from "../../dtos/common/strapi-response.dto";
-import { SubscriptionDTO } from "../../dtos/subscription.dto";
+import { DataResponse, StrapiResponse } from "../../types/dtos/strapi-response.dto";
+import { SubscriptionDTO } from "../../types/dtos/subscription.dto";
 import HttpService from "../HttpService";
 
 const NEXT_SUBSCRIPTION_ORDERS_API = `${process.env.NEXT_PUBLIC_BASEURL}${API_V}${SUBSCRIPTION_ORDERS}`;

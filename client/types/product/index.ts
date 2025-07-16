@@ -1,4 +1,4 @@
-import { ProductDTO } from "../../shared/dtos/product.dto";
+import { ProductDTO } from "../dtos/product.dto";
 
 export default interface IProduct {
     attributes: ProductDTO,

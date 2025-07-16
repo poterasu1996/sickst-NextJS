@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "../../api/axios";
-import IProduct from "../../types/product";
+import axios from "../api/axios";
+import IProduct from "../types/product";
 
 const PRODUCTS_URL = "/products?populate=*";
 const nullCategoryData = {

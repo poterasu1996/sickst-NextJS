@@ -1,4 +1,4 @@
-import IProduct from "../../../types/product";
+import IProduct from "../product";
 
 export default interface ICartProduct {
     cartProductId: string,

@@ -4,25 +4,25 @@ import { useEffect } from "react";
 // Components
 
 // Storage & services
-import CartService from "../../shared/services/cartService";
-import userService from "../../shared/services/userService";
+import CartService from "../../services/cartService";
+import userService from "../../services/userService";
 import orderService from "../../shared/services/orderService";
-import subscriptionService from "../../shared/services/subscriptionService";
+import subscriptionService from "../../services/subscriptionService";
 
 // Hooks
-import useGetJWT from "../../shared/hooks/auth/useGetJWT";
+import useGetJWT from "../../hooks/auth/useGetJWT";
 
 // Utils
 import { ISubscriptionOrderModel, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
 import { IOrderHistoryModel } from "../../models/OrderHistory.model";
 import { TxnStatusEnum } from "../../shared/enums/txn.enum";
-import { AppUtils } from "../../shared/utils/app.utils";
+import { AppUtils } from "../../utils/app.utils";
 
 // @ts-ignore
 import Cookies from 'cookies';
 
 // Stripe
-import stripeService from "../../shared/services/stripeService";
+import stripeService from "../../services/stripeService";
 
 
 interface Props {

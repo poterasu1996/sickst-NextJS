@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import RotatingText from "../../../components/global/RotatingText/RotatingText";
 
 // Services
-import brandService from "../../../shared/services/brandService";
-import HttpService from "../../../shared/services/HttpService";
+import brandService from "../../../services/brandService";
+import HttpService from "../../../services/HttpService";
 
 const ShopBanner = () => {
     const [brands, setBrands] = useState<string[]>(['']);

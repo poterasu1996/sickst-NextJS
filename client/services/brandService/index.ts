@@ -1,5 +1,5 @@
-import { BrandDTO } from "../../dtos/brand.dto";
-import { DataResponse, StrapiResponse } from "../../dtos/common/strapi-response.dto";
+import { BrandDTO } from "../../types/dtos/brand.dto";
+import { DataResponse, StrapiResponse } from "../../types/dtos/strapi-response.dto";
 import { BRANDS } from "../../utils/constants";
 import HttpService from "../HttpService";
 

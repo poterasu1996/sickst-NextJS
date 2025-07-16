@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
 import ProductResponse from "../../../types/shop/ProductResponse.interface";
-import productService from "../../../shared/services/productService";
-import HttpService from "../../../shared/services/HttpService";
+import productService from "../../../services/productService";
+import HttpService from "../../../services/HttpService";
 import { DEFAULT_SELECTED_FILTERS } from "../../../types/shop/shop.constants";
 
 type UseProductsResult = {
