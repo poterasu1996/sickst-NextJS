@@ -12,15 +12,20 @@ header {
   position: sticky;
   top: 0;
   z-index: 999;
+  width: 100%;
   min-width: 40rem;
-  @media (max-width:500px) {
+  padding: 0 3rem;
+  @media (max-width:576px) {
     height: 6rem;
+    padding: 0;
   }
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    @media (max-width:630px) {
+    width: 100%;
+    max-width: 153rem;
+    @media (max-width: 576px) {
       padding: 0 2rem;
     }
     .logo {
@@ -29,8 +34,18 @@ header {
       .logo-link {
         height: 100%;
         padding: 1.6rem;
+        padding-left: 0;
+
+        @media (max-width: 900px) {
+          padding-left: 0;
+        }
         img {
           height: 100%;
+          min-width: 12.6rem;
+          object-fit: contain;
+          @media (max-width: 900px) {
+            min-width: 9.2rem;
+          }
         }
       }
     }
@@ -39,6 +54,7 @@ header {
       background-color: #1a1a1a;
       border: none;
       padding: 0 2rem;
+      padding-left: 0;
       
       &:focus {
         box-shadow: none;
@@ -48,6 +64,11 @@ header {
       }
       @media (max-width: 400px) {
         padding: 0 1rem;
+      }
+    }
+    .searchInput {
+      @media (max-width: 576px) {
+        width: 100%;
       }
     }
     .nav-menu {
@@ -95,117 +116,50 @@ header {
       height: 100%;
       align-items: center;
       text-transform: uppercase;
-      @media (max-width:500px) {
+      transition: ease .5s;
+
+      @media (max-width: 576px) {
         // padding-right: 1rem;
+        padding-left: 2rem;
       }
 
-      .header-dropdown {
-        height: 100%;
-        display: flex;
+      a:first-of-type {
+        white-space: nowrap;
+        padding: 0 1rem;
+        transition: ease .5s;
         @media (max-width: 576px) {
-          display: none;
+          padding-left: 0;
         }
-        
-        #user-account-dd {
-          background-color: transparent;
-          border: none;
-          @media (max-width: 576px) {
-            padding-right: 2rem;
-          }
-          @media (max-width: 400px) {
-            padding-right: 1rem;
-          }
-          &:focus {
-            border: none;
-            box-shadow: none;
-          }
-          &:hover {
-            svg {
-              stroke: #cc3633;
-            }
-          }
-          &::after {
-            content: none;
-          }
-        }
-        &-menu {
-          background-color: #1a1a1a;
-          border: 1px solid #1a1a1a;
-          border-radius: unset;
-          inset: 0px 0px auto auto;
-          min-width: 35rem;
-          padding: 0rem 2rem 2rem 2rem;
-          @media (min-width: 576px) {
-            transform: translate(0px, 6.9rem) !important;
-          }
-          @media (min-width: 576px) {
-            inset: 0px 0px auto auto !important;
-          }
 
-          .dropdown-header {
-            text-align: end;
-            font-size: 1.6rem;
-            line-height: 1.6rem;
-            font-weight: 700;
-            padding-top: 2rem;
-            // color: #cc3633;
-            color: #d24f4d;
-          }
-          .dropdown-item {
-            color: #fff;
-            text-align: end;
-            font-size: 1.6rem;
-            line-height: 2.2rem;
-            padding: .7rem;
-            text-transform: none;
-            &:active {
-              background-color: #1a1a1a;
-            }
-            &:focus {
-              background-color: #1a1a1a;
-              color: #d24f4d;
-            }
-            &:hover {
-              background-color: transparent;
-              color: #d24f4d;
-            }
-          }
-        }
-      }
-
-      a {
-        color: #cecece;
-        text-decoration: none;
-        display: block;
-        height: 100%;
-        line-height: 7rem;
-        padding: 0 2rem;
-        @media (max-width:500px) {
-          line-height: 6rem;
-          padding: 0 1rem;
-        }
         &:hover {
-          // background-color: #000;
-          svg {
-            stroke: #cc3633;
-          }
+          transition: ease .5s;
+          color: #cc3633;
         }
       }
-
+     
       .mobile-user-account {
         display: none;
+        transition: ease .5s;
+
+        &:hover {
+          color: #cc3633;
+        }
+
         @media (max-width: 576px) {
           display: flex;
           align-items: center;
         }
       }
 
+      // menu/cart
       .btn-menu {
         display: flex;
         align-items: center;
         height: 100%;
         background-color: #1a1a1a;
         border: none;
+        transition: ease .5s;
+
         @media (max-width: 576px) {
           display: none;
         }
@@ -214,81 +168,35 @@ header {
           position: relative;
           .badge {
             font-size: 1rem;
+            line-height: 1;
             font-weight: 600;
             background-color: #cc3633;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
             border-radius: 50%;
             position: absolute;
             padding: 0.3rem 0.65rem;
             top: 0;
             right: 0;
+            transition: ease .5s;
             transform-origin: 100% 0;
             transform: translate(50%, -30%);
           }
         }
         svg {
+          transition: ease .5s;
           stroke: #cecece;
         }
         &:hover {
           svg {
+            transition: ease .5s;
             stroke: #cc3633;
           }
         }
         &:focus {
           box-shadow: none;
-        }
-      }
-      .modal {
-        .modal-dialog {
-          position: fixed;
-          top: 0;
-          right: 0px;
-          height: 100%;
-          width: 40rem;
-          margin: 0;
-          transition: left ease-in;
-
-          .modal-content {
-            height: 100%;
-            padding: 3rem;
-            text-transform: none;
-            .modal-header {
-              border-bottom: none;
-              .text {
-                font-size: 1.8rem;
-                line-height: 2.8rem;
-                font-weight: 600;
-              }
-            }
-            .modal-body {
-              .mid-menu {
-                display: flex;
-                flex-direction: column;
-                margin-top: 17rem;
-                a {
-                  font-size: 2.8rem;
-                  line-height: 3.8rem;
-                  font-weight: 600;
-                  padding: 0;
-                  color: #000;
-                  transform-origin: 0 center;
-                  transition: ease 0.2s;
-                  &:hover {
-                    background-color: unset;
-                    transform: scale3d(1.25, 1.25, 1.25);
-                    transition: ease 0.2s;
-                  }
-                }
-              }
-              .button-second {
-                height: unset;
-                margin: 6rem 0;
-                color: #fff;
-                &:hover {
-                  background-color: #d24f4d;
-                }
-              }
-            }
-          }
         }
       }
     }
@@ -342,16 +250,60 @@ header {
         height: 2rem;
       }
     }
-    // &:hover {
-    //   svg {
-    //     stroke: #cc3633;
-    //   }
-    // }
     &:focus {
       box-shadow: none;
     }
   }
   .register {
     justify-content: center;
+  }
+}
+
+#user-account-dd {
+  @media (max-width: 576px) {
+    display: none;
+  }
+  transition: ease .5s;
+  &:hover {
+    background: transparent;
+    svg {
+      transition: ease .5s;
+      stroke: #cc3633;
+    }
+  }
+  &::after {
+    content: none;
+  }
+}
+#user-account-dd-menu.MuiPopover-root {
+  .MuiPaper-root {
+    top: 69px !important;
+    background-color: #1a1a1a;
+    border: 1px solid #1a1a1a;
+    border-radius: unset;
+    inset: 0px 0px auto auto;
+    min-width: 35rem;
+    width: 35rem;
+    padding: 0rem 2rem 2rem 2rem;
+    text-align: right;
+
+    .MuiListSubheader-root {
+      background-color: #1a1a1a;
+      text-transform: uppercase;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #d24f4d;
+    }
+
+    .MuiMenuItem-root {
+      color: #fff;
+      font-size: 1.6rem;
+      justify-content: end;
+      background-color: transparent;
+
+      &:hover {
+        color: #d24f4d;
+      }
+    }
   }
 }

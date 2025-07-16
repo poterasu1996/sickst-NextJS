@@ -8,11 +8,11 @@ import 'primeicons/primeicons.css';
 import { ReviewCount } from '../../types/product/ProductReviews.interface';
 import { useContext, useState } from 'react';
 import SickstModal from '../global/SickstModal';
-import IProduct from '../../types/Product.interface';
 import ReviewForm from './ReviewForm';
 import AuthContext from '../../store/auth-context';
 import { useRouter } from 'next/router';
 import { IGETProductReview } from '../../models/ProductReview.model';
+import IProduct from '../../types/product';
 
 type Props = {
     product: IProduct,

@@ -78,9 +78,14 @@
     "subscription_type": {
       "type": "enumeration",
       "enum": [
+        "mystery",
         "basic",
         "premium"
       ],
+      "required": true
+    },
+    "product_name": {
+      "type": "string",
       "required": true
     }
   }

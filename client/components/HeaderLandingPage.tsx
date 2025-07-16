@@ -1,24 +1,29 @@
+import { useContext, useState } from "react";
 import Link from "next/link";
 import logo from '../../client/public/logo-black.svg';
-import { useState } from "react";
+
+// Components
 import AccountMobileSideModal from "./global/AccountMobileSideModal";
-import { Button } from "react-bootstrap";
 import { Menu } from "react-feather";
+
+// Storage
+import AuthContext from "../store/auth-context";
 
 const HeaderLandingPage = () => {
     const [accountMobileModal, setAccountMobileModal] = useState(false);
+    const { isAuth } = useContext(AuthContext);
 
     return(<>
         <header className="lp-header">
             <ul className="nav-menu">
-                <Button
+                <button
                     className="account-mobile-btn"
                     onClick={() => {
                         setAccountMobileModal(true);
                     }}
                 >
                     <Menu />
-                </Button>
+                </button>
                 <li className="nav-link">
                     <Link href="/shop/shop-for-her">
                         Women
@@ -38,8 +43,8 @@ const HeaderLandingPage = () => {
                     </Link>
                 </li>
                 <li className="nav-link">
-                    <Link href="/contact-us">
-                        Contact
+                    <Link href={isAuth ? "/account" : '/auth/login'}>
+                        Account
                     </Link>
                 </li>
             </ul>

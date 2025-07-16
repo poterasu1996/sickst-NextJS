@@ -2,6 +2,7 @@
     flex: 1;
     padding: 5rem 0rem;
     min-width: 40rem;
+    background-color: #f9f9f9;
     // @media (max-width: 576px) {
     //     min-width: unset;
     // }
@@ -65,7 +66,7 @@
                 position: absolute;
                 left: 50%;
                 top: 0;
-                background: #fff;
+                background-color: #f9f9f9;
                 padding: 0 2rem;
                 color: #0e960b;
                 font-size: 1.4rem;

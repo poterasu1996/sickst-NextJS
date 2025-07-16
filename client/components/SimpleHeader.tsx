@@ -1,5 +1,6 @@
 import Link from "next/link";
-import logo from "../public/logo.svg";
+// import logo from "../public/logo.svg";
+import logo from "../public/logo-white.svg";
 
 const SimpleHeader = () => {
     return <header>

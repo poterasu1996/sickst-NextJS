@@ -1,0 +1,69 @@
+.custom-modal {
+    .modal-content {
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        left: 50%;
+        padding: 3rem;
+        background-color: #fff;
+        background-clip: padding-box;
+        pointer-events: auto;
+        transform: translate(-50%, -50%);
+        border: 1px solid rgba($color: #000000, $alpha: 0.2);
+        border-radius: .3rem;
+        outline: 0;
+        min-width: 46rem;
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border-bottom: unset;
+
+            .modal-title {
+                font-size: 2rem;
+                font-weight: 600;
+                color: #141414;
+            }
+
+            .btn-close {
+                box-sizing: content-box;
+                width: 1.5rem;
+                height: 1.5rem;
+                font-size: 1.5rem;
+                opacity: 1;
+                color: #000000;
+                background: transparent url('/img/svg/cross.svg') center / 1em auto no-repeat;
+                border: 0;
+                border-radius: .25rem;
+                padding: .5rem;
+                margin: -.5rem -.5rem -.5rem auto;
+            }
+        }
+
+        .modal-body {
+            padding: 1rem;
+        }
+
+        .modal-footer {
+            padding: .75rem;
+            .cancel-btn {
+                background-color: transparent;
+                border: none;
+                font-size: 1.6rem;
+                font-weight: 600;
+            }
+        }
+    }
+    .modal-content.small {
+        max-width: 60rem;
+    }
+    .modal-content.medium { 
+        max-width: 80rem;
+    }
+    .modal-content.large { 
+        max-width: 120rem;
+    }
+}
+

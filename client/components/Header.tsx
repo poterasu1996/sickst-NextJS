@@ -1,34 +1,69 @@
-import { useContext, useEffect, useState } from "react";
-import { Button, Dropdown } from "react-bootstrap";
+import React, { useContext, useState } from "react";
 import Link from "next/link";
-import SideModal from "./global/SideModal";
-import AuthContext from "../store/auth-context";
-import { Menu, ShoppingCart, User } from "react-feather";
-import CartContext from "../store/cart-context";
-import CartService from "../shared/services/cartService";
 import { useRouter } from "next/router";
-import AccountMobileSideModal from "./global/AccountMobileSideModal";
-import AccountContext from "../store/account-context";
-// import logo from "../public/logo.svg";
-import logo from "../public/logo-white.svg";
-
 import axios from "axios";
-import useGetJWT from "../shared/hooks/auth/useGetJWT";
+
+// Components
+import { Menu as MenuIcon, ShoppingCart, User } from "react-feather";
+import Button from '@mui/material/Button';
+import ListSubheader from '@mui/material/ListSubheader';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import Cart from "./global/cart";
+import SideModal from "./global/SideModal";
+import AccountMobileSideModal from "./global/AccountMobileSideModal";
+
+// publics
+import logo from "../public/logo-white.svg";
+// import logo from "../public/logo.svg";
+
+// Storage & services
+import AuthContext from "../store/auth-context";
+import AccountContext from "../store/account-context";
+
+import useGetJWT from "../hooks/auth/useGetJWT";
+import SearchInputWithDropdown from "./global/SearchInputWithDropdown";
+import { useDebounce } from "../hooks/useDebounce";
+import { useSearch } from "../hooks/useSearch";
+import { useCart } from "../features/cart/hooks/useCart";
+import { AccountTabView } from "../types/account";
 
 const LOGOUT_URL = 'http://localhost:3000/api/v1/logout';
+
+export type ProductOption = {
+  id: string;
+  name: string;
+  image: string;
+};
 
 const Header = () => {
   const [accountMobileModal, setAccountMobileModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [searchInput, setSearchInput] = useState('');
+  const debouncedSearch = useDebounce(searchInput);
+  const openSubMenu = Boolean(anchorEl);
+
   const { isAuth, setIsAuth } = useContext(AuthContext);
-  const cartManager = useContext(CartContext);
   const accountManager = useContext(AccountContext);
   const router = useRouter();
 
-  if (CartService.cart) CartService.getCartLength();
+  const { cartLength } = useCart();
+
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   async function handleLogOut() {
     const response = await axios.post(LOGOUT_URL);
+
+    handleClose();
 
     if(response.status === 200) {
       localStorage.getItem('jwt') && localStorage.removeItem('jwt');
@@ -45,22 +80,64 @@ const Header = () => {
     document.body.classList.remove("overflow-hidden")
   }
 
-  useEffect(() => {}, [cartManager?.refresh])
+  function handleCloseSideModal() {
+    setShowModal(false);
+  }
+
+  const handleQueryFilter = (query: string) => {
+    const encodedQuery = encodeURIComponent(query.trim())
+    router.push(
+      {
+        pathname: router.pathname,
+        query: { search: encodedQuery },
+      },
+      undefined,
+      { shallow: false, scroll: false }
+    )
+  }
+
+  const handleProductRedirect = (product: ProductOption) => {
+    router.push(`/product/${product.id}`)
+  }
+
+  const handleAccountRedirect = (tabView: AccountTabView) => {
+    accountManager!.setAccountPageState(tabView);
+    handleClose();
+    router.push("/account");
+  }
+
+  // dummy data
+  const searchSuggestionsDUMMY = [
+    "Nike sneakers",
+    "Nike hoodie",
+    "Adidas tracksuit",
+    "Running shoes",
+    "Black boots"
+  ];
+  const productSuggestionsDUMMY = [
+    { id: "1", name: "Nike Air Max 90", image: "/nike1.jpg" },
+    { id: "2", name: "Nike Blazer Mid", image: "/nike2.jpg" },
+    { id: "3", name: "Adidas Ultraboost", image: "/adidas1.jpg" },
+    { id: "4", name: "Nike Dri-FIT Tee", image: "/nike3.jpg" },
+    { id: "5", name: "Converse Chuck Taylor", image: "/converse.jpg" }
+  ];
+
+  const { searchSuggestions, productSuggestions } = useSearch(debouncedSearch);
 
   return (
     <header className="print">
-      <div className="container header sticky-header">
-        <Button
+      <div className="header sticky-header">
+        <button
             className="account-mobile-btn"
             onClick={() => {
               addBodyhiddenOverflow();
               setAccountMobileModal(true);
             }}
           >
-            <Menu />
-        </Button>
+            <MenuIcon />
+        </button>
         <div className="logo">
-          <Link href="/">
+          <Link href="/shop">
             <a className="logo-link">
               <img src={logo.src}/>
             </a>
@@ -78,59 +155,61 @@ const Header = () => {
             <Link href="/shop/arrabian">Arrabian</Link>
           </li>
         </ul>
-
+        <SearchInputWithDropdown
+          searchSuggestions={searchSuggestions.length > 0 ? searchSuggestions : searchSuggestionsDUMMY}
+          productSuggestions={productSuggestions.length > 0 ? productSuggestions : productSuggestionsDUMMY}
+          // if clicked on text, add query param as filter in url
+          onSearchSelect={handleQueryFilter}
+          // if clicked on product, redirect to product 
+          onProductSelect={handleProductRedirect}
+          onInputChange={(val) => {
+            setSearchInput(val);
+          }}
+        />
         <div className="right-side">
           {isAuth ? (
             <>
-              <Dropdown className="header-dropdown">
-                <Dropdown.Toggle id="user-account-dd">
-                  <User stroke="#cecece" />
-                </Dropdown.Toggle>
+              <Button 
+                id="user-account-dd"
+                aria-controls={openSubMenu ? 'grouped-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={openSubMenu ? 'true' : undefined}
+                onClick={handleClick}  
+              ><User stroke="#cecece" /></Button>
+              <Menu
+                id="user-account-dd-menu"
+                anchorEl={anchorEl}
+                open={openSubMenu}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right"
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                MenuListProps={{
+                  'aria-labelledby': 'user-account-dd',
+                }}
+              >
+                <ListSubheader>Your membership</ListSubheader>
+                <MenuItem 
+                  onClick={() => handleAccountRedirect("subscription")}
+                >Manage your membership</MenuItem>
+                <MenuItem 
+                  onClick={() => handleAccountRedirect("orderHistory")}
+                >Order tracking & history</MenuItem>
+                <MenuItem 
+                  onClick={() => handleAccountRedirect("shippingInfo")}
+                >Shipping information</MenuItem>
+                <ListSubheader>Your account</ListSubheader>
+                <MenuItem 
+                  onClick={() => handleAccountRedirect("personalInfo")}
+                >Personal details</MenuItem>
+                <MenuItem onClick={handleLogOut}>Log out</MenuItem>
+              </Menu>
 
-                <Dropdown.Menu className="header-dropdown-menu">
-                  <Dropdown.Header>Your membership</Dropdown.Header>
-                  <Dropdown.Item
-                    as="button"
-                    onClick={() => {
-                      accountManager!.setAccountPageState("subscription");
-                      router.push("/account");
-                    }}
-                  >
-                    Manage your membership
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as="button"
-                    onClick={() => {
-                      accountManager?.setAccountPageState("orderHistory");
-                      router.push("/account");
-                    }}
-                  >
-                    Order tracking & history
-                  </Dropdown.Item>
-                  <Dropdown.Item 
-                    as="button"
-                    onClick={() => {
-                      accountManager!.setAccountPageState("shippingInfo");
-                      router.push("/account");
-                    }}
-                  >
-                    Shipping information
-                  </Dropdown.Item>
-                  <Dropdown.Header>Your account</Dropdown.Header>
-                  <Dropdown.Item 
-                    as="button"
-                    onClick={() => {
-                      accountManager!.setAccountPageState("personalInfo");
-                      router.push("/account");
-                    }}
-                  >
-                    Personal details
-                  </Dropdown.Item>
-                  <Dropdown.Item as="button" onClick={() => handleLogOut()}>
-                    Log out
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
               <Link href="/account">
                 <a className="mobile-user-account"><User /></a>
               </Link>
@@ -141,16 +220,19 @@ const Header = () => {
             </Link>
           )}
           
-          <Button variant="menu" onClick={() => setShowModal(true)}>
+          <button 
+            className="btn btn-menu"
+            onClick={() => setShowModal(true)}
+          >
             {isAuth ? (
               <div className="shopping-cart">
                 <ShoppingCart />{" "}
-                <span className="badge">{CartService.cartLength}</span>
+                <span className="badge">{cartLength}</span>
               </div>
             ) : (
-              <Menu />
+              <MenuIcon />
             )}
-          </Button>
+          </button>
 
           {/* mobile side modal */}
           <AccountMobileSideModal
@@ -160,15 +242,46 @@ const Header = () => {
               removeBodyhiddenOverflow();
             }}
           />
-          <SideModal show={showModal} onClick={() => {
-            setShowModal(false);
-            removeBodyhiddenOverflow();
-          }} />
+
+          <SideModal
+            open={showModal}
+            onClose={() => setShowModal(false)}
+          >
+            {isAuth 
+              ? <Cart onClick={handleCloseSideModal} />
+              : <>
+                 <div className="side-modal-header">
+                    <span className="text">Menu</span>
+                    <IconButton onClick={handleCloseSideModal} size="medium"><CloseIcon /></IconButton>
+                </div>
+                 <div className="side-modal-body">
+                  <div className="mid-menu">
+                      <Link href="#">
+                          <a onClick={handleCloseSideModal}>Cum functioneaza</a>
+                      </Link>
+                      <Link href="#">
+                          <a onClick={handleCloseSideModal}>Gifts</a>
+                      </Link>
+                      <Link href="#">
+                          <a onClick={handleCloseSideModal}>Despre noi</a>
+                      </Link>
+                  </div>
+                  
+                  <Link href="/account/login">
+                      <a className="button-second d-block d-sm-none" onClick={handleCloseSideModal}>Log in</a>
+                  </Link>
+                  <Link href="/account/register">
+                      <a className="button-second mt-24" onClick={handleCloseSideModal}>Autentificare</a>
+                  </Link>
+              </div>
+              </>
+            }
+          </SideModal>
+          
         </div>
       </div>
 
-      <Button
-        variant="menu"
+      <button
         className="floating-cart"
         onClick={() => {
           setShowModal(true);
@@ -177,11 +290,8 @@ const Header = () => {
       >
         <div className="shopping-cart">
           <ShoppingCart />{" "}
-          {/* {cartManager.cart.length > 0 && (
-            <span className="badge">{cartManager.cart.length}</span>
-          )} */}
         </div>
-      </Button>
+      </button>
     </header>
   );
 };

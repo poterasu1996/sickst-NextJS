@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CANCELLED_ORDERS, ORDER_HISTORIES } from "../../../../shared/utils/constants";
+import { CANCELLED_ORDERS, ORDER_HISTORIES } from "../../../../utils/constants";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const STRAPI_ORDER_HISTORY = `${process.env.NEXT_PUBLIC_STRAPI_APIURL}${ORDER_HISTORIES}`;

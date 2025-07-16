@@ -1,48 +1,83 @@
 import { useEffect, useState } from "react";
-import CollectionSection from "../../components/ShopPage/CollectionSection";
-import NewProductSection from "../../components/ShopPage/NewProductSection";
-import ProductFilterSection from "../../components/ShopPage/ProductFilterSection";
-import SubscriptionBanner from "../../components/ShopPage/SubscriptionBanner";
-import TopRatedProducts from "../../components/ShopPage/TopRatedProducts";
-import ProductResponse from "../../types/shop/ProductResponse.interface";
-import productService from "../../shared/services/productService";
-import { Spinner } from "react-bootstrap";
+import { useRouter } from "next/router";
+
+// Components
+import CollectionSection from "../../features/shop/components/CollectionSection";
+import NewProductSection from "../../features/shop/components/NewProductSection";
+import ProductFilterSection from "../../features/shop/components/ProductFilterSection";
+import TopRatedProducts from "../../features/shop/components/TopRatedProducts";
+import SliderBanner from "../../features/shop/components/SliderBanner";
+import NewProductSkeleton from "../../features/shop/components/NewProductSkeleton";
+import TopRatedProductsSkeleton from "../../features/shop/components/TopRatedProductsSkeleton";
+
+// Utils & constants
+import useWomanProducts from "../../features/shop/shop-for-her/hooks/useWomanProducts";
+import { DEFAULT_SELECTED_FILTERS } from "../../types/shop/shop.constants";
+import IProduct from "../../types/product";
 
 const ShopWoman = () => {
-    const [womanProducts, setWomanProducts] = useState<ProductResponse>();
-    const [newProducts, setNewProducts] = useState<ProductResponse>();
-    const [topRatedProducts, setTopRatedProducts] = useState<ProductResponse>();
-    const [loading, setLoading] = useState<boolean>(true);
+    const [products, setProducts] = useState<IProduct[]>([]);
+    const [showMore, setShowMore] = useState(true);
+    const [filters, setFilters] = useState(DEFAULT_SELECTED_FILTERS);
+
+    const router = useRouter();
+    const search = typeof router.query.search === "string" ? router.query.search : "";
+    
+    const { 
+        allProducts,
+        newProducts,
+        topRatedProducts,
+        loading,
+        respPage, 
+        setPage,
+        error
+    } = useWomanProducts({ search, filters });
 
     useEffect(() => {
-        productService.getFemaleProducts().then((resp: ProductResponse) => {
-            setWomanProducts(resp);
-        });
+        if(allProducts?.data) {
+            const totalPages = allProducts.meta?.pagination.pageCount || 1;
+            if(respPage === 1) {
+                setProducts([...allProducts.data]);
+                if (respPage >= totalPages) {
+                    setShowMore(false)
+                } else {
+                    setShowMore(true)
+                }
+            } else {
+                setProducts(prevVal => [...prevVal, ...allProducts?.data]);
+                if (respPage >= totalPages) {
+                    setShowMore(false)
+                } else {
+                    setShowMore(true)
+                }
+            }
+        }
+    }, [allProducts, respPage]);
 
-        productService.getNewFemaleProducts().then((resp: ProductResponse) => {
-            setNewProducts(resp);
-            setLoading(false);
-        });
+    const handleLoadMoreProducts = () => {
+        setPage(respPage + 1);
+    }
 
-        productService.getTopRatedFemaleProducst().then((resp: ProductResponse) => {
-            setTopRatedProducts(resp);
-        })
+    const handleFilters = (selectedFilters: any) => {
+        setFilters({...selectedFilters})
+    } 
 
-    }, [])
+    return (<>
+        <SliderBanner />
+        <div className="layout">
+            {/* <CollectionSection /> */}
+            {!search && (<>
+                    {loading &&  <NewProductSkeleton />}
+                    {newProducts?.data && <NewProductSection newProducts={newProducts.data} />}
 
-    console.log('womanProd', womanProducts)
-    return <div className="subs-body">
-        <SubscriptionBanner />
-        <CollectionSection />
-        {loading
-            && <div className="loader">
-                <Spinner animation="border" style={{color: "#cc3633"}}/>
-            </div>}
-        {newProducts?.data && <NewProductSection newProducts={newProducts.data} />}
-        {topRatedProducts?.data && <TopRatedProducts topProducts={topRatedProducts.data} />}
-        {/* de rezolvat daca fetchul esueaza */}
-        {womanProducts && <ProductFilterSection products={womanProducts}/>}
-    </div>
+                    {loading && <TopRatedProductsSkeleton />}
+                    {topRatedProducts?.data && <TopRatedProducts topProducts={topRatedProducts.data} />}
+            </>)}
+
+            {allProducts && <ProductFilterSection products={products} showMore={showMore} handleShowMore={handleLoadMoreProducts} handleFilters={handleFilters} />}
+            
+        </div>
+    </>) 
 }
 
 export default ShopWoman;

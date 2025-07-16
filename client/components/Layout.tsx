@@ -13,20 +13,21 @@ type Props = {
 
 const Layout: React.FC<Props> = ({ children }) => {
     const router = useRouter();
+    const isLoginOrRegister = router.pathname === '/auth/login' || router.pathname === '/auth/register';
 
     return (
         <>  
             {
                 (router.pathname === '/') 
                     ? <></>
-                    : (router.pathname === '/auth/login' || router.pathname === '/auth/register') 
+                    : isLoginOrRegister
                         ? <SimpleHeader /> 
                         : <Header />}
             {children}
             <ToastContainer limit={3}/>
             {   (router.pathname === '/')
                 ? <></>
-                : (router.pathname !== '/auth/login' && router.pathname !== '/auth/register') 
+                : !isLoginOrRegister
                     ? <Footer /> 
                     : <SimpleFooter />}
         </>

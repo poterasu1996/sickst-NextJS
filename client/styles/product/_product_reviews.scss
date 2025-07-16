@@ -217,6 +217,7 @@
                     .no-review-img {
                         max-width: 20rem;
                         height: auto;
+                        display: initial;
                     }
                     p {
                         font-size: 1.4rem;
@@ -228,6 +229,7 @@
                         margin: auto;
                     }
                     .rating-wrapper {
+                        margin-top: 1.2rem;
                         display: flex;
                         align-items: center;
                         @media (max-width: 490px) {

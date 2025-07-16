@@ -1,12 +1,17 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext } from "react";
-import { Button } from "react-bootstrap";
 import Transition from "react-transition-group/Transition";
-import AccountContext from "../../store/account-context";
-import AuthContext from "../../store/auth-context";
-
 import axios from "axios";
+
+// Components
+import { IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+
+// Storage & services
+import AuthContext from "../../store/auth-context";
+import AccountContext from "../../store/account-context";
+
 
 type Props = {
     show: boolean,
@@ -58,8 +63,7 @@ const AccountMobileSideModal = ({show, onClick}: Props) => {
                         }}
                     >   
                         <div className="side-modal-header-mobile">
-                            {/* <span>Account</span> */}
-                            <Button variant="close" onClick={onClick}/>
+                            <IconButton onClick={onClick} size="medium"><CloseIcon sx={{width: '20px', height: '20px'}}/></IconButton>
                         </div>
                         <div className="side-modal-body">
                             <div className="mobile-mid-menu">
@@ -101,7 +105,7 @@ const AccountMobileSideModal = ({show, onClick}: Props) => {
                                 </>}
 
                             </div>
-                            {isAuth && <Button className="button-second log-out" onClick={() => handleLogOut()}>Log out</Button>}
+                            {isAuth && <button className="button-second log-out" onClick={() => handleLogOut()}>Log out</button>}
                         </div>
                     </div>
                 )}

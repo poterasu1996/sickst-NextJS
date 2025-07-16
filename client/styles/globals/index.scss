@@ -1,15 +1,19 @@
 // @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700;900&display=swap");
+
+@import "../../components/global/RotatingText/rotating-text";
 
 @import "./subscription-cards";
 @import "./chip";
-@import "./custom_modal";
 @import "./form";
 @import "./header";
 @import "./footer";
 @import "./footer-simple";
+@import "./modal";
 @import "./side-modal";
 @import "./side-modal-cart";
+@import "./search-input";
+@import "./slider-banner";
 @import "./subscription-modal";
 @import "./utils";
 @import "./primereact";
@@ -46,13 +50,15 @@ body.modal-open {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  background-color: #f9f9f9;
 }
 .container {
   // @media (max-width: 1200px) {
   @media (max-width: 1400px) {
     width: 100%;
     margin: 0;
-    padding: 0 4rem;
+    padding: 0 3rem;
     max-width: unset;
   }
   @media (max-width: 576px) {

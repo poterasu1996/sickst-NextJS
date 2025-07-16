@@ -1,22 +1,28 @@
-import React, { Dispatch, useEffect, useState, SetStateAction } from "react";
-// import ICartContext from "../types/context-interfaces/CartContext.interface";
+import React, { useEffect, useState } from "react";
 interface ICartContext {
-  refresh: boolean,
-  setRefresh: Dispatch<SetStateAction<boolean>>,
+  refreshContext: () => void
 }
 
-const CartContext = React.createContext<ICartContext>({refresh: false, setRefresh: () => false});
+const CartContext = React.createContext<ICartContext>({ refreshContext: () => {}});
 
 type Props = {
   children: JSX.Element
 }
 
+// to be removed, not used anymore
 export const CartProvider = ({ children }: Props): JSX.Element => {
-  const [refresh, setRefresh] = useState<boolean>(false);                         // reset cart each time add/delete action is made
+  const [refresh, setRefresh] = useState(0);                         // reset cart each time add/delete action is made
+  
+  useEffect(() => {
+    // refresh the context
+  }, [refresh])
+
+  const refreshContext = () => {
+    setRefresh(prevState => prevState + 1);
+  }
 
   const cartManager: ICartContext = {
-    refresh: refresh,
-    setRefresh: setRefresh,
+    refreshContext: refreshContext
   };
 
   return (

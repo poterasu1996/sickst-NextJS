@@ -1,16 +1,21 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react";
-import { Button, Col, Row } from "react-bootstrap";
-import CustomFormField from "../global/form/CustomFormField";
-import DateFormField from "../global/form/DateFormField";
-import countyService from "../../shared/services/countyService";
-import { AppUtils } from "../../shared/utils/app.utils";
-import AccountContext from "../../store/account-context";
-import { GenderEnum, IUserDetailsModel } from "../../models/UserDetails.model";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+// Components
+import DateFormField from "../global/form/DateFormField";  // from primereact, to be removed
 import AutocompleteSelect from "../global/form/Autocomplete";
-import userService from "../../shared/services/userService";
+
+// Storage & services
+import AccountContext from "../../store/account-context";
+import countyService from "../../services/countyService";
+import userService from "../../services/userService";
+
+// Utils
+import { AppUtils } from "../../utils/app.utils";
+import { GenderEnum, IUserDetailsModel } from "../../models/UserDetails.model";
+import InputField from "../global/form/InputField";
 
 interface FormData {
   address: string;
@@ -133,7 +138,7 @@ const PersonalInfo = () => {
     userService.updateUserDetails(data)
       .then(() => {
         AppUtils.toastNotification("Datele personale au fost actualizate cu success!", true)
-        accountManager?.setRefresh(accountManager.refresh + 1);
+        accountManager?.refreshContext();
       })
       .catch(error => AppUtils.toastNotification("OOPS! An error occured while updating personal info!", false))
   };
@@ -189,122 +194,118 @@ const PersonalInfo = () => {
           Detaliile personale pot ajuta la imbunatatirea serviciului nostru.
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="user-details-form">
-          <Row>
-            <Col lg={6}>
-              <CustomFormField
-                label="Nume si Prenume*"
-                type="text"
-                value={formData.full_name}
-                error={errors.full_name?.message}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                  setFormData({ ...formData, full_name: e.target.value });
-                  setValue("full_name", e.target.value)
-                  handleDirty();
-                }}
-              />
-            </Col>
-            <Col lg={6}>
-              <CustomFormField
-                label="Telefon*"
-                type="text"
-                value={formData.phone}
-                error={errors.phone?.message}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                  console.log("eee", e)
-                  setFormData({ ...formData, phone: e.target.value });
-                  setValue("phone", e.target.value)
-                  handleDirty();
-                }}
-              />
-            </Col>
-          </Row>
-          <CustomFormField
-            label="Adresa*"
-            type="text"
-            value={formData.address}
-            error={errors.address?.message}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-              setFormData({ ...formData, address: e.target.value });
-              setValue("address", e.target.value)
-              handleDirty();
-            }}
-          />
-          <Row>
-            <Col lg={6}>
-              <CustomFormField
-                label="Oras*"
-                type="text"
-                value={formData.city}
-                error={errors.city?.message}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                  setFormData({ ...formData, city: e.target.value });
-                  handleDirty();
-                }}
-              />
-            </Col>
-            <Col lg={6}>
-              <AutocompleteSelect 
-                {...register("county")}
-                disablePortal
-                id="county"
-                options={countyList}
-                value={formData.county || ""}
-                onChange={(_, value) => {
-                  if(value && !Array.isArray(value)) {
-                    setFormData({ ...formData, county: value! });
-                    value && setValue("county", value);
-                    handleDirty();
-                  }
-                }}
-                inputValue={formData.county || ""}
-                onInputChange={(_, value) => {
+          {/* gap will fix after boostrap library removal */}
+          <div className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-4"> 
+            <InputField
+              className="mt-12"
+              label="Nume si Prenume*"
+              type="text"
+              value={formData.full_name}
+              error={errors.full_name?.message}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setFormData({ ...formData, full_name: e.target.value });
+                setValue("full_name", e.target.value)
+                handleDirty();
+              }}
+            />
+            <InputField
+              className="mt-12"
+              label="Telefon*"
+              type="text"
+              value={formData.phone}
+              error={errors.phone?.message}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                console.log("eee", e)
+                setFormData({ ...formData, phone: e.target.value });
+                setValue("phone", e.target.value)
+                handleDirty();
+              }}
+            />
+          </div>
+
+          <div className="grid grid-cols-1">
+            <InputField
+              className="mt-12"
+              label="Adresa*"
+              type="text"
+              value={formData.address}
+              error={errors.address?.message}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setFormData({ ...formData, address: e.target.value });
+                setValue("address", e.target.value)
+                handleDirty();
+              }}
+            />
+          </div>
+          <div className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-4">
+            <InputField
+              className="mt-12"
+              label="Oras*"
+              type="text"
+              value={formData.city}
+              error={errors.city?.message}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setFormData({ ...formData, city: e.target.value });
+                handleDirty();
+              }}
+            />
+            <AutocompleteSelect 
+              {...register("county")}
+              disablePortal
+              id="county"
+              options={countyList}
+              value={formData.county || ""}
+              onChange={(_, value) => {
+                if(value && !Array.isArray(value)) {
                   setFormData({ ...formData, county: value! });
-                }}
-                label="Judet*"
-                error={errors.county?.message}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={6}>
-              <DateFormField
-                placeholder="Data de nastere"
-                value={formData.birthday}
-                onChange={(val: ChangeEvent<HTMLInputElement>) => {
-                  setFormData({
-                    ...formData,
-                    birthday: val.target.value,
-                  });
+                  value && setValue("county", value);
                   handleDirty();
-                }}
-              />
-            </Col>
-            <Col lg={6}>
-              <AutocompleteSelect
-                className="custom-autocomplete"
-                disablePortal
-                disableClearable
-                id="gender"
-                options={genderList}
-                value={formData.gender[0]}
-                getOptionLabel={(option) => option.title}
-                onChange={(_, value) => {
-                  if(value && !Array.isArray(value)) {
-                    setFormData({ ...formData, gender: [{ ...value! }] });
-                    handleDirty();
-                  }
-                }}
-                label="Forma de adresare"
-              />
-            </Col>
-          </Row>
-          <Button
+                }
+              }}
+              inputValue={formData.county || ""}
+              onInputChange={(_, value) => {
+                setFormData({ ...formData, county: value! });
+              }}
+              label="Judet*"
+              error={errors.county?.message}
+            />
+          </div>
+          <div className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-4">
+            <DateFormField
+              placeholder="Data de nastere"
+              value={formData.birthday}
+              onChange={(val: ChangeEvent<HTMLInputElement>) => {
+                setFormData({
+                  ...formData,
+                  birthday: val.target.value,
+                });
+                handleDirty();
+              }}
+            />
+            <AutocompleteSelect
+              className="custom-autocomplete"
+              disablePortal
+              disableClearable
+              id="gender"
+              options={genderList}
+              value={formData.gender[0]}
+              getOptionLabel={(option) => option.title}
+              onChange={(_, value) => {
+                if(value && !Array.isArray(value)) {
+                  setFormData({ ...formData, gender: [{ ...value! }] });
+                  handleDirty();
+                }
+              }}
+              label="Forma de adresare"
+            />
+          </div>
+          <button
             className="button-second mt-5"
             type="submit"
             disabled={isFormSubmitted || !isDirty || isSubmitting}
           >
             Update information
-          </Button>
+          </button>
         </form>
       </div>
     </>

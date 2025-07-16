@@ -1,19 +1,28 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { Button } from "react-bootstrap";
-import CartService from "../../shared/services/cartService";
-import { TxnStatusEnum } from "../../shared/enums/txn.enum";
-import { IOrderHistoryModel } from "../../models/OrderHistory.model";
+
+// Components
+
+// Storage & services
+import CartService from "../../services/cartService";
+import userService from "../../services/userService";
+import orderService from "../../shared/services/orderService";
+import subscriptionService from "../../services/subscriptionService";
+
+// Hooks
+import useGetJWT from "../../hooks/auth/useGetJWT";
+
+// Utils
 import { ISubscriptionOrderModel, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
+import { IOrderHistoryModel } from "../../models/OrderHistory.model";
+import { TxnStatusEnum } from "../../shared/enums/txn.enum";
+import { AppUtils } from "../../utils/app.utils";
 
 // @ts-ignore
 import Cookies from 'cookies';
-import userService from "../../shared/services/userService";
-import stripeService from "../../shared/services/stripeService";
-import useGetJWT from "../../shared/hooks/auth/useGetJWT";
-import orderService from "../../shared/services/orderService";
-import { AppUtils } from "../../shared/utils/app.utils";
-import subscriptionService from "../../shared/services/subscriptionService";
+
+// Stripe
+import stripeService from "../../services/stripeService";
 
 
 interface Props {
@@ -87,9 +96,9 @@ const SuccessPayment = ({ populateSH }: Props) => {
                 <div className="title">Multumim ca ai ales Sickst!</div>
                 <div className="text">Produsul va fi livrat in cel mai scurt timp.</div>
                 <div className="btn-wrapper">
-                    <Button className="button-second" onClick={() => router.push('/')}>
+                    <button className="button-second" onClick={() => router.push('/')}>
                         Pagina principala
-                    </Button>
+                    </button>
                 </div>
             </div>
         </>

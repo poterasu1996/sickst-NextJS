@@ -1,45 +1,82 @@
 import { useEffect, useState } from "react";
-import CollectionSection from "../../components/ShopPage/CollectionSection";
-import NewProductSection from "../../components/ShopPage/NewProductSection";
-import ProductFilterSection from "../../components/ShopPage/ProductFilterSection";
-import SubscriptionBanner from "../../components/ShopPage/SubscriptionBanner";
-import TopRatedProducts from "../../components/ShopPage/TopRatedProducts";
-import productService from "../../shared/services/productService";
-import { Spinner } from "react-bootstrap";
-import ProductResponse from "../../types/shop/ProductResponse.interface";
+import { useRouter } from "next/router";
+
+// Components
+import CollectionSection from "../../features/shop/components/CollectionSection";
+import NewProductSection from "../../features/shop/components/NewProductSection";
+import ProductFilterSection from "../../features/shop/components/ProductFilterSection";
+import SliderBanner from "../../features/shop/components/SliderBanner";
+import TopRatedProducts from "../../features/shop/components/TopRatedProducts";
+import NewProductSkeleton from "../../features/shop/components/NewProductSkeleton";
+import TopRatedProductsSkeleton from "../../features/shop/components/TopRatedProductsSkeleton";
+
+// Utils & constants
+import useManProducts from "../../features/shop/shop-for-him/hooks/useManProducts";
+import { DEFAULT_SELECTED_FILTERS } from "../../types/shop/shop.constants";
+import IProduct from "../../types/product";
 
 const ShopMen = () => {
-    const [manProducts, setManProducts] = useState<ProductResponse>();
-    const [newProducts, setNewProducts] = useState<ProductResponse>();
-    const [topRatedProducts, setTopRatedProducts] = useState<ProductResponse>();
-    const [loading, setLoading] = useState<boolean>(true);
+    const [products, setProducts] = useState<IProduct[]>([]);
+    const [showMore, setShowMore] = useState(true);
+    const [filters, setFilters] = useState(DEFAULT_SELECTED_FILTERS)
+    
+    const router = useRouter();
+    const search = typeof router.query.search === "string" ? router.query.search : "";
+
+    const { 
+        allProducts,
+        newProducts,
+        topRatedProducts,
+        loading,
+        respPage, 
+        setPage,
+        error
+    } = useManProducts({ search, filters });
+
+    const handleLoadMoreProducts = () => {
+        setPage(respPage + 1);
+    }
+
+    const handleFilters = (selectedFilters: any) => {
+        setFilters({...selectedFilters})
+    } 
 
     useEffect(() => {
-        productService.getMaleProducts().then((resp: ProductResponse) => {
-            setManProducts(resp);
-        })
+        if(allProducts?.data) {
+            const totalPages = allProducts.meta?.pagination.pageCount || 1;
+            if(respPage === 1) {
+                setProducts([...allProducts.data]);
+                if (respPage >= totalPages) {
+                    setShowMore(false)
+                } else {
+                    setShowMore(true)
+                }
+            } else {
+                setProducts(prevVal => [...prevVal, ...allProducts?.data]);
+                if (respPage >= totalPages) {
+                    setShowMore(false)
+                } else {
+                    setShowMore(true)
+                }
+            }
+        }
+    }, [allProducts, respPage])
 
-        productService.getNewMaleProducts().then((resp: ProductResponse) => {
-            setNewProducts(resp);
-            setLoading(false);
-        })
+    return (<>
+        <SliderBanner />
+        <div className="layout">
+            {/* <CollectionSection /> */}
+            {!search && (<>
+                {loading &&  <NewProductSkeleton />}
+                {newProducts?.data && <NewProductSection newProducts={newProducts.data}/>}
 
-        productService.getTopRatedMaleProducts().then((resp: ProductResponse) => {
-            setTopRatedProducts(resp);
-        })
-    }, [])
+                {loading && <TopRatedProductsSkeleton />}
+                {topRatedProducts?.data && <TopRatedProducts topProducts={topRatedProducts.data} />}
+            </>)}
 
-    return <div className="subs-body">
-        <SubscriptionBanner />
-        <CollectionSection />
-        {loading 
-            && <div className="loader">
-                <Spinner animation="border" style={{color: "#cc3633"}}/>
-            </div>}
-        {newProducts?.data && <NewProductSection newProducts={newProducts.data}/>}
-        {topRatedProducts?.data && <TopRatedProducts topProducts={topRatedProducts.data} />}
-        {manProducts && <ProductFilterSection products={manProducts}/>}
-    </div>
+            {allProducts && <ProductFilterSection products={products} showMore={showMore} handleShowMore={handleLoadMoreProducts} handleFilters={handleFilters} />}
+        </div>
+    </>)
 }
 
 export default ShopMen;

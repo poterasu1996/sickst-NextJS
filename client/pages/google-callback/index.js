@@ -1,9 +1,7 @@
 import React, { useEffect, useContext } from 'react';
-// import axios from 'axios';
 import { useRouter } from 'next/router';
 import AuthContext from '../../store/auth-context';
 import axios from '../../api/axios';
-import { Spinner } from 'react-bootstrap';
 
 const GoogleAuthCallback = () => {
   const { setAuth } = useContext(AuthContext); 
@@ -30,7 +28,7 @@ const GoogleAuthCallback = () => {
   return (
     <div className='google-callback-page'>
       <div className='title'>Asteptati un moment</div>
-      <Spinner animation="border" style={{color: "#cc3663"}}/>
+      {/* <Spinner animation="border" style={{color: "#cc3663"}}/> */}
     </div>
   )
 }

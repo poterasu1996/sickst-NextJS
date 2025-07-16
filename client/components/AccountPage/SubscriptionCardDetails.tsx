@@ -2,12 +2,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { Check, Slash } from "react-feather";
 import { Modal, ModalBody } from "reactstrap";
-import { AppUtils } from "../../shared/utils/app.utils";
+import { AppUtils } from "../../utils/app.utils";
 import image1 from '../../public/img/mystery.jpg';
 import ILocalUserInfo from "../../types/account/LocalUserInfo.interface";
 import { IGETSubscriptionOrder, SubscriptionStatusEnum } from "../../models/SubscriptionOrder.model";
 import { useRouter } from "next/router";
-import subscriptionService from "../../shared/services/subscriptionService";
+import subscriptionService from "../../services/subscriptionService";
 
 type Props = {
     userInfo: ILocalUserInfo,
@@ -52,7 +52,6 @@ const SubscriptionCardDetails = ({ userInfo, userSubscription }: Props) => {
         handleCloseModal();
     }
 
-    console.log('activesubs', activeSubscription)
     return(<>
         <div className="subscriber-banner">
             {activeSubscription ?

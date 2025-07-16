@@ -1,30 +1,42 @@
-import { ModalBody, ModalFooter } from "react-bootstrap";
-import { Modal, ModalHeader } from "reactstrap"
+import Modal from '@mui/material/Modal';
 
 interface Props {
-    show: boolean,
-    setShow: () => void,
-    headerTitle?: string,
+    open: boolean,
+    onClose: () => void,
+    className?: string,
+    size?: 'small' | 'medium' | 'large',
     children: JSX.Element,
-    footer: boolean
+    headerTitle?: string,
+    footer?: boolean
 }
 
-const SickstModal = ({ show, children, setShow, headerTitle, footer }: Props) => {
+const SickstModal = ({ 
+    open, 
+    onClose,
+    className = "",
+    size = 'medium',
+    children, 
+    headerTitle = "", 
+    footer = true
+}: Props) => {
     return <>
         <Modal
-            className="custom-modal"
-            centered={true}
-            size="lg"
-            isOpen={show}
-            toggle={setShow}
+            className={`custom-modal ${className}`}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+            open={open}
+            onClose={onClose}
         >
-            <ModalHeader toggle={setShow}>{headerTitle && headerTitle}</ModalHeader>
-            <ModalBody>
-                {children}
-            </ModalBody>
-            {footer && <ModalFooter>
-                <button className="cancel-btn" onClick={setShow}>Cancel</button>
-            </ModalFooter>}
+            <div className={`modal-content ${size}`}>
+                <div className="modal-header">
+                    <span className="modal-title">{headerTitle}</span>
+                    <button className='btn-close' onClick={onClose}></button>
+                </div>
+                <div className="modal-body">{children}</div>
+                {footer && <div className="modal-footer">
+                    <button className="cancel-btn">Cancel</button>
+                </div>}
+            </div>
         </Modal>
     </>
 }

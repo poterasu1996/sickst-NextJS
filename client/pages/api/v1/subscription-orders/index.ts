@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SUBSCRIPTION_ORDERS } from "../../../../shared/utils/constants";
+import { SUBSCRIPTION_ORDERS } from "../../../../utils/constants";
 
 const STRAPI_SUBSCRIPTION_ORDERS = `${process.env.NEXT_PUBLIC_STRAPI_APIURL}${SUBSCRIPTION_ORDERS}`;
 
