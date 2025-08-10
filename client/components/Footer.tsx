@@ -1,6 +1,5 @@
 import Link from "next/link";
-// import logo from "../public/logo.svg";
-import logo from "../public/logo-white.svg";
+import Image from "next/image";
 
 const Footer = () => {
     return <footer>
@@ -8,7 +7,7 @@ const Footer = () => {
             <div className="row">
                 <div className="col-6 col-sm-3 col-md-3">
                     <div className="logo">
-                        <img src={logo.src}/>
+                        <Image src='/logo-white.svg' alt="Logo" width={126} height={36} priority />
                     </div>
                     <div className="text">Descopera un nou parfum in fiecare luna pentru 60 RON.</div>
                 </div>

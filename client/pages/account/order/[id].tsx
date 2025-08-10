@@ -4,12 +4,11 @@ import { useRouter } from "next/router";
 import axios from "axios";
 
 // Components
-import logo from "../../../public/logo.svg";
 import { Modal, ModalBody } from "reactstrap";
 
 // Storage & services
 import AccountContext from "../../../store/account-context";
-import orderService from "../../../shared/services/orderService";
+import orderService from "../../../services/orderService";
 
 // Utils
 import { ICompanyDetail, ICompanyDetailModel } from "../../../models/CompanyDetail.model";
@@ -78,7 +77,7 @@ const OrderId = ({ order, companyDet }: Props) => {
                                 <div className="order-card">
                                     <div className="order-card--text">
                                         <div className="mx-3 my-3">
-                                            <img className="logo mb-5" src={logo.src} />
+                                            <img className="logo mb-5" src='/logo.svg' />
                                             {companyDet && <>
                                                 <p style={{textTransform: "uppercase", fontWeight: "bold"}}>{companyDet.attributes.name}</p>
                                                 <p>CIF: {companyDet.attributes.cif}</p>

@@ -1,6 +1,5 @@
 import Link from "next/link";
-// import logo from "../public/logo.svg";
-import logo from "../public/logo-white.svg";
+import Image from "next/image";
 
 const SimpleHeader = () => {
     return <header>
@@ -8,7 +7,7 @@ const SimpleHeader = () => {
             <div className='logo'>
                 <Link href="/" >
                     <a className='logo-link'>
-                        <img src={logo.src}/>
+                        <Image src='/logo-white.svg' alt="Logo" width={126} height={37} priority />
                     </a>
                 </Link>
             </div>
