@@ -15,10 +15,6 @@ import Cart from "./global/cart";
 import SideModal from "./global/SideModal";
 import AccountMobileSideModal from "./global/AccountMobileSideModal";
 
-// publics
-import logo from "../public/logo-white.svg";
-// import logo from "../public/logo.svg";
-
 // Storage & services
 import AuthContext from "../store/auth-context";
 import AccountContext from "../store/account-context";
@@ -29,6 +25,7 @@ import { useDebounce } from "../hooks/useDebounce";
 import { useSearch } from "../hooks/useSearch";
 import { useCart } from "../features/cart/hooks/useCart";
 import { AccountTabView } from "../types/account";
+import Image from "next/image";
 
 const LOGOUT_URL = 'http://localhost:3000/api/v1/logout';
 
@@ -139,7 +136,7 @@ const Header = () => {
         <div className="logo">
           <Link href="/shop">
             <a className="logo-link">
-              <img src={logo.src}/>
+              <Image src='/logo-white.svg' alt="Logo" width={126} height={37} priority />
             </a>
           </Link>
         </div>

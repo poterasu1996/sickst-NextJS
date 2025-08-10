@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import img1 from '../../public/img/clive-christian-hedonistic-jump-up-and-kiss-me.jpg';
-import img2 from '../../public/img/fougere-fragrance-family-Clive-Christian-Perfumes-1555x1100.jpg';
-import logo from '../../public/logo-black.svg';
-import perfumeBottle from '../../public/perfume-bottle.svg';
-import { ChevronLeft, ChevronRight, ShoppingCart } from 'react-feather';
+import img1 from '../../public/img/sickst-black.jpg';
+import img2 from '../../public/img/sickst-pink.jpg';
+import { ChevronLeft, ChevronRight, Image, ShoppingCart } from 'react-feather';
 import HeaderLandingPage from '../HeaderLandingPage';
 import Link from 'next/link';
+import ImageNext from "next/image";
 
 const LandingPage = () => {
     const [productList, setProductList] = useState([
@@ -135,11 +134,11 @@ const LandingPage = () => {
                     <div className="item" onClick={checkFirstItem() ? handleNext : handlePrev}>
                         <img className='wave-clip' src={thumbnailList[0].img.src} />
                         <div className="perfume-icon">
-                            <img src={perfumeBottle.src} />
+                            <img src='/perfume-bottle.svg' />
                         </div>
                         <div className="content">
                             <div className="logo">
-                                <img src={logo.src} />
+                                <ImageNext src='/logo-black.svg' alt="Logo" width={45} height={50}  />
                             </div>
                             <svg width='100' height='100'>
                                 <path id="circle" fill='#000' d='M 10 49 A 40 40 0 1 1 10 50'></path>

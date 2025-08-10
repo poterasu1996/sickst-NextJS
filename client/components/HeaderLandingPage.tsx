@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import Link from "next/link";
-import logo from '../../client/public/logo-black.svg';
 
 // Components
 import AccountMobileSideModal from "./global/AccountMobileSideModal";
@@ -8,6 +7,7 @@ import { Menu } from "react-feather";
 
 // Storage
 import AuthContext from "../store/auth-context";
+import Image from "next/image";
 
 const HeaderLandingPage = () => {
     const [accountMobileModal, setAccountMobileModal] = useState(false);
@@ -35,7 +35,8 @@ const HeaderLandingPage = () => {
                     </Link>
                 </li>
                 <li className="nav-link logo">
-                <img src={logo.src} />
+                
+                <Image src={'/logo-black.svg'} width={250} height={28} alt="Logo" priority />
                 </li>
                 <li className="nav-link">
                     <Link href="/about-us">
